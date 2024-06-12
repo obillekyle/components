@@ -7,7 +7,7 @@
   import IconButton from '@/components/Button/icon-button.vue'
   import { ref } from 'vue'
   import HeaderTitle from '@/components/Header/header-title.vue'
-  import MasterSwitch from '@/components/Switches/master-switch.vue'
+  import MasterSwitch from '@/components/Switch/master-switch.vue'
   import SquareImage from '@/components/square-image.vue'
   import LinearProgress from '@/components/Progress/linear-progress.vue'
   import CircularProgress from '@/components/Progress/circular-progress.vue'
@@ -16,7 +16,7 @@
   import WavyDivider from '@/components/Divider/wavy-divider.vue'
   import Scroller from '@/components/Text/scroller.vue'
   import Slider from '@/components/Slider/slider.vue'
-  import Switch from '@/components/Switches/switch.vue'
+  import Switch from '@/components/Switch/switch.vue'
   import Fab from '@/components/Layout/fab.vue'
 
   const tab = ref(0)
