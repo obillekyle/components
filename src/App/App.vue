@@ -1,14 +1,14 @@
 <script setup lang="ts">
   import Layout from '@/components/Layout/layout.vue'
-  import Button from '../components/Button'
-  import Input from '../components/Input'
+  import Button from '@/components/Button'
+  import Input from '@/components/Input'
   import Navigation from '@/components/Navigation'
   import MdHeader from '@/components/Header/header.vue'
   import IconButton from '@/components/Button/icon-button.vue'
   import { ref } from 'vue'
   import HeaderTitle from '@/components/Header/header-title.vue'
   import MasterSwitch from '@/components/Switch/master-switch.vue'
-  import SquareImage from '@/components/square-image.vue'
+  import SquareImage from '@/components/Image/square-image.vue'
   import LinearProgress from '@/components/Progress/linear-progress.vue'
   import CircularProgress from '@/components/Progress/circular-progress.vue'
   import Chip from '@/components/Chip'
@@ -18,6 +18,9 @@
   import Slider from '@/components/Slider/slider.vue'
   import Switch from '@/components/Switch/switch.vue'
   import Fab from '@/components/Layout/fab.vue'
+  import MdBox from '@/components/Box'
+  import BlockImage from '@/components/Image/block-image.vue'
+  import Text from '@/components/Text'
 
   const tab = ref(0)
   const isDark = ref(true)
@@ -111,6 +114,9 @@
         <Switch variant="filled" default-checked />
       </div>
 
+      <MdBox class="primary" p="100">Box</MdBox>
+      <Text color="red">Hello</Text>
+
       <div class="flex">
         <SquareImage
           frame="circle"
@@ -128,6 +134,13 @@
           src="https://picsum.photos/[size]?random=3"
         />
       </div>
+
+      <BlockImage
+        :b-radius="4"
+        alt="random image"
+        src="https://picsum.photos/400/300?random=4"
+        :ratio="4 / 3"
+      />
 
       <Slider :values="[5, 15, 30, 60]" />
 

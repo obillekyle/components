@@ -53,23 +53,40 @@ export const addPX = (value: AppSizesString) => addUnit(value, 'px')
 
 export function getCSSValue(
   value: AppSizesString,
+  unit?: CSSMetricUnits,
+  varType?: AppSizesPrefixes | String
+): string
+export function getCSSValue(
+  value?: AppSizesString,
+  unit?: CSSMetricUnits,
+  varType?: AppSizesPrefixes | String
+): string | undefined
+export function getCSSValue(
+  value?: undefined,
+  unit?: CSSMetricUnits,
+  varType?: AppSizesPrefixes | String
+): undefined
+export function getCSSValue(
+  value?: AppSizesString,
   unit: CSSMetricUnits = 'px',
   varType?: AppSizesPrefixes | String
-): string {
-  value = typeof value === 'string' ? value.trim() : value
-  if (typeof value === 'string' && value.includes(' ')) {
-    return value
+): string | undefined {
+  if (value === undefined) return
+
+  const newValue = typeof value === 'string' ? value.trim() : value
+  if (typeof newValue === 'string' && newValue.includes(' ')) {
+    return newValue
       .split(' ')
       .map((v) => getCSSValue(v, unit, varType))
       .join(' ')
   }
 
-  if (sizes.find((size) => value === size)) {
+  if (sizes.find((size) => newValue === size)) {
     varType = varType ? varType + '-' : ''
-    return `var(--${varType}${value})`
+    return `var(--${varType}${newValue})`
   }
-  if (value === 'rounded') return '9999px'
-  return addUnit(value, unit)
+  if (newValue === 'rounded') return '9999px'
+  return addUnit(newValue, unit)
 }
 
 export const c = (value: AppColorString) => getCSSColor(value)

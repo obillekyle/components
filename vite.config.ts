@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
 import VueDevTools from 'vite-plugin-vue-devtools'
 import dts from 'vite-plugin-dts'
 import path from 'node:path'
@@ -10,11 +9,14 @@ import { version } from './package.json'
 export default defineConfig({
   plugins: [
     dts({
+      outDir: 'dist',
+      entryRoot: 'src',
       insertTypesEntry: true,
-      tsconfigPath: 'tsconfig.app.json'
+      pathsToAliases: false,
+      tsconfigPath: 'tsconfig.app.json',
+      strictOutput: true
     }),
     vue(),
-    vueJsx(),
     VueDevTools()
   ],
   build: {
@@ -25,29 +27,21 @@ export default defineConfig({
     lib: {
       formats: ['es'],
       entry: path.resolve(__dirname, 'src/index.ts'),
-      fileName: (_format, entryName) =>
-        entryName.startsWith('src/')
-          ? `${entryName.slice(4)}.js`
-          : `deps/${entryName}.js`
+      fileName: '[name]'
     },
     rollupOptions: {
-      preserveEntrySignatures: 'strict',
       external: ['vue', 'color', '@iconify/vue', 'deepmerge'],
       output: {
-        exports: 'named',
         preserveModules: true,
-        inlineDynamicImports: false,
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name].js',
+        assetFileNames: '[name].[ext]',
         globals: {
           vue: 'Vue',
           color: 'Color',
           deepmerge: 'Deepmerge',
           '@iconify/vue': 'Iconify'
-        },
-
-        assetFileNames: ({ name }) =>
-          name?.startsWith('src/')
-            ? `${name.slice(4)}.[ext]`
-            : `assets/[name].[ext]`
+        }
       }
     }
   },

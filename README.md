@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://sle.okyle.xyz"><img src="public/assets/logo-2.png" alt="@okyle/material" title="See in action" width="80"></a>
+<a href="https://sle.okyle.xyz"><img src="public/assets/logo-2.png" alt="@okyle/components" title="See in action" width="80"></a>
 
 # MD Components
 
@@ -20,11 +20,13 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ## Components
 
+- [Box](/src/components/Box)
 - [Button](/src/components/Button)
 - [Chip](/src/components/Chip)
 - [Switch](/src/components/Switch)
 - [Slider](/src/components/Slider)
 - [Select](/src/components/Select)
+- [Image](/src/components/Image)
 - [Input](/src/components/Input)
 - [List](/src/components/List)
 - [Text](/src/components/Text)

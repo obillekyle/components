@@ -8,7 +8,7 @@
     inject,
     type Ref
   } from 'vue'
-  import CircularProgress from './Progress/circular-progress.vue'
+  import CircularProgress from '../Progress/circular-progress.vue'
   import { Icon } from '@iconify/vue'
 
   interface SquareImageProps extends /* @vue-ignore */ HTMLAttributes {

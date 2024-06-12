@@ -1,25 +1,28 @@
 <script setup lang="ts">
-  import { getCSSValue, type AppSizesString } from '@/utils'
-  import type { HTMLAttributes } from 'vue'
+  import { exclude, getCSSValue, type AppSizesString } from '@/utils'
+  import type { BoxProps } from '@/utils/types'
+  import { computed, type HTMLAttributes } from 'vue'
+  import Box from '../Box/box.vue'
 
-  interface TextProps extends /** @vue-ignore */ HTMLAttributes {
+  interface TextProps extends BoxProps, /** @vue-ignore */ HTMLAttributes {
     comp?: string
     color?: string
     size?: AppSizesString
     weight?: number
     italic?: boolean
-    padding?: string | number
-    margin?: string | number
+    spacing?: number
   }
 
-  withDefaults(defineProps<TextProps>(), {
+  const props = withDefaults(defineProps<TextProps>(), {
     comp: 'span',
     size: 'md',
     color: 'currentColor',
-    weight: 400,
-    padding: 0,
-    margin: 0
+    weight: 400
   })
+
+  const boxProps = computed(() =>
+    exclude(props, ['size', 'weight', 'italic', 'spacing'])
+  )
 
   defineOptions({
     name: 'MdText'
@@ -27,18 +30,17 @@
 </script>
 
 <template>
-  <component
-    :is="comp"
+  <Box
+    v-bind="boxProps"
+    as="span"
     :style="{
-      color: color,
+      color,
       fontWeight: weight,
-      fontSize: getCSSValue(size, 'px', 'component'),
       fontStyle: italic ? 'italic' : 'normal',
-      padding: getCSSValue(padding),
-      margin: getCSSValue(margin)
+      fontSize: getCSSValue(size, 'px', 'font'),
+      letterSpacing: getCSSValue(spacing, 'px', 'padding')
     }"
-    v-bind="$attrs"
   >
     <slot />
-  </component>
+  </Box>
 </template>
