@@ -2,7 +2,7 @@
   import type { Component, InputHTMLAttributes, Ref } from 'vue'
   import { onMounted, ref, useAttrs, watch } from 'vue'
   import NumberArrows from './number-arrows.vue'
-  import IconOrComponent from '../icon-or-component.vue'
+  import IconOrComponent from '../Misc/icon-or-component.vue'
   import './style.scss'
 
   interface InputText extends /** @vue-ignore */ InputHTMLAttributes {

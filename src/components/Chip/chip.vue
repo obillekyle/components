@@ -2,7 +2,7 @@
   import type { ButtonHTMLAttributes, Component } from 'vue'
   import type { AppSizes } from '@/utils/css'
 
-  import IconOrComponent from '../icon-or-component.vue'
+  import IconOrComponent from '../Misc/icon-or-component.vue'
   import { rippleEffect } from '@/utils/dom'
   import { getCSSValue } from '@/utils/css'
 

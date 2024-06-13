@@ -82,11 +82,15 @@
   }
 
   onBeforeMount(() => resolve())
+  onUnmounted(() => URL.revokeObjectURL(image.value || ''))
   watch(
     () => props.src,
     () => resolve()
   )
-  onUnmounted(() => URL.revokeObjectURL(image.value || ''))
+
+  defineOptions({
+    name: 'MdBlockImage'
+  })
 </script>
 
 <template>

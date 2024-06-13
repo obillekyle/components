@@ -9,3 +9,4 @@ const SelectComponent = Select as SelectComponent
 SelectComponent.Item = OptionItem
 
 export default SelectComponent
+export { Select, OptionItem }

@@ -5,7 +5,6 @@
   import Navigation from '@/components/Navigation'
   import MdHeader from '@/components/Header/header.vue'
   import IconButton from '@/components/Button/icon-button.vue'
-  import { ref } from 'vue'
   import HeaderTitle from '@/components/Header/header-title.vue'
   import MasterSwitch from '@/components/Switch/master-switch.vue'
   import SquareImage from '@/components/Image/square-image.vue'
@@ -21,6 +20,7 @@
   import MdBox from '@/components/Box'
   import BlockImage from '@/components/Image/block-image.vue'
   import Text from '@/components/Text'
+  import { ref } from 'vue'
 
   const tab = ref(0)
   const isDark = ref(true)

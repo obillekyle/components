@@ -3,7 +3,7 @@
 
   import { keyboardClick, rippleEffect } from '@/utils/dom'
   import { inject, type ButtonHTMLAttributes } from 'vue'
-  import IconOrComponent from '../icon-or-component.vue'
+  import IconOrComponent from '../Misc/icon-or-component.vue'
 
   interface FabProps extends /* @vue-ignore */ ButtonHTMLAttributes {
     icon?: string | Component

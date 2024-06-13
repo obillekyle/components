@@ -1,11 +1,12 @@
 import List from './list.vue'
-import listItem from './list-item.vue'
+import ListItem from './list-item.vue'
 
 type ListComponent = typeof List & {
-  Item: typeof listItem
+  Item: typeof ListItem
 }
 
 const ListComp = List as ListComponent
-ListComp.Item = listItem
+ListComp.Item = ListItem
 
 export default ListComp
+export { List, ListItem }

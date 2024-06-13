@@ -12,5 +12,4 @@ ButtonElement.Icon = IconButton
 ButtonElement.Group = ButtonGroup
 
 export { Button, IconButton, ButtonGroup }
-
 export default ButtonElement

@@ -16,6 +16,10 @@
 
   watch(() => props.color, setColor)
   onMounted(() => setColor())
+
+  defineOptions({
+    name: 'MdColorBlock'
+  })
 </script>
 
 <template>

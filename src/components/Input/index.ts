@@ -12,3 +12,4 @@ Input.Number = NumberInput
 Input.Text = TextInput
 
 export default Input
+export { NumberInput, TextInput }

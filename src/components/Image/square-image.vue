@@ -6,7 +6,8 @@
     onBeforeMount,
     watch,
     inject,
-    type Ref
+    type Ref,
+    onUnmounted
   } from 'vue'
   import CircularProgress from '../Progress/circular-progress.vue'
   import { Icon } from '@iconify/vue'
@@ -83,6 +84,7 @@
   })
 
   onBeforeMount(() => resolve())
+  onUnmounted(() => URL.revokeObjectURL(image.value || ''))
   watch(
     () => props.src,
     () => resolve()

@@ -10,7 +10,7 @@
 </script>
 
 <template>
-  <div
+  <header
     class="md-header"
     :class="{ 'on-top': scrollHeight < 6, 'has-title': headerTitle }"
   >
@@ -19,7 +19,7 @@
     <div class="md-header-actions" v-if="$slots.actions">
       <slot name="actions" />
     </div>
-  </div>
+  </header>
 </template>
 
 <style lang="scss" scoped>

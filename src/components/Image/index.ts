@@ -8,4 +8,5 @@ type ImageComponent = typeof BlockImage & {
 const Image = BlockImage as ImageComponent
 Image.Square = SquareImage
 
+export { BlockImage, SquareImage }
 export default Image

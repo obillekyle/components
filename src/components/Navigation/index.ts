@@ -20,3 +20,10 @@ Navigation.Entry = NavigationEntry
 Navigation.Item = NavigationItem
 
 export default Navigation
+export {
+  NavigationBar,
+  NavigationContainer,
+  navigationContent,
+  NavigationEntry,
+  NavigationItem
+}

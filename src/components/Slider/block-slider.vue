@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import type { HTMLAttributes, Component } from 'vue'
 
-  import IconOrComponent from '../icon-or-component.vue'
+  import IconOrComponent from '../Misc/icon-or-component.vue'
   import { evaluate } from '@/utils/object'
   import { clamp, mapNumberToRange } from '@/utils/number'
   import { ref, onBeforeMount, watch, onBeforeUnmount, onMounted } from 'vue'
@@ -62,7 +62,10 @@
   }
 
   onBeforeMount(() => {
-    model.value ??= Math.max(Math.min(props.defaultValue ?? 0, props.max), props.min)
+    model.value ??= Math.max(
+      Math.min(props.defaultValue ?? 0, props.max),
+      props.min
+    )
   })
 
   function getPosition() {
@@ -70,7 +73,8 @@
     const rect = wrapper.value.getBoundingClientRect()
     const min = 100 * (rect.height / rect.width)
 
-    const num = (((model.value || 0) - props.min) / (props.max - props.min)) * 100
+    const num =
+      (((model.value || 0) - props.min) / (props.max - props.min)) * 100
 
     return mapNumberToRange(num, 0, 100, min, 100)
   }

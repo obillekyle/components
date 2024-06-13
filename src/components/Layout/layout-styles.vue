@@ -1,11 +1,15 @@
 <script setup lang="ts">
-  import type { AppColorVariants, AppSizesPrefixes, AppSizes } from '@/utils/css'
+  import type {
+    AppColorVariants,
+    AppSizesPrefixes,
+    AppSizes
+  } from '@/utils/css'
   import type { ComputedRef } from 'vue'
   import type { LayoutOptions, ElementSizes } from './util'
 
   import ColorsObj, { Colors } from '@/utils/colors'
-  import { inject, onMounted, ref, watch } from 'vue'
   import { AppShades } from './util'
+  import { inject, onMounted, ref, watch } from 'vue'
   import { addPX, getCSSValue } from '@/utils/css'
 
   const options = inject<ComputedRef<LayoutOptions>>('options')!
@@ -13,7 +17,8 @@
   const styleElem = ref('')
 
   function getShades(color: string | String | Colors, prefix: string) {
-    const colors = color instanceof Colors ? color : new ColorsObj(color.toString())
+    const colors =
+      color instanceof Colors ? color : new ColorsObj(color.toString())
     const theme = options.value.theme
     const values: Record<string, string> = {}
 
@@ -35,7 +40,9 @@
         if (shade == 60) {
           const color = colors.shade(60)
           values[prefix + '-container'] = color.hex()
-          values['on-' + prefix + '-container'] = colors.shade(color.isDark() ? 90 : 10).hex()
+          values['on-' + prefix + '-container'] = colors
+            .shade(color.isDark() ? 90 : 10)
+            .hex()
         }
       }
     } else {
@@ -84,7 +91,9 @@
 
       const colors = Object.keys(options.value.color) as AppColorVariants[]
       const sizes = Object.keys(options.value.sizes) as AppSizesPrefixes[]
-      const components = Object.keys(options.value.component) as (keyof ElementSizes)[]
+      const components = Object.keys(
+        options.value.component
+      ) as (keyof ElementSizes)[]
 
       if (options.value.color.primary) {
         Object.assign(values, getShades(options.value.color.primary, 'primary'))
@@ -99,7 +108,11 @@
       }
 
       for (const component of components) {
-        values[component + '-size'] = getCSSValue(options.value.component[component], 'px', 'size')
+        values[component + '-size'] = getCSSValue(
+          options.value.component[component],
+          'px',
+          'size'
+        )
       }
 
       for (const key in values) {

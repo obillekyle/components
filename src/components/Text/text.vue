@@ -31,12 +31,14 @@
 
 <template>
   <Box
+    exclude
+    class="md-text"
     v-bind="boxProps"
     as="span"
     :style="{
       color,
       fontWeight: weight,
-      fontStyle: italic ? 'italic' : 'normal',
+      fontStyle: italic ? 'italic' : null,
       fontSize: getCSSValue(size, 'px', 'font'),
       letterSpacing: getCSSValue(spacing, 'px', 'padding')
     }"

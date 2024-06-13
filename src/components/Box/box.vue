@@ -4,7 +4,11 @@
   import { computed, ref } from 'vue'
 
   const box = ref<HTMLElement | null>(null)
-  const props = defineProps<BoxProps>()
+  const props = defineProps<
+    BoxProps & {
+      exclude?: boolean
+    }
+  >()
 
   defineOptions({
     name: 'MdBox'
@@ -33,41 +37,45 @@
 
     return styleObj
   })
+
+  const mdBox = computed(() => {
+    if (props.exclude) return null
+    return props.bg ? props.bg : ''
+  })
 </script>
 
 <template>
-  <component :is="as ?? 'div'" class="md-box" :style="styles" ref="box">
+  <component :md-box :is="as ?? 'div'" :style="styles" ref="box">
     <slot />
   </component>
 </template>
 
 <style lang="scss">
-  .md-box {
+  [md-box] {
     background-color: var(--bgc);
     color: var(--onbgc);
 
-    &.primary {
+    [md-box='primary'] {
       --bgc: var(--primary);
       --onbgc: var(--on-primary);
     }
 
-    &.secondary {
+    [md-box='secondary'] {
       --bgc: var(--secondary);
       --onbgc: var(--on-secondary);
     }
 
-    &.warning,
-    &.error {
+    [md-box='error'] {
       --bgc: var(--error);
       --onbgc: var(--on-error);
     }
 
-    &.mono {
+    [md-box='mono'] {
       --bgc: var(--mono-10);
       --onbgc: var(--mono-80);
     }
 
-    &.on-bg {
+    [md-box='on-bg'] {
       background-color: var(--onbgc);
       color: var(--bgc);
     }

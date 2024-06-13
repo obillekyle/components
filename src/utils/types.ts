@@ -1,5 +1,5 @@
 import type { Component } from 'vue'
-import type { AppSizesString } from './css'
+import type { AppColorVariants, AppSizesString } from './css'
 
 export type TemplateString = [string[] | TemplateStringsArray, ...any[]]
 
@@ -25,4 +25,5 @@ export type BoxProps = {
   p?: AppSizesString
   r?: AppSizesString
   as?: string | Component
+  bg?: AppColorVariants | 'on-bg'
 }

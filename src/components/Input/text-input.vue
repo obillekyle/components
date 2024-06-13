@@ -5,11 +5,12 @@
   import type { AppSizes } from '@/utils/css'
 
   import Counter from './counter.vue'
-  import IconOrComponent from '../icon-or-component.vue'
+  import IconOrComponent from '../Misc/icon-or-component.vue'
   import { ref, onBeforeMount } from 'vue'
   import { getCSSValue } from '@/utils/css'
 
-  interface InputText extends /** @vue-ignore */ Omit<InputHTMLAttributes, 'height'> {
+  interface InputText
+    extends /** @vue-ignore */ Omit<InputHTMLAttributes, 'height'> {
     leftIcon?: string | Component
     rightIcon?: string | Component
     defaultValue?: string

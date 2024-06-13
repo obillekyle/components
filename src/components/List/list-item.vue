@@ -2,7 +2,7 @@
   import type { ListProps } from './types'
 
   import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
-  import { addPX, evaluate } from '@/utils'
+  import { addPX, evaluate, getClientPos } from '@/utils'
   import { Icon } from '@iconify/vue'
 
   const props = defineProps<{
@@ -34,11 +34,8 @@
     const element = content.value!
     let offset = 0
 
-    const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX
-    const oldX =
-      oldEvent instanceof MouseEvent
-        ? oldEvent.clientX
-        : oldEvent.touches[0].clientX
+    const clientX = getClientPos(e).x
+    const oldX = getClientPos(oldEvent).x
 
     offset = clientX - oldX
 
@@ -120,11 +117,8 @@
     if (!oldEvent) return
     e.preventDefault()
 
-    const clientY = e instanceof MouseEvent ? e.clientY : e.touches[0].clientY
-    const oldY =
-      oldEvent instanceof MouseEvent
-        ? oldEvent.clientY
-        : oldEvent.touches[0].clientY
+    const clientY = getClientPos(e).y
+    const oldY = getClientPos(oldEvent).y
 
     const element = wrapper.value!
     const offset = clientY - oldY
