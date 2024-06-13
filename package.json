@@ -4,15 +4,16 @@
   "private": true,
   "type": "module",
   "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./*": "./dist/*"
+    "./*": "./dist/components/*/index.js",
+    "./utils": "./dist/utils/index.js",
+    "./utils/*": "./dist/utils/*.js"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
-  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
     "types": "vue-tsc ",

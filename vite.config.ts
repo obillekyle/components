@@ -14,7 +14,8 @@ export default defineConfig({
       insertTypesEntry: true,
       pathsToAliases: false,
       tsconfigPath: 'tsconfig.app.json',
-      strictOutput: true
+      strictOutput: true,
+      exclude: ['src/**/__tests__/*', 'src/main.ts']
     }),
     vue(),
     VueDevTools()
