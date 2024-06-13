@@ -45,7 +45,7 @@
 </script>
 
 <template>
-  <component :md-box :is="as ?? 'div'" :style="styles" ref="box">
+  <component :md-box="mdBox" :is="as ?? 'div'" :style="styles" ref="box">
     <slot />
   </component>
 </template>
