@@ -23,14 +23,20 @@ export default function injectCSS(css, hash) {
 }
 `
 
-async function deleteCSSFiles(dir: string) {
+async function deleteCSSFiles(dir: string, out: string, ignore: string[] = []) {
   try {
     const files = await fs.promises.readdir(dir)
     for (const file of files) {
+      if (
+        ignore.includes(
+          path.relative(path.resolve(__dirname, out), path.join(dir, file))
+        )
+      )
+        continue
       const filePath = path.join(dir, file)
       const stats = await fs.promises.stat(filePath)
       if (stats.isDirectory()) {
-        await deleteCSSFiles(filePath)
+        await deleteCSSFiles(filePath, out, ignore)
       } else if (file.endsWith('.css')) {
         fileSize += stats.size
         await fs.promises.unlink(filePath)
@@ -43,7 +49,15 @@ async function deleteCSSFiles(dir: string) {
   }
 }
 
-function attachStyles(): Plugin {
+type ASOptions = {
+  cleanIgnore?: string[]
+  cleanCSS?: boolean
+}
+
+function attachStyles({
+  cleanIgnore = [],
+  cleanCSS = true
+}: ASOptions = {}): Plugin {
   let config: ResolvedConfig
   const name: string = 'attach-styles'
 
@@ -62,7 +76,7 @@ function attachStyles(): Plugin {
       config = _config
     },
     transform(code, id) {
-      const isCSS = /\.(scss|sass|css|styl|stylus|less)$/.test
+      const isCSS = (p: string) => /\.(scss|sass|css|styl|stylus|less)$/.test(p)
 
       if (!isCSS(id)) return
       const relative: string = path.relative(path.resolve(__dirname, 'src'), id)
@@ -110,25 +124,26 @@ function attachStyles(): Plugin {
         delete css[key]
       })
 
-      const outDir = config.build.outDir
+      if (cleanCSS) {
+        const outDir = config.build.outDir
+        const start = Date.now()
+        await deleteCSSFiles(outDir, outDir, cleanIgnore)
+        const end = Date.now()
+        const elapsed = end - start
+        const size = (fileSize / 1024).toFixed(2)
+        const pack = (packSize / 1024).toFixed(2)
 
-      const start = Date.now()
-      await deleteCSSFiles(outDir)
-      const end = Date.now()
-      const elapsed = end - start
-      const size = (fileSize / 1024).toFixed(2)
-      const pack = (packSize / 1024).toFixed(2)
-
-      console.log(`\x1b[36m[vite:${name}]\x1b[32m Clean CSS files...`)
-      console.log(
-        `\x1b[36m[vite:${name}]`,
-        `\x1b[32mCleaned CSS files in ${elapsed}ms.`
-      )
-      console.log(
-        `\x1b[36m[vite:${name}]`,
-        `\x1b[32mPack: \x1b[90m\x1b[1m${pack} kB\x1b[0m\x1b[90m │`,
-        `\x1b[32mSaved: \x1b[90m\x1b[1m${size} kB\x1b[0m\n`
-      )
+        console.log(`\x1b[36m[vite:${name}]\x1b[32m Clean CSS files...`)
+        console.log(
+          `\x1b[36m[vite:${name}]`,
+          `\x1b[32mCleaned CSS files in ${elapsed}ms.`
+        )
+        console.log(
+          `\x1b[36m[vite:${name}]`,
+          `\x1b[32mPack: \x1b[90m\x1b[1m${pack} kB\x1b[0m\x1b[90m │`,
+          `\x1b[32mSaved: \x1b[90m\x1b[1m${size} kB\x1b[0m\n`
+        )
+      }
     }
   }
 }
