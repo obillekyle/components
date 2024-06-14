@@ -20,7 +20,10 @@ export function getParent(
   return getParent(element.parentElement, selector, true, deep - 1)
 }
 
-export function onSelfEvent<T extends Event>(event: T, handler: (event: T) => any) {
+export function onSelfEvent<T extends Event>(
+  event: T,
+  handler: (event: T) => any
+) {
   const target = event.target as HTMLElement
   const currentTarget = event.currentTarget as HTMLElement
 
@@ -34,7 +37,10 @@ export type BoxDimensions = {
   width: number
 }
 let cdtID: ReturnType<typeof setTimeout> | null = null
-export function charDimensions(parent?: HTMLElement, text = 'A'): BoxDimensions {
+export function charDimensions(
+  parent?: HTMLElement,
+  text = 'A'
+): BoxDimensions {
   parent ??= document.body
   let span: HTMLSpanElement | null = $('span.char-dimensions', parent)
 
@@ -65,12 +71,16 @@ export function charDimensions(parent?: HTMLElement, text = 'A'): BoxDimensions 
 }
 
 export async function openFilePickerAsync(): Promise<File | null>
-export async function openFilePickerAsync(options: { accept?: string }): Promise<File | null>
+export async function openFilePickerAsync(options: {
+  accept?: string
+}): Promise<File | null>
 export async function openFilePickerAsync(options: {
   accept?: string
   multiple: true
 }): Promise<File[] | null>
-export async function openFilePickerAsync(options: { accept?: string; multiple?: boolean } = {}) {
+export async function openFilePickerAsync(
+  options: { accept?: string; multiple?: boolean } = {}
+) {
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = options.accept || ''
@@ -78,7 +88,9 @@ export async function openFilePickerAsync(options: { accept?: string; multiple?:
 
   return new Promise<File | File[] | null>((resolve) => {
     input.onchange = function () {
-      resolve(options.multiple ? [...(input.files || [])] : input.files?.[0] || null)
+      resolve(
+        options.multiple ? [...(input.files || [])] : input.files?.[0] || null
+      )
       this.removeEventListener('change', input.onchange!)
     }
     input.click()
@@ -113,7 +125,9 @@ export function rippleEffect(e: MouseEvent, to?: string) {
   ripple.className = 'md-ripple'
   ripple.style.left = addPX(e.clientX - rect.left)
   ripple.style.top = addPX(e.clientY - rect.top)
-  ripple.style.width = addPX(rect.height > rect.width ? rect.height : rect.width)
+  ripple.style.width = addPX(
+    rect.height > rect.width ? rect.height : rect.width
+  )
   ripple.style.height = ripple.style.width
 
   function removeRipple() {
@@ -145,7 +159,9 @@ export function getClientPos(event: TouchEvent | MouseEvent) {
 }
 
 export function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  )
 }
 
 export function isInputFocused(): boolean {
@@ -153,4 +169,12 @@ export function isInputFocused(): boolean {
     document.activeElement instanceof HTMLInputElement ||
     document.activeElement instanceof HTMLTextAreaElement
   )
+}
+
+export function injectCSS(css: string, id: string) {
+  const style: HTMLStyleElement =
+    $('style#' + id) ?? document.createElement('style')
+  style.id = id
+  style.textContent = css
+  document.head.contains(style) || document.head.appendChild(style)
 }

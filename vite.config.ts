@@ -4,6 +4,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { version } from './package.json'
+import attachStyles from './vite-plugin-attach-styles'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,12 +19,13 @@ export default defineConfig({
       exclude: ['src/**/__tests__/*', 'src/main.ts']
     }),
     vue(),
-    VueDevTools()
+    VueDevTools(),
+    attachStyles()
   ],
   build: {
     cssMinify: 'lightningcss',
-    cssCodeSplit: true,
     copyPublicDir: false,
+    cssCodeSplit: true,
 
     lib: {
       formats: ['es'],
