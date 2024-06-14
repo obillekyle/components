@@ -1,16 +1,17 @@
 <script setup lang="ts">
-  import Color from 'color'
-  import deep from 'deepmerge'
-  import { getUnique } from '@/utils/number'
   import type { HTMLAttributes } from 'vue'
   import type { LayoutOptions } from './util'
   import type { PartialDeep } from 'type-fest'
+
+  import Color from 'color'
+  import deep from 'deepmerge'
   import ScrollContainer from './scroll-container.vue'
-  import { DefaultLayoutOptions } from './util'
   import LayoutStyles from './layout-styles.vue'
+  import { getUnique } from '@/utils/number'
+  import { DefaultLayoutOptions } from './util'
   import { computed, onMounted, onUnmounted, provide, ref } from 'vue'
-  import './style.scss'
   import { interval, removeInterval } from '@/utils'
+  import './style.scss'
 
   interface LayoutProps extends /** @vue-ignore */ HTMLAttributes {
     options?: PartialDeep<LayoutOptions>
@@ -65,7 +66,10 @@
     <slot name="header" />
     <div class="md-layout-content">
       <slot name="fab" />
-      <ScrollContainer :scroll-change="({ y }) => (contentScrollTop = y)">
+      <ScrollContainer
+        as="main"
+        :scroll-change="({ y }) => (contentScrollTop = y)"
+      >
         <slot />
       </ScrollContainer>
     </div>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { exclude, getCSSValue, type AppSizesString } from '@/utils'
-  import type { BoxProps } from '@/utils/types'
+  import type { BoxProps } from '@/components/Box'
   import { computed, type HTMLAttributes } from 'vue'
-  import Box from '../Box/box.vue'
+  import Box, { getBoxProps } from '@/components/Box'
 
   interface TextProps extends BoxProps, /** @vue-ignore */ HTMLAttributes {
     comp?: string
@@ -20,9 +20,7 @@
     weight: 400
   })
 
-  const boxProps = computed(() =>
-    exclude(props, ['size', 'weight', 'italic', 'spacing'])
-  )
+  const boxProps = computed(() => getBoxProps(props))
 
   defineOptions({
     name: 'MdText'

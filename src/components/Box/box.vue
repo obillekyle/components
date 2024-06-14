@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { BoxProps } from '@/utils/types'
+  import type { BoxProps } from './util'
   import { getCSSValue } from '@/utils/css'
   import { computed, ref } from 'vue'
 

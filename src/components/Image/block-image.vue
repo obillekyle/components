@@ -1,11 +1,10 @@
 <script setup lang="ts">
-  import type { BoxProps } from '@/utils/types'
+  import type { BoxProps } from '@/components/Box'
   import type { HTMLAttributes } from 'vue'
 
-  import Box from '@/components/Box'
+  import Box, { getBoxProps } from '@/components/Box'
   import CircularProgress from '../Progress/circular-progress.vue'
   import { computed, onBeforeMount, onUnmounted, ref, watch } from 'vue'
-  import { exclude } from '@/utils'
   import { Icon } from '@iconify/vue'
 
   interface BlockImageProps
@@ -27,22 +26,19 @@
     fit: 'cover',
     position: 'center',
     ratio: 3 / 4,
-    cover: false
+    cover: false,
+    r: 'sm'
   })
 
   const progress = ref(0)
   const image = ref<string>()
   const error = ref(false)
-
-  const boxProps = computed(() =>
-    exclude(props, ['src', 'alt', 'ratio', 'span', 'cover', 'fit', 'position'])
-  )
+  const boxProps = computed(() => getBoxProps(props))
 
   async function resolve() {
     error.value = false
     let data: Blob | undefined
     if (image.value) {
-      console.log('called')
       URL.revokeObjectURL(image.value)
       image.value = ''
     }
@@ -73,8 +69,6 @@
       error.value = true
       return
     }
-
-    console.log(data)
 
     setTimeout(() => {
       image.value = URL.createObjectURL(data)

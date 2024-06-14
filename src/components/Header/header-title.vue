@@ -17,9 +17,9 @@
 </script>
 
 <template>
-  <div class="md-header-title" :class="{ 'on-top': scrollTop < 6 }">
+  <h1 class="md-header-title" :class="{ 'on-top': scrollTop < 6 }">
     {{ props.title }}
-  </div>
+  </h1>
 </template>
 
 <style lang="scss" scoped>

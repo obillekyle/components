@@ -40,6 +40,19 @@ export function exclude(obj: any, keys: string[]) {
     }, {} as any)
 }
 
+export function pick<T extends any, K extends (keyof T)[] = []>(
+  obj: T,
+  keys: K
+): Pick<T, K[number]>
+export function pick(obj: any, keys: string[]) {
+  return Object.keys(obj)
+    .filter((key) => keys.includes(key))
+    .reduce((prev, key) => {
+      prev[key] = obj[key]
+      return prev
+    }, {} as any)
+}
+
 export function is(value: null, type: 'null'): true
 export function is(value: string, type: 'string'): true
 export function is(value: number, type: 'number'): true

@@ -62,10 +62,7 @@ function attachStyles(): Plugin {
       config = _config
     },
     transform(code, id) {
-      const isCSS = (path: string) =>
-        /\.(scss|sass|css|styl|stylus|less)$/.test(path)
-
-      id.includes('index') && console.log(id)
+      const isCSS = /\.(scss|sass|css|styl|stylus|less)$/.test
 
       if (!isCSS(id)) return
       const relative: string = path.relative(path.resolve(__dirname, 'src'), id)
@@ -81,6 +78,7 @@ function attachStyles(): Plugin {
       const cssObj = css[name]
 
       if (cssObj) {
+        delete css[name]
         const root = normalizePath(
           path.relative(
             path.resolve(__dirname, 'src', path.dirname(name)),
@@ -113,12 +111,14 @@ function attachStyles(): Plugin {
       })
 
       const outDir = config.build.outDir
+
       const start = Date.now()
       await deleteCSSFiles(outDir)
       const end = Date.now()
       const elapsed = end - start
       const size = (fileSize / 1024).toFixed(2)
       const pack = (packSize / 1024).toFixed(2)
+
       console.log(`\x1b[36m[vite:${name}]\x1b[32m Clean CSS files...`)
       console.log(
         `\x1b[36m[vite:${name}]`,
