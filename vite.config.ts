@@ -33,6 +33,8 @@ export default defineConfig({
       fileName: '[name]'
     },
     rollupOptions: {
+      treeshake: false,
+      preserveEntrySignatures: 'strict',
       external: ['vue', 'color', '@iconify/vue', 'deepmerge'],
       output: {
         preserveModules: true,

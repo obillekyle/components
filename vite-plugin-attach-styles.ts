@@ -14,10 +14,10 @@ function generateHash(str: string) {
 const script = `
 export default function injectCSS(css, hash) {
   const style = 
-    document.querySelector('style#' + hash) 
+    document.querySelector('style#md-' + hash) 
     ?? document.createElement('style');
   
-  style.id = hash;
+  style.id = 'md-' + hash;
   style.textContent = css;
   document.head.contains(style) || document.head.appendChild(style);
 }
@@ -64,6 +64,8 @@ function attachStyles(): Plugin {
     transform(code, id) {
       const isCSS = (path: string) =>
         /\.(scss|sass|css|styl|stylus|less)$/.test(path)
+
+      id.includes('index') && console.log(id)
 
       if (!isCSS(id)) return
       const relative: string = path.relative(path.resolve(__dirname, 'src'), id)
