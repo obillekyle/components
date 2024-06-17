@@ -1,11 +1,10 @@
 .md-ripple {
   position: absolute;
   border-radius: 999px;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.1);
   pointer-events: none;
   opacity: 0;
-  scale: 0.1;
-  transform-origin: left top;
+  transform-origin: 0 0;
   background-color: var(--mono-50-30);
   animation: rippled 0.75s forwards ease-out;
 
@@ -14,26 +13,21 @@
   }
 
   @keyframes fade {
-    from {
-      scale: 2;
-      opacity: 1;
-    }
-
     to {
-      scale: 2.5;
       opacity: 0;
+      transform: translate(-50%, -50%) scale(2.5);
     }
   }
 
   @keyframes rippled {
     60% {
       opacity: 1;
-      scale: 2;
+      transform: translate(-50%, -50%) scale(2);
     }
 
     100% {
       opacity: 1;
-      scale: 2.5;
+      transform: translate(-50%, -50%) scale(2.5);
     }
   }
 }
