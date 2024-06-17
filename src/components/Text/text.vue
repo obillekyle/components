@@ -14,16 +14,10 @@
     weight?: number
     italic?: boolean
     spacing?: number
-    align?: 'left' | 'center' | 'right'
+    textAlign?: 'left' | 'center' | 'right'
   }
 
-  const props = withDefaults(defineProps<TextProps>(), {
-    comp: 'span',
-    size: 'md',
-    color: 'currentColor',
-    weight: 400
-  })
-
+  const props = defineProps<TextProps>()
   const boxProps = computed(() => getBoxProps(props))
 
   defineOptions({
@@ -39,7 +33,7 @@
     as="span"
     :style="{
       color,
-      textAlign: align,
+      textAlign,
       fontWeight: weight,
       fontStyle: italic ? 'italic' : null,
       fontSize: getCSSValue(size, 'px', 'font'),
