@@ -5,12 +5,15 @@ import type {
   AppSizesString,
   ColorString,
   AppColorVariants,
-  SizesString
+  SizesString,
+  AppColorString
 } from '@/utils/css'
 
 export type SizesObject = { [key in AppSizes]: SizesString }
 export type AppSizesObject = { [key in AppSizesPrefixes]: SizesObject }
-export const AppShades = [0, 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100] as const
+export const AppShades = [
+  0, 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100
+] as const
 export type AppColorShades = (typeof AppShades)[number]
 
 export const DefaultSizes: AppSizesObject = {
@@ -79,7 +82,8 @@ export interface LayoutOther {
 
 export type LayoutOptions = {
   theme: 'light' | 'dark'
-  color: { [key in AppColorVariants]: ColorString | Colors }
+  color: AppColorString
+  colors: { [key in AppColorVariants]: ColorString | Colors }
   fontFamily: string
   sizes: AppSizesObject
   component: ElementSizes
@@ -88,7 +92,8 @@ export type LayoutOptions = {
 
 export const DefaultLayoutOptions: LayoutOptions = {
   theme: 'dark',
-  color: {
+  color: 'primary-99',
+  colors: {
     primary: '#1a73e8',
     secondary: '#ffbe0d',
     error: '#f01c00',

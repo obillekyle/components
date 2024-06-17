@@ -18,7 +18,10 @@
     textAlign?: 'left' | 'center' | 'right'
   }
 
-  const props = defineProps<TextProps>()
+  const props = withDefaults(defineProps<TextProps>(), {
+    as: 'span'
+  })
+
   const boxProps = computed(() => getBoxProps(props))
 
   defineOptions({
@@ -28,7 +31,6 @@
 
 <template>
   <Box
-    as="p"
     exclude
     class="md-text"
     v-bind="boxProps"

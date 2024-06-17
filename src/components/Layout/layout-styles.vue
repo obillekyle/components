@@ -10,7 +10,7 @@
   import ColorsObj, { Colors } from '@/utils/colors'
   import { AppShades } from './util'
   import { inject, onMounted, ref, watch } from 'vue'
-  import { addPX, getCSSValue } from '@/utils/css'
+  import { addPX, getCSSColor, getCSSValue } from '@/utils/css'
 
   const options = inject<ComputedRef<LayoutOptions>>('options')!
   const tag = inject<string>('layout-id')!
@@ -89,18 +89,21 @@
       const values: Record<string, string> = {}
       let value = ''
 
-      const colors = Object.keys(options.value.color) as AppColorVariants[]
+      const colors = Object.keys(options.value.colors) as AppColorVariants[]
       const sizes = Object.keys(options.value.sizes) as AppSizesPrefixes[]
       const components = Object.keys(
         options.value.component
       ) as (keyof ElementSizes)[]
 
-      if (options.value.color.primary) {
-        Object.assign(values, getShades(options.value.color.primary, 'primary'))
+      if (options.value.colors.primary) {
+        Object.assign(
+          values,
+          getShades(options.value.colors.primary, 'primary')
+        )
       }
 
       for (const color of colors) {
-        Object.assign(values, getShades(options.value.color[color], color))
+        Object.assign(values, getShades(options.value.colors[color], color))
       }
 
       for (const size of sizes) {
@@ -121,6 +124,7 @@
 
       styleElem.value = `#${tag} {
         ${value}
+        color: ${getCSSColor(options.value.color)};
         color-scheme: ${options.value.theme};
         font-family: ${options.value.fontFamily},
           system-ui,

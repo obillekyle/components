@@ -21,10 +21,11 @@
     const opts = props.options || {}
     const options = DefaultLayoutOptions
 
-    const primary = opts.color?.primary || options.color.primary
-    const secondary = opts.color?.secondary || Color(primary).rotate(180).hex()
+    const primary = opts.colors?.primary || options.colors.primary
+    const secondary = opts.colors?.secondary || Color(primary).rotate(180).hex()
 
     const propsOptions = deep(opts, { color: { primary, secondary } })
+    // @ts-ignore
     return deep(options, propsOptions) as LayoutOptions
   })
 
