@@ -15,9 +15,9 @@
     fit?: 'contain' | 'cover'
     position?: 'left' | 'center' | 'right'
     ratio?: number
+    cover?: boolean
     width?: number
     height?: number
-    cover?: boolean
     span?: boolean
   }
 
@@ -25,7 +25,6 @@
     size: 'md',
     fit: 'cover',
     position: 'center',
-    ratio: 3 / 4,
     cover: false,
     r: 'sm'
   })
@@ -89,9 +88,10 @@
 
 <template>
   <Box
+    exclude
     v-bind="boxProps"
     class="md-block-image"
-    :class="{ loaded: image, 'image-error': error }"
+    :class="{ loaded: image, 'image-error': error, span }"
   >
     <Box class="md-loader">
       <CircularProgress :value="error ? 0 : progress">
@@ -113,17 +113,9 @@
   .md-block-image {
     position: relative;
     overflow: hidden;
-    max-width: 100%;
     width: max-content;
     height: max-content;
     aspect-ratio: v-bind('props.ratio');
-
-    &.span {
-      width: 100%;
-      flex-grow: 1;
-      height: auto;
-      aspect-ratio: unset;
-    }
 
     img {
       display: block;
@@ -140,6 +132,17 @@
       display: grid;
       place-items: center;
       transition: opacity 0.2s ease-out;
+    }
+
+    &.span {
+      width: 100%;
+      flex-grow: 1;
+      height: auto;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
 
     &.image-error {
