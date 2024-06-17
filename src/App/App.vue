@@ -115,7 +115,7 @@
       </div>
 
       <MdBox class="primary" p="100">Box</MdBox>
-      <Text color="red">Hello</Text>
+      <Text color="red" as="h1">Hello</Text>
 
       <div class="flex">
         <SquareImage
@@ -130,8 +130,13 @@
         />
         <SquareImage
           alt="random image"
-          frame="scalloped-square"
+          frame="clover"
           src="https://picsum.photos/[size]?random=3"
+        />
+        <SquareImage
+          alt="random image"
+          frame="hexagon"
+          src="https://picsum.photos/[size]?random=4"
         />
       </div>
 

@@ -46,10 +46,11 @@ export type BoxProps = {
   as?: string | Component
   bg?: AppColorVariants | 'on-bg'
 }
-export function getBoxProps(props: BoxProps): BoxProps
-export function getBoxProps(props: any): BoxProps {
+export function getBoxProps(props: BoxProps, defs?: BoxProps): BoxProps
+export function getBoxProps(props: any, defs: any = {}): BoxProps {
   return boxKeys.reduce((acc, key) => {
     if (props[key]) acc[key] = props[key]
+    if (!props[key] && defs[key]) acc[key] = defs[key]
     return acc
   }, {} as BoxProps)
 }

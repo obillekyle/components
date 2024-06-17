@@ -18,10 +18,7 @@
     textAlign?: 'left' | 'center' | 'right'
   }
 
-  const props = withDefaults(defineProps<TextProps>(), {
-    as: 'span'
-  })
-
+  const props = defineProps<TextProps>()
   const boxProps = computed(() => getBoxProps(props))
 
   defineOptions({
@@ -34,6 +31,7 @@
     exclude
     class="md-text"
     v-bind="boxProps"
+    :as="props.as || 'span'"
     :style="{
       color,
       textAlign,
