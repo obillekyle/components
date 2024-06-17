@@ -14,6 +14,7 @@
     weight?: number
     italic?: boolean
     spacing?: number
+    lineHeight?: number | string
     textAlign?: 'left' | 'center' | 'right'
   }
 
@@ -27,13 +28,14 @@
 
 <template>
   <Box
+    as="p"
     exclude
     class="md-text"
     v-bind="boxProps"
-    as="span"
     :style="{
       color,
       textAlign,
+      lineHeight,
       fontWeight: weight,
       fontStyle: italic ? 'italic' : null,
       fontSize: getCSSValue(size, 'px', 'font'),
