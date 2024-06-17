@@ -1,7 +1,10 @@
 <script setup lang="ts">
-  import { exclude, getCSSValue, type AppSizesString } from '@/utils'
   import type { BoxProps } from '@/components/Box'
-  import { computed, type HTMLAttributes } from 'vue'
+  import type { AppSizesString } from '@/utils/css'
+  import type { HTMLAttributes } from 'vue'
+
+  import { getCSSValue } from '@/utils'
+  import { computed } from 'vue'
   import Box, { getBoxProps } from '@/components/Box'
 
   interface TextProps extends BoxProps, /** @vue-ignore */ HTMLAttributes {
@@ -11,6 +14,7 @@
     weight?: number
     italic?: boolean
     spacing?: number
+    align?: 'left' | 'center' | 'right'
   }
 
   const props = withDefaults(defineProps<TextProps>(), {
@@ -35,6 +39,7 @@
     as="span"
     :style="{
       color,
+      textAlign: align,
       fontWeight: weight,
       fontStyle: italic ? 'italic' : null,
       fontSize: getCSSValue(size, 'px', 'font'),

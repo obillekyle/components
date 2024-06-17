@@ -20,9 +20,7 @@ export default defineConfig({
     }),
     vue(),
     VueDevTools(),
-    attachStyles({
-      cleanIgnore: ['assets']
-    })
+    attachStyles()
   ],
   build: {
     cssMinify: 'lightningcss',
