@@ -2,7 +2,7 @@ import { Plugin, ResolvedConfig, normalizePath } from 'vite'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import fs from 'node:fs'
-import { transform } from 'lightningcss'
+import { transform as transformJS } from 'esbuild'
 
 let packSize = 0
 let fileSize = 0
@@ -61,12 +61,14 @@ function attachStyles({
   let config: ResolvedConfig
   const name: string = 'attach-styles'
 
-  function transformCSS(code: string, key: string) {
-    return transform({
-      code: new Uint8Array(Buffer.from(code)),
-      minify: config.build.cssMinify === 'lightningcss',
-      filename: key
-    }).code.toString()
+  async function transformCSS(code: string) {
+    return (
+      await transformJS(code, {
+        minify: config.build.minify && config.build.minify !== 'terser',
+        minifyWhitespace: true,
+        loader: 'css'
+      })
+    ).code
   }
 
   return {
@@ -75,7 +77,7 @@ function attachStyles({
     configResolved: (_config) => {
       config = _config
     },
-    transform(code, id) {
+    async transform(code, id) {
       const isCSS = (p: string) => /\.(scss|sass|css|styl|stylus|less)$/.test(p)
 
       if (!isCSS(id)) return
@@ -85,7 +87,7 @@ function attachStyles({
         ? normalizePath(entry).replace(/\\/g, '/')
         : 'index'
 
-      const cssString = transformCSS(code, key)
+      const cssString = await transformCSS(code)
       css[key] = css[key] ? `${css[key]}\n${cssString}` : cssString
     },
     renderChunk(code, { name }) {
@@ -113,7 +115,7 @@ function attachStyles({
     async writeBundle() {
       await fs.promises.writeFile(
         path.resolve(__dirname, config.build.outDir, 'attach-styles.js'),
-        script
+        (await transformJS(script, { loader: 'js' })).code
       )
 
       console.log(``)

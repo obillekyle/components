@@ -23,7 +23,7 @@ export default defineConfig({
     attachStyles()
   ],
   build: {
-    cssMinify: 'lightningcss',
+    minify: true,
     copyPublicDir: false,
     cssCodeSplit: true,
 

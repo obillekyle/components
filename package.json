@@ -42,7 +42,6 @@
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
-    "lightningcss": "^1.25.1",
     "npm-run-all2": "^6.1.2",
     "postcss-html": "^1.7.0",
     "prettier": "^3.2.5",
