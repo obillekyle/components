@@ -113,11 +113,12 @@ export function openFilePicker(
   openFilePickerAsync(options).then((file) => callback(file)?.then?.())
 }
 
-export function rippleEffect(e: MouseEvent, to?: string) {
+export function rippleEffect(e: PointerEvent, to?: string) {
   const target = e.currentTarget as HTMLElement
   const element = to ? $(to, target) || target : target
 
   if ('disabled' in element && element.disabled) return
+  if (e.pointerType === 'mouse' && e.button === 2) return
 
   const rect = element.getBoundingClientRect()
   const ripple = document.createElement('span')

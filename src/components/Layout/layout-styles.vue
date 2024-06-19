@@ -12,6 +12,10 @@
   import { inject, onMounted, ref, watch } from 'vue'
   import { addPX, getCSSColor, getCSSValue } from '@/utils/css'
 
+  const props = defineProps<{
+    globalStyle?: boolean
+  }>()
+
   const options = inject<ComputedRef<LayoutOptions>>('options')!
   const tag = inject<string>('layout-id')!
   const styleElem = ref('')
@@ -122,7 +126,7 @@
         value += `  --${key}: ${values[key]};\n`
       }
 
-      styleElem.value = `#${tag} {
+      styleElem.value = `#${props.globalStyle ? 'body' : tag} {
         ${value}
         color: ${getCSSColor(options.value.color)};
         color-scheme: ${options.value.theme};

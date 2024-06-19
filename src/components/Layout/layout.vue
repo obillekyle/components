@@ -14,6 +14,7 @@
   import './style.scss'
 
   interface LayoutProps extends /** @vue-ignore */ HTMLAttributes {
+    globalStyle?: boolean
     options?: PartialDeep<LayoutOptions>
   }
   const props = defineProps<LayoutProps>()

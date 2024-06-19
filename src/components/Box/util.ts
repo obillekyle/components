@@ -1,5 +1,5 @@
 import type { Component } from 'vue'
-import type { AppColorVariants, AppSizesString } from '../../utils/css'
+import type { AppColorVariants, AppSizesString } from '@/utils/css'
 const boxKeys = [
   'px',
   'py',

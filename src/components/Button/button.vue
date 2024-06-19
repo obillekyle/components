@@ -47,6 +47,7 @@
     gap: var(--xs);
     height: var(--size-sm);
     width: max-content;
+    position: relative;
     min-width: var(--size-sm);
     border-radius: var(--radius);
     overflow: hidden;
