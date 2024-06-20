@@ -1,3 +1,5 @@
+import { is } from './object'
+
 export const sizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const
 export const prefixes = [
   'font',
@@ -54,38 +56,48 @@ export const addPX = (value: AppSizesString) => addUnit(value, 'px')
 export function getCSSValue(
   value: AppSizesString,
   unit?: CSSMetricUnits,
-  varType?: AppSizesPrefixes | String
+  type?: AppSizesPrefixes | String
 ): string
 export function getCSSValue(
   value?: AppSizesString,
   unit?: CSSMetricUnits,
-  varType?: AppSizesPrefixes | String
+  type?: AppSizesPrefixes | String
 ): string | undefined
 export function getCSSValue(
   value?: undefined,
   unit?: CSSMetricUnits,
-  varType?: AppSizesPrefixes | String
+  type?: AppSizesPrefixes | String
 ): undefined
 export function getCSSValue(
   value?: AppSizesString,
   unit: CSSMetricUnits = 'px',
-  varType?: AppSizesPrefixes | String
+  type?: AppSizesPrefixes | String
 ): string | undefined {
   if (value === undefined) return
-
   const newValue = typeof value === 'string' ? value.trim() : value
-  if (typeof newValue === 'string' && newValue.includes(' ')) {
-    return newValue
-      .split(' ')
-      .map((v) => getCSSValue(v, unit, varType))
-      .join(' ')
+  if (typeof newValue === 'string') {
+    if (newValue.includes('var')) return newValue
+    if (newValue === 'rounded') return '9999px'
+    if (newValue.includes(' ')) {
+      return newValue
+        .split(' ')
+        .map((v) => getCSSValue(v, unit, type))
+        .join(' ')
+    }
+
+    if (prefixes.includes(newValue as any)) {
+      return `var(--${newValue}-md)`
+    }
+
+    if (prefixes.some((p) => newValue.startsWith(p))) {
+      return `var(--${newValue})`
+    }
   }
 
-  if (sizes.find((size) => newValue === size)) {
-    varType = varType ? varType + '-' : ''
-    return `var(--${varType}${newValue})`
+  if (sizes.some((s) => newValue === s)) {
+    type = type ? type + '-' : ''
+    return `var(--${type}${newValue})`
   }
-  if (newValue === 'rounded') return '9999px'
   return addUnit(newValue, unit)
 }
 
@@ -123,10 +135,8 @@ export type ColorString =
 
 export function getCSSColor(value: AppColorString): string {
   value = value.trim()
-  if (
-    colorVariants.some((v) => value.startsWith(v) || value.startsWith('color'))
-  ) {
-    return colorVariants.some((v) => v === value) || value === 'color'
+  if (colorVariants.some((v) => value.startsWith(v))) {
+    return colorVariants.some((v) => v === value)
       ? `var(--${value}-500)`
       : `var(--${value})`
   }

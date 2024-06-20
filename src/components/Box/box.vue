@@ -20,14 +20,14 @@
     if (props.p) styleObj.padding = getCSSValue(props.p)
     if (props.m) styleObj.margin = getCSSValue(props.m)
     if (props.r) styleObj.borderRadius = getCSSValue(props.r)
-    if (props.px) styleObj.paddingLeft = getCSSValue(props.px)
-    if (props.py) styleObj.paddingTop = getCSSValue(props.py)
+    if (props.px) styleObj.paddingInline = getCSSValue(props.px)
+    if (props.py) styleObj.paddingBlock = getCSSValue(props.py)
     if (props.pt) styleObj.paddingTop = getCSSValue(props.pt)
     if (props.pl) styleObj.paddingLeft = getCSSValue(props.pl)
     if (props.pr) styleObj.paddingRight = getCSSValue(props.pr)
     if (props.pb) styleObj.paddingBottom = getCSSValue(props.pb)
-    if (props.mx) styleObj.marginLeft = getCSSValue(props.mx)
-    if (props.my) styleObj.marginTop = getCSSValue(props.my)
+    if (props.mx) styleObj.marginInline = getCSSValue(props.mx)
+    if (props.my) styleObj.marginBlock = getCSSValue(props.my)
     if (props.mt) styleObj.marginTop = getCSSValue(props.mt)
     if (props.ml) styleObj.marginLeft = getCSSValue(props.ml)
     if (props.mr) styleObj.marginRight = getCSSValue(props.mr)
@@ -50,32 +50,37 @@
   </component>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   [md-box] {
     background-color: var(--bgc);
     color: var(--onbgc);
 
-    [md-box='primary'] {
+    * {
+      --bgc: unset;
+      --onbgc: unset;
+    }
+
+    &[md-box='primary'] {
       --bgc: var(--primary);
       --onbgc: var(--on-primary);
     }
 
-    [md-box='secondary'] {
+    &[md-box='secondary'] {
       --bgc: var(--secondary);
       --onbgc: var(--on-secondary);
     }
 
-    [md-box='error'] {
+    &[md-box='error'] {
       --bgc: var(--error);
       --onbgc: var(--on-error);
     }
 
-    [md-box='mono'] {
+    &[md-box='mono'] {
       --bgc: var(--mono-10);
       --onbgc: var(--mono-80);
     }
 
-    [md-box='on-bg'] {
+    &[md-box='on-bg'] {
       background-color: var(--onbgc);
       color: var(--bgc);
     }
