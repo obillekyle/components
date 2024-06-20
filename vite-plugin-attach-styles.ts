@@ -15,17 +15,20 @@ function attachCSSFile(additionalCSS: string, prefix: string) {
   return `
 function injectCSS(css, hash) {
   const style = 
-    document.querySelector('style#md-' + hash) 
+    document.querySelector('style#${prefix}-' + hash) 
     ?? document.createElement('style');
   
   style.id = '${prefix}-' + hash;
   style.textContent = css;
   document.head.contains(style) || document.head.appendChild(style);
 }
-  
-injectCSS(${JSON.stringify(additionalCSS)}, "global");
 
-export default injectCSS
+const helper = function() {
+  injectCSS(${JSON.stringify(additionalCSS)}, 'global');
+  return injectCSS;
+}
+
+export default helper();
 `
 }
 
