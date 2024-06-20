@@ -8,5 +8,7 @@
 </script>
 
 <template>
-  <Box class="md-flex-span" v-bind="$props" />
+  <Box class="md-flex-span" v-bind="$props">
+    <slot />
+  </Box>
 </template>

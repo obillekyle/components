@@ -1,8 +1,11 @@
 <script setup lang="ts">
-  import { computed, type HTMLAttributes } from 'vue'
+  import type { HTMLAttributes } from 'vue'
   import type { BoxProps } from '@/components/Box'
+  import type { AppSizesString } from '@/utils/css'
 
+  import { getCSSValue } from '@/utils/css'
   import { getBoxProps } from '../util'
+  import { computed } from 'vue'
   import Box from '../box.vue'
 
   interface FlexBoxProps extends BoxProps, /** @vue-ignore */ HTMLAttributes {
@@ -10,6 +13,8 @@
     align?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
     justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
     wrap?: 'wrap' | 'nowrap' | 'wrap-reverse'
+
+    gap?: AppSizesString
   }
 
   const props = defineProps<FlexBoxProps>()
@@ -24,9 +29,11 @@
       flexDirection: props.direction,
       justifyContent: props.justify,
       alignItems: props.align,
-      flexWrap: props.wrap
+      flexWrap: props.wrap,
+      gap: getCSSValue(props.gap)
     }"
   >
+    <slot />
   </Box>
 </template>
 
