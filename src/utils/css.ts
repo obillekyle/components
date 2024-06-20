@@ -1,5 +1,3 @@
-import { is } from './object'
-
 export const sizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const
 export const prefixes = [
   'font',
