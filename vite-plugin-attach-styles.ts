@@ -11,17 +11,23 @@ function generateHash(str: string) {
   return crypto.createHash('md5').update(str).digest('hex').slice(0, 8)
 }
 
-const script = `
-export default function injectCSS(css, hash) {
+function attachCSSFile(additionalCSS: string, prefix: string) {
+  return `
+function injectCSS(css, hash) {
   const style = 
     document.querySelector('style#md-' + hash) 
     ?? document.createElement('style');
   
-  style.id = 'md-' + hash;
+  style.id = '${prefix}-' + hash;
   style.textContent = css;
   document.head.contains(style) || document.head.appendChild(style);
 }
+  
+injectCSS(${JSON.stringify(additionalCSS)}, "global");
+
+export default injectCSS
 `
+}
 
 async function deleteCSSFiles(dir: string, out: string, ignore: string[] = []) {
   try {
@@ -50,11 +56,13 @@ async function deleteCSSFiles(dir: string, out: string, ignore: string[] = []) {
 }
 
 type ASOptions = {
+  prefix?: string
   cleanIgnore?: string[]
   cleanCSS?: boolean
 }
 
 function attachStyles({
+  prefix = 'css',
   cleanIgnore = [],
   cleanCSS = true
 }: ASOptions = {}): Plugin {
@@ -85,7 +93,7 @@ function attachStyles({
       const entry = relative.split('?')[0]
       const key = entry.endsWith('.vue')
         ? normalizePath(entry).replace(/\\/g, '/')
-        : 'index'
+        : 'globalCss'
 
       const cssString = await transformCSS(code)
       css[key] = css[key] ? `${css[key]}\n${cssString}` : cssString
@@ -110,9 +118,22 @@ function attachStyles({
           map: { mappings: '' }
         }
       }
+
+      if (name === 'index') {
+        return {
+          code: `
+            import './attach-styles.js'
+            ${code}
+          `,
+          map: { mappings: '' }
+        }
+      }
     },
 
     async writeBundle() {
+      const unattachedCSS = await transformCSS(Object.values(css).join('\n'))
+      const script = attachCSSFile(unattachedCSS || '', prefix)
+
       await fs.promises.writeFile(
         path.resolve(__dirname, config.build.outDir, 'attach-styles.js'),
         (await transformJS(script, { loader: 'js' })).code

@@ -6,6 +6,7 @@
   interface ScrollerProps extends /* @vue-ignore */ HTMLAttributes {
     speed?: number
     spacing?: number
+    continuous?: boolean
   }
 
   const props = withDefaults(defineProps<ScrollerProps>(), {
@@ -50,7 +51,7 @@
 </script>
 
 <template>
-  <span class="md-scroller" :class="{ cloned }">
+  <span class="md-scroller" :class="{ cloned, continuous }">
     <div class="md-scroller-wrapper" ref="wrapper">
       <div class="md-scroller-content" ref="content">
         <slot />
@@ -88,6 +89,12 @@
         animation: scroll var(--speed) linear infinite;
       }
 
+      &.continuous {
+        .md-scroller-content {
+          animation: scroll-continuous var(--speed) linear infinite;
+        }
+      }
+
       &:hover {
         .md-scroller-content {
           animation-play-state: paused;
@@ -112,6 +119,16 @@
 
       75% {
         transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    @keyframes scroll-continuous {
+      0% {
+        transform: translateX(0);
       }
 
       100% {
