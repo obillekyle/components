@@ -95,17 +95,17 @@ function attachStyles({
       const relative: string = path.relative(path.resolve(__dirname, 'src'), id)
       const entry = relative.split('?')[0]
       const key = entry.endsWith('.vue')
-        ? normalizePath(entry).replace(/\\/g, '/')
+        ? normalizePath(entry).replace(/\\/g, '/') + '.js'
         : 'globalCss'
 
       const cssString = await transformCSS(code)
       css[key] = css[key] ? `${css[key]}\n${cssString}` : cssString
     },
-    renderChunk(code, { name }) {
-      const cssObj = css[name]
+    renderChunk(code, { fileName }) {
+      const cssObj = css[fileName]
 
       if (cssObj) {
-        delete css[name]
+        delete css[fileName]
         const root = normalizePath(
           path.relative(
             path.resolve(__dirname, 'src', path.dirname(name)),
