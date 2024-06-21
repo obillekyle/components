@@ -41,6 +41,7 @@
 
     .md-icon-wrapper {
       display: grid;
+      cursor: pointer;
       place-items: center;
       place-content: center;
       position: relative;

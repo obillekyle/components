@@ -1,7 +1,21 @@
 .md-layout {
   --background-body: var(--primary-5, #111);
   --background-secondary: var(--primary-10, #333);
+  --shadow-1: 0px 1px 2px 0px #0000004d, 0px 1px 3px 1px #00000026;
+  --shadow-2: 0px 1px 2px 0px #0000004d, 0px 2px 6px 2px #00000026;
+  --shadow-3: 0px 1px 3px 0px #0000004d, 0px 3px 8px 3px #00000026;
+  --navbar-size: var(--size-xl);
+  --timing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --header-size: var(--size-md);
+  --xxs: var(--padding-xxs);
+  --xs: var(--padding-xs);
+  --sm: var(--padding-sm);
+  --md: var(--padding-md);
+  --lg: var(--padding-lg);
+  --xl: var(--padding-xl);
+  --xxl: var(--padding-xxl);
 
+  color: var(--primary-99, currentColor);
   position: absolute;
   background: var(--background-body);
   inset: 0;
@@ -9,10 +23,15 @@
   *,
   *::before,
   *::after {
+    outline: 0 solid var(--primary);
     -webkit-tap-highlight-color: transparent;
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+  }
+
+  *:focus-visible {
+    animation: focus 0.25s forwards;
   }
 
   &.light {
@@ -35,7 +54,7 @@
   }
 
   &:has(.md-header) {
-    .md-layout-content > .md-scroll > .md-scroll-wrapper {
+    > .md-layout-content > .md-scroll > .md-scroll-wrapper {
       padding-top: var(--header-size);
 
       .md-master-switch {
@@ -43,30 +62,6 @@
       }
     }
   }
-
-  * {
-    outline: 0 solid var(--primary);
-  }
-
-  *:focus-visible {
-    animation: focus 0.25s forwards;
-  }
-
-  color: var(--primary-99, currentColor);
-
-  --shadow-1: 0px 1px 2px 0px #0000004d, 0px 1px 3px 1px #00000026;
-  --shadow-2: 0px 1px 2px 0px #0000004d, 0px 2px 6px 2px #00000026;
-  --shadow-3: 0px 1px 3px 0px #0000004d, 0px 3px 8px 3px #00000026;
-  --navigation-size: var(--size-xl);
-  --timing-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --header-size: var(--size-md);
-  --xxs: var(--padding-xxs);
-  --xs: var(--padding-xs);
-  --sm: var(--padding-sm);
-  --md: var(--padding-md);
-  --lg: var(--padding-lg);
-  --xl: var(--padding-xl);
-  --xxl: var(--padding-xxl);
 
   @media (width <= 600px) {
     .md-header {
@@ -79,22 +74,22 @@
 
     &:has(.md-navbar) {
       .md-layout-content {
-        bottom: var(--navigation-size);
+        bottom: var(--navbar-size);
       }
     }
   }
+}
 
-  @keyframes focus {
-    0% {
-      outline-width: 0;
-    }
+@keyframes focus {
+  0% {
+    outline-width: 0;
+  }
 
-    70% {
-      outline-width: 6px;
-    }
+  70% {
+    outline-width: 6px;
+  }
 
-    100% {
-      outline-width: 2px;
-    }
+  100% {
+    outline-width: 2px;
   }
 }

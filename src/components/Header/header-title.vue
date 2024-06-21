@@ -27,12 +27,14 @@
     position: relative;
     font-size: var(--size-sm);
     font-weight: 500;
-    transition: all 0.2s var(--timing-standard);
     opacity: 0;
     z-index: 200;
     transform: translateY(-20%);
     margin-top: calc(var(--padding-md) * -1);
     margin-bottom: var(--md);
+    transition:
+      opacity 0.2s var(--timing-standard),
+      transform 0.2s var(--timing-standard);
 
     &.on-top {
       transform: translateY(0);

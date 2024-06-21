@@ -44,7 +44,7 @@
       progress.value = Infinity
       const url = props.src.replace(/\[size\]/g, props.size.toString())
       const xhr = new XMLHttpRequest()
-      xhr.responseType = 'blob'
+      xhr.responseType = 'arraybuffer'
       xhr.open('GET', url)
       xhr.onprogress = (e) => {
         progress.value = !e.total
@@ -53,7 +53,8 @@
       }
       xhr.send()
       data = await new Promise((resolve) => {
-        xhr.onload = () => resolve(xhr.response)
+        xhr.onload = () =>
+          resolve(new Blob([xhr.response || ''], { type: 'image/webp' }))
         xhr.onerror = () => resolve(undefined)
       })
 

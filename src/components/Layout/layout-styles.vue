@@ -38,7 +38,7 @@
         if (shade == 50) {
           const color = colors.shade(55)
           values[prefix] = color.hex()
-          values['on-' + prefix] = colors.shade(color.isDark() ? 85 : 15).hex()
+          values['on-' + prefix] = colors.shade(color.isDark() ? 90 : 10).hex()
         }
 
         if (shade == 60) {
@@ -63,7 +63,7 @@
         if (shade == 50) {
           const color = colors.shade(50, 1, 'light')
           values[prefix] = color.hex()
-          values['on-' + prefix] = colors.shade(color.isDark() ? 85 : 15).hex()
+          values['on-' + prefix] = colors.shade(color.isDark() ? 90 : 10).hex()
         }
 
         if (shade == 40) {
@@ -123,26 +123,10 @@
       }
 
       for (const key in values) {
-        value += `  --${key}: ${values[key]};\n`
+        value += `--${key}: ${values[key]};`
       }
 
-      styleElem.value = `#${props.globalStyle ? 'body' : tag} {
-        ${value}
-        color: ${getCSSColor(options.value.color)};
-        color-scheme: ${options.value.theme};
-        font-family: ${options.value.fontFamily},
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          'Segoe UI',
-          Roboto,
-          Oxygen,
-          Ubuntu,
-          Cantarell,
-          'Open Sans',
-          'Helvetica Neue',
-          sans-serif;
-      }`
+      styleElem.value = `#${props.globalStyle ? 'body' : tag} { ${value} color:${getCSSColor(options.value.color)};  color-scheme:${options.value.theme}; font-family: ${options.value.fontFamily},Roboto,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif; ${value} }`
     })
   }
 

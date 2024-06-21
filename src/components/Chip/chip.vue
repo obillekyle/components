@@ -56,8 +56,10 @@
     padding-inline: var(--sm);
     box-shadow: var(--shadow-1);
     transition:
+      color 0.2s,
+      background-color 0.2s,
       filter 0.2s,
-      background-color 0.2s;
+      box-shadow 0.2s;
 
     &:hover {
       filter: brightness(1.2);

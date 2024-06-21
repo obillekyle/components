@@ -58,7 +58,11 @@
     background: var(--primary);
     padding-inline: var(--sm);
     box-shadow: var(--shadow-2);
-    transition: all 0.2s;
+    transition:
+      color 0.2s,
+      background-color 0.2s,
+      filter 0.2s,
+      box-shadow 0.2s;
 
     &:not(:disabled) {
       cursor: pointer;

@@ -95,6 +95,16 @@
       circle2Elem.style.rotate = circle2StrokeRotate.value
     }
 
+    if (
+      circleElem.classList.contains('animate') ||
+      circle2Elem?.classList.contains('animate')
+    ) {
+      setTimeout(() => {
+        circleElem.classList.toggle('animate', true)
+        circle2Elem?.classList.toggle('animate', true)
+      })
+    }
+
     circleElem.style.setProperty(
       '--md-progress-spinner-start-value',
       String(0.99 * circleCircumference.value)
@@ -108,7 +118,6 @@
   defineOptions({
     name: 'MDCircularProgress'
   })
-
 
   watch(props, () => attachStyles())
   onMounted(() => attachStyles())
@@ -304,12 +313,15 @@
     .md-progress-spinner-bg {
       fill: none;
       transform-origin: center;
-      stroke-linecap: square;
-      transition:
-        stroke-dashoffset 0.25s var(--timing-standard),
-        rotate 0.25s var(--timing-standard);
+      stroke-linecap: butt;
       will-change: stroke-dashoffset, stroke-dasharray, stroke-width,
         animation-name, r;
+
+      &.animate {
+        transition:
+          stroke-dashoffset 0.25s var(--timing-standard),
+          rotate 0.25s var(--timing-standard);
+      }
     }
 
     .md-progress-spinner-circle {
@@ -323,7 +335,7 @@
     &.md3 {
       .md-progress-spinner-circle,
       .md-progress-spinner-bg {
-        stroke-linecap: round;
+        stroke-linecap: round !important;
       }
     }
 
@@ -336,6 +348,7 @@
 
     &.md-infinite {
       .md-progress-spinner-circle {
+        stroke-linecap: square;
         animation: 7s infinite var(--timing-standard) !important;
         animation-name: md-progress-spinner-stroke-rotate !important;
       }
