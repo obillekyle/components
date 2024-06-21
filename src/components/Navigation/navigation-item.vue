@@ -7,7 +7,8 @@
   import { inject, onMounted, onUnmounted, ref, watch } from 'vue'
   import { $ } from '@/utils/dom'
 
-  interface NavigationItemProps extends /** @vue-ignore */ ButtonHTMLAttributes {
+  interface NavigationItemProps
+    extends /** @vue-ignore */ ButtonHTMLAttributes {
     name?: string
     icon: string
     value?: number

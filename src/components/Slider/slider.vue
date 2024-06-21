@@ -1,7 +1,14 @@
 <script setup lang="ts">
   import { evaluate } from '@/utils/object'
   import { clamp, findNearestNumber, mapNumberToRange } from '@/utils/number'
-  import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+  import {
+    computed,
+    onBeforeMount,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    watch
+  } from 'vue'
 
   const props = withDefaults(
     defineProps<{
@@ -29,7 +36,9 @@
 
   const minVal = computed(() => {
     if (props.values) {
-      const array = props.values.map((value) => (typeof value === 'object' ? value.value : value))
+      const array = props.values.map((value) =>
+        typeof value === 'object' ? value.value : value
+      )
       return Math.min(...array)
     }
     return props.min
@@ -47,7 +56,9 @@
 
   const maxVal = computed(() => {
     if (props.values) {
-      const array = props.values.map((value) => (typeof value === 'object' ? value.value : value))
+      const array = props.values.map((value) =>
+        typeof value === 'object' ? value.value : value
+      )
       return Math.max(...array)
     }
     return props.max
@@ -61,7 +72,9 @@
 
   function getLabel(value: number) {
     if (props.values) {
-      const index = props.values.find((v) => typeof v === 'object' && v.value === value)
+      const index = props.values.find(
+        (v) => typeof v === 'object' && v.value === value
+      )
       return typeof index === 'number' ? index : index?.label || value
     }
 
@@ -98,7 +111,8 @@
     }
 
     const value = (offset / rect.width) * maxOffset
-    const rounded = Math.round(value * 10 ** props.decimal) / 10 ** props.decimal
+    const rounded =
+      Math.round(value * 10 ** props.decimal) / 10 ** props.decimal
     model.value = Math.max(rounded + minVal.value, minVal.value)
   }
 
@@ -107,7 +121,10 @@
   }
 
   onBeforeMount(() => {
-    model.value ??= Math.max(Math.min(props.defaultValue ?? 0, maxVal.value), minVal.value)
+    model.value ??= Math.max(
+      Math.min(props.defaultValue ?? 0, maxVal.value),
+      minVal.value
+    )
   })
 
   function getPosition(value: number) {
@@ -184,8 +201,17 @@
     <div class="slider-value" v-if="props.showValue">
       {{ model }}
     </div>
-    <div ref="wrapper" class="slider-wrapper" :style="{ '--thumb-offset': thumbPos }">
-      <div class="slider-thumb" :data-value="getLabel(model!)" :dragging @touchstart="dragDown" />
+    <div
+      ref="wrapper"
+      class="slider-wrapper"
+      :style="{ '--thumb-offset': thumbPos }"
+    >
+      <div
+        class="slider-thumb"
+        :data-value="getLabel(model!)"
+        :dragging
+        @touchstart="dragDown"
+      />
       <input type="range" :min="minVal" :max="maxVal" v-model="model" />
       <div class="slider-track" />
       <div class="slider-labels" v-if="props.values">

@@ -3,7 +3,8 @@
 
   import { Icon } from '@iconify/vue'
 
-  interface NavigationItemProps extends /** @vue-ignore */ ButtonHTMLAttributes {
+  interface NavigationItemProps
+    extends /** @vue-ignore */ ButtonHTMLAttributes {
     name?: string
     icon: string
   }

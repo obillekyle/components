@@ -10,7 +10,10 @@ type ThrottlerOptions = {
 
 const throttlerStore: ThrottlerStore = {}
 
-export function throttler(callback: () => any, options: ThrottlerOptions): void {
+export function throttler(
+  callback: () => any,
+  options: ThrottlerOptions
+): void {
   const key = options.key
   const wait = options.wait ?? 1000
   const ignore = options.ignore ?? false

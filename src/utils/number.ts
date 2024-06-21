@@ -1,13 +1,13 @@
-let idIncrement = 0;
+let idIncrement = 0
 
-export function getUnique(prefix: string): string;
-export function getUnique(): number;
+export function getUnique(prefix: string): string
+export function getUnique(): number
 export function getUnique(prefix?: string) {
-  return prefix ? `${prefix}${idIncrement++}` : idIncrement++;
+  return prefix ? `${prefix}${idIncrement++}` : idIncrement++
 }
 
 export function rand(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 export function inRange(
@@ -16,8 +16,8 @@ export function inRange(
   max: number,
   excludeLimit = false
 ) {
-  if (excludeLimit) return value > min && value < max;
-  return value >= min && value <= max;
+  if (excludeLimit) return value > min && value < max
+  return value >= min && value <= max
 }
 
 export function mapNumberToRange(
@@ -27,48 +27,48 @@ export function mapNumberToRange(
   newMin: number,
   newMax: number
 ): number {
-  return ((number - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin;
+  return ((number - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin
 }
 
 export function findNearestNumber(
   target: number,
   numberSet: number[]
 ): number | null {
-  let nearestNumber: number | null = null;
-  let minDifference: number = Number.POSITIVE_INFINITY;
+  let nearestNumber: number | null = null
+  let minDifference: number = Number.POSITIVE_INFINITY
 
   for (const num of numberSet) {
-    const difference = Math.abs(target - num);
+    const difference = Math.abs(target - num)
     if (difference < minDifference) {
-      minDifference = difference;
-      nearestNumber = num;
+      minDifference = difference
+      nearestNumber = num
     }
   }
 
-  return nearestNumber;
+  return nearestNumber
 }
 
 export function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
+  return Math.max(min, Math.min(max, value))
 }
 
 /** @deprecated */
-export const minMax = clamp;
+export const minMax = clamp
 
 export function toFileSize(value: number, type: 'bit' | 'byte'): string {
-  const units = ['b', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb', 'zb', 'yb'];
-  const divider = type === 'byte' ? 1024 : 1000;
+  const units = ['b', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb', 'zb', 'yb']
+  const divider = type === 'byte' ? 1024 : 1000
 
-  let unitIndex = 0;
+  let unitIndex = 0
   while (value >= divider) {
-    value /= divider;
-    unitIndex++;
+    value /= divider
+    unitIndex++
   }
 
   const unit =
-    type == 'byte' ? units[unitIndex].toUpperCase() : units[unitIndex];
-  return `${value.toFixed(0)} ${unit}`;
+    type == 'byte' ? units[unitIndex].toUpperCase() : units[unitIndex]
+  return `${value.toFixed(0)} ${unit}`
 }
 
-toFileSize.bytes = (value: number) => toFileSize(value, 'byte');
-toFileSize.bits = (value: number) => toFileSize(value, 'bit');
+toFileSize.bytes = (value: number) => toFileSize(value, 'byte')
+toFileSize.bits = (value: number) => toFileSize(value, 'bit')

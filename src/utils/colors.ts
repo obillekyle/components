@@ -24,7 +24,9 @@ export class Colors extends CustomEventHandler<ColorEvents> {
     const [h, s] = this.main.hsv().array()
     const color = Color({ h, s, l: shade, alpha })
 
-    return theme == 'light' ? color : color.desaturate(Math.abs(50 - shade) / 50)
+    return theme == 'light'
+      ? color
+      : color.desaturate(Math.abs(50 - shade) / 50)
   }
 }
 

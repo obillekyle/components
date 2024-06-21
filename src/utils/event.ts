@@ -11,7 +11,9 @@ export class CustomEventHandler<Events extends EventType = {}> {
 
   addEventListener<EK extends keyof Events | String>(
     type: EK,
-    callback: EK extends keyof Events ? CustomEventCallback<Events[EK]> : () => any
+    callback: EK extends keyof Events
+      ? CustomEventCallback<Events[EK]>
+      : () => any
   ): void
   addEventListener(type: string, callback: () => any): void {
     this.events[type.toString()] = this.events[type] ?? []
@@ -32,7 +34,9 @@ export class CustomEventHandler<Events extends EventType = {}> {
 
   removeEventListener<EK extends keyof Events | String>(
     type: EK,
-    callback: EK extends keyof Events ? CustomEventCallback<Events[EK]> : () => any
+    callback: EK extends keyof Events
+      ? CustomEventCallback<Events[EK]>
+      : () => any
   ): void
   removeEventListener(type: string, callback: () => any): void {
     if (!this.events[type]) return

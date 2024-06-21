@@ -1,7 +1,6 @@
 {
   "name": "@okyle/components",
-  "version": "1.0.0a",
-  "private": true,
+  "version": "0.1.0a",
   "type": "module",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,10 +16,17 @@
   ],
   "scripts": {
     "dev": "vite",
-    "types": "vue-tsc ",
+    "check:types": "vue-tsc --noEmit",
+    "check:format": "prettier --check src/",
+    "check:stylelint": "stylelint src/**/*.{vue,css,scss}",
+    "check:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
+    "check": "run-s check:format check:stylelint check:eslint",
+    "format:prettier": "prettier --write src/",
+    "format:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "format:stylelint": "stylelint src/**/*.{vue,css,scss} --fix",
+    "format": "run-s format:prettier format:eslint format:stylelint",
     "build": "vue-tsc --build --force && vite build",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/",
+    "prepare": "husky",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -38,6 +44,8 @@
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
     "npm-run-all2": "^6.1.2",
     "postcss-html": "^1.7.0",
     "prettier": "^3.2.5",

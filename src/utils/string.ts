@@ -30,7 +30,11 @@ export function insertAt(text: string, index: number, value: string) {
   return text.slice(0, index) + value + text.slice(index)
 }
 
-export function replaceRange(text: string, [start, end]: [number, number], value: string) {
+export function replaceRange(
+  text: string,
+  [start, end]: [number, number],
+  value: string
+) {
   return text.slice(0, start) + value + text.slice(end)
 }
 
@@ -84,7 +88,9 @@ export class MutableString extends String {
   }
 
   replaceRange([start, end]: [number, number], replace: string) {
-    return new MutableString(replaceRange(this.toString(), [start, end], replace))
+    return new MutableString(
+      replaceRange(this.toString(), [start, end], replace)
+    )
   }
 
   insert(index: number, replace: string) {
@@ -106,7 +112,8 @@ export class MutableString extends String {
 
 function toRegularString(parts: TemplateString[0], ...args: any[]): string {
   return parts.reduce(
-    (result, part, i) => result + part + (args[i] ? String(evaluate(args[i])) : ''),
+    (result, part, i) =>
+      result + part + (args[i] ? String(evaluate(args[i])) : ''),
     ''
   )
 }
