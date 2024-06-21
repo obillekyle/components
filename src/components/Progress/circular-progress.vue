@@ -96,8 +96,8 @@
     }
 
     if (
-      circleElem.classList.contains('animate') ||
-      circle2Elem?.classList.contains('animate')
+      !circleElem.classList.contains('animate') ||
+      !circle2Elem?.classList.contains('animate')
     ) {
       setTimeout(() => {
         circleElem.classList.toggle('animate', true)
