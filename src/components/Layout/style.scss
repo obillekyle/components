@@ -1,4 +1,11 @@
 .md-layout {
+  --background-body: var(--primary-5, #111);
+  --background-secondary: var(--primary-10, #333);
+
+  position: absolute;
+  background: var(--background-body);
+  inset: 0;
+
   *,
   *::before,
   *::after {
@@ -6,6 +13,35 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+  }
+
+  &.light {
+    --background-body: var(--primary-1, #fff);
+  }
+
+  .md-layout-content {
+    position: absolute;
+    inset: 0;
+  }
+
+  &:has(.md-navbar) {
+    .md-layout-content {
+      left: var(--navbar-size);
+    }
+
+    .md-header {
+      left: var(--navbar-size);
+    }
+  }
+
+  &:has(.md-header) {
+    .md-layout-content > .md-scroll > .md-scroll-wrapper {
+      padding-top: var(--header-size);
+
+      .md-master-switch {
+        top: calc(var(--header-size) + var(--sm)) !important;
+      }
+    }
   }
 
   * {
