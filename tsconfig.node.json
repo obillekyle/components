@@ -6,7 +6,7 @@
     "cypress.config.*",
     "nightwatch.conf.*",
     "playwright.config.*",
-    "vite-plugin-attach-styles.ts"
+    "vite-plugin-vue-attach-styles.ts"
   ],
   "compilerOptions": {
     "composite": true,

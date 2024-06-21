@@ -1,8 +1,8 @@
-import { Plugin, ResolvedConfig, normalizePath } from 'vite'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import fs from 'node:fs'
-import { transform as transformJS } from 'esbuild'
+import { transform } from 'esbuild'
+import { Plugin, ResolvedConfig, normalizePath } from 'vite'
 
 let packSize = 0
 let fileSize = 0
@@ -13,23 +13,23 @@ function generateHash(str: string) {
 
 function attachCSSFile(additionalCSS: string, prefix: string) {
   return `
-function injectCSS(css, hash) {
-  const style = 
-    document.querySelector('style#${prefix}-' + hash) 
-    ?? document.createElement('style');
-  
-  style.id = '${prefix}-' + hash;
-  style.textContent = css;
-  document.head.contains(style) || document.head.appendChild(style);
-}
+    function injectCSS(css, hash) {
+      const style = 
+        document.querySelector('style#${prefix}-' + hash) 
+        ?? document.createElement('style');
+      
+      style.id = '${prefix}-' + hash;
+      style.textContent = css;
+      document.head.contains(style) || document.head.appendChild(style);
+    }
 
-const helper = function() {
-  injectCSS(${JSON.stringify(additionalCSS)}, 'global');
-  return injectCSS;
-}
+    const helper = function() {
+      injectCSS(${JSON.stringify(additionalCSS)}, 'global');
+      return injectCSS;
+    }
 
-export default helper();
-`
+    export default helper();
+  `
 }
 
 async function deleteCSSFiles(dir: string, out: string, ignore: string[] = []) {
@@ -74,7 +74,7 @@ function attachStyles({
 
   async function transformCSS(code: string) {
     return (
-      await transformJS(code, {
+      await transform(code, {
         minify: config.build.minify && config.build.minify !== 'terser',
         minifyWhitespace: true,
         loader: 'css'
@@ -139,7 +139,7 @@ function attachStyles({
 
       await fs.promises.writeFile(
         path.resolve(__dirname, config.build.outDir, 'attach-styles.js'),
-        (await transformJS(script, { loader: 'js' })).code
+        (await transform(script, { loader: 'js' })).code
       )
 
       console.log(``)
