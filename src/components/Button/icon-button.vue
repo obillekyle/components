@@ -30,7 +30,7 @@
   </button>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-icon-button {
     display: block;
     background: none;
@@ -56,21 +56,21 @@
       }
     }
 
-    &:disabled .icon-wrapper {
-      color: var(--mono-50);
-      pointer-events: none;
-    }
-
-    &:hover:not(:disabled) .icon-wrapper {
-      background-color: var(--primary-60-20);
-      cursor: pointer;
-    }
-
     &:focus-visible {
       .md-icon-wrapper {
         outline: 2px dashed var(--primary-60);
         background-color: var(--primary-60-20);
       }
+    }
+
+    &:disabled .md-icon-wrapper {
+      color: var(--mono-50);
+      pointer-events: none;
+    }
+
+    &:hover:not(:disabled) .md-icon-wrapper {
+      background-color: var(--primary-60-20);
+      cursor: pointer;
     }
   }
 </style>
