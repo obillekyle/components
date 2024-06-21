@@ -8,14 +8,12 @@
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/components/*/index.js",
+    "./*/*.vue": "./dist/components/*/*.vue.js",
     "./utils": "./dist/utils/index.js",
     "./utils/*": "./dist/utils/*.js"
   },
   "files": [
     "dist"
-  ],
-  "sideEffects": [
-    "**/*.css"
   ],
   "scripts": {
     "dev": "vite",
