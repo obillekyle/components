@@ -67,13 +67,13 @@
   .md-scroller {
     display: grid;
     overflow: hidden;
+    margin-left: calc(-1 * var(--md));
 
     .md-scroller-wrapper {
       height: 100%;
       position: relative;
       display: flex;
       padding-left: var(--md);
-      margin-left: calc(-1 * var(--md));
       overflow: hidden;
     }
 

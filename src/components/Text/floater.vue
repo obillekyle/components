@@ -1,10 +1,5 @@
 <script setup lang="ts">
-  import {
-    type AppColorString,
-    getCSSColor,
-    getCSSValue,
-    type AppSizesString
-  } from '@/utils/css'
+  import { getCSSColor, getCSSValue, type AppSizesString } from '@/utils/css'
   import type { Component } from 'vue'
 
   type Positions =
@@ -20,7 +15,7 @@
 
   interface FloaterProps {
     text?: Component | string
-    color?: AppColorString
+    color?: string
     offset?: AppSizesString
     size?: AppSizesString
     pos?: Positions
@@ -31,8 +26,7 @@
   })
 
   withDefaults(defineProps<FloaterProps>(), {
-    // @ts-ignore
-    color: () => 'color-200',
+    color: 'primary-200',
     offset: 0,
     size: 'xxs',
     pos: 'top-right'
@@ -40,9 +34,9 @@
 </script>
 
 <template>
-  <div class="floater">
+  <div class="md-floater">
     <div
-      class="floater-text"
+      class="md-floater-text"
       :class="pos"
       :style="{
         '--offset': getCSSValue(offset),
@@ -57,13 +51,13 @@
   </div>
 </template>
 
-<style lang="scss">
-  .floater {
+<style lang="scss" scoped>
+  .md-floater {
     position: relative;
     width: max-content;
     height: max-content;
 
-    .floater-text {
+    .md-floater-text {
       display: flex;
       position: absolute;
       align-items: center;
