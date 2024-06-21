@@ -101,7 +101,7 @@ function attachStyles({
       const cssString = await transformCSS(code)
       css[key] = css[key] ? `${css[key]}\n${cssString}` : cssString
     },
-    renderChunk(code, { fileName }) {
+    renderChunk(code, { name, fileName }) {
       const cssObj = css[fileName]
 
       if (cssObj) {
