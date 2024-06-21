@@ -73,6 +73,7 @@
       position: relative;
       display: flex;
       padding-left: var(--md);
+      margin-left: calc(-1 * var(--md));
       overflow: hidden;
     }
 
@@ -117,8 +118,8 @@
         transform: translateX(0);
       }
 
-      75% {
-        transform: translateX(-100%);
+      25% {
+        transform: translateX(0);
       }
 
       100% {

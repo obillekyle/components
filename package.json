@@ -8,7 +8,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/components/*/index.js",
-    "./*/*.vue": "./dist/components/*/*.vue.js",
+    "./*.vue": "./dist/components/*.vue.js",
     "./utils": "./dist/utils/index.js",
     "./utils/*": "./dist/utils/*.js"
   },
