@@ -102,7 +102,10 @@ export function attachStyles({
 
       for (const styleImport of styleImports) {
         const file = path.parse(entry)
-        const id = normalize(path.join(file.dir, file.name))
+        const id =
+          file.ext === '.vue'
+            ? entry
+            : normalize(path.join(file.dir, file.name))
 
         const map = importedMap[id]
 
@@ -174,6 +177,9 @@ export function attachStyles({
       console.log(``)
       logger.log(`Created attach-styles.js`)
       logger.log(`Injecting CSS...\n`)
+
+      console.log(Object.keys(css))
+      console.log(importedMap)
 
       if (cleanCSS) {
         const outDir = config.build.outDir
