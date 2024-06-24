@@ -171,11 +171,3 @@ export function isInputFocused(): boolean {
     document.activeElement instanceof HTMLTextAreaElement
   )
 }
-
-export function injectCSS(css: string, id: string) {
-  const style: HTMLStyleElement =
-    $('style#' + id) ?? document.createElement('style')
-  style.id = id
-  style.textContent = css
-  document.head.contains(style) || document.head.appendChild(style)
-}

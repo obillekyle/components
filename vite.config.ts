@@ -4,7 +4,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { version } from './package.json'
-import attachStyles from './vite-plugin-vue-attach-styles'
+import { attachStyles } from './plugins'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,7 +16,7 @@ export default defineConfig({
       pathsToAliases: false,
       tsconfigPath: 'tsconfig.app.json',
       strictOutput: true,
-      exclude: ['src/**/__tests__/*', 'src/main.ts']
+      exclude: ['src/**/__tests__/*', 'src/main.ts', 'plugins/**/*']
     }),
     vue(),
     VueDevTools(),

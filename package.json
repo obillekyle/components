@@ -17,11 +17,11 @@
   "scripts": {
     "dev": "vite",
     "check:types": "vue-tsc --noEmit",
-    "check:format": "prettier --check src/",
+    "check:format": "prettier --check . --ignore-path .gitignore",
     "check:stylelint": "stylelint src/**/*.{vue,css,scss}",
     "check:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
     "check": "run-s check:format check:stylelint check:eslint",
-    "format:prettier": "prettier --write src/",
+    "format:prettier": "prettier --write . --ignore-path .gitignore",
     "format:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format:stylelint": "stylelint src/**/*.{vue,css,scss} --fix",
     "format": "run-s format:prettier format:eslint format:stylelint",
