@@ -61,18 +61,19 @@
 
 <template>
   <div class="md-layout" :class="[options.theme]" :id="id">
-    <LayoutStyles />
-    <slot name="navbar" />
-    <slot name="sidebar" />
-    <slot name="header" />
-    <div class="md-layout-content">
-      <slot name="fab" />
-      <ScrollContainer
-        as="main"
-        :scroll-change="({ y }) => (contentScrollTop = y)"
-      >
-        <slot />
-      </ScrollContainer>
-    </div>
+    <LayoutStyles>
+      <slot name="navbar" />
+      <slot name="sidebar" />
+      <slot name="header" />
+      <div class="md-layout-content">
+        <slot name="fab" />
+        <ScrollContainer
+          as="main"
+          :scroll-change="({ y }) => (contentScrollTop = y)"
+        >
+          <slot />
+        </ScrollContainer>
+      </div>
+    </LayoutStyles>
   </div>
 </template>

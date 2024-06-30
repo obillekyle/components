@@ -138,4 +138,5 @@
   <component v-bind:is="'style'" :data-for="tag">
     {{ styleElem }}
   </component>
+  <slot v-if="styleElem" />
 </template>
