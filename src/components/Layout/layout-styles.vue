@@ -9,7 +9,7 @@
 
   import ColorsObj, { Colors } from '@/utils/colors'
   import { AppShades } from './util'
-  import { inject, onMounted, ref, watch } from 'vue'
+  import { inject, onBeforeMount, ref, watch } from 'vue'
   import { addPX, getCSSColor, getCSSValue } from '@/utils/css'
 
   const props = defineProps<{
@@ -130,7 +130,7 @@
     })
   }
 
-  onMounted(setStyle)
+  onBeforeMount(setStyle)
   watch(options, setStyle)
 </script>
 
