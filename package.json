@@ -1,6 +1,7 @@
 {
   "name": "@okyle/components",
-  "version": "0.1.0a",
+  "version": "1.0.0a",
+  "private": false,
   "type": "module",
   "license": "MIT",
   "module": "./dist/index.js",
@@ -11,6 +12,13 @@
     "./*.vue": "./dist/components/*.vue.js",
     "./utils": "./dist/utils/index.js",
     "./utils/*": "./dist/utils/*.js"
+  },
+  "bugs": {
+    "url": "https://github.com/obillekyle/components/issues"
+  },
+  "homepage": "https://github.com/obillekyle/components#readme",
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "dist"

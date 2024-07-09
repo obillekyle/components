@@ -15,26 +15,28 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ## Screenshots
 
-![Components in Light Mode](public/assets/preview-light.png)
-![Components in Dark Mode](public/assets/preview-dark.png)
+<<<<<<<<<<<<<< ✨ Codeium Command 🌟 >>>>>>>>>>>>>>>> +![Components in Light Mode](https://raw.githubusercontent.com/obillekyle/components/main/public/assets/preview-light.png) -![Components in Light Mode](public/assets/preview-light.png)
+<<<<<<< e41e064a-c8c1-4ba1-b3bc-163ea14a5ccd >>>>>>>
+<<<<<<<<<<<<<< ✨ Codeium Command 🌟 >>>>>>>>>>>>>>>> +![Components in Dark Mode](https://raw.githubusercontent.com/obillekyle/components/main/public/assets/preview-dark.png) -![Components in Dark Mode](public/assets/preview-dark.png)
+<<<<<<< ef959ade-ec38-4ff6-9e9c-8f62f7d823f3 >>>>>>>
 
 ## Components
 
-- [Box](/src/components/Box)
-- [Button](/src/components/Button)
-- [Chip](/src/components/Chip)
-- [Switch](/src/components/Switch)
-- [Slider](/src/components/Slider)
-- [Select](/src/components/Select)
-- [Image](/src/components/Image)
-- [Input](/src/components/Input)
-- [List](/src/components/List)
-- [Text](/src/components/Text)
-- [Divider](/src/components/Divider)
-- [Progress](/src/components/Progress)
-- [Navigation](/src/components/Navigation)
-- [Header](/src/components/Header)
-- [Layout](/src/components/Layout)
+- [Box](https://github.com/obillekyle/components/tree/main/src/components/Box)
+- [Button](https://github.com/obillekyle/components/tree/main/src/components/Button)
+- [Chip](https://github.com/obillekyle/components/tree/main/src/components/Chip)
+- [Switch](https://github.com/obillekyle/components/tree/main/src/components/Switch)
+- [Slider](https://github.com/obillekyle/components/tree/main/src/components/Slider)
+- [Select](https://github.com/obillekyle/components/tree/main/src/components/Select)
+- [Image](https://github.com/obillekyle/components/tree/main/src/components/Image)
+- [Input](https://github.com/obillekyle/components/tree/main/src/components/Input)
+- [List](https://github.com/obillekyle/components/tree/main/src/components/List)
+- [Text](https://github.com/obillekyle/components/tree/main/src/components/Text)
+- [Divider](https://github.com/obillekyle/components/tree/main/src/components/Divider)
+- [Progress](https://github.com/obillekyle/components/tree/main/src/components/Progress)
+- [Navigation](https://github.com/obillekyle/components/tree/main/src/components/Navigation)
+- [Header](https://github.com/obillekyle/components/tree/main/src/components/Header)
+- [Layout](https://github.com/obillekyle/components/tree/main/src/components/Layout)
 
 ## Docs
 
