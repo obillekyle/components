@@ -2,6 +2,7 @@
   "name": "@okyle/components",
   "version": "0.1.0a",
   "type": "module",
+  "license": "MIT",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

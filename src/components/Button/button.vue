@@ -45,10 +45,10 @@
     align-items: center;
     justify-content: center;
     gap: var(--xs);
-    height: var(--size-sm);
+    height: var(--component-md);
     width: max-content;
     position: relative;
-    min-width: var(--size-sm);
+    min-width: var(--component-md);
     border-radius: var(--radius);
     overflow: hidden;
     border: none;

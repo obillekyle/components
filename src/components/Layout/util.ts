@@ -27,13 +27,13 @@ export const DefaultSizes: AppSizesObject = {
     xxl: 28
   },
   component: {
-    xxs: 8,
-    xs: 16,
-    sm: 24,
-    md: 32,
-    lg: 40,
-    xl: 48,
-    xxl: 56
+    xxs: 24,
+    xs: 32,
+    sm: 40,
+    md: 48,
+    lg: 56,
+    xl: 64,
+    xxl: 72
   },
   size: {
     xxs: 24,

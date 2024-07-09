@@ -19,6 +19,7 @@
 <template>
   <button
     class="md-fab"
+    tabindex="0"
     :class="{ 'on-top': scrollTop < 6 }"
     @pointerdown="rippleEffect"
     @keydown="keyboardClick"

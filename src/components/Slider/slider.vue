@@ -192,33 +192,33 @@
 <template>
   <div
     tabindex="0"
-    class="slider"
+    class="md-slider"
     :class="{ md3: useMD3 }"
     @keydown="handleKeydown"
     @mousedown="dragDown"
     @dblclick="dragMove"
   >
-    <div class="slider-value" v-if="props.showValue">
+    <div class="md-slider-value" v-if="props.showValue">
       {{ model }}
     </div>
     <div
       ref="wrapper"
-      class="slider-wrapper"
+      class="md-slider-wrapper"
       :style="{ '--thumb-offset': thumbPos }"
     >
       <div
-        class="slider-thumb"
+        class="md-slider-thumb"
         :data-value="getLabel(model!)"
         :dragging
         @touchstart="dragDown"
       />
       <input type="range" :min="minVal" :max="maxVal" v-model="model" />
-      <div class="slider-track" />
-      <div class="slider-labels" v-if="props.values">
+      <div class="md-slider-track" />
+      <div class="md-slider-labels" v-if="props.values">
         <template v-if="props.showLabel">
           <div
             :key="value"
-            class="label"
+            class="md-slider-label"
             v-for="value in values"
             :style="{ '--offset': getPosition(value) }"
           >
@@ -226,9 +226,9 @@
           </div>
         </template>
       </div>
-      <div class="slider-indicator" v-if="props.values">
+      <div class="md-slider-indicators" v-if="props.values">
         <div
-          class="dot"
+          class="md-slider-indicator"
           :key="value"
           v-for="value in values"
           :class="{ covered: value <= (model || 0) }"
@@ -239,8 +239,8 @@
   </div>
 </template>
 
-<style lang="scss">
-  .slider {
+<style lang="scss" scoped>
+  .md-slider {
     --thumb-width: calc(var(--xs) * 1.5);
     --thumb-height: var(--lg);
     --track-height: var(--sm);
@@ -259,7 +259,7 @@
       grid-template-columns: auto 1fr;
     }
 
-    .slider-value {
+    .md-slider-value {
       font-size: var(--font-sm);
       padding: var(--xs) var(--md);
       margin-right: var(--sm);
@@ -268,14 +268,14 @@
       border-radius: var(--xs);
     }
 
-    .slider-wrapper {
+    .md-slider-wrapper {
       position: relative;
       display: flex;
       height: 100%;
       align-items: center;
     }
 
-    .slider-track {
+    .md-slider-track {
       position: absolute;
       align-self: center;
       left: 0;
@@ -295,7 +295,7 @@
       }
     }
 
-    .slider-thumb {
+    .md-slider-thumb {
       z-index: 1;
       position: absolute;
       left: calc(var(--thumb-offset) * 1%);
@@ -332,7 +332,7 @@
       }
     }
 
-    .slider-indicator {
+    .md-slider-indicators {
       position: absolute;
       left: 0;
       right: 0;
@@ -342,7 +342,7 @@
       height: calc(var(--xs) * 2);
       border-radius: 999px;
 
-      .dot {
+      .md-slider-indicator {
         left: calc(var(--offset) * 1%);
         transform: translateX(-50%);
         position: absolute;
@@ -357,7 +357,7 @@
       }
     }
 
-    .slider-labels {
+    .md-slider-labels {
       position: absolute;
       align-self: center;
       width: 100%;
@@ -365,7 +365,7 @@
       margin-inline: auto;
       pointer-events: none;
 
-      .label {
+      .md-slider-label {
         position: absolute;
         left: calc(var(--offset) * 1%);
         transform: translateX(-50%);
@@ -379,22 +379,22 @@
 
     &.md3 {
       --thumb-width: calc(var(--padding-xxs) * 1.5);
-      --thumb-height: var(--component-xl);
-      --track-height: var(--component-xs);
+      --thumb-height: var(--component-md);
+      --track-height: var(--lg);
 
       height: var(--thumb-height);
 
-      .slider-thumb {
+      .md-slider-thumb {
         height: var(--thumb-height);
       }
 
-      .slider-indicator {
+      .md-slider-indicators {
         > :last-child {
           scale: 1.5;
           transform-origin: left;
         }
 
-        .dot {
+        .md-slider-indicator {
           background-color: var(--primary-60);
 
           &.covered {
@@ -403,7 +403,7 @@
         }
       }
 
-      .slider-track {
+      .md-slider-track {
         background: none;
 
         &::before {

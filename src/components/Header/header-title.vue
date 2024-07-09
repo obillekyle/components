@@ -28,7 +28,7 @@
     font-size: var(--size-sm);
     font-weight: 500;
     opacity: 0;
-    z-index: 200;
+    z-index: 99;
     transform: translateY(-20%);
     margin-top: calc(var(--padding-md) * -1);
     margin-bottom: var(--md);

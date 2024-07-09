@@ -118,16 +118,13 @@ export function attachStyles({
 
       if (imports) {
         const root = relativeFromSrc(name)
-        code = `import injectCSS from '${root}/attach-styles.js';\n` + code
+        code = `import __i__ from '${root}/attach-styles.js';\n` + code
 
         for (const imported of imports) {
           if (imported.endsWith('.vue')) {
             const cssStr = css[imported]
-
-            if (cssStr) {
-              code += `\ninjectCSS(${JSON.stringify(cssStr)}, '${hash(imported)}');`
-            }
-            continue
+            if (!cssStr) continue
+            code += `\n__i__(${JSON.stringify(cssStr)}, '${hash(imported)}');`
           }
 
           const file = path.parse(imported)
@@ -177,9 +174,6 @@ export function attachStyles({
       console.log(``)
       logger.log(`Created attach-styles.js`)
       logger.log(`Injecting CSS...\n`)
-
-      console.log(Object.keys(css))
-      console.log(importedMap)
 
       if (cleanCSS) {
         const outDir = config.build.outDir

@@ -22,7 +22,7 @@
 
   const props = withDefaults(defineProps<SwitchProps>(), {
     // eslint-disable-next-line vue/require-valid-default-prop
-    size: 'md',
+    size: 'xs',
     variant: 'outline'
   })
 
@@ -98,6 +98,10 @@
       transition:
         inset 0.2s var(--timing-standard),
         scale 0.25s var(--timing-standard);
+    }
+
+    &:focus-visible::after {
+      outline: calc(var(--size) / 2) solid var(--mono-80-30);
     }
   }
 
