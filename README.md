@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://sle.okyle.xyz"><img src="public/assets/logo-2.png" alt="@okyle/components" title="See in action" width="80"></a>
+<a href="https://sle.okyle.xyz"><img src="https://raw.githubusercontent.com/obillekyle/components/main/public/assets/logo-2.png" alt="@okyle/components" title="See in action" width="80"></a>
 
 # MD Components
 
