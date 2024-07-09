@@ -15,10 +15,8 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ## Screenshots
 
-<<<<<<<<<<<<<< ✨ Codeium Command 🌟 >>>>>>>>>>>>>>>> +![Components in Light Mode](https://raw.githubusercontent.com/obillekyle/components/main/public/assets/preview-light.png) -![Components in Light Mode](public/assets/preview-light.png)
-<<<<<<< e41e064a-c8c1-4ba1-b3bc-163ea14a5ccd >>>>>>>
-<<<<<<<<<<<<<< ✨ Codeium Command 🌟 >>>>>>>>>>>>>>>> +![Components in Dark Mode](https://raw.githubusercontent.com/obillekyle/components/main/public/assets/preview-dark.png) -![Components in Dark Mode](public/assets/preview-dark.png)
-<<<<<<< ef959ade-ec38-4ff6-9e9c-8f62f7d823f3 >>>>>>>
+![Components in Light Mode](https://raw.githubusercontent.com/obillekyle/components/main/public/assets/preview-light.png)
+![Components in Dark Mode](https://raw.githubusercontent.com/obillekyle/components/main/public/assets/preview-dark.png)
 
 ## Components
 

@@ -15,6 +15,7 @@
 
   interface LayoutProps extends /** @vue-ignore */ HTMLAttributes {
     globalStyle?: boolean
+    useMd3?: boolean
     options?: PartialDeep<LayoutOptions>
   }
   const props = defineProps<LayoutProps>()
@@ -52,7 +53,7 @@
   provide('options', options)
   provide('content-scroll-top', contentScrollTop)
   provide('header-title', headerTitle)
-  provide('md3', true)
+  provide('md3', props.useMd3 ?? true)
   provide('rotate', rotate)
 
   onMounted(() => rotater())

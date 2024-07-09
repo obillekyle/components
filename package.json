@@ -1,9 +1,24 @@
 {
   "name": "@okyle/components",
-  "version": "1.0.0a",
+  "description": "Yet another 'Material Design Components' library for Vue3.",
+  "version": "1.0.2a",
   "private": false,
   "type": "module",
   "license": "MIT",
+  "keywords": [
+    "vue",
+    "vue3",
+    "components",
+    "material",
+    "material-design"
+  ],
+  "bugs": {
+    "url": "https://github.com/obillekyle/components/issues"
+  },
+  "homepage": "https://github.com/obillekyle/components#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -12,13 +27,6 @@
     "./*.vue": "./dist/components/*.vue.js",
     "./utils": "./dist/utils/index.js",
     "./utils/*": "./dist/utils/*.js"
-  },
-  "bugs": {
-    "url": "https://github.com/obillekyle/components/issues"
-  },
-  "homepage": "https://github.com/obillekyle/components#readme",
-  "publishConfig": {
-    "access": "public"
   },
   "files": [
     "dist"
