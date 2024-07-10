@@ -50,8 +50,14 @@ async function deleteCSSFiles(
         packSize += stats.size
         if (file.endsWith('.js')) {
           const content = await fs.promises.readFile(filePath, 'utf-8')
-          modSizeGzip += await gzipSync(content).length
-          moduleSize += stats.size
+          const newContent = content.replace(
+            /\/\* empty css\s*\*\/\n/gm,
+            ''
+          )
+          await fs.promises.writeFile(filePath, newContent)
+          modSizeGzip += gzipSync(newContent).length
+          moduleSize += new Blob([newContent]).size
+          fileSize += content.length - newContent.length
         }
       }
     }
@@ -121,27 +127,31 @@ export function attachStyles({
       }
     },
     async renderChunk(code, { name, fileName }) {
+      let added = false
       const imports = importedMap[name]
 
-      if (imports) {
-        const root = relativeFromSrc(name)
-        code = `import $i from '${root}/attach-styles.js';\n` + code
-
+      if (imports?.length) {
         for (const imported of imports) {
           if (imported.endsWith('.vue')) {
             const cssStr = css[imported]
 
             if (cssStr) {
+              if (!added) {
+                const root = relativeFromSrc(name)
+                code = `import $i from '${root}/attach-styles.js';\n` + code
+                added = true
+              }
               code += `\n$i(${JSON.stringify(cssStr)}, '${hash(imported)}');`
             }
             continue
           }
 
           const file = path.parse(imported)
-          const relative = normalize(
+          let relative = normalize(
             path.relative(path.dirname(fileName), path.dirname(imported))
           )
-          code = `import '${relative || '.'}/${file.name}.css.js';\n${code}`
+          relative = relative.startsWith('.') ? relative : `./${relative}`
+          code = `import '${relative}/${file.name}.css.js';\n${code}`
         }
 
         return { code, map: { mappings: '' } }

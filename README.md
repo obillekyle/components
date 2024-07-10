@@ -13,6 +13,12 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 </div>
 
+## Notes
+
+> [!CAUTION]  
+> This package is still in Alpha development and updates may contain breaking changes.
+> Please report any bugs [here](https://github.com/obillekyle/components/issues).
+
 ## Screenshots
 
 ![Components in Light Mode](https://raw.githubusercontent.com/obillekyle/components/main/public/assets/preview-light.png)
