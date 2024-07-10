@@ -1,7 +1,7 @@
 {
   "name": "@okyle/components",
   "description": "Yet another 'Material Design Components' library for Vue3.",
-  "version": "1.0.4-a",
+  "version": "1.0.5-a",
   "private": false,
   "type": "module",
   "license": "MIT",

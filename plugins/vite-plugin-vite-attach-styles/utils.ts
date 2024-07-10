@@ -14,7 +14,7 @@ export async function formatCss(
 
       loader: 'css'
     })
-  ).code
+  ).code.trim()
 }
 
 export function hash(str: string) {

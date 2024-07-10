@@ -125,20 +125,23 @@ export function attachStyles({
 
       if (imports) {
         const root = relativeFromSrc(name)
-        code = `import __i__ from '${root}/attach-styles.js';\n` + code
+        code = `import $i from '${root}/attach-styles.js';\n` + code
 
         for (const imported of imports) {
           if (imported.endsWith('.vue')) {
             const cssStr = css[imported]
-            if (!cssStr) continue
-            code += `\n__i__(${JSON.stringify(cssStr)}, '${hash(imported)}');`
+
+            if (cssStr) {
+              code += `\n$i(${JSON.stringify(cssStr)}, '${hash(imported)}');`
+            }
+            continue
           }
 
           const file = path.parse(imported)
           const relative = normalize(
             path.relative(path.dirname(fileName), path.dirname(imported))
           )
-          code = `import './${relative || '.'}/${file.name}.split.js';\n${code}`
+          code = `import '${relative || '.'}/${file.name}.css.js';\n${code}`
         }
 
         return { code, map: { mappings: '' } }
@@ -163,7 +166,7 @@ export function attachStyles({
           path.resolve(
             process.cwd(),
             config.build.outDir,
-            path.join(file.dir, file.name + '.split.js')
+            path.join(file.dir, file.name + '.css.js')
           ),
           (await transform(newFile, { loader: 'js' })).code
         )
