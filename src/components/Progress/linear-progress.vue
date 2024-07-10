@@ -1,13 +1,7 @@
 <script setup lang="ts">
   import { clamp } from '@/utils'
   import { addUnit, getCSSValue } from '@/utils/css'
-  import {
-    computed,
-    inject,
-    onBeforeUnmount,
-    onMounted,
-    ref
-  } from 'vue'
+  import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
   const observer = ref<ResizeObserver | null>(null)
   const root = ref<HTMLDivElement | null>(null)

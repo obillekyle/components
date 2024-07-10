@@ -24,7 +24,7 @@
   </header>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-header {
     display: flex;
     align-items: center;
@@ -37,7 +37,7 @@
     height: var(--header-size);
     background: var(--background-secondary);
 
-    .md-header-title {
+    &-title {
       transition: color 0.2s;
       font-size: var(--font-xl);
     }
@@ -45,12 +45,12 @@
     &.on-top {
       background: transparent;
 
-      .md-header-title {
+      &-title {
         color: transparent;
       }
     }
 
-    .md-header-actions {
+    &-actions {
       position: absolute;
       padding-inline: var(--sm);
       background-color: inherit;

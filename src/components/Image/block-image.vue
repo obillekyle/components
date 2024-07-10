@@ -58,9 +58,7 @@
       xhr.send()
       data = await new Promise((resolve) => {
         xhr.onload = () =>
-          resolve(
-            new Blob([xhr.response || ''], { type: 'image/webp' })
-          )
+          resolve(new Blob([xhr.response || ''], { type: 'image/webp' }))
         xhr.onerror = () => resolve(undefined)
       })
     } else {
@@ -97,7 +95,7 @@
     :class="{ loaded: image, 'image-error': error, span }"
   >
     <Box class="md-loader">
-      <CircularProgress :value="error ? 0 : progress">
+      <CircularProgress :value="error ? 0 : progress" rotate>
         <Icon
           icon="material-symbols:refresh"
           :width="24"
@@ -119,6 +117,7 @@
     width: max-content;
     height: max-content;
     aspect-ratio: v-bind('props.ratio');
+    background-color: var(--mono-10);
 
     img {
       display: block;
@@ -138,9 +137,9 @@
     }
 
     &.span {
-      width: 100%;
       flex-grow: 1;
-      height: auto;
+      width: 100% !important;
+      height: auto !important;
 
       img {
         width: 100%;

@@ -145,10 +145,7 @@
         </div>
       </div>
 
-      <div
-        class="md-select-single"
-        v-if="value?.length === 0 && !multiple"
-      >
+      <div class="md-select-single" v-if="value?.length === 0 && !multiple">
         <div class="md-select-placeholder">{{ placeholder }}</div>
       </div>
 

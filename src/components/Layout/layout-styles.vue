@@ -88,12 +88,8 @@
       const values: Record<string, string> = {}
       let value = ''
 
-      const colors = Object.keys(
-        options.value.colors
-      ) as AppColorVariants[]
-      const sizes = Object.keys(
-        options.value.sizes
-      ) as AppSizesPrefixes[]
+      const colors = Object.keys(options.value.colors) as AppColorVariants[]
+      const sizes = Object.keys(options.value.sizes) as AppSizesPrefixes[]
       const components = Object.keys(
         options.value.component
       ) as (keyof ElementSizes)[]
@@ -106,10 +102,7 @@
       }
 
       for (const color of colors) {
-        Object.assign(
-          values,
-          getShades(options.value.colors[color], color)
-        )
+        Object.assign(values, getShades(options.value.colors[color], color))
       }
 
       for (const size of sizes) {
@@ -128,7 +121,7 @@
         value += `--${key}: ${values[key]};`
       }
 
-      styleElem.value = `#${props.globalStyle ? 'body' : tag} { ${value} color:${getCSSColor(options.value.color)};  color-scheme:${options.value.theme}; font-family: ${options.value.fontFamily},Roboto,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif; ${value} }`
+      styleElem.value = `#${props.globalStyle ? 'html, body' : tag} { ${value} color:${getCSSColor(options.value.color)};  color-scheme:${options.value.theme}; font-family: ${options.value.fontFamily},Roboto,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif; ${value} }`
     })
   }
 

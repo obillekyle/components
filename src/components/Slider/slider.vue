@@ -51,9 +51,7 @@
   const values = computed(() => {
     if (props.values) {
       return props.values
-        .map((value) =>
-          typeof value === 'object' ? value.value : value
-        )
+        .map((value) => (typeof value === 'object' ? value.value : value))
         .sort((a, b) => a - b)
     }
 
@@ -105,9 +103,7 @@
     if (props.values) {
       const min = minVal.value
       const max = maxVal.value
-      const value = Math.round(
-        (offset / rect.width) * (max - min) + min
-      )
+      const value = Math.round((offset / rect.width) * (max - min) + min)
       model.value = findNearestNumber(value, values.value)!
       return
     }

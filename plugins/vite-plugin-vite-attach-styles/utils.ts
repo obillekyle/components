@@ -61,8 +61,7 @@ export function resolveAlias(path: string, config: ResolvedConfig) {
   if (aliases instanceof Array) {
     for (const alias of aliases) {
       if (
-        (typeof alias.find === 'string' &&
-          path.startsWith(alias.find)) ||
+        (typeof alias.find === 'string' && path.startsWith(alias.find)) ||
         path.match(alias.find)
       ) {
         return path.replace(alias.find, alias.replacement)

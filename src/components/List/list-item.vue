@@ -91,10 +91,7 @@
         }
         case 'custom': {
           value.value > 0
-            ? evaluate(
-                parentProps.swipeOptions?.left?.handler,
-                props.index
-              )
+            ? evaluate(parentProps.swipeOptions?.left?.handler, props.index)
             : evaluate(
                 parentProps.swipeOptions?.right?.handler,
                 props.index

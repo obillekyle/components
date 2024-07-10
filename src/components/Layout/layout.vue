@@ -18,7 +18,9 @@
     useMd3?: boolean
     options?: PartialDeep<LayoutOptions>
   }
-  const props = defineProps<LayoutProps>()
+  const props = withDefaults(defineProps<LayoutProps>(), {
+    useMd3: true
+  })
   const options = computed<LayoutOptions>(() => {
     const opts = props.options || {}
     const options = DefaultLayoutOptions
@@ -43,9 +45,7 @@
 
   function rotater() {
     rotaterKey.value = interval(
-      () => {
-        rotate.value = (rotate.value + 0.5) % 360
-      },
+      () => (rotate.value = (rotate.value + 0.5) % 360),
       { time: 1000 / 24 }
     )
   }

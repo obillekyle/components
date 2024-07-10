@@ -13,13 +13,7 @@
       /** @vue-ignore */ HTMLAttributes {
     direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse'
     align?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
-    justify?:
-      | 'start'
-      | 'center'
-      | 'end'
-      | 'between'
-      | 'around'
-      | 'evenly'
+    justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
     wrap?: 'wrap' | 'nowrap' | 'wrap-reverse'
 
     gap?: AppSizesString

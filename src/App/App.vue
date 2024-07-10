@@ -28,6 +28,7 @@
 
 <template>
   <Layout
+    global-style
     :options="{
       theme: isDark ? 'dark' : 'light',
       colors: { primary: '#4ed47b' }
@@ -79,16 +80,12 @@
 
       <div class="flex">
         <Button left-icon="material-symbols:star-outline">Star</Button>
-        <Button
-          variant="outline"
-          left-icon="material-symbols:fullscreen"
-          >Fullscreen</Button
-        >
-        <Button
-          variant="subtle"
-          right-icon="material-symbols:open-in-new"
-          >Open in new tab</Button
-        >
+        <Button variant="outline" left-icon="material-symbols:fullscreen">
+          Fullscreen
+        </Button>
+        <Button variant="subtle" right-icon="material-symbols:open-in-new">
+          Open in new tab
+        </Button>
         <Button variant="transparent">Transparent Button</Button>
       </div>
 
@@ -97,9 +94,9 @@
           Device: Mobile
         </Chip>
         <Chip variant="outline">Time: 1 week</Chip>
-        <Chip variant="subtle" left-icon="material-symbols:add"
-          >Add Filter</Chip
-        >
+        <Chip variant="subtle" left-icon="material-symbols:add">
+          Add Filter
+        </Chip>
       </div>
       <div class="flex">
         <Input
@@ -155,17 +152,19 @@
       <BlockImage
         :b-radius="4"
         alt="random image"
-        src="https://picsum.photos/400/300?random=4"
+        src="https://picsum.photos/[width]/[height]?random=4"
+        :width="400"
+        :height="300"
         :ratio="4 / 3"
       />
 
       <Slider :values="[5, 15, 30, 60]" />
 
       <Scroller>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi
-        a ea natus qui aliquid error atque eveniet in temporibus placeat
-        quam expedita obcaecati laborum, dolorum soluta eaque
-        praesentium nostrum ab.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi a
+        ea natus qui aliquid error atque eveniet in temporibus placeat quam
+        expedita obcaecati laborum, dolorum soluta eaque praesentium nostrum
+        ab.
       </Scroller>
 
       <WavyDivider />

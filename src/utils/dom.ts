@@ -99,9 +99,7 @@ export async function openFilePickerAsync(
   })
 }
 
-export function openFilePicker(
-  callback: (file: File | null) => any
-): void
+export function openFilePicker(callback: (file: File | null) => any): void
 export function openFilePicker(
   callback: (file: File | null) => any,
   options: { accept?: string }

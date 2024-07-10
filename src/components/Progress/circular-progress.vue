@@ -22,54 +22,34 @@
 
   const md3 = inject('md3', false)
 
-  const isInfinite = computed(() => {
-    return !isFinite(props.value)
-  })
+  const isInfinite = computed(() => !isFinite(props.value))
+  const circleRadius = computed(() => (props.diameter - props.stroke) / 2)
+  const circleStrokeWidth = computed(() => addPX(props.stroke))
 
-  const circleRadius = computed(() => {
-    return (props.diameter - props.stroke) / 2
-  })
+  const circleCircumference = computed(
+    () => 2 * Math.PI * circleRadius.value
+  )
 
-  const circleStrokeWidth = computed(() => {
-    return addPX(props.stroke)
-  })
+  const circleStrokeDashArray = computed(() =>
+    addPX(circleCircumference.value)
+  )
 
-  const circleCircumference = computed(() => {
-    return 2 * Math.PI * circleRadius.value
-  })
-
-  const circleStrokeDashArray = computed(() => {
-    return addPX(circleCircumference.value)
-  })
-
-  const circleStrokeDashOffset = computed(() => {
-    if (!isInfinite.value) {
-      return addPX(
-        (circleCircumference.value * (100 - props.value)) / 100
-      )
-    }
-
-    if (isInfinite.value) {
-      return addPX(circleCircumference.value * 0.2)
-    }
-
-    return ''
-  })
+  const circleStrokeDashOffset = computed(() =>
+    !isInfinite.value
+      ? addPX((circleCircumference.value * (100 - props.value)) / 100)
+      : addPX(circleCircumference.value * 0.2)
+  )
 
   const space = computed(() => props.stroke * 3)
-  const hasSpace = computed(() => {
-    return props.value > props.stroke && props.value < 100 - space.value
-  })
+  const hasSpace = computed(
+    () => props.value > props.stroke && props.value < 100 - space.value
+  )
 
   const circle2StrokeDashOffset = computed(() => {
     const offset = hasSpace.value ? space.value : 0
-
-    const value = addPX(
-      (circleCircumference.value * props.value +
-        circleCircumference.value * offset) /
-        100
-    )
-    return value
+    const value = circleCircumference.value * props.value
+    const total = circleCircumference.value * offset
+    return addPX((value + total) / 100)
   })
 
   const circle2StrokeRotate = computed(() => {

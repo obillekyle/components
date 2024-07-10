@@ -11,10 +11,7 @@
 
   function setColor() {
     if (!element.value || !props.color) return
-    element.value!.style.setProperty(
-      '--color',
-      getCSSColor(props.color)
-    )
+    element.value!.style.setProperty('--color', getCSSColor(props.color))
   }
 
   watch(() => props.color, setColor)
@@ -26,11 +23,7 @@
 </script>
 
 <template>
-  <div
-    class="color-block"
-    ref="element"
-    :title="props.color.toString()"
-  />
+  <div class="color-block" ref="element" :title="props.color.toString()" />
 </template>
 
 <style lang="scss">

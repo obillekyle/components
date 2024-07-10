@@ -99,7 +99,7 @@ export const DefaultLayoutOptions: LayoutOptions = {
     error: '#f01c00',
     mono: '#000000'
   },
-  fontFamily: 'sans-serif',
+  fontFamily: 'Roboto, sans-serif',
   sizes: DefaultSizes,
   component: DefaultElementSizes,
   other: {}

@@ -77,16 +77,13 @@ export function attachStyles({
   return {
     name,
     apply: 'build',
-    configResolved: (_config) => {
+    configResolved(_config) {
       config = _config
       logger = new Logger(name)
     },
 
     async transform(code, id) {
-      const relative = path.relative(
-        path.resolve(process.cwd(), 'src'),
-        id
-      )
+      const relative = path.relative(path.resolve(process.cwd(), 'src'), id)
       const entry = normalize(relative.split('?')[0])
 
       if (isCSS(id)) {
@@ -139,10 +136,7 @@ export function attachStyles({
 
           const file = path.parse(imported)
           const relative = normalize(
-            path.relative(
-              path.dirname(fileName),
-              path.dirname(imported)
-            )
+            path.relative(path.dirname(fileName), path.dirname(imported))
           )
           code = `import './${relative || '.'}/${file.name}.split.js';\n${code}`
         }

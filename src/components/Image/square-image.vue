@@ -60,9 +60,7 @@
       xhr.send()
       data = await new Promise((resolve) => {
         xhr.onload = () =>
-          resolve(
-            new Blob([xhr.response || ''], { type: 'image/webp' })
-          )
+          resolve(new Blob([xhr.response || ''], { type: 'image/webp' }))
         xhr.onerror = () => resolve(undefined)
       })
 
@@ -88,10 +86,7 @@
 
   watch(rotate, () => {
     if (root.value && props.frame == 'circle') {
-      root.value.style.setProperty(
-        '--rotate',
-        addUnit(rotate.value, 'deg')
-      )
+      root.value.style.setProperty('--rotate', addUnit(rotate.value, 'deg'))
     }
   })
 
@@ -110,11 +105,13 @@
     :class="{ loaded: image, [frame]: true, error }"
     :title="as<string>($attrs['alt'])"
     :style="{
+      width: addUnit(size),
+      height: addUnit(size),
       '--radius': getCSSValue(radius)
     }"
   >
     <div class="md-loader">
-      <CircularProgress :size="size" :value="error ? 0 : progress">
+      <CircularProgress :size="size" :value="error ? 0 : progress" rotate>
         <Icon
           icon="material-symbols:refresh"
           :width="24"
@@ -195,6 +192,7 @@
     width: max-content;
     max-width: 100%;
     aspect-ratio: 1;
+    flex-shrink: 0;
     justify-content: center;
     align-items: center;
 

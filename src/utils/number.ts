@@ -57,10 +57,7 @@ export function clamp(value: number, min: number, max: number) {
 /** @deprecated */
 export const minMax = clamp
 
-export function toFileSize(
-  value: number,
-  type: 'bit' | 'byte'
-): string {
+export function toFileSize(value: number, type: 'bit' | 'byte'): string {
   const units = ['b', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb', 'zb', 'yb']
   const divider = type === 'byte' ? 1024 : 1000
 
