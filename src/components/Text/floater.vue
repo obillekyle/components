@@ -1,5 +1,9 @@
 <script setup lang="ts">
-  import { getCSSColor, getCSSValue, type AppSizesString } from '@/utils/css'
+  import {
+    getCSSColor,
+    getCSSValue,
+    type AppSizesString
+  } from '@/utils/css'
   import type { Component } from 'vue'
 
   type Positions =

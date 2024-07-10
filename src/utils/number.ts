@@ -27,7 +27,9 @@ export function mapNumberToRange(
   newMin: number,
   newMax: number
 ): number {
-  return ((number - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin
+  return (
+    ((number - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin
+  )
 }
 
 export function findNearestNumber(
@@ -55,7 +57,10 @@ export function clamp(value: number, min: number, max: number) {
 /** @deprecated */
 export const minMax = clamp
 
-export function toFileSize(value: number, type: 'bit' | 'byte'): string {
+export function toFileSize(
+  value: number,
+  type: 'bit' | 'byte'
+): string {
   const units = ['b', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb', 'zb', 'yb']
   const divider = type === 'byte' ? 1024 : 1000
 

@@ -27,11 +27,19 @@
 </script>
 
 <template>
-  <Layout :options="{ theme: isDark ? 'dark' : 'light' }">
+  <Layout
+    :options="{
+      theme: isDark ? 'dark' : 'light',
+      colors: { primary: '#4ed47b' }
+    }"
+  >
     <template #navbar>
       <Navigation.Bar :active="tab" :change="(t) => (tab = t)">
         <Navigation.Container center>
-          <Navigation.Item name="Home" icon="material-symbols:home-outline" />
+          <Navigation.Item
+            name="Home"
+            icon="material-symbols:home-outline"
+          />
           <Navigation.Item
             name="Library"
             icon="material-symbols:library-books-outline"
@@ -71,10 +79,14 @@
 
       <div class="flex">
         <Button left-icon="material-symbols:star-outline">Star</Button>
-        <Button variant="outline" left-icon="material-symbols:fullscreen"
+        <Button
+          variant="outline"
+          left-icon="material-symbols:fullscreen"
           >Fullscreen</Button
         >
-        <Button variant="subtle" right-icon="material-symbols:open-in-new"
+        <Button
+          variant="subtle"
+          right-icon="material-symbols:open-in-new"
           >Open in new tab</Button
         >
         <Button variant="transparent">Transparent Button</Button>
@@ -150,9 +162,10 @@
       <Slider :values="[5, 15, 30, 60]" />
 
       <Scroller>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi a ea
-        natus qui aliquid error atque eveniet in temporibus placeat quam
-        expedita obcaecati laborum, dolorum soluta eaque praesentium nostrum ab.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi
+        a ea natus qui aliquid error atque eveniet in temporibus placeat
+        quam expedita obcaecati laborum, dolorum soluta eaque
+        praesentium nostrum ab.
       </Scroller>
 
       <WavyDivider />

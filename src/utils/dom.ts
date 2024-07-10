@@ -89,7 +89,9 @@ export async function openFilePickerAsync(
   return new Promise<File | File[] | null>((resolve) => {
     input.onchange = function () {
       resolve(
-        options.multiple ? [...(input.files || [])] : input.files?.[0] || null
+        options.multiple
+          ? [...(input.files || [])]
+          : input.files?.[0] || null
       )
       this.removeEventListener('change', input.onchange!)
     }
@@ -97,7 +99,9 @@ export async function openFilePickerAsync(
   })
 }
 
-export function openFilePicker(callback: (file: File | null) => any): void
+export function openFilePicker(
+  callback: (file: File | null) => any
+): void
 export function openFilePicker(
   callback: (file: File | null) => any,
   options: { accept?: string }

@@ -1,7 +1,13 @@
 <script setup lang="ts">
   import { clamp } from '@/utils'
   import { addUnit, getCSSValue } from '@/utils/css'
-  import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+  import {
+    computed,
+    inject,
+    onBeforeUnmount,
+    onMounted,
+    ref
+  } from 'vue'
 
   const observer = ref<ResizeObserver | null>(null)
   const root = ref<HTMLDivElement | null>(null)
@@ -45,7 +51,10 @@
     ref="root"
     class="md-progress"
     :class="{ md3, noSpace }"
-    :style="{ height: getCSSValue(size), '--speed': addUnit(speed, 's') }"
+    :style="{
+      height: getCSSValue(size),
+      '--speed': addUnit(speed, 's')
+    }"
   >
     <div class="md-progress-infinite" v-if="value === Infinity">
       <div class="md-progress-infinite-bar" v-if="md3" />

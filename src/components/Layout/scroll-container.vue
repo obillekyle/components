@@ -81,7 +81,10 @@
 
 <style lang="scss">
   .md-scroll {
-    &:has(.md-master-switch:first-child, .md-master-switch:nth-child(2)) {
+    &:has(
+        .md-master-switch:first-child,
+        .md-master-switch:nth-child(2)
+      ) {
       .md-master-switch {
         box-shadow: 0 calc(var(--size-xs) * -1) 0 var(--xl)
           var(--background-body);

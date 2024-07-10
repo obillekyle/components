@@ -48,7 +48,8 @@ export class Logger {
 
   error(...messages: string[]) {
     console.error(
-      this.prefix + this.format('$red; ' + messages.map(this.format).join(' '))
+      this.prefix +
+        this.format('$red; ' + messages.map(this.format).join(' '))
     )
   }
 

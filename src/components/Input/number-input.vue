@@ -50,7 +50,12 @@
   <div class="md-input number" @click="() => input?.focus()">
     <IconOrComponent class="md-input-icon left" :icon="leftIcon" />
     <div class="md-input-content">
-      <input type="number" v-bind="$attrs" v-model="model" ref="input" />
+      <input
+        type="number"
+        v-bind="$attrs"
+        v-model="model"
+        ref="input"
+      />
       <NumberArrows v-model="model" />
     </div>
   </div>

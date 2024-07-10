@@ -40,7 +40,11 @@
 </script>
 
 <template>
-  <div class="switcher" v-bind="$attrs" :style="{ '--chars': maxChars + 2 }">
+  <div
+    class="switcher"
+    v-bind="$attrs"
+    :style="{ '--chars': maxChars + 2 }"
+  >
     <div
       :class="['item', index == value && 'active']"
       v-for="(item, index) in items"

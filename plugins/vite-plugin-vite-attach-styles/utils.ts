@@ -3,7 +3,10 @@ import { transform } from 'esbuild'
 import { ResolvedConfig, normalizePath } from 'vite'
 import path from 'node:path'
 
-export async function formatCss(css: string, minify: boolean | string = true) {
+export async function formatCss(
+  css: string,
+  minify: boolean | string = true
+) {
   return (
     await transform(css, {
       minify: !!minify && minify !== 'terser',
@@ -58,7 +61,8 @@ export function resolveAlias(path: string, config: ResolvedConfig) {
   if (aliases instanceof Array) {
     for (const alias of aliases) {
       if (
-        (typeof alias.find === 'string' && path.startsWith(alias.find)) ||
+        (typeof alias.find === 'string' &&
+          path.startsWith(alias.find)) ||
         path.match(alias.find)
       ) {
         return path.replace(alias.find, alias.replacement)

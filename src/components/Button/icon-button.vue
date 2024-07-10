@@ -6,7 +6,8 @@
   import { getCSSValue } from '@/utils/css'
   import { rippleEffect } from '@/utils/dom'
 
-  interface IconButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
+  interface IconButtonProps
+    extends /* @vue-ignore */ ButtonHTMLAttributes {
     icon: string
     size?: AppSizes | number | String
   }

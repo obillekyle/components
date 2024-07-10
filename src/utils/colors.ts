@@ -5,6 +5,14 @@ export type ColorEvents = {
   update: [color: Color, oldColor: Color]
 }
 
+export function isLight(color: Color) {
+  const [r, g, b] = color.rgb().array()
+  console.log(r, g, b)
+  return r > 180 || r + g + b > 450
+}
+
+console.log(isLight(Color('yellow')), isLight(Color('blue')))
+
 export class Colors extends CustomEventHandler<ColorEvents> {
   main: Color = Color('white')
 
@@ -20,14 +28,13 @@ export class Colors extends CustomEventHandler<ColorEvents> {
     return this
   }
 
-  shade(shade: number, alpha = 1, theme: 'light' | 'dark' = 'dark') {
-    const [h, s] = this.main.hsv().array()
-    const color = Color({ h, s, l: shade, alpha })
-
-    return theme == 'light'
-      ? color
-      : color.desaturate(Math.abs(50 - shade) / 50)
+  shade(shade: number, alpha = 1) {
+    const [h, s] = this.main.hsl().array()
+    return Color({
+      h,
+      s: s > 80 ? 80 : s,
+      l: shade,
+      alpha
+    })
   }
 }
-
-export default Colors

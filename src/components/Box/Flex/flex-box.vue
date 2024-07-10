@@ -8,10 +8,18 @@
   import { computed } from 'vue'
   import Box from '../box.vue'
 
-  interface FlexBoxProps extends BoxProps, /** @vue-ignore */ HTMLAttributes {
+  interface FlexBoxProps
+    extends BoxProps,
+      /** @vue-ignore */ HTMLAttributes {
     direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse'
     align?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
-    justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
+    justify?:
+      | 'start'
+      | 'center'
+      | 'end'
+      | 'between'
+      | 'around'
+      | 'evenly'
     wrap?: 'wrap' | 'nowrap' | 'wrap-reverse'
 
     gap?: AppSizesString

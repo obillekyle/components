@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import type { ButtonHTMLAttributes, Component } from 'vue'
   import type { AppSizes } from '@/utils/css'
+  import '@/assets/button.scss'
 
   import IconOrComponent from '../Misc/icon-or-component.vue'
   import { rippleEffect } from '@/utils/dom'
@@ -15,7 +16,7 @@
   }
 
   withDefaults(defineProps<ChipProps>(), {
-    radius: 'rounded'
+    radius: 'xs'
   })
 
   defineOptions({
@@ -37,80 +38,9 @@
   </button>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-chip {
-    position: relative;
-    overflow: hidden;
-    user-select: none;
-    display: inline-flex;
-    align-items: center;
-    width: fit-content;
-    border-radius: var(--radius);
     height: var(--size-xs);
-    gap: var(--xs);
-    border: none;
-    font: inherit;
-    font-weight: 500;
-    color: var(--on-primary);
-    background: var(--primary);
-    padding-inline: var(--sm);
-    box-shadow: var(--shadow-1);
-    transition:
-      color 0.2s,
-      background-color 0.2s,
-      filter 0.2s,
-      box-shadow 0.2s;
-
-    &:hover {
-      filter: brightness(1.2);
-    }
-
-    .md-chip-label {
-      align-self: center;
-      text-align: center;
-      flex-grow: 1;
-    }
-
-    .md-chip-icon {
-      display: grid;
-      place-items: center;
-    }
-
-    &:active {
-      opacity: 0.8;
-    }
-
-    &:not(:disabled) {
-      cursor: pointer;
-    }
-
-    &.outline,
-    &.transparent,
-    &.subtle {
-      color: var(--primary-80);
-      box-shadow: none;
-    }
-
-    &:disabled {
-      background-color: var(--mono-30-50) !important;
-      color: var(--mono-50) !important;
-    }
-
-    &.outline {
-      border: 1px solid var(--primary-60-50);
-    }
-
-    &.subtle {
-      background: var(--primary-50-20);
-    }
-
-    &.transparent,
-    &.outline {
-      background: none;
-
-      &:hover {
-        background: var(--primary-40-20);
-      }
-    }
+    padding-inline: var(--xs);
   }
 </style>

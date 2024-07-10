@@ -1,7 +1,7 @@
 {
   "name": "@okyle/components",
   "description": "Yet another 'Material Design Components' library for Vue3.",
-  "version": "1.0.2a",
+  "version": "1.0.3a",
   "private": false,
   "type": "module",
   "license": "MIT",
@@ -43,6 +43,7 @@
     "format:stylelint": "stylelint src/**/*.{vue,css,scss} --fix",
     "format": "run-s format:prettier format:eslint format:stylelint",
     "build": "vue-tsc --build --force && vite build",
+    "publish": "npm run build && npm publish",
     "prepare": "husky",
     "preview": "vite preview"
   },

@@ -58,7 +58,9 @@
       xhr.send()
       data = await new Promise((resolve) => {
         xhr.onload = () =>
-          resolve(new Blob([xhr.response || ''], { type: 'image/webp' }))
+          resolve(
+            new Blob([xhr.response || ''], { type: 'image/webp' })
+          )
         xhr.onerror = () => resolve(undefined)
       })
     } else {

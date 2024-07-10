@@ -24,7 +24,8 @@
     const options = DefaultLayoutOptions
 
     const primary = opts.colors?.primary || options.colors.primary
-    const secondary = opts.colors?.secondary || Color(primary).rotate(180).hex()
+    const secondary =
+      opts.colors?.secondary || Color(primary).rotate(180).hex()
 
     const propsOptions = deep(opts, { colors: { primary, secondary } })
     return deep(options, propsOptions) as LayoutOptions

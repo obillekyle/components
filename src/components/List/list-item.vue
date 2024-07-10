@@ -91,8 +91,14 @@
         }
         case 'custom': {
           value.value > 0
-            ? evaluate(parentProps.swipeOptions?.left?.handler, props.index)
-            : evaluate(parentProps.swipeOptions?.right?.handler, props.index)
+            ? evaluate(
+                parentProps.swipeOptions?.left?.handler,
+                props.index
+              )
+            : evaluate(
+                parentProps.swipeOptions?.right?.handler,
+                props.index
+              )
         }
       }
     }
@@ -204,7 +210,11 @@
           :style="{ background: i.color }"
           v-show="k == 'left' ? value > 0 : value < 0"
         >
-          <Icon v-if="typeof i.icon == 'string'" :icon="i.icon" :width="24" />
+          <Icon
+            v-if="typeof i.icon == 'string'"
+            :icon="i.icon"
+            :width="24"
+          />
           <component v-else :is="i.icon" />
         </div>
       </template>

@@ -4,7 +4,13 @@
   import IconOrComponent from '../Misc/icon-or-component.vue'
   import { evaluate } from '@/utils/object'
   import { clamp, mapNumberToRange } from '@/utils/number'
-  import { ref, onBeforeMount, watch, onBeforeUnmount, onMounted } from 'vue'
+  import {
+    ref,
+    onBeforeMount,
+    watch,
+    onBeforeUnmount,
+    onMounted
+  } from 'vue'
   import { getClientPos } from '@/utils/dom'
 
   interface MasterSliderProps extends /* @vue-ignore */ HTMLAttributes {

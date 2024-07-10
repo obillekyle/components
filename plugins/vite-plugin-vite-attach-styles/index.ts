@@ -22,13 +22,20 @@ let logger = new Logger('attach-styles')
 const css: Record<string, string> = {}
 const importedMap: Record<string, string[]> = {}
 
-async function deleteCSSFiles(dir: string, out: string, ignore: string[] = []) {
+async function deleteCSSFiles(
+  dir: string,
+  out: string,
+  ignore: string[] = []
+) {
   try {
     const files = await fs.promises.readdir(dir)
     for (const file of files) {
       if (
         ignore.includes(
-          path.relative(path.resolve(process.cwd(), out), path.join(dir, file))
+          path.relative(
+            path.resolve(process.cwd(), out),
+            path.join(dir, file)
+          )
         )
       )
         continue
@@ -76,7 +83,10 @@ export function attachStyles({
     },
 
     async transform(code, id) {
-      const relative = path.relative(path.resolve(process.cwd(), 'src'), id)
+      const relative = path.relative(
+        path.resolve(process.cwd(), 'src'),
+        id
+      )
       const entry = normalize(relative.split('?')[0])
 
       if (isCSS(id)) {
@@ -129,7 +139,10 @@ export function attachStyles({
 
           const file = path.parse(imported)
           const relative = normalize(
-            path.relative(path.dirname(fileName), path.dirname(imported))
+            path.relative(
+              path.dirname(fileName),
+              path.dirname(imported)
+            )
           )
           code = `import './${relative || '.'}/${file.name}.split.js';\n${code}`
         }
@@ -167,7 +180,11 @@ export function attachStyles({
       const script = getHelperFileContent('', prefix)
 
       await fs.promises.writeFile(
-        path.resolve(process.cwd(), config.build.outDir, 'attach-styles.js'),
+        path.resolve(
+          process.cwd(),
+          config.build.outDir,
+          'attach-styles.js'
+        ),
         (await transform(script, { loader: 'js' })).code
       )
 

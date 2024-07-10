@@ -1,5 +1,11 @@
 <script setup lang="ts">
-  import { getCSSValue, type AppSizes, getUnique, as, addUnit } from '@/utils'
+  import {
+    getCSSValue,
+    type AppSizes,
+    getUnique,
+    as,
+    addUnit
+  } from '@/utils'
   import {
     ref,
     type HTMLAttributes,
@@ -54,7 +60,9 @@
       xhr.send()
       data = await new Promise((resolve) => {
         xhr.onload = () =>
-          resolve(new Blob([xhr.response || ''], { type: 'image/webp' }))
+          resolve(
+            new Blob([xhr.response || ''], { type: 'image/webp' })
+          )
         xhr.onerror = () => resolve(undefined)
       })
 
@@ -80,7 +88,10 @@
 
   watch(rotate, () => {
     if (root.value && props.frame == 'circle') {
-      root.value.style.setProperty('--rotate', addUnit(rotate.value, 'deg'))
+      root.value.style.setProperty(
+        '--rotate',
+        addUnit(rotate.value, 'deg')
+      )
     }
   })
 
@@ -141,7 +152,13 @@
         :width="size"
         :height="size"
       >
-        <rect x="0" y="0" :width="size" :height="size" fill="var(--mono-10)" />
+        <rect
+          x="0"
+          y="0"
+          :width="size"
+          :height="size"
+          fill="var(--mono-10)"
+        />
         <image
           :href="image"
           x="0"

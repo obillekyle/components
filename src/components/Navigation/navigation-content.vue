@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from 'vue'
 
-  interface NavigationContentProps extends /* @vue-ignore */ HTMLAttributes {}
+  interface NavigationContentProps
+    extends /* @vue-ignore */ HTMLAttributes {}
 
   defineProps<NavigationContentProps>()
 

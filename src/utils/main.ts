@@ -4,7 +4,10 @@ const langCodes: Record<string, string> = {
 
 const translationStore: Record<string, Record<string, undefined>> = {}
 
-export async function getTranslatedText(text: string, lang: string = 'en') {
+export async function getTranslatedText(
+  text: string,
+  lang: string = 'en'
+) {
   lang = langCodes[lang] || lang
 
   if (!translationStore[lang]) translationStore[lang] = {}
@@ -21,7 +24,11 @@ export async function getTranslatedText(text: string, lang: string = 'en') {
     return json[0][0][0]
   } catch {
     console.error(
-      'Failed to get translation for "' + text + '" in "' + lang + '" language'
+      'Failed to get translation for "' +
+        text +
+        '" in "' +
+        lang +
+        '" language'
     )
   }
 

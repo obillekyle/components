@@ -1,4 +1,12 @@
-export const sizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const
+export const sizes = [
+  'xxs',
+  'xs',
+  'sm',
+  'md',
+  'lg',
+  'xl',
+  'xxl'
+] as const
 export const prefixes = [
   'font',
   'size',
@@ -100,7 +108,12 @@ export function getCSSValue(
 }
 
 export const c = (value: AppColorString) => getCSSColor(value)
-export const colorVariants = ['primary', 'secondary', 'mono', 'error'] as const
+export const colorVariants = [
+  'primary',
+  'secondary',
+  'mono',
+  'error'
+] as const
 export type AppColorVariants = (typeof colorVariants)[number]
 export type ColorShades =
   | 0

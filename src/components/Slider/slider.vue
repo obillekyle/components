@@ -1,6 +1,10 @@
 <script setup lang="ts">
   import { evaluate } from '@/utils/object'
-  import { clamp, findNearestNumber, mapNumberToRange } from '@/utils/number'
+  import {
+    clamp,
+    findNearestNumber,
+    mapNumberToRange
+  } from '@/utils/number'
   import {
     computed,
     onBeforeMount,
@@ -47,7 +51,9 @@
   const values = computed(() => {
     if (props.values) {
       return props.values
-        .map((value) => (typeof value === 'object' ? value.value : value))
+        .map((value) =>
+          typeof value === 'object' ? value.value : value
+        )
         .sort((a, b) => a - b)
     }
 
@@ -90,7 +96,8 @@
 
     e.preventDefault()
 
-    const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX
+    const clientX =
+      e instanceof MouseEvent ? e.clientX : e.touches[0].clientX
     const offset = clamp(clientX - rect.left, 0, rect.width)
 
     const maxOffset = maxVal.value - minVal.value
@@ -98,7 +105,9 @@
     if (props.values) {
       const min = minVal.value
       const max = maxVal.value
-      const value = Math.round((offset / rect.width) * (max - min) + min)
+      const value = Math.round(
+        (offset / rect.width) * (max - min) + min
+      )
       model.value = findNearestNumber(value, values.value)!
       return
     }
@@ -128,7 +137,8 @@
   })
 
   function getPosition(value: number) {
-    const num = ((value - minVal.value) / (maxVal.value - minVal.value)) * 100
+    const num =
+      ((value - minVal.value) / (maxVal.value - minVal.value)) * 100
 
     return useMD3
       ? mapNumberToRange(num, 0, 100, 2.4, 97.6)
@@ -407,7 +417,9 @@
         background: none;
 
         &::before {
-          width: calc((var(--thumb-offset) * 1%) - (var(--thumb-width) * 1.5));
+          width: calc(
+            (var(--thumb-offset) * 1%) - (var(--thumb-width) * 1.5)
+          );
           border-radius: 2px;
         }
 
@@ -417,7 +429,9 @@
           background: var(--primary-20);
           height: 100%;
           position: absolute;
-          left: calc(((var(--thumb-offset) * 1%) + (var(--thumb-width) * 1.5)));
+          left: calc(
+            ((var(--thumb-offset) * 1%) + (var(--thumb-width) * 1.5))
+          );
           border-radius: 2px;
         }
       }

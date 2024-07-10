@@ -58,7 +58,10 @@
   const items = computed(() => {
     return values.value.filter(
       (item) =>
-        item.id.toString().toLowerCase().includes(search.value.toLowerCase()) ||
+        item.id
+          .toString()
+          .toLowerCase()
+          .includes(search.value.toLowerCase()) ||
         props.searchByKey.some((key) =>
           item.props[key]!.toString()
             .toLowerCase()
@@ -104,7 +107,10 @@
 
   watch(show, (show) => {
     if (show && select.value) {
-      $('.md-select-options-dropdown .md-select-option', select.value)?.focus()
+      $(
+        '.md-select-options-dropdown .md-select-option',
+        select.value
+      )?.focus()
     }
   })
 
@@ -139,7 +145,10 @@
         </div>
       </div>
 
-      <div class="md-select-single" v-if="value?.length === 0 && !multiple">
+      <div
+        class="md-select-single"
+        v-if="value?.length === 0 && !multiple"
+      >
         <div class="md-select-placeholder">{{ placeholder }}</div>
       </div>
 

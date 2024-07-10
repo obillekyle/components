@@ -110,7 +110,10 @@ export class MutableString extends String {
   }
 }
 
-function toRegularString(parts: TemplateString[0], ...args: any[]): string {
+function toRegularString(
+  parts: TemplateString[0],
+  ...args: any[]
+): string {
   return parts.reduce(
     (result, part, i) =>
       result + part + (args[i] ? String(evaluate(args[i])) : ''),

@@ -68,6 +68,7 @@
     display: inline-block;
     width: calc(var(--size) * 2);
     height: var(--size);
+    flex-shrink: 0;
     border-radius: var(--size);
     background-color: var(--mono-10);
     box-shadow: 0 0 0 2px var(--mono-50);
@@ -78,9 +79,11 @@
     }
 
     &.filled {
-      box-shadow: 0 0 0 2px var(--mono-10);
+      box-shadow: 0 0 0 2px var(--mono-20);
+      background-color: var(--mono-20);
 
       &::after {
+        background-color: #fafafa;
         scale: 0.8;
       }
     }
@@ -93,7 +96,7 @@
       scale: 0.6;
       width: var(--size);
       height: var(--size);
-      background-color: var(--mono-50);
+      background-color: var(--mono-60);
       border-radius: var(--size);
       transition:
         inset 0.2s var(--timing-standard),
@@ -111,7 +114,7 @@
 
     &::after {
       scale: 0.8;
-      left: calc(var(--size) * 1);
+      left: var(--size);
       background-color: var(--on-primary);
     }
   }

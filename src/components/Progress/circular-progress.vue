@@ -44,7 +44,9 @@
 
   const circleStrokeDashOffset = computed(() => {
     if (!isInfinite.value) {
-      return addPX((circleCircumference.value * (100 - props.value)) / 100)
+      return addPX(
+        (circleCircumference.value * (100 - props.value)) / 100
+      )
     }
 
     if (isInfinite.value) {

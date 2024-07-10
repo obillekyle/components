@@ -22,7 +22,11 @@ export type MaybeFunction<T extends any> = T | (() => T)
 export function evaluate<
   K extends any,
   V = K extends () => any ? ReturnType<K> : K
->(this: any, obj: K, ...args: V extends (...args: infer P) => any ? P : any): V
+>(
+  this: any,
+  obj: K,
+  ...args: V extends (...args: infer P) => any ? P : any
+): V
 export function evaluate(this: any, obj: any, ...params: any): any {
   return typeof obj === 'function' ? obj.call(this, ...params) : obj
 }
@@ -61,7 +65,10 @@ export function is(value: symbol, type: 'symbol'): true
 export function is(value: boolean, type: 'boolean'): true
 export function is(value: () => any, type: 'function'): true
 export function is(value: undefined, type: 'undefined'): true
-export function is<O extends object>(value: object, type: 'object'): value is O
+export function is<O extends object>(
+  value: object,
+  type: 'object'
+): value is O
 export function is(
   value: any,
   type:

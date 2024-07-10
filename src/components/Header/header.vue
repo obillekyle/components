@@ -15,7 +15,9 @@
     :class="{ 'on-top': scrollHeight < 6, 'has-title': headerTitle }"
   >
     <slot />
-    <div class="md-header-title" v-if="headerTitle">{{ headerTitle }}</div>
+    <div class="md-header-title" v-if="headerTitle">
+      {{ headerTitle }}
+    </div>
     <div class="md-header-actions" v-if="$slots.actions">
       <slot name="actions" />
     </div>
@@ -31,7 +33,7 @@
     right: 0;
     top: 0;
     z-index: 100;
-    padding-inline: var(--sm);
+    padding-inline: var(--lg);
     height: var(--header-size);
     background: var(--background-secondary);
 

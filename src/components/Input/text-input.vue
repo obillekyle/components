@@ -54,8 +54,17 @@
   >
     <IconOrComponent class="md-input-icon left" :icon="leftIcon" />
     <div class="md-input-content">
-      <input type="text" v-bind="$attrs" v-model="model" ref="inputRef" />
-      <Counter v-if="counter" :length="model.length" :max="$attrs.maxlength" />
+      <input
+        type="text"
+        v-bind="$attrs"
+        v-model="model"
+        ref="inputRef"
+      />
+      <Counter
+        v-if="counter"
+        :length="model.length"
+        :max="$attrs.maxlength"
+      />
     </div>
     <IconOrComponent class="md-input-icon right" :icon="rightIcon" />
   </div>
