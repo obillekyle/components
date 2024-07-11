@@ -1,1 +1,2 @@
-export * from './vite-plugin-vite-attach-styles'
+export * from './attach-styles'
+export * from './resolve-vars'

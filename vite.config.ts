@@ -4,7 +4,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { version } from './package.json'
-import { attachStyles } from './plugins'
+import { attachStyles, resolver } from './plugins'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,7 +20,9 @@ export default defineConfig({
     }),
     vue(),
     VueDevTools(),
-    attachStyles()
+    attachStyles({
+      transform: resolver()
+    })
   ],
   build: {
     minify: true,

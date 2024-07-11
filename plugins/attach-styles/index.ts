@@ -2,7 +2,7 @@ import path from 'node:path'
 import fs from 'node:fs'
 import { gzipSync } from 'node:zlib'
 import { transform } from 'esbuild'
-import { Plugin, ResolvedConfig } from 'vite'
+import type { Plugin, ResolvedConfig } from 'vite'
 import {
   formatCss,
   getHelperFileContent,
@@ -12,7 +12,7 @@ import {
   normalize,
   relativeFromSrc
 } from './utils'
-import Logger from './logger'
+import Logger from '../logger'
 
 let packSize = 0
 let fileSize = 0
@@ -70,12 +70,14 @@ type ASOptions = {
   prefix?: string
   cleanIgnore?: string[]
   cleanCSS?: boolean
+  transform?: (code: string, id: string) => string
 }
 
 export function attachStyles({
   prefix = 'css',
   cleanIgnore = [],
-  cleanCSS = true
+  cleanCSS = true,
+  transform: t = (s) => s
 }: ASOptions = {}): Plugin {
   let config: ResolvedConfig
   const name: string = 'attach-styles'
@@ -133,7 +135,7 @@ export function attachStyles({
       if (imports?.length) {
         for (const imported of imports) {
           if (imported.endsWith('.vue')) {
-            const cssStr = css[imported]
+            const cssStr = t(css[imported], imported)
 
             if (cssStr) {
               if (!added) {
@@ -154,11 +156,11 @@ export function attachStyles({
           code = `import '${relative}/${file.name}.css.js';\n${code}`
         }
 
-        return { code, map: { mappings: '' } }
+        return code
       }
 
       if (isCSS(name)) {
-        const cssStr = css[name]
+        const cssStr = t(css[name], name)
         const root = relativeFromSrc(name)
         const newFile = `
           import i from '${root}/attach-styles.js';

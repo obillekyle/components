@@ -1,6 +1,6 @@
 import crypto from 'node:crypto'
 import { transform } from 'esbuild'
-import { ResolvedConfig, normalizePath } from 'vite'
+import { type ResolvedConfig, normalizePath } from 'vite'
 import path from 'node:path'
 
 export async function formatCss(

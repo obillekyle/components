@@ -1,7 +1,7 @@
 {
   "name": "@okyle/components",
   "description": "Yet another 'Material Design Components' library for Vue3.",
-  "version": "1.0.6-a",
+  "version": "1.0.7-a",
   "private": false,
   "type": "module",
   "license": "MIT",
@@ -10,7 +10,9 @@
     "vue3",
     "components",
     "material",
-    "material-design"
+    "material-design",
+    "ui-library",
+    "ui"
   ],
   "bugs": {
     "url": "https://github.com/obillekyle/components/issues"

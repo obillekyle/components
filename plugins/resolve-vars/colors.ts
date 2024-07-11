@@ -1,5 +1,4 @@
 import Color from 'color'
-import { CustomEventHandler } from './event'
 
 export type ColorEvents = {
   update: [color: Color, oldColor: Color]
@@ -10,18 +9,15 @@ export function isLight(color: Color) {
   return r > 180 || r + g + b > 450
 }
 
-export class Colors extends CustomEventHandler<ColorEvents> {
+export class Colors {
   main: Color = Color('white')
 
-  constructor(color?: string | Color) {
-    super()
+  constructor(color?: string | Color | String) {
     this.set(color ?? this.main)
   }
 
-  set(colorString: string | Color): this {
-    const old = this.main
+  set(colorString: String | string | Color): this {
     this.main = Color(colorString)
-    this.dispatchEvent('update', [this.main, old])
     return this
   }
 
@@ -34,4 +30,8 @@ export class Colors extends CustomEventHandler<ColorEvents> {
       alpha
     })
   }
+}
+
+export function toColorsObj(color: string | String | Colors): Colors {
+  return color instanceof Colors ? color : new Colors(color)
 }
