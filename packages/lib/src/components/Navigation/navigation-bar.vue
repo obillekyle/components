@@ -28,7 +28,7 @@
 <style lang="scss">
   .md-navbar {
     display: flex;
-    position: fixed;
+    position: absolute;
     flex-direction: column;
     height: 100dvh;
     left: 0;

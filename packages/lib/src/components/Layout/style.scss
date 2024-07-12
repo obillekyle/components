@@ -43,17 +43,17 @@
     inset: 0;
   }
 
-  &:has(.md-navbar) {
-    .md-layout-content {
+  &:has(> .md-navbar) {
+    > .md-layout-content {
       left: var(--navbar-size);
     }
 
-    .md-header {
+    > .md-header {
       left: var(--navbar-size);
     }
   }
 
-  &:has(.md-header) {
+  &:has(> .md-header) {
     > .md-layout-content > .md-scroll > .md-scroll-wrapper {
       padding-top: var(--header-size);
 
@@ -72,8 +72,8 @@
       left: 0 !important;
     }
 
-    &:has(.md-navbar) {
-      .md-layout-content {
+    &:has(> .md-navbar) {
+      > .md-layout-content {
         bottom: var(--navbar-size);
       }
     }

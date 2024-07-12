@@ -36,7 +36,7 @@
   const rotate = ref(0)
   const rotaterKey = ref(0)
   const contentScrollTop = ref(0)
-  const id = getUnique('layout')
+  const id = ref(getUnique('layout'))
   const headerTitle = ref('')
 
   defineOptions({

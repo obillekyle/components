@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://sle.okyle.xyz"><img src="https://raw.githubusercontent.com/obillekyle/components/main/public/assets/logo-2.png" alt="@okyle/components" title="See in action" width="80"></a>
+<a href="https://sle.okyle.xyz"><img src="https://raw.githubusercontent.com/obillekyle/components/main/assets/logo.png" alt="@okyle/components" title="See in action" width="80"></a>
 
 # MD Components
 
@@ -19,10 +19,13 @@ Recreated the [Material Design Components](https://github.com/material-component
 > This package is still in Alpha development and updates may contain breaking changes.
 > Please report any bugs [here](https://github.com/obillekyle/components/issues).
 
+> [!NOTE]  
+> `1.0.8-a`: Components will now work in SSR mode. If you think I missed something, let me know.
+
 ## Screenshots
 
-![Components in Light Mode](https://raw.githubusercontent.com/obillekyle/components/main/public/assets/preview-light.png)
-![Components in Dark Mode](https://raw.githubusercontent.com/obillekyle/components/main/public/assets/preview-dark.png)
+![Components in Light Mode](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview-light.png)
+![Components in Dark Mode](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview-dark.png)
 
 ## Components
 
@@ -48,14 +51,17 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ## Get Started
 
+> [!Important]  
+> It is recommended to use `bun` package manager for this project. This is to prevent version mismatches in development.
+
 - Clone the repository
 - Install dependencies
-  - `npm install` or `yarn` or `pnpm install` or `bun install`
+  - `bun install`
 - Open development server:
-  - `npm run dev` or `yarn dev` or `pnpm dev` or `bun run dev`
+  - `bun run dev`
 - Build:
-  - `npm run build` or `yarn build` or `pnpm build` or `bun run build`
+  - `bun run build`
 
 ## Contributing
 
-If you have any questions or suggestions, please feel free to [open an issue](https://github.com/obillekyle/components/issues) or [open a pull request](https://github.com/obillekyle/components/pulls).
+If you want to contribute, please feel free to [open an issue](https://github.com/obillekyle/components/issues) or [open a pull request](https://github.com/obillekyle/components/pulls).

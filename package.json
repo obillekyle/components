@@ -1,87 +1,40 @@
 {
-  "name": "@okyle/components",
-  "description": "Yet another 'Material Design Components' library for Vue3.",
-  "version": "1.0.7-a",
-  "private": false,
-  "type": "module",
-  "license": "MIT",
-  "keywords": [
-    "vue",
-    "vue3",
-    "components",
-    "material",
-    "material-design",
-    "ui-library",
-    "ui"
+  "name": "monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
-  "bugs": {
-    "url": "https://github.com/obillekyle/components/issues"
-  },
-  "homepage": "https://github.com/obillekyle/components#readme",
-  "publishConfig": {
-    "access": "public"
-  },
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js",
-    "./*": "./dist/components/*/index.js",
-    "./*.vue": "./dist/components/*.vue.js",
-    "./utils": "./dist/utils/index.js",
-    "./utils/*": "./dist/utils/*.js"
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "dev": "vite",
-    "check:types": "vue-tsc --noEmit",
-    "check:format": "prettier --check . --ignore-path .gitignore",
-    "check:stylelint": "stylelint src/**/*.{vue,css,scss}",
-    "check:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
-    "check": "run-s check:format check:stylelint check:eslint",
-    "format:prettier": "prettier --write . --ignore-path .gitignore",
-    "format:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format:stylelint": "stylelint src/**/*.{vue,css,scss} --fix",
-    "format": "run-s format:prettier format:eslint format:stylelint",
-    "build": "vue-tsc --build --force && vite build",
-    "prepare": "husky",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "color": "^4.2.3",
-    "deepmerge": "^4.3.1"
-  },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.8.0",
-    "@tsconfig/node20": "^20.1.4",
-    "@types/color": "^3.0.6",
-    "@types/node": "^20.12.5",
-    "@vitejs/plugin-vue": "^5.0.4",
-    "@vue/eslint-config-prettier": "^9.0.0",
-    "@vue/eslint-config-typescript": "^13.0.0",
-    "@vue/tsconfig": "^0.5.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.23.0",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.7",
-    "npm-run-all2": "^6.1.2",
-    "postcss-html": "^1.7.0",
-    "prettier": "^3.2.5",
     "sass": "^1.77.4",
     "stylelint": "^16.6.1",
     "stylelint-config-recommended-scss": "^14.0.0",
     "stylelint-config-recommended-vue": "^1.5.0",
     "stylelint-config-standard-scss": "^13.1.0",
     "stylelint-scss": "^6.3.1",
-    "typescript": "~5.4.0",
-    "vite": "^5.2.8",
-    "vite-plugin-dts": "^3.9.1",
-    "vite-plugin-vue-devtools": "^7.0.25",
-    "vue-tsc": "^2.0.11"
+    "@types/node": "^20.12.5",
+    "husky": "^9.0.11",
+    "@rushstack/eslint-patch": "^1.8.0",
+    "@tsconfig/node20": "^20.1.4",
+    "postcss-html": "^1.7.0",
+    "prettier": "^3.2.5",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.23.0",
+    "lint-staged": "^15.2.7",
+    "npm-run-all2": "^6.1.2"
   },
-  "peerDependencies": {
-    "vue": "^3.4.21",
-    "@iconify/vue": "^4.1.2"
+  "scripts": {
+    "prepare": "husky",
+    "check:format": "prettier --check . --ignore-path .gitignore",
+    "check:stylelint": "stylelint **/*.{vue,css,scss} --ignore-path .gitignore",
+    "check:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
+    "format:prettier": "prettier --write . --ignore-path .gitignore",
+    "format:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "format:stylelint": "stylelint **/*.{vue,css,scss} --fix --ignore-path .gitignore",
+    "build:lib": "bun run --filter @okyle/components build",
+    "check": "run-s check:format check:stylelint check:eslint",
+    "format": "run-s format:prettier format:eslint format:stylelint",
+    "build": "run-s build:lib"
   }
 }

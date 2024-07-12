@@ -11,13 +11,14 @@
   import { AppShades } from './util'
   import { inject, onBeforeMount, ref, watch } from 'vue'
   import { addPX, getCSSColor, getCSSValue } from '@/utils/css'
+  import type { Ref } from 'vue'
 
-  const props = defineProps<{
+  defineProps<{
     globalStyle?: boolean
   }>()
 
   const options = inject<ComputedRef<LayoutOptions>>('options')!
-  const tag = inject<string>('layout-id')!
+  const tag = inject<Ref<string>>('layout-id')!
   const styleElem = ref('')
 
   function getShades(color: string | String | Colors, prefix: string) {
@@ -121,7 +122,7 @@
         value += `--${key}: ${values[key]};`
       }
 
-      styleElem.value = `#${props.globalStyle ? 'html, body' : tag} { ${value} color:${getCSSColor(options.value.color)};  color-scheme:${options.value.theme}; font-family: ${options.value.fontFamily},Roboto,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif; ${value} }`
+      styleElem.value = value
     })
   }
 
@@ -131,7 +132,17 @@
 
 <template>
   <component v-bind:is="'style'" :data-for="tag">
-    {{ styleElem }}
+    {{
+      `${globalStyle ? 'html, body' : '#' + tag} {
+        ${styleElem}
+        color: ${getCSSColor(options.color)}
+        color-scheme: ${options.theme}
+        font-family: ${options.fontFamily},
+          Roboto,
+          'Arial',
+          sans-serif
+      }`
+    }}
   </component>
   <slot v-if="styleElem" />
 </template>
