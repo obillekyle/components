@@ -57,14 +57,14 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-progress {
     position: relative;
     background: var(--mono-10);
     overflow: hidden;
     width: 100%;
 
-    .md-progress-bar {
+    &-bar {
       height: inherit;
       background: var(--primary);
       overflow: hidden;
@@ -78,13 +78,13 @@
       }
     }
 
-    .md-progress-infinite {
+    &-infinite {
       height: inherit;
       overflow: hidden;
       position: relative;
       border-radius: inherit;
 
-      .md-progress-infinite-bar {
+      &-bar {
         height: inherit;
         position: relative;
         border-radius: inherit;

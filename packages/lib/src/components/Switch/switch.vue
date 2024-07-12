@@ -62,7 +62,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-switch {
     position: relative;
     display: inline-block;

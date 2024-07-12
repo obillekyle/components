@@ -22,7 +22,7 @@
   </h1>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-header-title {
     position: relative;
     font-size: var(--size-sm);

@@ -183,12 +183,12 @@
 <template>
   <div
     ref="wrapper"
-    class="list-item"
+    class="md-list-item"
     @mousedown="swipeDown"
     @touchstart="swipeDown"
     :style="{ top: addPX(index * 60) }"
   >
-    <div class="list-content" ref="content" :data-index="props.index">
+    <div class="md-list-content" ref="content" :data-index="props.index">
       <component :is="parentProps.listComp" v-bind="props.props" />
       <div
         class="draggable"
@@ -199,20 +199,23 @@
         <Icon icon="material-symbols:drag-handle" :width="24" />
       </div>
     </div>
-    <div class="swipe-indicator" v-if="parentProps.swipe === 'custom'">
-      <template :key="k" v-for="(i, k) in parentProps.swipeOptions">
+    <div
+      class="md-list-swipe-indicator"
+      v-if="parentProps.swipe === 'custom'"
+    >
+      <template :key="key" v-for="(item, key) in parentProps.swipeOptions">
         <div
-          :class="k"
-          v-if="typeof i == 'object'"
-          :style="{ background: i.color }"
-          v-show="k == 'left' ? value > 0 : value < 0"
+          :class="key"
+          v-if="typeof item == 'object'"
+          :style="{ background: item.color }"
+          v-show="key == 'left' ? value > 0 : value < 0"
         >
           <Icon
-            v-if="typeof i.icon == 'string'"
-            :icon="i.icon"
+            v-if="typeof item.icon == 'string'"
+            :icon="item.icon"
             :width="24"
           />
-          <component v-else :is="i.icon" />
+          <component v-else :is="item.icon" />
         </div>
       </template>
     </div>

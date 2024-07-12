@@ -21,15 +21,13 @@
 </script>
 
 <template>
-  <div v-if="label && direction == 'x'" class="divider-label">
+  <div v-if="label && direction == 'x'" class="md-divider-label">
     {{ label }}
   </div>
   <div
     v-else
-    :class="{
-      divider: true,
-      [direction]: true
-    }"
+    class="md-divider"
+    :class="direction"
     :style="{
       '--size': addPX(size),
       '--margin': getCSSValue(margin)
@@ -37,26 +35,26 @@
   />
 </template>
 
-<style lang="scss">
-  .divider {
+<style lang="scss" scoped>
+  .md-divider {
     place-self: center;
     display: block;
     background-color: var(--mono-50-50);
+
+    .x {
+      height: 1px;
+      width: var(--size);
+      margin-block: var(--margin);
+    }
+
+    .y {
+      width: 1px;
+      height: var(--size);
+      margin-inline: var(--margin);
+    }
   }
 
-  .divider.x {
-    height: 1px;
-    width: var(--size);
-    margin-block: var(--margin);
-  }
-
-  .divider.y {
-    width: 1px;
-    height: var(--size);
-    margin-inline: var(--margin);
-  }
-
-  .divider-label {
+  .md-divider-label {
     align-items: center;
     display: grid;
     grid-template-columns: auto 1fr;

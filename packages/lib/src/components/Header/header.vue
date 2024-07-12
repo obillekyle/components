@@ -45,7 +45,7 @@
     &.on-top {
       background: transparent;
 
-      &-title {
+      .md-header-title {
         color: transparent;
       }
     }

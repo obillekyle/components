@@ -37,7 +37,7 @@
     width: var(--navbar-size, 88px);
     background: var(--primary-10);
 
-    .md-navbar-container {
+    &-container {
       display: flex;
       position: absolute;
       justify-content: center;
@@ -45,11 +45,11 @@
       inset: 0;
     }
 
-    .md-navbar-container + .md-navbar-content {
+    &-container + &-content {
       margin-top: auto;
     }
 
-    .md-navbar-item {
+    &-item {
       display: grid;
       font: inherit;
       border: none;
@@ -64,8 +64,9 @@
         pointer-events: none;
       }
 
-      .md-navbar-item-icon {
+      &-icon {
         place-self: end center;
+        contain: content;
         margin-bottom: 4px;
         border-radius: 999px;
         display: grid;
@@ -75,9 +76,11 @@
         width: var(--size-sm);
         height: var(--icon-lg);
         font-size: var(--icon-md);
-        transition: background-color 0.2s;
+        transition:
+          background-color 0.2s,
+          scale 0.2s;
 
-        * {
+        > * {
           transition: scale 0.2s;
         }
 
@@ -96,7 +99,11 @@
         }
       }
 
-      .md-navbar-item-name {
+      &:active > &-icon > * {
+        scale: 0.9;
+      }
+
+      &-name {
         font-size: var(--font-xs);
         font-weight: 500;
         text-overflow: ellipsis;
@@ -110,22 +117,22 @@
       }
     }
 
-    &.hidden .md-navbar-item,
-    &.active .md-navbar-item {
+    &.hidden &,
+    &.active & {
       margin-bottom: 0;
       padding-top: var(--md);
       padding-bottom: 0;
     }
 
-    .md-navbar-item:active .icon > * {
+    &:active .icon > * {
       scale: 0.9;
     }
 
-    .md-navbar-item:hover .icon {
+    &-item:hover .icon {
       background-color: var(--primary-40-20);
     }
 
-    .md-navbar-item.active {
+    &-item.active {
       .md-navbar-item-icon {
         color: var(--on-primary-container);
 
@@ -140,8 +147,8 @@
       }
     }
 
-    &.hidden .md-navbar-item .name,
-    &.active .md-navbar-item:not(.active) .name {
+    &.hidden &-item .name,
+    &.active &-item:not(.active) .name {
       transform: translateY(50%);
       opacity: 0;
     }
@@ -159,21 +166,21 @@
         grid-template-columns: minmax(0, 1fr);
       }
 
-      .md-navbar-container {
+      &-container {
         margin-block: 0;
         grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
         display: grid;
       }
 
-      .md-navbar-item {
+      &-item {
         margin-bottom: 0;
         padding-top: var(--padding-sm);
 
-        .md-navbar-item-name {
+        &-name {
           font-size: var(--font-md);
         }
 
-        .md-navbar-item-icon {
+        &-icon {
           height: var(--icon-xl);
           width: var(--size-md);
           transition: transform 0.25s var(--timing-standard);
@@ -186,19 +193,19 @@
         }
       }
 
-      &.hidden .md-navbar-item .name,
-      &.active .md-navbar-item:not(.active) .name {
+      &.hidden &-item .name,
+      &.active &-item:not(.active) .name {
         opacity: 0;
         transform: translateY(100%);
       }
 
-      &.hidden .md-navbar-item .icon,
-      &.active .md-navbar-item:not(.active) .icon {
+      &.hidden &-item .icon,
+      &.active &-item:not(.active) .icon {
         transform: translateY(20%);
       }
 
-      &.hidden .md-navbar-item.active,
-      &.active .md-navbar-item.active {
+      &.hidden &-item.active,
+      &.active &-item.active {
         .name {
           opacity: 1;
           transform: translateY(-25%);
@@ -209,7 +216,7 @@
         }
       }
 
-      .md-navbar-content {
+      &-content {
         display: none;
       }
     }

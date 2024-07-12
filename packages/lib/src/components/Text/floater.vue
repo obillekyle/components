@@ -55,13 +55,13 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-floater {
     position: relative;
     width: max-content;
     height: max-content;
 
-    .md-floater-text {
+    &-text {
       display: flex;
       position: absolute;
       align-items: center;

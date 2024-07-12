@@ -125,7 +125,7 @@
     :class="{ dragging }"
     :style="{ '--pos': position }"
   >
-    <div class="md-block-icon" :data-value="model">
+    <div class="md-block-slider-icon" :data-value="model">
       <IconOrComponent :icon="props.icon" />
     </div>
     <div class="md-block-slider-content">
@@ -134,7 +134,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-block-slider {
     --height: var(--size-md);
 
@@ -149,7 +149,7 @@
     background-color: var(--primary-50-50);
     border-radius: calc(var(--height) / 2.25);
 
-    .md-block-icon {
+    &-icon {
       width: var(--height);
       height: var(--height);
       display: grid;
@@ -187,7 +187,7 @@
         border-bottom-right-radius: 0;
       }
 
-      .md-block-icon {
+      .md-block-slider-icon {
         > * {
           display: none;
         }
@@ -199,7 +199,7 @@
       }
     }
 
-    .md-block-slider-content {
+    &-content {
       width: 100%;
       height: 100%;
       position: relative;

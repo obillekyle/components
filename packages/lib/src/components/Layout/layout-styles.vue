@@ -17,6 +17,10 @@
     globalStyle?: boolean
   }>()
 
+  defineOptions({
+    name: 'MdLayoutStyles'
+  })
+
   const options = inject<ComputedRef<LayoutOptions>>('options')!
   const tag = inject<Ref<string>>('layout-id')!
   const styleElem = ref('')
@@ -135,8 +139,8 @@
     {{
       `${globalStyle ? 'html, body' : '#' + tag} {
         ${styleElem}
-        color: ${getCSSColor(options.color)}
-        color-scheme: ${options.theme}
+        color: ${getCSSColor(options.color)};
+        color-scheme: ${options.theme};
         font-family: ${options.fontFamily},
           Roboto,
           'Arial',

@@ -3,6 +3,10 @@
     name: string
     id: string | number
   }>()
+
+  defineOptions({
+    name: 'MdSelectOptionItem'
+  })
 </script>
 
 <template>

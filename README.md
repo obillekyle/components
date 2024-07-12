@@ -19,40 +19,20 @@ Recreated the [Material Design Components](https://github.com/material-component
 > This package is still in Alpha development and updates may contain breaking changes.
 > Please report any bugs [here](https://github.com/obillekyle/components/issues).
 
-> [!NOTE]  
-> `1.0.8-a`: Components will now work in SSR mode. If you think I missed something, let me know.
-
 ## Screenshots
 
 ![Components in Light Mode](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview-light.png)
 ![Components in Dark Mode](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview-dark.png)
 
-## Components
+## Packages
 
-- [Box](https://github.com/obillekyle/components/tree/main/src/components/Box)
-- [Button](https://github.com/obillekyle/components/tree/main/src/components/Button)
-- [Chip](https://github.com/obillekyle/components/tree/main/src/components/Chip)
-- [Switch](https://github.com/obillekyle/components/tree/main/src/components/Switch)
-- [Slider](https://github.com/obillekyle/components/tree/main/src/components/Slider)
-- [Select](https://github.com/obillekyle/components/tree/main/src/components/Select)
-- [Image](https://github.com/obillekyle/components/tree/main/src/components/Image)
-- [Input](https://github.com/obillekyle/components/tree/main/src/components/Input)
-- [List](https://github.com/obillekyle/components/tree/main/src/components/List)
-- [Text](https://github.com/obillekyle/components/tree/main/src/components/Text)
-- [Divider](https://github.com/obillekyle/components/tree/main/src/components/Divider)
-- [Progress](https://github.com/obillekyle/components/tree/main/src/components/Progress)
-- [Navigation](https://github.com/obillekyle/components/tree/main/src/components/Navigation)
-- [Header](https://github.com/obillekyle/components/tree/main/src/components/Header)
-- [Layout](https://github.com/obillekyle/components/tree/main/src/components/Layout)
-
-## Docs
-
-- None
+- [Main Library](https://github.com/obillekyle/components/tree/main/packages/lib)
+- [Documentation](https://github.com/obillekyle/components/tree/main/packages/docs)
 
 ## Get Started
 
 > [!Important]  
-> It is recommended to use `bun` package manager for this project. This is to prevent version mismatches in development.
+> It is recommended to use `bun` package manager for this project. This is to prevent version mismatches on development.
 
 - Clone the repository
 - Install dependencies

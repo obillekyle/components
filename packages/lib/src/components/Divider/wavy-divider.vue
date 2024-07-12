@@ -17,7 +17,7 @@
 </script>
 
 <template>
-  <Box class="wavy-divider" v-bind="boxProps" :style="{ color }">
+  <Box class="md-wavy-divider" v-bind="boxProps" :style="{ color }">
     <svg
       width="100%"
       height="12"
@@ -45,7 +45,7 @@
 </template>
 
 <style lang="scss" scoped>
-  .wavy-divider {
+  .md-wavy-divider {
     width: 100%;
     color: var(--primary-30-50);
   }

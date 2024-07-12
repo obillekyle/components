@@ -52,7 +52,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-master-switch {
     position: sticky;
     top: 0;
@@ -69,7 +69,7 @@
     z-index: 10;
     box-shadow: var(--shadow-3);
 
-    .md-master-switch-toggle {
+    &-toggle {
       pointer-events: none;
       position: absolute;
       display: grid;

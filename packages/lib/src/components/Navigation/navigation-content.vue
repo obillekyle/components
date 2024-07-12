@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-navbar-content {
     align-self: center;
   }

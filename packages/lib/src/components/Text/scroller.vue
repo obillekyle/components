@@ -69,7 +69,7 @@
     overflow: hidden;
     margin-left: calc(-1 * var(--md));
 
-    .md-scroller-wrapper {
+    &-wrapper {
       height: 100%;
       position: relative;
       display: flex;
@@ -77,7 +77,7 @@
       overflow: hidden;
     }
 
-    .md-scroller-content {
+    &-content {
       height: 100%;
       position: relative;
       width: max-content;

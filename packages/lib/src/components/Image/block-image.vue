@@ -110,7 +110,7 @@
   </Box>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .md-block-image {
     position: relative;
     overflow: hidden;

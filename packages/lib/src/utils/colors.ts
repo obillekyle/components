@@ -13,12 +13,12 @@ export function isLight(color: Color) {
 export class Colors extends CustomEventHandler<ColorEvents> {
   main: Color = Color('white')
 
-  constructor(color?: string | Color) {
+  constructor(color?: string | Color | String) {
     super()
     this.set(color ?? this.main)
   }
 
-  set(colorString: string | Color): this {
+  set(colorString: string | Color | String): this {
     const old = this.main
     this.main = Color(colorString)
     this.dispatchEvent('update', [this.main, old])

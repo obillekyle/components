@@ -151,7 +151,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @keyframes md-progress-spinner-rotate {
     from {
       transform: rotate(0);
@@ -270,7 +270,7 @@
     height: max-content;
     align-self: center;
 
-    .md-circular-progress-content {
+    &-content {
       position: absolute;
       display: grid;
       place-items: center;

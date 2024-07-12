@@ -13,7 +13,7 @@ export function escapeHtml(unsafeText: string): string {
   return unsafeText.replace(/[&<>"']/g, (match) => map[match])
 }
 
-export function unscapeHtml(unsafeText: string): string {
+export function unescapeHtml(unsafeText: string): string {
   const map: Record<string, string> = {
     '&amp;': '&',
     '&lt;': '<',
@@ -106,7 +106,7 @@ export class MutableString extends String {
   }
 
   unescape() {
-    return new MutableString(unscapeHtml(this.toString()))
+    return new MutableString(unescapeHtml(this.toString()))
   }
 }
 

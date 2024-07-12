@@ -31,7 +31,7 @@
   </button>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-fab {
     position: absolute;
     bottom: var(--padding-md);
@@ -53,7 +53,7 @@
     cursor: pointer;
     overflow: hidden;
 
-    .md-fab-label {
+    &-label {
       max-width: 0;
       opacity: 0;
       font-size: var(--font-md);

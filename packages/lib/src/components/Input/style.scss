@@ -12,7 +12,7 @@
     width: 100%;
   }
 
-  .md-input-content {
+  &-content {
     position: relative;
     height: 100%;
     width: 100%;
@@ -57,13 +57,13 @@
     }
   }
 
-  .md-input-icon {
+  &-icon {
     display: inherit;
     align-items: center;
     padding-inline: var(--sm);
   }
 
-  .md-input-counter {
+  &-counter {
     color: #7779;
     position: absolute;
     inset: auto 4px 2px auto;
@@ -76,7 +76,7 @@
     margin: 0;
   }
 
-  .md-input-number-arrows {
+  &-number-arrows {
     display: grid;
     grid-template-rows: 1fr 1fr;
     place-items: center;

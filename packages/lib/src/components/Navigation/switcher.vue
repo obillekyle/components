@@ -41,26 +41,26 @@
 
 <template>
   <div
-    class="switcher"
+    class="md-switcher"
     v-bind="$attrs"
     :style="{ '--chars': maxChars + 2 }"
   >
     <div
-      :class="['item', index == value && 'active']"
+      :class="['md-switcher-item', index == value && 'active']"
       v-for="(item, index) in items"
       @click="() => handleClick(index)"
       :key="index"
     >
-      <div class="icon">
+      <div class="md-switcher-item-icon">
         <icon :icon="item.icon" :width="24" />
       </div>
-      <div class="name">{{ item.name }}</div>
+      <div class="md-switcher-item-name">{{ item.name }}</div>
     </div>
   </div>
 </template>
 
-<style lang="scss">
-  .switcher {
+<style lang="scss" scoped>
+  .md-switcher {
     display: flex;
     align-items: center;
     padding: calc(var(--sm) / 2);
@@ -68,7 +68,7 @@
     border-radius: var(--sm);
     margin-block: auto;
 
-    .item {
+    &-item {
       overflow: hidden;
       height: 36px;
       display: grid;
@@ -79,13 +79,13 @@
       grid-template-columns: 36px auto;
       color: var(--primary-90);
 
-      .icon {
+      &-icon {
         display: grid;
         place-items: center;
         width: 36px;
       }
 
-      .name {
+      &-name {
         font-size: var(--font-md);
         text-transform: uppercase;
         transition: width 0.2s;
@@ -101,7 +101,7 @@
       }
 
       &.active {
-        .name {
+        .md-switcher-item-name {
           opacity: 1;
           width: calc(var(--chars) * 1ch);
         }

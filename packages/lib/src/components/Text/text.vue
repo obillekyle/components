@@ -56,6 +56,7 @@
 <style lang="scss">
   .md-text {
     display: -webkit-box;
+    line-clamp: var(--lines);
     -webkit-line-clamp: var(--lines);
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;

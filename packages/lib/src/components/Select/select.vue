@@ -187,7 +187,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-select {
     position: relative;
 

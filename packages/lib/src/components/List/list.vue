@@ -19,7 +19,7 @@
 </script>
 
 <template>
-  <div class="list" :style="{ height: addPX((items.length + 1) * 60) }">
+  <div class="md-list" :style="{ height: addPX((items.length + 1) * 60) }">
     <ListItem
       v-for="(item, index) in items"
       :key="item.id"
@@ -30,13 +30,13 @@
 </template>
 
 <style lang="scss">
-  .list {
+  .md-list {
     position: relative;
     display: block;
     width: 100%;
     overflow: hidden;
 
-    .list-item {
+    &-item {
       width: 100%;
       display: flex;
       position: absolute;
@@ -51,7 +51,7 @@
       }
     }
 
-    .list-content {
+    &-content {
       position: absolute;
       width: 100%;
       display: flex;
@@ -75,7 +75,7 @@
       }
     }
 
-    .swipe-indicator {
+    &-swipe-indicator {
       position: absolute;
       z-index: 1;
       inset: 0;

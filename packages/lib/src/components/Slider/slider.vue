@@ -13,30 +13,30 @@
     ref,
     watch
   } from 'vue'
+  import { inject } from 'vue'
 
-  const props = withDefaults(
-    defineProps<{
-      defaultValue?: number
-      values?: number[] | { label: string; value: number }[]
-      min?: number
-      max?: number
-      step?: number
-      decimal?: number
-      change?: (value: number) => void
-      showValue?: boolean
-      showLabel?: boolean
-    }>(),
-    {
-      min: 0,
-      max: 100,
-      decimal: 0
-    }
-  )
+  interface SliderProps {
+    defaultValue?: number
+    values?: number[] | { label: string; value: number }[]
+    min?: number
+    max?: number
+    step?: number
+    decimal?: number
+    change?: (value: number) => void
+    showValue?: boolean
+    showLabel?: boolean
+  }
 
+  const props = withDefaults(defineProps<SliderProps>(), {
+    min: 0,
+    max: 100,
+    decimal: 0
+  })
+
+  const dragging = ref(false)
   const model = defineModel<number>()
   const wrapper = ref<HTMLElement | null>(null)
-  const dragging = ref(false)
-  const useMD3 = true
+  const useMD3 = inject<boolean>('md3', false)
 
   const minVal = computed(() => {
     if (props.values) {
@@ -138,7 +138,7 @@
 
     return useMD3
       ? mapNumberToRange(num, 0, 100, 2.4, 97.6)
-      : mapNumberToRange(num, 0, 100, 0.3, 99.4)
+      : mapNumberToRange(num, 0, 100, 0.8, 99.2)
   }
 
   const thumbPos = computed(() => {
@@ -245,11 +245,11 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-slider {
-    --thumb-width: calc(var(--xs) * 1.5);
+    --thumb-width: var(--lg);
     --thumb-height: var(--lg);
-    --track-height: var(--sm);
+    --track-height: var(--xs);
 
     height: calc(var(--thumb-height) * 2);
     width: 100%;
@@ -265,7 +265,7 @@
       grid-template-columns: auto 1fr;
     }
 
-    .md-slider-value {
+    &-value {
       font-size: var(--font-sm);
       padding: var(--xs) var(--md);
       margin-right: var(--sm);
@@ -274,14 +274,14 @@
       border-radius: var(--xs);
     }
 
-    .md-slider-wrapper {
+    &-wrapper {
       position: relative;
       display: flex;
       height: 100%;
       align-items: center;
     }
 
-    .md-slider-track {
+    &-track {
       position: absolute;
       align-self: center;
       left: 0;
@@ -301,16 +301,17 @@
       }
     }
 
-    .md-slider-thumb {
+    &-thumb {
       z-index: 1;
       position: absolute;
       left: calc(var(--thumb-offset) * 1%);
       width: var(--thumb-width);
-      height: calc(var(--thumb-height) * 2);
+      height: var(--thumb-height);
       border-radius: 999px;
       align-self: center;
       transform: translateX(-50%);
       background: var(--primary);
+      box-shadow: var(--shadow-1);
 
       &::after {
         content: attr(data-value);
@@ -338,7 +339,7 @@
       }
     }
 
-    .md-slider-indicators {
+    &-indicators {
       position: absolute;
       left: 0;
       right: 0;
@@ -363,7 +364,7 @@
       }
     }
 
-    .md-slider-labels {
+    &-labels {
       position: absolute;
       align-self: center;
       width: 100%;
@@ -386,13 +387,9 @@
     &.md3 {
       --thumb-width: calc(var(--padding-xxs) * 1.5);
       --thumb-height: var(--component-md);
-      --track-height: var(--lg);
+      --track-height: var(--sm);
 
       height: var(--thumb-height);
-
-      .md-slider-thumb {
-        height: var(--thumb-height);
-      }
 
       .md-slider-indicators {
         > :last-child {

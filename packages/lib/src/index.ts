@@ -1,4 +1,3 @@
-import './assets/main.scss'
 import Layout from './components/Layout'
 
 export * from './components'
