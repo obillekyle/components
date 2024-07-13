@@ -42,10 +42,12 @@
     "build:lib": "bun run --filter @okyle/components build",
     "check": "run-s check:format check:stylelint check:eslint",
     "format": "run-s format:prettier format:eslint format:stylelint",
+    "commit": "commit",
     "release": "lerna exec -- npx semantic-release",
     "build": "run-s build:lib"
   },
   "dependencies": {
-    "@commitlint/config-angular": "^19.3.0"
+    "@commitlint/config-angular": "^19.3.0",
+    "@commitlint/prompt-cli": "^19.3.1"
   }
 }
