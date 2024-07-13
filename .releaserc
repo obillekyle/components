@@ -6,7 +6,7 @@
     {
       "name": "next",
       "channel": "next",
-      "prerelease": true
+      "prerelease": "next"
     },
     {
       "name": "pre/rc",
@@ -29,12 +29,6 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/npm",
     "@semantic-release/github"
-  ],
-  "prepare": [
-    {
-      "path": "@semantic-release/exec",
-      "cmd": "bun install && bun run build"
-    }
   ],
   "monorepo": {
     "analyzeCommits": {
