@@ -1,6 +1,7 @@
 <script setup lang="ts">
-  import type { BoxProps } from '@/components/Box'
-  import Box, { getBoxProps } from '@/components/Box'
+  import Box from '@/components/Box/box.vue'
+  import type { BoxProps } from '@/components/Box/util'
+  import { getBoxProps } from '@/components/Box/util'
   import { computed } from 'vue'
 
   const props = defineProps<

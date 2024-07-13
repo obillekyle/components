@@ -1,12 +1,13 @@
 <script setup lang="ts">
-  import type { BoxProps } from '@/components/Box'
+  import type { BoxProps } from '@/components/Box/util'
   import type { AppSizesString } from '@/utils/css'
   import type { HTMLAttributes } from 'vue'
   import type { TextProps } from './util'
 
-  import { getCSSValue } from '@/utils'
+  import { getCSSValue } from '@/utils/css'
   import { computed } from 'vue'
-  import Box, { getBoxProps } from '@/components/Box'
+  import Box from '@/components/Box/box.vue'
+  import { getBoxProps } from '@/components/Box/util'
 
   interface Props
     extends BoxProps,

@@ -1,4 +1,4 @@
-import { Colors } from '@/utils'
+import { Colors } from '@/utils/colors'
 import type {
   AppSizes,
   AppSizesPrefixes,

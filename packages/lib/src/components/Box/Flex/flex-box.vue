@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from 'vue'
-  import type { BoxProps } from '@/components/Box'
+  import type { BoxProps } from '@/components/Box/util'
   import type { AppSizesString } from '@/utils/css'
 
   import { getCSSValue } from '@/utils/css'

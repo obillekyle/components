@@ -1,4 +1,4 @@
-import type { AppSizesString } from '@/utils'
+import type { AppSizesString } from '@/utils/css'
 
 export type TextProps = {
   color?: string

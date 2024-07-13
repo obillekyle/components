@@ -1,8 +1,9 @@
 <script setup lang="ts">
   import { evaluate } from '@/utils/object'
   import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-  import type { BoxProps } from '@/components/Box'
-  import Box, { getBoxProps } from '@/components/Box'
+  import type { BoxProps } from '@/components/Box/util'
+  import { getBoxProps } from '@/components/Box/util'
+  import Box from '@/components/Box/box.vue'
 
   interface ScrollContainerProps extends BoxProps {
     scrollable?: boolean

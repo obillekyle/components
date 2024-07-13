@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import type { BoxProps } from '@/components/Box'
+  import type { BoxProps } from '@/components/Box/util'
   import type { HTMLAttributes } from 'vue'
 
-  import Box, { getBoxProps } from '@/components/Box'
+  import Box from '@/components/Box/box.vue'
+  import { getBoxProps } from '@/components/Box/util'
   import CircularProgress from '../Progress/circular-progress.vue'
   import { computed, onBeforeMount, onUnmounted, ref, watch } from 'vue'
   import { Icon } from '@iconify/vue'

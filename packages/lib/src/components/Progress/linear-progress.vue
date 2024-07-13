@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { clamp } from '@/utils'
+  import { clamp } from '@/utils/number'
   import { addUnit, getCSSValue } from '@/utils/css'
   import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 

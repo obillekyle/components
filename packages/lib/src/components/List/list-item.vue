@@ -2,7 +2,9 @@
   import type { ListProps } from './types'
 
   import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
-  import { addPX, evaluate, getClientPos } from '@/utils'
+  import { evaluate } from '@/utils/object'
+  import { getClientPos } from '@/utils/dom'
+  import { addPX } from '@/utils/css'
   import { Icon } from '@iconify/vue'
 
   const props = defineProps<{
