@@ -39,11 +39,10 @@
     "format:prettier": "prettier --write . --ignore-path .gitignore",
     "format:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format:stylelint": "stylelint **/*.{vue,css,scss} --fix --ignore-path .gitignore",
-    "build:lib": "bun run --filter @okyle/components build",
-    "check": "run-s check:format check:stylelint check:eslint",
+    "build:lib": "bun run --filter @vue-material/core build",
+    "check": "run-s check:format check:stylelint check:eslint build",
     "format": "run-s format:prettier format:eslint format:stylelint",
     "commit": "commit",
-    "release": "lerna exec -- npx semantic-release",
     "build": "run-s build:lib"
   },
   "dependencies": {

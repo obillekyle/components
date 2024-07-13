@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import Layout from '@okyle/components/Layout/layout.vue'
-  import Navigation from '@okyle/components/Navigation'
+  import Layout from '@vue-material/core/Layout/layout.vue'
+  import Navigation from '@vue-material/core/Navigation'
 
   const router = useRouter()
 

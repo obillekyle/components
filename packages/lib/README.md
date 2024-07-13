@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://sle.okyle.xyz"><img src="https://raw.githubusercontent.com/obillekyle/components/main/assets/logo.png" alt="@okyle/components" title="See in action" width="80"></a>
+<a href="https://sle.okyle.xyz"><img src="https://raw.githubusercontent.com/obillekyle/components/main/assets/logo.png" alt="@vue-material/core" title="See in action" width="80"></a>
 
 # MD Components
 
@@ -10,9 +10,9 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/obillekyle/components)
 ![GitHub License](https://img.shields.io/github/license/obillekyle/components)\
-![Version](https://img.shields.io/npm/v/@okyle/components?label=Version&color=orange&logo=npm)
-![MinZip Size](https://badgen.net/bundlephobia/minzip/@okyle/components)\
-![Tree Shaking](https://badgen.net/bundlephobia/tree-shaking/@okyle/components)
+![Version](https://img.shields.io/npm/v/@vue-material/core?label=Version&color=orange&logo=npm)
+![MinZip Size](https://badgen.net/bundlephobia/minzip/@vue-material/core)\
+![Tree Shaking](https://badgen.net/bundlephobia/tree-shaking/@vue-material/core)
 ![SSR](https://img.shields.io/badge/SSR-supported-'')
 
 </div>
@@ -23,8 +23,8 @@ Recreated the [Material Design Components](https://github.com/material-component
 > This package is still in Alpha development and updates may contain breaking changes.
 > Please report any bugs [here](https://github.com/obillekyle/components/issues).
 
-> [!NOTE]  
-> `1.0.10-a`: Fixed component hydration issues.
+> [!IMPORTANT]
+> If you previously installed @okyle/components, please remove it before installing this package.
 
 ## Screenshots
 
@@ -35,16 +35,16 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ```bash
 # NPM
-npm install @okyle/components @iconify/vue
+npm install @vue-material/core @iconify/vue
 
 # Yarn
-yarn add @okyle/components @iconify/vue
+yarn add @vue-material/core @iconify/vue
 
 # PNPM
-pnpm add @okyle/components @iconify/vue
+pnpm add @vue-material/core @iconify/vue
 
 # BUN
-bun install @okyle/components @iconify/vue
+bun install @vue-material/core @iconify/vue
 ```
 
 ## Components
