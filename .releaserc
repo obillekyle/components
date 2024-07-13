@@ -27,31 +27,23 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    "@semantic-release/npm",
-    "@semantic-release/github",
+    [
+      "@semantic-release/npm",
+      {
+        "pkgRoot": "packages/lib"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "packages/lib/dist/**/*",
+            "label": "Components"
+          }
+        ]
+      }
+    ],
     "@semantic-release/exec"
-  ],
-  "monorepo": {
-    "analyzeCommits": {
-      "path": "@semantic-release/commit-analyzer",
-      "preset": "angular"
-    },
-    "generateNotes": {
-      "path": "@semantic-release/release-notes-generator",
-      "preset": "angular"
-    },
-    "publish": {
-      "path": "@semantic-release/npm",
-      "pkgRoot": "packages/lib"
-    },
-    "github": {
-      "path": "@semantic-release/github",
-      "assets": [
-        {
-          "path": "packages/lib/dist/**/*",
-          "label": "Components"
-        }
-      ]
-    }
-  }
+  ]
 }
