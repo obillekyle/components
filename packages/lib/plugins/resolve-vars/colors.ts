@@ -23,6 +23,6 @@ export class Colors {
 
   shade(shade: number, alpha = 1) {
     const [h, s] = this.main
-    return toHex(hsla(h, s > 80 ? 80 : s, shade, alpha))
+    return toHex(hsla(h, s > 0.8 ? 0.8 : s, shade / 100, alpha))
   }
 }
