@@ -211,15 +211,18 @@ export function attachStyles({
         const pack = (packSize / 1024).toFixed(2)
         const mod = (moduleSize / 1024).toFixed(2)
         const modGzip = (modSizeGzip / 1024).toFixed(2)
+        const packPad = Math.max(pack.length, mod.length)
+        const sizePad = Math.max(size.length, modGzip.length)
 
         logger.log(`Clean CSS files...`)
         logger.log(`Cleaned CSS files in ${elapsed}ms.`)
         logger.log(
-          `$cyan;Files: $gray;$B;${pack} kB $R;$gray;│`,
-          `$cyan;Saved: $gray;$B;${size} kB$R;`
+          `$cyan;Unpacked: $gray;$B;${pack.padStart(packPad, ' ')} kB`,
+          `$R;$gray;│ save: ${size.padStart(sizePad, ' ')} kB$R;`
         )
         logger.log(
-          `$cyan;Module size: $gray;$B;${mod} kB $R;$gray;│ gzip: ${modGzip} kB$R;\n`
+          `$cyan;Packaged: $gray;$B;${mod.padStart(packPad, ' ')} kB`,
+          `$R;$gray;│ gzip: ${modGzip.padStart(sizePad, ' ')} kB$R;\n`
         )
       }
     }

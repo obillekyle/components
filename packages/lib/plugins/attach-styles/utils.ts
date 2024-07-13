@@ -27,17 +27,17 @@ export function isCSS(str: string) {
 
 export function getHelperFileContent(css: string, prefix: string) {
   return `
-    function injectCSS(css, hash) {
-      const style = 
-        document.querySelector('style#${prefix}-' + hash) 
-        ?? document.createElement('style');
-      
-      style.id = '${prefix}-' + hash;
-      style.textContent = css;
-      document.head.contains(style) || document.head.appendChild(style);
+    export default function injectCSS(css, hash) {
+      if (typeof window !== 'undefined') {
+        const style = 
+          document.querySelector('style#${prefix}-' + hash) 
+          ?? document.createElement('style');
+        
+        style.id = '${prefix}-' + hash;
+        style.textContent = css;
+        document.head.contains(style) || document.head.appendChild(style);
+      }
     }
-
-    export default injectCSS;
   `
 }
 

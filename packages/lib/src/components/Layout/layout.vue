@@ -7,10 +7,10 @@
   import deep from 'deepmerge'
   import ScrollContainer from './scroll-container.vue'
   import LayoutStyles from './layout-styles.vue'
-  import { getUnique } from '@/utils/number'
+  import { hashStr } from '@/utils/string'
   import { DefaultLayoutOptions } from './util'
   import { computed, onMounted, onUnmounted, provide, ref } from 'vue'
-  import { interval, removeInterval } from '@/utils'
+  import { interval, removeInterval } from '@/utils/performance'
   import './style.scss'
 
   interface LayoutProps extends /** @vue-ignore */ HTMLAttributes {
@@ -33,10 +33,21 @@
     return deep(options, propsOptions) as LayoutOptions
   })
 
+  const id = computed(
+    () =>
+      'layout-' +
+      hashStr(
+        JSON.stringify({
+          globalStyle: props.globalStyle,
+          options: options.value
+        }),
+        6
+      )
+  )
+
   const rotate = ref(0)
   const rotaterKey = ref(0)
   const contentScrollTop = ref(0)
-  const id = ref(getUnique('layout'))
   const headerTitle = ref('')
 
   defineOptions({
@@ -62,7 +73,7 @@
 </script>
 
 <template>
-  <div class="md-layout" :class="[options.theme]" :id="id">
+  <div class="md-layout" :class="[options.theme]" :id>
     <LayoutStyles>
       <slot name="navbar" />
       <slot name="sidebar" />

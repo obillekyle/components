@@ -20,7 +20,7 @@ Recreated the [Material Design Components](https://github.com/material-component
 > Please report any bugs [here](https://github.com/obillekyle/components/issues).
 
 > [!NOTE]  
-> `1.0.8-a`: Components will now work in SSR mode. If you think I missed something, let me know.
+> `1.0.10-a`: Fixed component hydration issues.
 
 ## Screenshots
 

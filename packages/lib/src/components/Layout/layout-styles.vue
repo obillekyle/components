@@ -9,7 +9,7 @@
 
   import { Colors, isLight } from '@/utils/colors'
   import { AppShades } from './util'
-  import { inject, onBeforeMount, ref, watch } from 'vue'
+  import { inject, onBeforeMount, onMounted, ref, watch } from 'vue'
   import { addPX, getCSSColor, getCSSValue } from '@/utils/css'
   import type { Ref } from 'vue'
 
@@ -24,6 +24,7 @@
   const options = inject<ComputedRef<LayoutOptions>>('options')!
   const tag = inject<Ref<string>>('layout-id')!
   const styleElem = ref('')
+  const isClient = ref(false)
 
   function getShades(color: string | String | Colors, prefix: string) {
     const colors =
@@ -130,12 +131,15 @@
     })
   }
 
+  onMounted(() => {
+    isClient.value = true
+  })
   onBeforeMount(setStyle)
   watch(options, setStyle)
 </script>
 
 <template>
-  <component v-bind:is="'style'" :data-for="tag">
+  <component v-bind:is="'style'" :data-for="tag" v-if="isClient">
     {{
       `${globalStyle ? 'html, body' : '#' + tag} {
         ${styleElem}

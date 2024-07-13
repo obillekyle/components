@@ -17,13 +17,13 @@
 </script>
 
 <template>
-  <h1 class="md-header-title" :class="{ 'on-top': scrollTop < 6 }">
+  <h1 class="md-header-content-title" :class="{ 'on-top': scrollTop < 6 }">
     {{ props.title }}
   </h1>
 </template>
 
 <style lang="scss">
-  .md-header-title {
+  .md-header-content-title {
     position: relative;
     font-size: var(--size-sm);
     font-weight: 500;

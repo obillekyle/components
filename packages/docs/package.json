@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@okyle/components": "^1.0.7-a",
+    "@okyle/components": "workspace:*",
     "nuxt": "^3.12.3",
     "vue": "latest"
   }

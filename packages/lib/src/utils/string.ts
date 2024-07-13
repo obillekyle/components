@@ -78,6 +78,14 @@ export function fixLineBreaks(str: string) {
   return text
 }
 
+export function hashStr(str: string, limit?: number) {
+  let hash = 5381
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 33) ^ str.charCodeAt(i)
+  }
+  return (hash >>> 0).toString(16).slice(0, limit)
+}
+
 export class MutableString extends String {
   constructor(str: string) {
     super(str)
