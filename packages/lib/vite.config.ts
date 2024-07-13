@@ -37,7 +37,7 @@ export default defineConfig({
     rollupOptions: {
       treeshake: false,
       preserveEntrySignatures: 'strict',
-      external: ['vue', 'color', '@iconify/vue', 'deepmerge'],
+      external: ['vue', 'color2k', '@iconify/vue', 'deepmerge'],
       output: {
         preserveModules: true,
         entryFileNames: '[name].js',
@@ -45,8 +45,8 @@ export default defineConfig({
         assetFileNames: '[name].[ext]',
         globals: {
           vue: 'Vue',
-          color: 'Color',
-          deepmerge: 'Deepmerge',
+          color2k: 'color2k',
+          deepmerge: 'deepmerge',
           '@iconify/vue': 'Iconify'
         }
       }

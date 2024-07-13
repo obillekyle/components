@@ -1,37 +1,36 @@
-import Color from 'color'
+import { parseToRgba, parseToHsla, hsla, toHex } from 'color2k'
 import { CustomEventHandler } from './event'
 
 export type ColorEvents = {
-  update: [color: Color, oldColor: Color]
+  update: [color: string, oldColor: string]
 }
 
-export function isLight(color: Color) {
-  const [r, g, b] = color.rgb().array()
+export function isLight(color: string): boolean {
+  const [r, g, b] = parseToRgba(color)
   return r > 180 || r + g + b > 450
 }
 
 export class Colors extends CustomEventHandler<ColorEvents> {
-  main: Color = Color('white')
+  main = parseToHsla('white')
 
-  constructor(color?: string | Color | String) {
+  constructor(color?: string | String) {
     super()
-    this.set(color ?? this.main)
+    this.set(color ?? 'white')
   }
 
-  set(colorString: string | Color | String): this {
-    const old = this.main
-    this.main = Color(colorString)
-    this.dispatchEvent('update', [this.main, old])
+  set(colorString: string | String): this {
+    const old = hsla(...this.main)
+    this.main = parseToHsla(colorString.toString())
+    this.dispatchEvent('update', [hsla(...this.main), old])
     return this
   }
 
   shade(shade: number, alpha = 1) {
-    const [h, s] = this.main.hsl().array()
-    return Color({
-      h,
-      s: s > 80 ? 80 : s,
-      l: shade,
-      alpha
-    })
+    const [h, s] = this.main
+    return toHex(hsla(h, s > 80 ? 80 : s, shade, alpha))
+  }
+
+  toString() {
+    return toHex(hsla(...this.main))
   }
 }

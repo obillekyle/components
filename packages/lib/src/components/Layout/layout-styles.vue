@@ -35,43 +35,43 @@
     if (theme == 'dark') {
       for (let shade of AppShades) {
         const key = prefix + '-' + shade
-        values[key] = colors.shade(shade).hex()
+        values[key] = colors.shade(shade)
 
         for (let i = 0; i < 9; i++) {
-          const color = colors.shade(shade, (i + 1) * 0.1).hexa()
+          const color = colors.shade(shade, (i + 1) * 0.1)
           values[key + '-' + (i + 1) * 10] = color
         }
       }
       const _50 = colors.shade(50)
-      values[prefix] = _50.hex()
-      values['on-' + prefix] = colors.shade(isLight(_50) ? 5 : 95).hex()
+      values[prefix] = _50
+      values['on-' + prefix] = colors.shade(isLight(_50) ? 5 : 95)
 
       const _95 = colors.shade(80)
-      values[prefix + '-container'] = _95.hex()
-      values['on-' + prefix + '-container'] = colors
-        .shade(isLight(_95) ? 5 : 95)
-        .hex()
+      values[prefix + '-container'] = _95
+      values['on-' + prefix + '-container'] = colors.shade(
+        isLight(_95) ? 5 : 95
+      )
     } else {
       for (let shade of AppShades) {
         const val = Math.abs(100 - shade)
         const key = prefix + '-' + shade
-        values[key] = colors.shade(val, 1).hex()
+        values[key] = colors.shade(val, 1)
 
         for (let i = 0; i < 9; i++) {
-          const color = colors.shade(val, (i + 1) * 0.1).hexa()
+          const color = colors.shade(val, (i + 1) * 0.1)
           values[key + '-' + (i + 1) * 10] = color
         }
       }
 
       const _50 = colors.shade(50)
-      values[prefix] = _50.hex()
-      values['on-' + prefix] = colors.shade(isLight(_50) ? 5 : 95).hex()
+      values[prefix] = _50
+      values['on-' + prefix] = colors.shade(isLight(_50) ? 5 : 95)
 
       const _95 = colors.shade(90)
-      values[prefix + '-container'] = _95.hex()
-      values['on-' + prefix + '-container'] = colors
-        .shade(isLight(_95) ? 5 : 95)
-        .hex()
+      values[prefix + '-container'] = _95
+      values['on-' + prefix + '-container'] = colors.shade(
+        isLight(_95) ? 5 : 95
+      )
     }
 
     return values

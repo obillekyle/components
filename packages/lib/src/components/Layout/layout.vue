@@ -3,7 +3,7 @@
   import type { LayoutOptions } from './util'
   import type { PartialDeep } from 'type-fest'
 
-  import Color from 'color'
+  import { adjustHue } from 'color2k'
   import deep from 'deepmerge'
   import ScrollContainer from './scroll-container.vue'
   import LayoutStyles from './layout-styles.vue'
@@ -27,7 +27,8 @@
 
     const primary = opts.colors?.primary || options.colors.primary
     const secondary =
-      opts.colors?.secondary || Color(primary).rotate(180).hex()
+      opts.colors?.secondary ||
+      adjustHue(primary.toString?.() || '#000', 180)
 
     const propsOptions = deep(opts, { colors: { primary, secondary } })
     return deep(options, propsOptions) as LayoutOptions

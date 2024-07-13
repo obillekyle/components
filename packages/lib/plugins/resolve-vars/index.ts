@@ -4,21 +4,23 @@ import {
   DefaultColors,
   DefaultElementSizes
 } from './defaults'
-import { Colors, isLight, toColorsObj } from './colors'
+import { Colors, isLight } from './colors'
 
 export function resolver() {
-  const defColors = DefaultColors as any
+  const defColors = DefaultColors
   const defSizes = DefaultSizes as any
   const defElems = DefaultElementSizes as any
 
   const colors: Record<string, Colors> = {
-    primary: toColorsObj(defColors.primary),
-    secondary: toColorsObj(defColors.secondary),
-    error: toColorsObj(defColors.error),
-    mono: toColorsObj(defColors.mono)
+    primary: new Colors(defColors.primary),
+    secondary: new Colors(defColors.secondary),
+    error: new Colors(defColors.error),
+    mono: new Colors(defColors.mono)
   }
 
   function setVars(content: string): string {
+    if (typeof content !== 'string') return content
+
     const VAR_OTHER = /var\((\w{1,})\)/g
     const VAR_COLOR =
       /var\((--([a-z]{1,})-(?:(\d{1,3}|\d{1,3}-\d{1,3})))\)/g
@@ -32,8 +34,7 @@ export function resolver() {
         const [s, a] = variant.split('-')
 
         const shade = colors[color].shade(Number(s), a ? Number(a) : 1)
-        const finalColor = a ? shade.hexa() : shade.hex()
-        return `var(${varTxt}, ${finalColor})`
+        return `var(${varTxt}, ${shade})`
       }
     )
 
@@ -58,24 +59,24 @@ export function resolver() {
 
       if (p1 in colors && !p2 && !p3) {
         const color = colors[p1].shade(50)
-        return `var(--${rawVar},${color.hexa()})`
+        return `var(--${rawVar},${color})`
       }
 
       if (p1 === 'on' && p2 in colors && !p3) {
         const color = colors[p2].shade(50)
         const shade = colors[p2].shade(isLight(color) ? 5 : 95)
-        return `var(--${rawVar},${shade.hexa()})`
+        return `var(--${rawVar},${shade})`
       }
 
       if (p1 in colors && p2 === 'container' && !p3) {
         const color = colors[p1].shade(80)
-        return `var(--${rawVar},${color.hexa()})`
+        return `var(--${rawVar},${color})`
       }
 
       if (p1 === 'on' && p2 in colors && p3 === 'container') {
         const color = colors[p2].shade(80)
         const shade = colors[p2].shade(isLight(color) ? 5 : 95)
-        return `var(--${rawVar},${shade.hexa()})`
+        return `var(--${rawVar},${shade})`
       }
 
       return match

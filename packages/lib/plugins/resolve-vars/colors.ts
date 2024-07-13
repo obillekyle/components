@@ -1,37 +1,28 @@
-import Color from 'color'
+import { parseToRgba, parseToHsla, hsla, toHex } from 'color2k'
 
 export type ColorEvents = {
-  update: [color: Color, oldColor: Color]
+  update: [color: string, oldColor: string]
 }
 
-export function isLight(color: Color) {
-  const [r, g, b] = color.rgb().array()
+export function isLight(color: string): boolean {
+  const [r, g, b] = parseToRgba(color)
   return r > 180 || r + g + b > 450
 }
 
 export class Colors {
-  main: Color = Color('white')
+  main = parseToHsla('white')
 
-  constructor(color?: string | Color | String) {
-    this.set(color ?? this.main)
+  constructor(color?: string | String) {
+    this.set(color ?? 'white')
   }
 
-  set(colorString: String | string | Color): this {
-    this.main = Color(colorString)
+  set(colorString: string | String): this {
+    this.main = parseToHsla(colorString.toString())
     return this
   }
 
   shade(shade: number, alpha = 1) {
-    const [h, s] = this.main.hsl().array()
-    return Color({
-      h,
-      s: s > 80 ? 80 : s,
-      l: shade,
-      alpha
-    })
+    const [h, s] = this.main
+    return toHex(hsla(h, s > 80 ? 80 : s, shade, alpha))
   }
-}
-
-export function toColorsObj(color: string | String | Colors): Colors {
-  return color instanceof Colors ? color : new Colors(color)
 }
