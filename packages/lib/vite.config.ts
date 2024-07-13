@@ -56,8 +56,5 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src')
     }
-  },
-  define: {
-    __MDC_VER__: JSON.stringify(version)
   }
 })
