@@ -9,7 +9,11 @@
 Recreated the [Material Design Components](https://github.com/material-components/material-components-web) for Vue3.
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/obillekyle/components)
-![GitHub License](https://img.shields.io/github/license/obillekyle/components)
+![GitHub License](https://img.shields.io/github/license/obillekyle/components)\
+![Version](https://img.shields.io/npm/v/@okyle/components?label=Version&color=orange&logo=npm)
+![MinZip Size](https://badgen.net/bundlephobia/minzip/@okyle/components)\
+![Tree Shaking](https://badgen.net/bundlephobia/tree-shaking/@okyle/components)
+![SSR](https://img.shields.io/badge/SSR-supported-'')
 
 </div>
 
