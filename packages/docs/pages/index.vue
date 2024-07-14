@@ -25,13 +25,11 @@
   const tab = ref(0)
   const isDark = ref(true)
 
-  defineOptions({
-    name: 'HelloWorld'
-  })
+  defineOptions({ name: 'HelloWorld' })
 </script>
 
 <template>
-  <Layout>
+  <Layout :options="{ theme: isDark ? 'dark' : 'light' }">
     <template #navbar>
       <Navigation.Bar :active="tab" :change="(t) => (tab = t)">
         <Navigation.Container center>

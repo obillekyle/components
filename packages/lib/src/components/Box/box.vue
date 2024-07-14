@@ -1,88 +1,53 @@
 <script setup lang="ts">
-  import type { BoxProps } from './util'
-  import { getCSSValue } from '@/utils/css'
-  import { computed, ref } from 'vue'
+  import type { BoxComponentProps } from './util'
+  import { processBoxProps } from './util'
+  import { computed } from 'vue'
 
-  const box = ref<HTMLElement | null>(null)
-  const props = defineProps<
-    BoxProps & {
-      exclude?: boolean
-    }
-  >()
-
-  defineOptions({
-    name: 'MdBox'
-  })
-
-  const styles = computed(() => {
-    const styleObj = {} as any
-
-    if (props.p) styleObj.padding = getCSSValue(props.p)
-    if (props.m) styleObj.margin = getCSSValue(props.m)
-    if (props.r) styleObj.borderRadius = getCSSValue(props.r)
-    if (props.px) styleObj.paddingInline = getCSSValue(props.px)
-    if (props.py) styleObj.paddingBlock = getCSSValue(props.py)
-    if (props.pt) styleObj.paddingTop = getCSSValue(props.pt)
-    if (props.pl) styleObj.paddingLeft = getCSSValue(props.pl)
-    if (props.pr) styleObj.paddingRight = getCSSValue(props.pr)
-    if (props.pb) styleObj.paddingBottom = getCSSValue(props.pb)
-    if (props.mx) styleObj.marginInline = getCSSValue(props.mx)
-    if (props.my) styleObj.marginBlock = getCSSValue(props.my)
-    if (props.mt) styleObj.marginTop = getCSSValue(props.mt)
-    if (props.ml) styleObj.marginLeft = getCSSValue(props.ml)
-    if (props.mr) styleObj.marginRight = getCSSValue(props.mr)
-    if (props.mb) styleObj.marginBottom = getCSSValue(props.mb)
-    if (props.width) styleObj.width = getCSSValue(props.width)
-    if (props.height) styleObj.height = getCSSValue(props.height)
-
-    return styleObj
-  })
-
-  const mdBox = computed(() => {
-    if (props.exclude) return null
-    return props.bg ? props.bg : ''
-  })
+  defineOptions({ name: 'MdBox' })
+  const props = defineProps<BoxComponentProps>()
+  const style = computed(() => processBoxProps(props))
+  const mdBox = computed(() => (props.exclude ? null : props.bg ?? ''))
 </script>
 
 <template>
-  <component :md-box="mdBox" :is="as ?? 'div'" :style="styles" ref="box">
+  <component :md-box="mdBox" :is="as ?? 'div'" :style>
     <slot />
   </component>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   [md-box] {
-    background-color: var(--bgc);
-    color: var(--onbgc);
+    color: var(--color);
+    background: var(--bg);
 
-    * {
-      --bgc: unset;
-      --onbgc: unset;
+    > * {
+      --bg: unset;
+      --color: unset;
     }
 
     &[md-box='primary'] {
-      --bgc: var(--primary);
-      --onbgc: var(--on-primary);
+      --bg: var(--primary);
+      --color: var(--on-primary);
     }
 
     &[md-box='secondary'] {
-      --bgc: var(--secondary);
-      --onbgc: var(--on-secondary);
+      --bg: var(--secondary);
+      --color: var(--on-secondary);
     }
 
     &[md-box='error'] {
-      --bgc: var(--error);
-      --onbgc: var(--on-error);
+      --bg: var(--error);
+      --color: var(--on-error);
     }
 
     &[md-box='mono'] {
-      --bgc: var(--mono-10);
-      --onbgc: var(--mono-80);
+      --bg: var(--mono-10);
+      --color: var(--mono-80);
     }
 
     &[md-box='on-bg'] {
-      background-color: var(--onbgc);
-      color: var(--bgc);
+      color: var(--bg);
+      background: var(--color);
     }
   }
 </style>

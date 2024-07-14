@@ -25,10 +25,7 @@
     pos?: Positions
   }
 
-  defineOptions({
-    name: 'MdFloatingIndicator'
-  })
-
+  defineOptions({ name: 'MdFloatingIndicator' })
   withDefaults(defineProps<FloaterProps>(), {
     color: 'primary-200',
     offset: 0,

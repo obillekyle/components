@@ -10,15 +10,11 @@
   }
 
   defineProps<NavigationItemProps>()
-
-  defineOptions({
-    name: 'MdNavigationEntry',
-    inheritAttrs: false
-  })
+  defineOptions({ name: 'MdNavigationEntry' })
 </script>
 
 <template>
-  <button ref="element" v-bind="$attrs" class="md-nav-item entry">
+  <button ref="element" class="md-nav-item entry">
     <div class="md-navbar-item-icon">
       <Icon :icon="icon" />
     </div>

@@ -5,10 +5,7 @@
     extends /* @vue-ignore */ HTMLAttributes {}
 
   defineProps<NavigationContentProps>()
-
-  defineOptions({
-    name: 'MdNavigationContent'
-  })
+  defineOptions({ name: 'MdNavigationContent' })
 </script>
 
 <template>

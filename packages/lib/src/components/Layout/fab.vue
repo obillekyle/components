@@ -8,12 +8,11 @@
   interface FabProps extends /* @vue-ignore */ ButtonHTMLAttributes {
     icon?: string | Component
   }
-  const scrollTop = inject<Ref<number>>('content-scroll-top')!
-  defineProps<FabProps>()
 
-  defineOptions({
-    name: 'MdFloatingActionButton'
-  })
+  const scrollTop = inject<Ref<number>>('content-scroll-top')!
+
+  defineProps<FabProps>()
+  defineOptions({ name: 'MdFloatingActionButton' })
 </script>
 
 <template>

@@ -2,13 +2,15 @@
   import Box from '@/components/Box/box.vue'
   import type { BoxProps } from '@/components/Box/util'
   import { getBoxProps } from '@/components/Box/util'
+  import { getCSSColor } from '@/utils'
   import { computed } from 'vue'
 
-  const props = defineProps<
-    BoxProps & {
-      color?: string
-    }
-  >()
+  interface WavyDividerProps extends BoxProps {
+    color?: string
+  }
+
+  defineOptions({ name: 'MdWavyDivider' })
+  const props = defineProps<WavyDividerProps>()
   const boxProps = computed(() =>
     getBoxProps(props, {
       my: 'lg',
@@ -18,7 +20,11 @@
 </script>
 
 <template>
-  <Box class="md-wavy-divider" v-bind="boxProps" :style="{ color }">
+  <Box
+    class="md-wavy-divider"
+    v-bind="boxProps"
+    :style="{ color: getCSSColor(color ?? '') }"
+  >
     <svg
       width="100%"
       height="12"
@@ -40,7 +46,7 @@
         </g>
       </pattern>
 
-      <rect width="100%" height="100%" fill="url(#squiggle)"></rect>
+      <rect width="100%" height="100%" fill="url(#squiggle)" />
     </svg>
   </Box>
 </template>

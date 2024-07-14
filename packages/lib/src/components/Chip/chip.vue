@@ -3,7 +3,7 @@
   import type { AppSizes } from '@/utils/css'
   import '@/assets/button.scss'
 
-  import IconOrComponent from '../Misc/icon-or-component.vue'
+  import IconOrComponent from '@/components/Misc/icon-or-component.vue'
   import { rippleEffect } from '@/utils/dom'
   import { getCSSValue } from '@/utils/css'
 
@@ -15,20 +15,15 @@
     radius?: AppSizes | number | 'rounded' | String
   }
 
-  withDefaults(defineProps<ChipProps>(), {
-    radius: 'xs'
-  })
-
-  defineOptions({
-    name: 'MdChip'
-  })
+  defineProps<ChipProps>()
+  defineOptions({ name: 'MdChip' })
 </script>
 
 <template>
   <button
     :class="['md-chip', variant]"
-    :style="{ '--radius': getCSSValue(radius) }"
     @pointerdown="rippleEffect"
+    :style="{ '--radius': getCSSValue(radius ?? 'xs') }"
   >
     <IconOrComponent class="md-chip-icon left" :icon="leftIcon" />
     <div class="md-chip-label">

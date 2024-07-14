@@ -27,9 +27,7 @@ export function onSelfEvent<T extends Event>(
   const target = event.target as HTMLElement
   const currentTarget = event.currentTarget as HTMLElement
 
-  if (target === currentTarget) {
-    handler(event)
-  }
+  if (target === currentTarget) handler(event)
 }
 
 export type BoxDimensions = {
@@ -135,7 +133,7 @@ export function rippleEffect(e: PointerEvent, to?: string) {
 
   function removeRipple() {
     ripple.classList.add('fade')
-    ripple.addEventListener('animationend', () => ripple.remove())
+    ripple.addEventListener('animationend', ripple.remove.bind(ripple))
   }
 
   document.addEventListener('pointerup', removeRipple)

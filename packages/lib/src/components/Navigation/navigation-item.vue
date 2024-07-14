@@ -14,17 +14,14 @@
     value?: number
   }
 
-  const props = defineProps<NavigationItemProps>()
   const index = ref<number>(0)
   const element = ref<HTMLElement | null>(null)
   const count = inject<Ref<number>>('count')!
   const parentProps = inject<NavigationBarProps>('parent-props')!
   const root = inject<Ref<HTMLDivElement | null>>('parent')!
 
-  defineOptions({
-    name: 'NavigationItem',
-    inheritAttrs: false
-  })
+  const props = defineProps<NavigationItemProps>()
+  defineOptions({ name: 'MdNavigationItem' })
 
   function updateIndex() {
     if (root.value) {

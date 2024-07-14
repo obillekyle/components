@@ -6,6 +6,7 @@
   import { getClientPos } from '@/utils/dom'
   import { addPX } from '@/utils/css'
   import { Icon } from '@iconify/vue'
+  import IconOrComponent from '../Misc/icon-or-component.vue'
 
   const props = defineProps<{
     index: number
@@ -17,6 +18,7 @@
   const arrangeEvent = ref<MouseEvent | TouchEvent | null>(null)
   const content = ref<HTMLElement | null>(null)
   const wrapper = ref<HTMLElement | null>(null)
+
   const value = ref(0)
   const lastTop = ref(0)
 
@@ -83,6 +85,7 @@
     swipeEvent.value = null
     document.body.style.removeProperty('cursor')
     const distance = parentProps.swipeDistance ?? 200
+    const swipeOptions = parentProps.swipeOptions
     const element = content.value!
 
     if (Math.abs(value.value) >= distance) {
@@ -93,11 +96,8 @@
         }
         case 'custom': {
           value.value > 0
-            ? evaluate(parentProps.swipeOptions?.left?.handler, props.index)
-            : evaluate(
-                parentProps.swipeOptions?.right?.handler,
-                props.index
-              )
+            ? evaluate(swipeOptions?.left?.handler, props.index)
+            : evaluate(swipeOptions?.right?.handler, props.index)
         }
       }
     }
@@ -206,19 +206,13 @@
       v-if="parentProps.swipe === 'custom'"
     >
       <template :key="key" v-for="(item, key) in parentProps.swipeOptions">
-        <div
+        <IconOrComponent
           :class="key"
+          v-show="key == 'left' ? value > 0 : value < 0"
           v-if="typeof item == 'object'"
           :style="{ background: item.color }"
-          v-show="key == 'left' ? value > 0 : value < 0"
-        >
-          <Icon
-            v-if="typeof item.icon == 'string'"
-            :icon="item.icon"
-            :width="24"
-          />
-          <component v-else :is="item.icon" />
-        </div>
+          :icon="item.icon"
+        />
       </template>
     </div>
   </div>

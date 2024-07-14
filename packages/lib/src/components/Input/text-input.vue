@@ -1,8 +1,7 @@
 <script setup lang="ts">
-  import './style.scss'
-
   import type { InputHTMLAttributes, Component } from 'vue'
   import type { AppSizes } from '@/utils/css'
+  import '@/assets/input.scss'
 
   import Counter from './counter.vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'

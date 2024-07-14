@@ -13,10 +13,9 @@
     speed: 24
   })
 
+  const cloned = ref(false)
   const wrapper = ref<HTMLDivElement | null>(null)
   const content = ref<HTMLDivElement | null>(null)
-
-  const cloned = ref(false)
 
   function setScroll() {
     cloned.value = false
@@ -37,9 +36,7 @@
     })
   }
 
-  defineOptions({
-    name: 'MdScroller'
-  })
+  defineOptions({ name: 'MdScroller' })
 
   onMounted(() => {
     setScroll()

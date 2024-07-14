@@ -1,25 +1,39 @@
 <script setup lang="ts">
-  import { inject, onMounted, type Ref, onBeforeUnmount } from 'vue'
+  import type { Ref, HTMLAttributes } from 'vue'
+  import type { BoxProps } from '@/components/Box/util'
+  import type { TextProps } from '@/components/Text/util'
 
-  const headerTitle = inject<Ref<string>>('header-title')!
+  import Text from '@/components/Text/text.vue'
+  import { inject, watch, onMounted, onBeforeUnmount } from 'vue'
+
+  const header = inject<Ref<string>>('header-title')!
   const scrollTop = inject<Ref<number>>('content-scroll-top')!
-  const props = defineProps<{
+
+  interface HeaderContentProps
+    extends TextProps,
+      BoxProps,
+      /* @vue-ignore */ HTMLAttributes {
     title: string
-  }>()
+  }
 
-  onMounted(() => {
-    headerTitle.value = props.title
-  })
+  const props = defineProps<HeaderContentProps>()
+  const setTitle = (val?: string) => (header.value = val ?? props.title)
 
-  onBeforeUnmount(() => {
-    headerTitle.value = ''
-  })
+  onMounted(setTitle)
+  watch(() => props.title, setTitle)
+  onBeforeUnmount(() => setTitle(''))
+  defineOptions({ name: 'MdHeaderContent' })
 </script>
 
 <template>
-  <h1 class="md-header-content-title" :class="{ 'on-top': scrollTop < 6 }">
-    {{ props.title }}
-  </h1>
+  <Text
+    as="h1"
+    class="md-header-content-title"
+    :class="{ 'on-top': scrollTop < 6 }"
+    v-bind="$props"
+  >
+    {{ title }}
+  </Text>
 </template>
 
 <style lang="scss">

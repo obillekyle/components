@@ -7,6 +7,7 @@
       /** @vue-ignore */ HTMLAttributes {}
 
   defineProps<FlexSpanProps>()
+  defineOptions({ name: 'MdFlexSpan' })
 </script>
 
 <template>

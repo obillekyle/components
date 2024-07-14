@@ -15,13 +15,8 @@
     label?: string
   }
 
-  withDefaults(defineProps<ButtonProps>(), {
-    radius: 'rounded'
-  })
-
-  defineOptions({
-    name: 'MdButton'
-  })
+  withDefaults(defineProps<ButtonProps>(), { radius: 'rounded' })
+  defineOptions({ name: 'MdButton' })
 </script>
 
 <template>

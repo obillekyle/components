@@ -19,11 +19,13 @@
   import Fab from '@/components/Layout/fab.vue'
   import MdBox from '@/components/Box'
   import BlockImage from '@/components/Image/block-image.vue'
+  import ColorBlock from '@/components/Misc/color-block.vue'
   import Text from '@/components/Text'
   import { ref } from 'vue'
 
   const tab = ref(0)
   const isDark = ref(true)
+  const color = ref('#4ed47b')
 </script>
 
 <template>
@@ -31,7 +33,7 @@
     global-style
     :options="{
       theme: isDark ? 'dark' : 'light',
-      colors: { primary: '#4ed47b' }
+      colors: { primary: color }
     }"
   >
     <template #navbar>
@@ -168,6 +170,48 @@
       </Scroller>
 
       <WavyDivider />
+
+      <input
+        type="color"
+        :defaultValue="color"
+        :onChange="(e: any) => (color = e.target.value)"
+      />
+
+      <div class="flex">
+        <ColorBlock color="primary" />
+        <ColorBlock color="primary-1" />
+        <ColorBlock color="primary-5" />
+        <ColorBlock color="primary-10" />
+        <ColorBlock color="primary-20" />
+        <ColorBlock color="primary-30" />
+        <ColorBlock color="primary-40" />
+        <ColorBlock color="primary-50" />
+        <ColorBlock color="primary-60" />
+        <ColorBlock color="primary-70" />
+        <ColorBlock color="primary-80" />
+        <ColorBlock color="primary-90" />
+        <ColorBlock color="primary-95" />
+        <ColorBlock color="primary-99" />
+        <ColorBlock color="primary-100" />
+      </div>
+
+      <div class="flex">
+        <ColorBlock color="secondary" />
+        <ColorBlock color="secondary-1" />
+        <ColorBlock color="secondary-5" />
+        <ColorBlock color="secondary-10" />
+        <ColorBlock color="secondary-20" />
+        <ColorBlock color="secondary-30" />
+        <ColorBlock color="secondary-40" />
+        <ColorBlock color="secondary-50" />
+        <ColorBlock color="secondary-60" />
+        <ColorBlock color="secondary-70" />
+        <ColorBlock color="secondary-80" />
+        <ColorBlock color="secondary-90" />
+        <ColorBlock color="secondary-95" />
+        <ColorBlock color="secondary-99" />
+        <ColorBlock color="secondary-100" />
+      </div>
     </div>
   </Layout>
 </template>

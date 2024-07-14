@@ -1,11 +1,10 @@
 <script setup lang="ts">
-  defineProps<{
+  interface NavigationContainerProps {
     center?: boolean
-  }>()
+  }
 
-  defineOptions({
-    name: 'MdNavigationContainer'
-  })
+  defineProps<NavigationContainerProps>()
+  defineOptions({ name: 'MdNavigationContainer' })
 </script>
 
 <template>

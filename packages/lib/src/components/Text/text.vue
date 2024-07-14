@@ -24,12 +24,9 @@
     textAlign?: 'left' | 'center' | 'right'
   }
 
+  defineOptions({ name: 'MdText' })
   const props = defineProps<Props>()
   const boxProps = computed(() => getBoxProps(props))
-
-  defineOptions({
-    name: 'MdText'
-  })
 </script>
 
 <template>

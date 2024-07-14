@@ -1,36 +1,40 @@
 <script setup lang="ts">
   import type { AppColorString } from '@/utils/css'
+  import type { BoxProps } from '../Box'
   import { getCSSColor } from '@/utils/css'
-  import { onMounted, ref, watch } from 'vue'
+  import { ref, computed } from 'vue'
+  import { getBoxProps } from '../Box/util'
+  import Box from '../Box/box.vue'
 
-  const element = ref<HTMLElement>()
-
-  const props = defineProps<{
-    color: AppColorString<'color'>
-  }>()
-
-  function setColor() {
-    if (!element.value || !props.color) return
-    element.value!.style.setProperty('--color', getCSSColor(props.color))
+  interface ColorBlockProps extends BoxProps {
+    color: AppColorString
   }
 
-  watch(() => props.color, setColor)
-  onMounted(() => setColor())
+  const element = ref<HTMLElement>()
+  const props = defineProps<ColorBlockProps>()
+  const boxProps = computed(() =>
+    getBoxProps(props, {
+      width: 'size-xs',
+      height: 'size-xs'
+    })
+  )
 
-  defineOptions({
-    name: 'MdColorBlock'
-  })
+  const color = computed(() => ({ background: getCSSColor(props.color) }))
+  defineOptions({ name: 'MdColorBlock' })
 </script>
 
 <template>
-  <div class="color-block" ref="element" :title="props.color.toString()" />
+  <Box
+    class="md-color-block"
+    ref="element"
+    :title="color.background"
+    v-bind="boxProps"
+    :style="color"
+  />
 </template>
 
 <style lang="scss">
-  .color-block {
+  .md-color-block {
     display: inline-block;
-    min-width: var(--size-xs);
-    min-height: var(--size-xs);
-    background-color: var(--color);
   }
 </style>

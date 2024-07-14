@@ -13,13 +13,12 @@
   provide('items', props.items)
   provide('parentProps', props)
 
-  defineOptions({
-    name: 'MdList'
-  })
+  defineOptions({ name: 'MdList' })
+  const height = addPX((props.items.length + 1) * 60)
 </script>
 
 <template>
-  <div class="md-list" :style="{ height: addPX((items.length + 1) * 60) }">
+  <div class="md-list" :style="{ height }">
     <ListItem
       v-for="(item, index) in items"
       :key="item.id"

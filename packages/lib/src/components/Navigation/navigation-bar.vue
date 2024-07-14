@@ -6,17 +6,18 @@
     extends NavigationBarProps,
       /* @vue-ignore */ HTMLAttributes {}
 
+  const count = ref(0)
+  const parent = ref<HTMLDivElement | null>(null)
   const props = withDefaults(defineProps<Props>(), {
     labels: 'always',
     active: -1
   })
-  const count = ref(0)
-  const parent = ref<HTMLDivElement | null>(null)
 
   provide('parent-props', props)
   provide('parent', parent)
   provide('root', parent)
   provide('count', count)
+  defineOptions({ name: 'MdNavigationBar' })
 </script>
 
 <template>

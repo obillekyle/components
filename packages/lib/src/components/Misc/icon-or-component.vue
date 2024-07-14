@@ -4,6 +4,7 @@
 
   defineProps<{
     icon?: string | Component
+    size?: number
   }>()
 
   defineOptions({
@@ -14,7 +15,7 @@
 
 <template>
   <div v-if="icon" v-bind="$attrs">
-    <Icon v-if="typeof icon == 'string'" :icon="icon" :width="24" />
+    <Icon v-if="typeof icon == 'string'" :icon="icon" :width="size ?? 24" />
     <component v-else :is="icon" />
   </div>
   <template v-else />

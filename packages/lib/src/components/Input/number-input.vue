@@ -1,9 +1,10 @@
 <script setup lang="ts">
   import type { Component, InputHTMLAttributes, Ref } from 'vue'
   import { onMounted, ref, useAttrs, watch } from 'vue'
+  import '@/assets/input.scss'
+
   import NumberArrows from './number-arrows.vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'
-  import './style.scss'
 
   interface InputText extends /** @vue-ignore */ InputHTMLAttributes {
     leftIcon?: string | Component

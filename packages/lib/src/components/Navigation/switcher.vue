@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { evaluate } from '@/utils/object'
-  import { onMounted, ref, type HTMLAttributes } from 'vue'
+  import type { HTMLAttributes } from 'vue'
   import { Icon } from '@iconify/vue'
+  import { computed } from 'vue'
 
   interface SwitcherProps extends /* @vue-ignore */ HTMLAttributes {
     change?: (value: number, oldValue: number) => void
@@ -13,38 +14,29 @@
     }[]
   }
 
-  const maxChars = ref(0)
   const props = defineProps<SwitcherProps>()
   const value = defineModel<number>()
-
-  onMounted(() => {
-    value.value ??= props.defaultValue ?? 0
-
-    props.items.forEach((item) => {
-      if (item.name.length > maxChars.value) {
-        maxChars.value = item.name.length
-      }
-    })
-  })
-
-  defineOptions({
-    inheritAttrs: false,
-    name: 'MdSwitcher'
-  })
+  defineOptions({ name: 'MdSwitcher' })
 
   function handleClick(index: number) {
     evaluate(props.change, index, value.value)
-
     value.value = index
   }
+
+  const maxChars = computed(() => {
+    let max = 0
+    props.items.forEach((item) => {
+      if (item.name.length > max) {
+        max = item.name.length
+      }
+    })
+
+    return max + 2
+  })
 </script>
 
 <template>
-  <div
-    class="md-switcher"
-    v-bind="$attrs"
-    :style="{ '--chars': maxChars + 2 }"
-  >
+  <div class="md-switcher" :style="{ '--chars': maxChars }">
     <div
       :class="['md-switcher-item', index == value && 'active']"
       v-for="(item, index) in items"
@@ -52,7 +44,7 @@
       :key="index"
     >
       <div class="md-switcher-item-icon">
-        <icon :icon="item.icon" :width="24" />
+        <Icon :icon="item.icon" :width="24" />
       </div>
       <div class="md-switcher-item-name">{{ item.name }}</div>
     </div>

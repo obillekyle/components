@@ -19,6 +19,7 @@
     gap?: AppSizesString
   }
 
+  defineOptions({ name: 'MdFlexBox' })
   const props = defineProps<FlexBoxProps>()
   const boxProps = computed(() => getBoxProps(props))
 </script>

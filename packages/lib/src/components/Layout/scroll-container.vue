@@ -14,6 +14,7 @@
     scrollable: true
   })
 
+  const boxProps = getBoxProps(props)
   const element = ref<HTMLElement | null>(null)
   const model = defineModel<{ x: number; y: number }>({
     default: { x: 0, y: 0 }
@@ -27,8 +28,6 @@
       evaluate(props.scrollChange, model.value)
     }
   }
-
-  const boxProps = getBoxProps(props)
 
   watch(model, () => {
     if (element.value) {
@@ -69,7 +68,7 @@
     height: 100%;
     width: 100%;
 
-    .md-scroll-wrapper {
+    &-wrapper {
       padding: var(--padding-md);
       width: 100%;
     }
@@ -77,20 +76,12 @@
     &:not(.scrollable) {
       overflow: hidden;
     }
-  }
-</style>
 
-<style lang="scss">
-  .md-scroll {
     &:has(.md-master-switch:first-child, .md-master-switch:nth-child(2)) {
       .md-master-switch {
         box-shadow: 0 calc(var(--size-xs) * -1) 0 var(--xl)
           var(--background-body);
       }
-    }
-
-    @media screen and (width <= 800px) {
-      scrollbar-width: none;
     }
   }
 </style>

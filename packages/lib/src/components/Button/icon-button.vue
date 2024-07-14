@@ -12,16 +12,12 @@
   }
 
   defineProps<IconButtonProps>()
-
-  defineOptions({
-    name: 'MdIconButton',
-    inheritAttrs: false
-  })
+  defineOptions({ name: 'MdIconButton' })
 </script>
 
 <template>
-  <button class="md-icon-button" type="button" v-bind="$attrs">
-    <div class="md-icon-wrapper" @pointerdown="rippleEffect">
+  <button class="md-icon-button" type="button">
+    <div class="md-icon-button-wrapper" @pointerdown="rippleEffect">
       <Icon
         :icon="icon"
         :style="{ fontSize: getCSSValue(size ?? 'md', 'px', 'icon') }"
@@ -32,14 +28,14 @@
 
 <style lang="scss">
   .md-icon-button {
+    border: none;
+    outline: none;
     display: block;
     background: none;
-    outline: none;
     color: var(--primary-90, inherit);
-    border: none;
     -webkit-tap-highlight-color: transparent;
 
-    .md-icon-wrapper {
+    &-wrapper {
       display: grid;
       cursor: pointer;
       place-items: center;
@@ -51,7 +47,7 @@
       border-radius: 999px;
       transition: background-color 0.2s;
 
-      * {
+      > * {
         pointer-events: none;
       }
     }

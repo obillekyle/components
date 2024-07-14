@@ -34,17 +34,14 @@
     return deep(options, propsOptions) as LayoutOptions
   })
 
-  const id = computed(
-    () =>
-      'layout-' +
-      hashStr(
-        JSON.stringify({
-          globalStyle: props.globalStyle,
-          options: options.value
-        }),
-        6
-      )
-  )
+  const id = computed(() => {
+    const obj = JSON.stringify({
+      globalStyle: props.globalStyle,
+      options: options.value
+    })
+
+    return 'layout-' + hashStr(obj, 6)
+  })
 
   const rotate = ref(0)
   const rotaterKey = ref(0)

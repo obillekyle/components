@@ -1,35 +1,28 @@
 <script setup lang="ts">
-  import { addPX, getCSSValue } from '@/utils/css'
+  import { getCSSValue, type AppSizesString } from '@/utils/css'
 
-  withDefaults(
-    defineProps<{
-      label?: string
-      direction?: 'x' | 'y'
-      size?: number | string
-      margin?: 'sm' | 'md' | 'lg' | 'xl' | String
-    }>(),
-    {
-      direction: 'x',
-      margin: 'md',
-      size: '100%'
-    }
-  )
+  interface DividerProps {
+    label?: string
+    direction?: 'x' | 'y'
+    size?: AppSizesString
+    margin?: AppSizesString
+  }
 
-  defineOptions({
-    name: 'MdDivider'
-  })
+  defineProps<DividerProps>()
+  defineOptions({ name: 'MdDivider' })
 </script>
 
 <template>
-  <div v-if="label && direction == 'x'" class="md-divider-label">
+  <div v-if="label && direction != 'x'" class="md-divider-label">
     {{ label }}
   </div>
+
   <div
     v-else
     class="md-divider"
-    :class="direction"
+    :class="direction ?? 'x'"
     :style="{
-      '--size': addPX(size),
+      '--size': getCSSValue(size ?? '100%'),
       '--margin': getCSSValue(margin)
     }"
   />
