@@ -1,17 +1,5 @@
-name: CI
-on:
-  push:
-    branches:
-      - main
-      - next
-      - beta
-      - alpha
-  pull_request:
-    branches:
-      - main
-      - next
-      - beta
-      - alpha
+name: Validate PR commits
+on: [push, pull_request]
 
 jobs:
   commitlint:
@@ -39,7 +27,6 @@ jobs:
         run: |
           bun install conventional-changelog-conventionalcommits
           bun install commitlint@latest
-
       - name: Validate current commit (last commit) with commitlint
         if: github.event_name == 'push'
         run: bunx commitlint --last --verbose

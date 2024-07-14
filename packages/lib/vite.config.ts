@@ -4,6 +4,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { attachStyles, resolver } from './plugins'
+import { version } from './package.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,11 +24,13 @@ export default defineConfig({
       transform: resolver()
     })
   ],
+  esbuild: {
+    banner: `// v${version}`
+  },
   build: {
     minify: true,
     copyPublicDir: false,
     cssCodeSplit: true,
-
     lib: {
       formats: ['es'],
       entry: path.resolve(__dirname, 'src/index.ts'),
