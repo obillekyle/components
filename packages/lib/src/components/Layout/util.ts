@@ -1,12 +1,13 @@
-import { Colors } from '@/utils/colors'
-import type {
-  AppSizes,
-  AppSizesPrefixes,
-  AppSizesString,
-  ColorString,
-  AppColorVariants,
-  SizesString,
-  AppColorString
+import { Colors, isLight } from '@/utils/colors'
+import {
+  type AppSizes,
+  type AppSizesPrefixes,
+  type AppSizesString,
+  type ColorString,
+  type AppColorVariants,
+  type SizesString,
+  type AppColorString,
+  addPX
 } from '@/utils/css'
 
 export type SizesObject = { [key in AppSizes]: SizesString }
@@ -62,6 +63,50 @@ export const DefaultSizes: AppSizesObject = {
     xl: 32,
     xxl: 36
   }
+}
+
+export function getShades(
+  color: string | String | Colors,
+  prefix: string,
+  theme: 'light' | 'dark'
+) {
+  const colors = Colors.from(color)
+  const isDark = theme == 'dark'
+  const values: Record<string, string> = {}
+
+  for (const shade of AppShades) {
+    const key = prefix + '-' + shade
+    const val = isDark ? shade : Math.abs(100 - shade)
+    values[key] = colors.shade(val)
+
+    for (let i = 0; i < 9; i++) {
+      const color = colors.shade(val, (i + 1) * 0.1)
+      values[key + '-' + (i + 1) * 10] = color
+    }
+  }
+
+  const main = colors.shade(50)
+  values[prefix] = main
+  values['on-' + prefix] = colors.shade(isLight(main) ? 5 : 95)
+
+  const container = colors.shade(isDark ? 90 : 80)
+  values[prefix + '-container'] = container
+  values['on-' + prefix + '-container'] = colors.shade(
+    isLight(container) ? 5 : 95
+  )
+
+  return values
+}
+
+export function getSizes(object: SizesObject, prefix: string) {
+  const obj: Record<string, string> = {}
+  const sizes = object as Record<string, number>
+
+  for (const key in sizes) {
+    obj[prefix + '-' + key] = addPX(sizes[key])
+  }
+
+  return obj
 }
 
 export type ElementSizes = {

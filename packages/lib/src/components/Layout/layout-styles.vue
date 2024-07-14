@@ -1,156 +1,93 @@
 <script setup lang="ts">
-  import type {
-    AppColorVariants,
-    AppSizesPrefixes,
-    AppSizes
-  } from '@/utils/css'
-  import type { ComputedRef } from 'vue'
-  import type { LayoutOptions, ElementSizes } from './util'
-
-  import { Colors, isLight } from '@/utils/colors'
-  import { AppShades } from './util'
-  import { inject, onBeforeMount, onMounted, ref, watch } from 'vue'
-  import { addPX, getCSSColor, getCSSValue } from '@/utils/css'
   import type { Ref } from 'vue'
+  import type { LayoutOptions, SizesObject } from './util'
 
-  defineProps<{
+  import { getShades, getSizes } from './util'
+  import { inject, onBeforeMount, onMounted, ref, watch } from 'vue'
+  import { getCSSColor, getCSSValue } from '@/utils/css'
+
+  interface LayoutStylesProps {
     globalStyle?: boolean
-  }>()
+  }
 
-  defineOptions({
-    name: 'MdLayoutStyles'
-  })
+  defineProps<LayoutStylesProps>()
+  defineOptions({ name: 'MdLayoutStyles' })
 
-  const options = inject<ComputedRef<LayoutOptions>>('options')!
-  const tag = inject<Ref<string>>('layout-id')!
-  const styleElem = ref('')
+  const contentColor = ref('')
+  const contentSizes = ref('')
   const isClient = ref(false)
+  const layoutId = inject<Ref<string>>('layout-id')!
+  const options = inject<Ref<LayoutOptions>>('options')!
 
-  function getShades(color: string | String | Colors, prefix: string) {
-    const colors =
-      color instanceof Colors ? color : new Colors(color.toString())
-    const theme = options.value.theme
-    const values: Record<string, string> = {}
-
-    if (theme == 'dark') {
-      for (let shade of AppShades) {
-        const key = prefix + '-' + shade
-        values[key] = colors.shade(shade)
-
-        for (let i = 0; i < 9; i++) {
-          const color = colors.shade(shade, (i + 1) * 0.1)
-          values[key + '-' + (i + 1) * 10] = color
-        }
-      }
-      const _50 = colors.shade(50)
-      values[prefix] = _50
-      values['on-' + prefix] = colors.shade(isLight(_50) ? 5 : 95)
-
-      const _95 = colors.shade(80)
-      values[prefix + '-container'] = _95
-      values['on-' + prefix + '-container'] = colors.shade(
-        isLight(_95) ? 5 : 95
-      )
-    } else {
-      for (let shade of AppShades) {
-        const val = Math.abs(100 - shade)
-        const key = prefix + '-' + shade
-        values[key] = colors.shade(val, 1)
-
-        for (let i = 0; i < 9; i++) {
-          const color = colors.shade(val, (i + 1) * 0.1)
-          values[key + '-' + (i + 1) * 10] = color
-        }
-      }
-
-      const _50 = colors.shade(50)
-      values[prefix] = _50
-      values['on-' + prefix] = colors.shade(isLight(_50) ? 5 : 95)
-
-      const _95 = colors.shade(90)
-      values[prefix + '-container'] = _95
-      values['on-' + prefix + '-container'] = colors.shade(
-        isLight(_95) ? 5 : 95
-      )
-    }
-
-    return values
-  }
-
-  function getSizes(size: AppSizesPrefixes) {
-    const obj: { [key: string]: string } = {}
-
-    Object.keys(options.value.sizes[size]).forEach((key) => {
-      obj[size + '-' + key] = addPX(
-        options.value.sizes[size][key as AppSizes]
-      )
-    })
-
-    return obj
-  }
-
-  function setStyle() {
+  function setColors() {
     setTimeout(() => {
       const values: Record<string, string> = {}
+      const theme = options.value.theme
+      const colors = options.value.colors as Record<string, string>
+
+      for (const color in colors) {
+        Object.assign(values, getShades(colors[color], color, theme))
+      }
+
       let value = ''
-
-      const colors = Object.keys(options.value.colors) as AppColorVariants[]
-      const sizes = Object.keys(options.value.sizes) as AppSizesPrefixes[]
-      const components = Object.keys(
-        options.value.component
-      ) as (keyof ElementSizes)[]
-
-      if (options.value.colors.primary) {
-        Object.assign(
-          values,
-          getShades(options.value.colors.primary, 'primary')
-        )
+      for (const key in values) {
+        value += `--${key}: ${values[key]};`
       }
 
-      for (const color of colors) {
-        Object.assign(values, getShades(options.value.colors[color], color))
+      contentColor.value = value
+    })
+  }
+
+  function setSizes() {
+    console.log(options.value.sizes)
+    setTimeout(() => {
+      const values: Record<string, string> = {}
+      const sizes = options.value.sizes as Record<string, SizesObject>
+      const components = options.value.component as Record<string, string>
+
+      for (const size in sizes) {
+        Object.assign(values, getSizes(sizes[size], size))
       }
 
-      for (const size of sizes) {
-        Object.assign(values, getSizes(size))
-      }
-
-      for (const component of components) {
+      for (const component in components) {
         values[component + '-size'] = getCSSValue(
-          options.value.component[component],
+          components[component],
           'px',
           'size'
         )
       }
 
+      let value = ''
       for (const key in values) {
         value += `--${key}: ${values[key]};`
       }
 
-      styleElem.value = value
+      contentSizes.value = value
     })
   }
 
-  onMounted(() => {
-    isClient.value = true
-  })
+  function setStyle() {
+    setColors()
+    setSizes()
+  }
+
   onBeforeMount(setStyle)
-  watch(options, setStyle)
+  onMounted(() => (isClient.value = true))
+  watch(() => JSON.stringify(options.value.sizes), setSizes)
+  watch(() => JSON.stringify(options.value.colors), setColors)
+  watch(() => JSON.stringify(options.value.component), setSizes)
+  watch(() => options.value.theme, setColors)
 </script>
 
 <template>
-  <component v-bind:is="'style'" :data-for="tag" v-if="isClient">
-    {{
-      `${globalStyle ? 'html, body' : '#' + tag} {
-        ${styleElem}
-        color: ${getCSSColor(options.color)};
-        color-scheme: ${options.theme};
-        font-family: ${options.fontFamily},
-          Roboto,
-          'Arial',
-          sans-serif
-      }`
-    }}
-  </component>
-  <slot v-if="styleElem" />
+  <component :is="'style'" v-if="isClient">{{
+    `${globalStyle ? 'html, body' : '#' + layoutId} {
+      ${contentSizes} ${contentColor}
+      color: ${getCSSColor(options.color)};
+      color-scheme: ${options.theme};
+      font-family: ${options.fontFamily}
+    }`
+  }}</component>
+  <template v-else />
+  <slot v-if="contentSizes && contentColor" />
 </template>
