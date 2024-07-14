@@ -18,6 +18,10 @@ export class Colors extends CustomEventHandler<ColorEvents> {
     this.set(color ?? 'white')
   }
 
+  static from(color: string | String | Colors): Colors {
+    return color instanceof Colors ? color : new Colors(color)
+  }
+
   set(colorString: string | String): this {
     const old = hsla(...this.main)
     this.main = parseToHsla(colorString.toString())
