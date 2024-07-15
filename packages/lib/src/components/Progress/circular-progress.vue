@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { addPX } from '@/utils/css'
   import { computed, inject, onMounted, ref, watch } from 'vue'
+  import ViewObserver from '../Misc/view-observer.vue'
 
   const svg = ref<SVGSVGElement | null>(null)
   const circle = ref<SVGCircleElement | null>(null)
@@ -106,7 +107,8 @@
 </script>
 
 <template>
-  <div
+  <ViewObserver
+    apply="animate"
     class="md-circular-progress"
     :class="{
       md3,
@@ -148,7 +150,7 @@
     >
       <slot />
     </div>
-  </div>
+  </ViewObserver>
 </template>
 
 <style lang="scss">
@@ -270,6 +272,10 @@
     height: max-content;
     align-self: center;
 
+    &:not(.animate) * {
+      animation-play-state: paused !important;
+    }
+
     &-content {
       position: absolute;
       display: grid;
@@ -331,8 +337,8 @@
     &.md-infinite {
       .md-progress-spinner-circle {
         stroke-linecap: square;
-        animation: 7s infinite var(--timing-standard) !important;
-        animation-name: md-progress-spinner-stroke-rotate !important;
+        animation: 7s infinite var(--timing-standard);
+        animation-name: md-progress-spinner-stroke-rotate;
       }
     }
   }

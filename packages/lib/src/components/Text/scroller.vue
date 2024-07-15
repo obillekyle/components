@@ -2,6 +2,7 @@
   import { type HTMLAttributes } from 'vue'
   import { addPX, addUnit } from '@/utils/css'
   import { onMounted, ref } from 'vue'
+  import ViewObserver from '../Misc/view-observer.vue'
 
   interface ScrollerProps extends /* @vue-ignore */ HTMLAttributes {
     speed?: number
@@ -48,7 +49,11 @@
 </script>
 
 <template>
-  <span class="md-scroller" :class="{ cloned, continuous }">
+  <ViewObserver
+    apply="scroll"
+    class="md-scroller"
+    :class="{ cloned, continuous }"
+  >
     <div class="md-scroller-wrapper" ref="wrapper">
       <div class="md-scroller-content" ref="content">
         <slot />
@@ -57,10 +62,10 @@
         <slot />
       </div>
     </div>
-  </span>
+  </ViewObserver>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
   .md-scroller {
     display: grid;
     overflow: hidden;
@@ -79,6 +84,10 @@
       position: relative;
       width: max-content;
       text-wrap: nowrap;
+    }
+
+    &:not(.scroll) * {
+      animation-play-state: paused !important;
     }
 
     &.cloned {

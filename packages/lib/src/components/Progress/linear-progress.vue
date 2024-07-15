@@ -2,9 +2,11 @@
   import { clamp } from '@/utils/number'
   import { addUnit, getCSSValue } from '@/utils/css'
   import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+  import ViewObserver from '../Misc/view-observer.vue'
+  import { fnRef } from '@/utils/ref'
 
   const observer = ref<ResizeObserver | null>(null)
-  const root = ref<HTMLDivElement | null>(null)
+  const root = ref<HTMLElement | null>(null)
   const speed = ref(2)
   const props = withDefaults(
     defineProps<{
@@ -18,10 +20,6 @@
   )
   const md3 = inject('md3', false)
   const noSpace = computed(() => props.value <= 0)
-
-  defineOptions({
-    name: 'MdLinearProgress'
-  })
 
   function setSpeed() {
     const rect = root.value!.getBoundingClientRect()
@@ -38,11 +36,15 @@
   onBeforeUnmount(() => {
     observer.value?.disconnect()
   })
+
+  const setRef = fnRef(root)
+  defineOptions({ name: 'MdLinearProgress' })
 </script>
 
 <template>
-  <div
-    ref="root"
+  <ViewObserver
+    :ref="setRef"
+    apply="animate"
     class="md-progress"
     :class="{ md3, noSpace }"
     :style="{
@@ -54,7 +56,7 @@
       <div class="md-progress-infinite-bar" v-if="md3" />
     </div>
     <div class="md-progress-bar" v-else :style="`--value: ${value}`" />
-  </div>
+  </ViewObserver>
 </template>
 
 <style lang="scss">
@@ -63,6 +65,14 @@
     background: var(--mono-10);
     overflow: hidden;
     width: 100%;
+
+    &:not(.animate) {
+      *,
+      *::before,
+      *::after {
+        animation-play-state: paused !important;
+      }
+    }
 
     &-bar {
       height: inherit;
