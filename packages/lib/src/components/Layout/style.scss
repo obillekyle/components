@@ -26,7 +26,6 @@
     outline: 0 solid var(--primary);
     -webkit-tap-highlight-color: transparent;
     box-sizing: border-box;
-    padding: 0;
     margin: 0;
   }
 
@@ -55,7 +54,7 @@
 
   &:has(> .md-header) {
     > .md-layout-content > .md-scroll > .md-scroll-wrapper {
-      padding-top: var(--header-size);
+      padding-block-start: var(--header-size);
 
       .md-master-switch {
         top: calc(var(--header-size) + var(--sm)) !important;

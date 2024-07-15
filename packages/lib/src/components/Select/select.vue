@@ -1,12 +1,6 @@
 <script setup lang="ts">
-  import {
-    ref,
-    type Component,
-    type HTMLAttributes,
-    computed,
-    watch,
-    onMounted
-  } from 'vue'
+  import type { Component, HTMLAttributes } from 'vue'
+  import { ref, computed, watch, onMounted } from 'vue'
   import OptionItem from './option-item.vue'
   import { Icon } from '@iconify/vue'
   import { $, keyboardClick, rippleEffect } from '@/utils/dom'
@@ -30,16 +24,11 @@
     change?: (value: number[]) => void
   }
 
-  const values = computed(() => {
-    return props.items.map((item) => {
-      return typeof item === 'object'
-        ? item
-        : {
-            id: item,
-            name: item
-          }
-    })
-  })
+  const values = computed(() =>
+    props.items.map((item) =>
+      typeof item === 'object' ? item : { id: item, name: item }
+    )
+  )
 
   const show = ref(false)
   const search = ref('')
@@ -71,9 +60,7 @@
   })
 
   defineExpose({ items })
-  defineOptions({
-    name: 'MdSelect'
-  })
+  defineOptions({ name: 'MdSelect' })
 
   const toggle = () => (show.value = !show.value)
   const val = computed(() => modelValue.value || props.value)

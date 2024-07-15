@@ -63,9 +63,10 @@
       <Fab icon="material-symbols:star-outline">Fab</Fab>
     </template>
 
+    <HeaderTitle title="Header Title" />
+    <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
+
     <div class="wrapper">
-      <HeaderTitle title="Header Title" />
-      <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
       <div class="flex">
         <Button.Group>
           <Button variant="outline">Button</Button>

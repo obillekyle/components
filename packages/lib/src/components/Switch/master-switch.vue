@@ -5,6 +5,7 @@
   import { evaluate } from '@/utils/object'
   import { watch, onBeforeMount } from 'vue'
   import { keyboardClick, rippleEffect } from '@/utils/dom'
+
   interface MasterSwitchProps extends /* @vue-ignore */ HTMLAttributes {
     name?: string
     defaultChecked?: boolean
@@ -16,10 +17,7 @@
     default: undefined
   })
 
-  defineOptions({
-    name: 'MasterSwitch',
-    inheritAttrs: false
-  })
+  defineOptions({ name: 'MasterSwitch' })
 
   onBeforeMount(() => {
     value.value ??= props.defaultChecked ?? false
@@ -34,7 +32,6 @@
   <div
     class="md-master-switch"
     tabindex="0"
-    v-bind="$attrs"
     @click="() => (value = !value)"
     @pointerdown="rippleEffect"
     @keydown="keyboardClick"
@@ -62,8 +59,9 @@
     overflow: hidden;
     background: var(--primary-container);
     color: var(--on-primary-container);
-    padding: var(--padding-xxl) var(--padding-lg);
-    border-radius: var(--padding-xxl);
+    padding: var(--xxl) var(--lg);
+    margin-bottom: var(--md);
+    border-radius: var(--xxl);
     text-transform: capitalize;
     font-size: var(--font-lg);
     z-index: 10;
@@ -74,7 +72,7 @@
       position: absolute;
       display: grid;
       align-items: center;
-      right: var(--padding-lg);
+      right: var(--lg);
       top: 0;
       bottom: 0;
     }

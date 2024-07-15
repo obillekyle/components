@@ -1,13 +1,14 @@
 <script setup lang="ts">
-  import type { Ref } from 'vue'
-  import type { LayoutOptions, SizesObject } from './util'
+  import type { SizesObject } from './util'
 
-  import { getShades, getSizes } from './util'
+  import { DefaultLayoutOptions as DLO, getShades, getSizes } from './util'
   import { inject, onBeforeMount, onMounted, ref, watch } from 'vue'
   import { getCSSColor, getCSSValue } from '@/utils/css'
+  import { dummyRef } from '@/utils/ref'
 
   interface LayoutStylesProps {
     globalStyle?: boolean
+    name?: string
   }
 
   defineProps<LayoutStylesProps>()
@@ -16,8 +17,8 @@
   const contentColor = ref('')
   const contentSizes = ref('')
   const isClient = ref(false)
-  const layoutId = inject<Ref<string>>('layout-id')!
-  const options = inject<Ref<LayoutOptions>>('options')!
+  const layoutId = inject('layout-id', dummyRef(''))!
+  const options = inject('options', dummyRef(DLO))!
 
   function setColors() {
     setTimeout(() => {
@@ -39,7 +40,6 @@
   }
 
   function setSizes() {
-    console.log(options.value.sizes)
     setTimeout(() => {
       const values: Record<string, string> = {}
       const sizes = options.value.sizes as Record<string, SizesObject>
@@ -81,7 +81,7 @@
 
 <template>
   <component :is="'style'" v-if="isClient">{{
-    `${globalStyle ? 'html, body' : '#' + layoutId} {
+    `${globalStyle ? 'html, body' : '#' + (name ?? layoutId)} {
       ${contentSizes} ${contentColor}
       color: ${getCSSColor(options.color)};
       color-scheme: ${options.theme};
@@ -89,5 +89,11 @@
     }`
   }}</component>
   <template v-else />
-  <slot v-if="contentSizes && contentColor" />
+
+  <template v-if="contentSizes && contentColor">
+    <div :id="name" v-if="name">
+      <slot />
+    </div>
+    <slot v-else />
+  </template>
 </template>

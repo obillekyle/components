@@ -1,15 +1,16 @@
 <script setup lang="ts">
-  import type { Component, Ref } from 'vue'
+  import type { Component, ButtonHTMLAttributes } from 'vue'
 
   import { keyboardClick, rippleEffect } from '@/utils/dom'
-  import { inject, type ButtonHTMLAttributes } from 'vue'
+  import { inject } from 'vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'
+  import { dummyRef } from '@/utils/ref'
 
   interface FabProps extends /* @vue-ignore */ ButtonHTMLAttributes {
     icon?: string | Component
   }
 
-  const scrollTop = inject<Ref<number>>('content-scroll-top')!
+  const scrollTop = inject('content-scroll-top', dummyRef(0))!
 
   defineProps<FabProps>()
   defineOptions({ name: 'MdFloatingActionButton' })

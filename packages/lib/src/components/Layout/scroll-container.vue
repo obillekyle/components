@@ -1,7 +1,8 @@
 <script setup lang="ts">
+  import type { BoxProps } from '@/components/Box/util'
+
   import { evaluate } from '@/utils/object'
   import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-  import type { BoxProps } from '@/components/Box/util'
   import { getBoxProps } from '@/components/Box/util'
   import Box from '@/components/Box/box.vue'
 
@@ -60,7 +61,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-scroll {
     overflow: auto;
     position: relative;
@@ -71,17 +72,21 @@
     &-wrapper {
       padding: var(--padding-md);
       width: 100%;
+
+      &:has(
+          > .md-master-switch:first-child,
+          > .md-master-switch:nth-child(2)
+        ) {
+        .md-master-switch {
+          box-shadow:
+            0 calc(var(--size-xs) * -1) 0 var(--xl) var(--background-body),
+            var(--shadow-2);
+        }
+      }
     }
 
     &:not(.scrollable) {
       overflow: hidden;
-    }
-
-    &:has(.md-master-switch:first-child, .md-master-switch:nth-child(2)) {
-      .md-master-switch {
-        box-shadow: 0 calc(var(--size-xs) * -1) 0 var(--xl)
-          var(--background-body);
-      }
     }
   }
 </style>
