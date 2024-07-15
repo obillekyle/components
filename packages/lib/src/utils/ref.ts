@@ -11,3 +11,7 @@ export function fnRef<T extends Ref>(ref: T): RefGetter {
     ref.value = '$el' in value ? value.$el : value
   }
 }
+
+export function dummyRef<T>(value: T): Ref<T> {
+  return { value } as any
+}
