@@ -5,8 +5,10 @@
   import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
   import CircularProgress from '../Progress/circular-progress.vue'
-  import { computed, onBeforeMount, onUnmounted, ref, watch } from 'vue'
+  import { computed, onUnmounted, ref, watch, onMounted } from 'vue'
   import { Icon } from '@iconify/vue'
+  import { resolveImage } from './util'
+  import ViewObserver from '../Misc/view-observer.vue'
 
   interface BlockImageProps
     extends BoxProps,
@@ -16,6 +18,7 @@
     fit?: 'contain' | 'cover'
     position?: 'left' | 'center' | 'right'
     ratio?: number
+    lazy?: boolean
     cover?: boolean
     width?: number
     height?: number
@@ -33,66 +36,60 @@
   const progress = ref(0)
   const image = ref<string>()
   const error = ref(false)
+  const visible = ref(false)
   const boxProps = computed(() => getBoxProps(props))
 
   async function resolve() {
     error.value = false
-    let data: Blob | undefined
+    let src = props.src
+
     if (image.value) {
       URL.revokeObjectURL(image.value)
-      image.value = ''
+      image.value = undefined
     }
 
-    if (typeof props.src === 'string') {
-      progress.value = Infinity
-      const url = props.src
-        .replace(/\[width\]/g, props.width?.toString() || '')
-        .replace(/\[height\]/g, props.height?.toString() || '')
-      const xhr = new XMLHttpRequest()
-      xhr.responseType = 'arraybuffer'
-      xhr.open('GET', url)
-      xhr.onprogress = (e) => {
-        progress.value = !e.total
-          ? Infinity
-          : Math.floor((e.loaded / e.total) * 100)
-      }
-      xhr.send()
-      data = await new Promise((resolve) => {
-        xhr.onload = () =>
-          resolve(new Blob([xhr.response || ''], { type: 'image/webp' }))
-        xhr.onerror = () => resolve(undefined)
-      })
-    } else {
-      data = props.src
-    }
-
-    if (!data) {
+    if (!src) {
       error.value = true
       return
     }
 
-    setTimeout(() => {
-      image.value = URL.createObjectURL(data)
-    }, 200)
+    src =
+      src instanceof Blob
+        ? URL.createObjectURL(src)
+        : src
+            .replace(/\[width\]/g, String(props.width))
+            .replace(/\[height\]/g, String(props.height))
+
+    try {
+      const data = await resolveImage(src, (e) => (progress.value = e))
+      setTimeout(() => (image.value = URL.createObjectURL(data)), 200)
+    } catch (e) {
+      error.value = true
+    }
   }
 
-  onBeforeMount(() => resolve())
-  onUnmounted(() => URL.revokeObjectURL(image.value || ''))
-  watch(
-    () => props.src,
-    () => resolve()
-  )
-
-  defineOptions({
-    name: 'MdBlockImage'
+  watch(visible, (v) => {
+    if (!props.lazy) return
+    if (v && !progress.value && !image.value && !error.value) {
+      resolve()
+    }
   })
+
+  watch(() => props.src, resolve)
+  onMounted(() => !props.lazy && resolve())
+  onUnmounted(() => URL.revokeObjectURL(image.value || ''))
+
+  defineOptions({ name: 'MdBlockImage' })
 </script>
 
 <template>
-  <Box
+  <ViewObserver
     exclude
+    :as="Box"
+    :offset="50"
     v-bind="boxProps"
     class="md-block-image"
+    :change="(v) => (visible = v)"
     :class="{ loaded: image, 'image-error': error, span }"
   >
     <Box class="md-loader">
@@ -108,7 +105,7 @@
       </CircularProgress>
     </Box>
     <img v-if="!error" :src="image" :alt :width :height />
-  </Box>
+  </ViewObserver>
 </template>
 
 <style lang="scss" scoped>

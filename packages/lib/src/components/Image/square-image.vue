@@ -1,106 +1,97 @@
 <script setup lang="ts">
-  import { getCSSValue, type AppSizes, addUnit } from '@/utils/css'
-  import { as } from '@/utils/object'
+  import type { HTMLAttributes } from 'vue'
+  import type { AppSizes } from '@/utils/css'
+
+  import { getCSSValue, addUnit } from '@/utils/css'
+  import { clean, resolveImage } from './util'
   import { hashStr } from '@/utils/string'
-  import {
-    ref,
-    type HTMLAttributes,
-    onBeforeMount,
-    watch,
-    inject,
-    type Ref,
-    onUnmounted
-  } from 'vue'
-  import CircularProgress from '../Progress/circular-progress.vue'
+  import { ref, watch, inject, onUnmounted } from 'vue'
+  import { dummyRef, fnRef } from '@/utils/ref'
   import { Icon } from '@iconify/vue'
-  import { computed } from 'vue'
+  import { computed, onMounted } from 'vue'
+  import { as } from '@/utils/object'
+
+  import ViewObserver from '../Misc/view-observer.vue'
+  import CircularProgress from '../Progress/circular-progress.vue'
 
   interface SquareImageProps extends /* @vue-ignore */ HTMLAttributes {
     src?: string | Blob
     size?: number | string
     frame?: 'default' | 'clover' | 'circle' | 'hexagon'
-    radius?: String | AppSizes | number
-    optimize?: boolean
-  }
-
-  const root = ref<HTMLElement | null>(null)
-  const rotate = inject<Ref<number>>('rotate')!
-  const progress = ref(0)
-  const image = ref<string>()
-  const error = ref(false)
-
-  async function resolve() {
-    error.value = false
-    let data: Blob | undefined
-    if (image.value) {
-      URL.revokeObjectURL(image.value)
-      image.value = ''
-    }
-
-    if (!props.src) {
-      error.value = true
-      return
-    }
-
-    if (typeof props.src === 'string') {
-      progress.value = Infinity
-      const url = props.src.replace(/\[size\]/g, props.size.toString())
-      const xhr = new XMLHttpRequest()
-      xhr.responseType = 'arraybuffer'
-      xhr.open('GET', url)
-      xhr.onprogress = (e) => {
-        progress.value = !e.total
-          ? Infinity
-          : Math.floor((e.loaded / e.total) * 100)
-      }
-      xhr.send()
-      data = await new Promise((resolve) => {
-        xhr.onload = () =>
-          resolve(new Blob([xhr.response || ''], { type: 'image/webp' }))
-        xhr.onerror = () => resolve(undefined)
-      })
-
-      if (!data) {
-        error.value = true
-        return
-      }
-    } else {
-      data = props.src
-    }
-
-    setTimeout(() => {
-      image.value = URL.createObjectURL(data)
-    }, 200)
+    radius?: AppSizes
+    lazy?: boolean
   }
 
   const props = withDefaults(defineProps<SquareImageProps>(), {
     frame: 'default',
-    // eslint-disable-next-line vue/require-valid-default-prop
     radius: 'sm',
     size: 96
   })
 
+  const root = ref<HTMLElement | null>(null)
+  const rotate = inject('rotate', dummyRef(0))!
+  const progress = ref(0)
+  const image = ref<string>()
+  const error = ref(false)
+  const visible = ref(false)
+  const setRef = fnRef(root)
+  const id = computed(
+    () => 'img-' + hashStr((props.src || '').toString() + props.frame, 6)
+  )
+
+  async function resolve() {
+    error.value = false
+    let src = props.src
+
+    if (image.value) {
+      clean(image.value)
+      image.value = undefined
+    }
+
+    if (!src) {
+      error.value = true
+      return
+    }
+
+    src =
+      src instanceof Blob
+        ? URL.createObjectURL(src)
+        : src.replace(/\[size\]/g, String(props.size))
+
+    try {
+      const data = await resolveImage(src, (e) => (progress.value = e))
+      setTimeout(() => (image.value = URL.createObjectURL(data)), 200)
+    } catch (e) {
+      error.value = true
+    }
+  }
+
   watch(rotate, () => {
+    if (!visible.value) return
     if (root.value && props.frame == 'circle') {
       root.value.style.setProperty('--rotate', addUnit(rotate.value, 'deg'))
     }
   })
 
-  const id = computed(
-    () => 'img-' + hashStr((props.src || '')?.toString() + props.frame, 6)
-  )
-  onBeforeMount(() => resolve())
-  onUnmounted(() => URL.revokeObjectURL(image.value || ''))
-  watch(
-    () => props.src,
-    () => resolve()
-  )
+  watch(visible, (v) => {
+    if (!props.lazy) return
+    if (v && !progress.value && !image.value && !error.value) {
+      resolve()
+    }
+  })
+
+  watch(() => props.src, resolve)
+  onMounted(() => !props.lazy && resolve())
+  onUnmounted(() => clean(image.value))
 </script>
 
 <template>
-  <div
-    ref="root"
+  <ViewObserver
+    :ref="setRef"
+    apply="visible"
+    :offset="50"
     class="md-square-image"
+    :change="(v) => (visible = v)"
     :class="{ loaded: image, [frame]: true, error }"
     :title="as<string>($attrs['alt'])"
     :style="{
@@ -180,7 +171,7 @@
         :fill="`url(#${id})`"
       />
     </svg>
-  </div>
+  </ViewObserver>
 </template>
 
 <style lang="scss" scoped>
@@ -204,7 +195,7 @@
       border-radius: inherit;
     }
 
-    &.circle .md-image {
+    &.circle.visible .md-image {
       pattern {
         rotate: calc(var(--rotate) * -1);
       }
