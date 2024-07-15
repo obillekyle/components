@@ -15,7 +15,7 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
         with:
-          version: latest
+          bun-version: latest
       - name: Print versions
         run: |
           git --version
