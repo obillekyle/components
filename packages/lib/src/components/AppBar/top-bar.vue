@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  import { inject, type Ref } from 'vue'
+  import { inject, ref } from 'vue'
 
-  const scrollHeight = inject<Ref<number>>('content-scroll-top')!
-  const headerTitle = inject<Ref<string>>('header-title')!
+  const scrollHeight = inject('content-scroll-top', ref(0))
+  const headerTitle = inject('header-title', ref(''))
 
   defineOptions({
-    name: 'MdHeader'
+    name: 'MdTopAppBar'
   })
 </script>
 
@@ -33,13 +33,16 @@
     right: 0;
     top: 0;
     z-index: 100;
-    padding-inline: var(--lg);
     height: var(--header-size);
-    background: var(--background-secondary);
+    background: var(--surface-container);
 
     &-title {
       transition: color 0.2s;
       font-size: var(--font-xl);
+
+      &:first-child {
+        padding-left: var(--md);
+      }
     }
 
     &.on-top {
@@ -52,7 +55,6 @@
 
     &-actions {
       position: absolute;
-      padding-inline: var(--sm);
       background-color: inherit;
       display: flex;
       right: 0;

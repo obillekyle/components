@@ -1,26 +1,27 @@
 <script setup lang="ts">
-  import type { Ref, HTMLAttributes } from 'vue'
   import type { BoxProps } from '@/components/Box/util'
   import type { TextProps } from '@/components/Text/util'
+  import type { HTMLAttributes, Ref } from 'vue'
 
   import Text from '@/components/Text/text.vue'
-  import { inject, watch, onMounted, onBeforeUnmount } from 'vue'
+  import { inject, onBeforeUnmount, onMounted, watch } from 'vue'
 
   const header = inject<Ref<string>>('header-title')!
   const scrollTop = inject<Ref<number>>('content-scroll-top')!
 
-  interface HeaderContentProps
+  interface HeaderContentProperties
     extends TextProps,
       BoxProps,
       /* @vue-ignore */ HTMLAttributes {
     title: string
   }
 
-  const props = defineProps<HeaderContentProps>()
-  const setTitle = (val?: string) => (header.value = val ?? props.title)
+  const properties = defineProps<HeaderContentProperties>()
+  const setTitle = (value?: string) =>
+    (header.value = value ?? properties.title)
 
   onMounted(setTitle)
-  watch(() => props.title, setTitle)
+  watch(() => properties.title, setTitle)
   onBeforeUnmount(() => setTitle(''))
   defineOptions({ name: 'MdHeaderContent' })
 </script>
@@ -44,7 +45,7 @@
     opacity: 0;
     z-index: 99;
     transform: translateY(-20%);
-    margin-top: calc(var(--padding-md) * -1);
+    margin-top: calc(var(--md) * -1);
     margin-bottom: var(--md);
     transition:
       opacity 0.2s var(--timing-standard),
