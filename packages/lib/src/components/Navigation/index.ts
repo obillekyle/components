@@ -20,10 +20,9 @@ Navigation.Entry = NavigationEntry
 Navigation.Item = NavigationItem
 
 export default Navigation
-export {
-  NavigationBar,
-  NavigationContainer,
-  navigationContent,
-  NavigationEntry,
-  NavigationItem
-}
+
+export { default as NavigationBar } from './navigation-bar.vue'
+export { default as NavigationContainer } from './navigation-container.vue'
+export { default as navigationContent } from './navigation-content.vue'
+export { default as NavigationEntry } from './navigation-entry.vue'
+export { default as NavigationItem } from './navigation-item.vue'

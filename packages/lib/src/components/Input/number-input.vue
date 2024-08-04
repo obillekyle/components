@@ -1,58 +1,59 @@
 <script setup lang="ts">
-  import type { Component, InputHTMLAttributes, Ref } from 'vue'
-  import { onMounted, ref, useAttrs, watch } from 'vue'
   import '@/assets/input.scss'
+  import type { Component, InputHTMLAttributes } from 'vue'
+  import { computed, ref, useAttrs } from 'vue'
 
-  import NumberArrows from './number-arrows.vue'
+  import { clamp } from '@/utils/number'
+  import { evaluate } from '@/utils/object'
   import IconOrComponent from '../Misc/icon-or-component.vue'
+  import NumberArrows from './number-arrows.vue'
 
-  interface InputText extends /** @vue-ignore */ InputHTMLAttributes {
-    leftIcon?: string | Component
+  interface InputText
+    extends /** @vue-ignore */ Omit<InputHTMLAttributes, 'onChange'> {
+    span?: boolean
+    value?: number
     defaultValue?: number
-    modelValue?: Ref<number>
+    placeholder?: string
+    variant?: 'filled' | 'outlined'
+    leftIcon?: string | Component
+    onChange?: (value: number) => any
   }
 
-  const input = ref<HTMLInputElement | null>(null)
+  const input = ref<HTMLInputElement>()
   const props = defineProps<InputText>()
-  const model = defineModel<number>({
-    default: 0
-  })
+  const model = defineModel<number>()
 
-  const attrs = useAttrs()
+  const attributes = useAttrs()
+  const inputValue = computed({
+    get: () => props.value ?? model.value ?? props.defaultValue ?? 0,
+    set: (value) => {
+      const min = Number(attributes.min)
+      const max = Number(attributes.max)
 
-  watch(model, (val) => {
-    const min = Number(attrs.min)
-    const max = Number(attrs.max)
+      value = clamp(value, min, max)
 
-    if (isFinite(max)) {
-      if (val > max) {
-        model.value = max
-      }
+      model.value = value
+      evaluate(props.onChange, value)
     }
-
-    if (isFinite(min)) {
-      if (min > val) {
-        model.value = min
-      }
-    }
-  })
-
-  onMounted(() => {
-    model.value ??= props.defaultValue ?? 0
-  })
-
-  defineExpose({
-    value: model,
-    input: input
   })
 </script>
 
 <template>
-  <div class="md-input number" @click="() => input?.focus()">
+  <div
+    class="md-input number"
+    @click="input?.focus()"
+    :class="{ span, [variant ?? 'filled']: true }"
+  >
     <IconOrComponent class="md-input-icon left" :icon="leftIcon" />
-    <div class="md-input-content">
-      <input type="number" v-bind="$attrs" v-model="model" ref="input" />
-      <NumberArrows v-model="model" />
+    <div class="md-input-content" :data-placeholder="placeholder">
+      <input
+        ref="input"
+        type="number"
+        placeholder=""
+        v-bind="$attrs"
+        v-model="model"
+      />
+      <NumberArrows v-model="inputValue" />
     </div>
   </div>
 </template>

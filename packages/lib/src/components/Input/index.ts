@@ -12,4 +12,6 @@ Input.Number = NumberInput
 Input.Text = TextInput
 
 export default Input
-export { NumberInput, TextInput }
+
+export { default as NumberInput } from './number-input.vue'
+export { default as TextInput } from './text-input.vue'

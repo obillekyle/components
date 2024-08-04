@@ -1,71 +1,66 @@
 <script setup lang="ts">
-  import { evaluate } from '@/utils/object'
+  import { getClientPos } from '@/utils/dom'
   import {
     clamp,
     findNearestNumber,
     mapNumberToRange
   } from '@/utils/number'
-  import {
-    computed,
-    onBeforeMount,
-    onBeforeUnmount,
-    onMounted,
-    ref,
-    watch
-  } from 'vue'
-  import { inject } from 'vue'
+  import { evaluate } from '@/utils/object'
+  import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
-  interface SliderProps {
+  interface SliderProperties {
+    value?: number
     defaultValue?: number
     values?: number[] | { label: string; value: number }[]
     min?: number
     max?: number
     step?: number
     decimal?: number
-    change?: (value: number) => void
+    onChange?: (value: number) => void
     showValue?: boolean
     showLabel?: boolean
   }
 
-  const props = withDefaults(defineProps<SliderProps>(), {
+  const props = withDefaults(defineProps<SliderProperties>(), {
     min: 0,
     max: 100,
     decimal: 0
   })
 
   const dragging = ref(false)
+  const wrapper = ref<HTMLElement>()
   const model = defineModel<number>()
-  const wrapper = ref<HTMLElement | null>(null)
-  const useMD3 = inject<boolean>('md3', false)
+  const useMD3 = inject('md3', false)
 
-  const minVal = computed(() => {
-    if (props.values) {
-      const array = props.values.map((value) =>
-        typeof value === 'object' ? value.value : value
-      )
-      return Math.min(...array)
-    }
-    return props.min
-  })
+  // TODO: Organize this mess
 
   const values = computed(() => {
     if (props.values) {
       return props.values
-        .map((value) => (typeof value === 'object' ? value.value : value))
+        .map((v) => (typeof v === 'object' ? v.value : v))
         .sort((a, b) => a - b)
     }
 
     return []
   })
 
-  const maxVal = computed(() => {
-    if (props.values) {
-      const array = props.values.map((value) =>
-        typeof value === 'object' ? value.value : value
-      )
-      return Math.max(...array)
+  const minVal = computed(() =>
+    values.value.length > 0 ? Math.min(...values.value) : props.min
+  )
+
+  const maxVal = computed(() =>
+    values.value.length > 0 ? Math.max(...values.value) : props.max
+  )
+
+  const sliderVal = computed({
+    get: () =>
+      props.value ??
+      model.value ??
+      Math.max(props.defaultValue ?? minVal.value, minVal.value),
+    set: (value) => {
+      model.value = value
+      evaluate(props.onChange, value)
     }
-    return props.max
   })
 
   function dragDown(e: MouseEvent | TouchEvent) {
@@ -76,10 +71,10 @@
 
   function getLabel(value: number) {
     if (props.values) {
-      const index = props.values.find(
-        (v) => typeof v === 'object' && v.value === value
-      )
-      return typeof index === 'number' ? index : index?.label || value
+      const item = props.values.find((v) => {
+        return typeof v === 'object' && v.value === value
+      })
+      return typeof item === 'number' ? item : item?.label || value
     }
 
     return value
@@ -94,8 +89,7 @@
 
     e.preventDefault()
 
-    const clientX =
-      e instanceof MouseEvent ? e.clientX : e.touches[0].clientX
+    const clientX = getClientPos(e).x
     const offset = clamp(clientX - rect.left, 0, rect.width)
 
     const maxOffset = maxVal.value - minVal.value
@@ -104,79 +98,64 @@
       const min = minVal.value
       const max = maxVal.value
       const value = Math.round((offset / rect.width) * (max - min) + min)
-      model.value = findNearestNumber(value, values.value)!
+      sliderVal.value = findNearestNumber(value, values.value)!
       return
     }
 
     if (props.step) {
       const value = (offset / rect.width) * maxOffset
       const rounded = Math.round(value / props.step) * props.step
-      model.value = Math.max(rounded, minVal.value)
+      sliderVal.value = Math.max(rounded, minVal.value)
       return
     }
 
     const value = (offset / rect.width) * maxOffset
     const rounded =
       Math.round(value * 10 ** props.decimal) / 10 ** props.decimal
-    model.value = Math.max(rounded + minVal.value, minVal.value)
+    sliderVal.value = Math.max(rounded + minVal.value, minVal.value)
   }
 
   function dragUp() {
     dragging.value = false
   }
 
-  onBeforeMount(() => {
-    model.value ??= Math.max(
-      Math.min(props.defaultValue ?? 0, maxVal.value),
-      minVal.value
-    )
-  })
-
   function getPosition(value: number) {
-    const num =
+    const number_ =
       ((value - minVal.value) / (maxVal.value - minVal.value)) * 100
 
     return useMD3
-      ? mapNumberToRange(num, 0, 100, 2.4, 97.6)
-      : mapNumberToRange(num, 0, 100, 0.8, 99.2)
+      ? mapNumberToRange(number_, 0, 100, 2.4, 97.6)
+      : mapNumberToRange(number_, 0, 100, 0.8, 99.2)
   }
 
-  const thumbPos = computed(() => {
-    return getPosition(model.value ?? 0)
-  })
-
-  watch(model, () => {
-    evaluate(props.change, model.value)
-  })
+  const thumbPos = computed(() => getPosition(sliderVal.value ?? 0))
 
   function handleKeydown(e: KeyboardEvent) {
     const step = props.step ?? 1 / 10 ** props.decimal
     if (e.key === 'ArrowLeft') {
       if (props.values) {
-        const index = values.value.findIndex((v) => v === model.value)
+        const index = values.value.indexOf(sliderVal.value!)
         const nextIndex = Math.max(index - 1, 0)
-        model.value = values.value[nextIndex]
+        sliderVal.value = values.value[nextIndex]
         return
       }
 
-      const value = (model.value ?? minVal.value) - step
-      model.value = Math.max(value, minVal.value)
+      const value = sliderVal.value - step
+      sliderVal.value = Math.max(value, minVal.value)
     } else if (e.key === 'ArrowRight') {
       if (props.values) {
-        const index = values.value.findIndex((v) => v === model.value)
+        const index = values.value.indexOf(sliderVal.value!)
         const nextIndex = Math.min(index + 1, values.value.length - 1)
-        model.value = values.value[nextIndex]
+        sliderVal.value = values.value[nextIndex]
         return
       }
 
-      const value = (model.value ?? minVal.value) + step
-      model.value = Math.min(value, maxVal.value)
+      const value = sliderVal.value + step
+      sliderVal.value = Math.min(value, maxVal.value)
     }
   }
 
-  defineOptions({
-    name: 'MdSlider'
-  })
+  defineOptions({ name: 'MdSlider' })
 
   onMounted(() => {
     document.addEventListener('mousemove', dragMove)
@@ -205,7 +184,7 @@
     @dblclick="dragMove"
   >
     <div class="md-slider-value" v-if="props.showValue">
-      {{ model }}
+      {{ sliderVal }}
     </div>
     <div
       ref="wrapper"
@@ -218,7 +197,7 @@
         :dragging
         @touchstart="dragDown"
       />
-      <input type="range" :min="minVal" :max="maxVal" v-model="model" />
+      <input type="range" :min="minVal" :max="maxVal" v-model="sliderVal" />
       <div class="md-slider-track" />
       <div class="md-slider-labels" v-if="props.values">
         <template v-if="props.showLabel">
@@ -251,27 +230,29 @@
     --thumb-height: var(--lg);
     --track-height: var(--xs);
 
-    height: calc(var(--thumb-height) * 2);
-    width: 100%;
-    user-select: none;
     display: grid;
+    user-select: none;
     align-items: center;
+    height: calc(var(--thumb-height) * 2);
+    min-width: calc(var(--thumb-height) * 2);
+    width: 100%;
 
     input {
       display: none;
     }
 
-    &:has(.slider-value) {
+    &:has(.md-slider-value) {
       grid-template-columns: auto 1fr;
     }
 
     &-value {
-      font-size: var(--font-sm);
-      padding: var(--xs) var(--md);
       margin-right: var(--sm);
-      background-color: var(--mono-20);
-      color: var(--mono-80);
       border-radius: var(--xs);
+      padding: var(--xs) var(--sm);
+      min-width: 6ch;
+      text-align: center;
+      background: var(--secondary-container);
+      color: var(--secondary);
     }
 
     &-wrapper {
@@ -288,7 +269,7 @@
       overflow: hidden;
       right: 0;
       height: var(--track-height);
-      background: var(--mono-20);
+      background: var(--primary-container);
       border-radius: 999px;
 
       &::before {
@@ -311,7 +292,6 @@
       align-self: center;
       transform: translateX(-50%);
       background: var(--primary);
-      box-shadow: var(--shadow-1);
 
       &::after {
         content: attr(data-value);
@@ -319,18 +299,18 @@
         top: 0;
         left: 50%;
         padding: var(--xs) var(--sm);
-        background: var(--mono-10);
         transform: translate(-50%, -100%);
         font-size: var(--font-sm);
-        color: var(--mono-100);
-        border-radius: var(--xs);
+        color: var(--inverse-on-surface);
+        background: var(--inverse-surface);
+        border-radius: 99px;
         transition: all 0.2s;
         box-shadow: 0 2px 5px #0005;
         opacity: 0;
       }
 
       &[dragging='true'] {
-        background: var(--primary-40);
+        background: var(--primary);
 
         &::after {
           transform: translate(-50%, -125%);
@@ -356,10 +336,10 @@
         width: var(--xxs);
         height: var(--xxs);
         border-radius: 999px;
-        background: var(--primary-50);
+        background: var(--primary);
 
         &.covered {
-          background: var(--primary-20);
+          background: var(--on-primary);
         }
       }
     }
@@ -385,9 +365,9 @@
     }
 
     &.md3 {
-      --thumb-width: calc(var(--padding-xxs) * 1.5);
+      --thumb-width: var(--xxs);
       --thumb-height: var(--component-md);
-      --track-height: var(--sm);
+      --track-height: var(--md);
 
       height: var(--thumb-height);
 
@@ -398,10 +378,10 @@
         }
 
         .md-slider-indicator {
-          background-color: var(--primary-60);
+          background: var(--primary);
 
           &.covered {
-            background-color: var(--primary-10);
+            background: var(--on-primary);
           }
         }
       }
@@ -411,7 +391,7 @@
 
         &::before {
           width: calc(
-            (var(--thumb-offset) * 1%) - (var(--thumb-width) * 1.5)
+            (var(--thumb-offset) * 1%) - (var(--thumb-width) * 2)
           );
           border-radius: 2px;
         }
@@ -419,11 +399,11 @@
         &::after {
           content: '';
           right: 0;
-          background: var(--primary-20);
+          background: var(--primary-container);
           height: 100%;
           position: absolute;
           left: calc(
-            ((var(--thumb-offset) * 1%) + (var(--thumb-width) * 1.5))
+            ((var(--thumb-offset) * 1%) + (var(--thumb-width) * 2))
           );
           border-radius: 2px;
         }

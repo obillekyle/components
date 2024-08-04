@@ -1,2 +1,2 @@
-export * from './switch.vue'
-export * from './master-switch.vue'
+export { default as MasterSwitch } from './master-switch.vue'
+export { default as Switch } from './switch.vue'

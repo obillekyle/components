@@ -1,11 +1,11 @@
 <script setup lang="ts">
-  import type { ListProps } from './types'
+  import type { ListProps as ListProperties } from './types'
 
-  import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
-  import { evaluate } from '@/utils/object'
-  import { getClientPos } from '@/utils/dom'
   import { addPX } from '@/utils/css'
+  import { getClientPos } from '@/utils/dom'
+  import { evaluate } from '@/utils/object'
   import { Icon } from '@iconify/vue'
+  import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'
 
   const props = defineProps<{
@@ -13,11 +13,11 @@
     props: any
   }>()
 
-  const parentProps = inject<ListProps>('parentProps')!
-  const swipeEvent = ref<MouseEvent | TouchEvent | null>(null)
-  const arrangeEvent = ref<MouseEvent | TouchEvent | null>(null)
-  const content = ref<HTMLElement | null>(null)
-  const wrapper = ref<HTMLElement | null>(null)
+  const parentProps = inject<ListProperties>('parentProps')!
+  const swipeEvent = ref<MouseEvent | TouchEvent>()
+  const arrangeEvent = ref<MouseEvent | TouchEvent>()
+  const content = ref<HTMLElement>()
+  const wrapper = ref<HTMLElement>()
 
   const value = ref(0)
   const lastTop = ref(0)
@@ -32,7 +32,7 @@
   }
 
   function swipeMove(e: MouseEvent | TouchEvent) {
-    const oldEvent: MouseEvent | TouchEvent | null = swipeEvent.value
+    const oldEvent: MouseEvent | TouchEvent | undefined = swipeEvent.value
     if (!oldEvent) return
 
     const element = content.value!
@@ -82,7 +82,7 @@
     if (!swipeEvent.value) return
     e.preventDefault()
 
-    swipeEvent.value = null
+    swipeEvent.value = undefined
     document.body.style.removeProperty('cursor')
     const distance = parentProps.swipeDistance ?? 200
     const swipeOptions = parentProps.swipeOptions
@@ -110,7 +110,7 @@
 
     e.preventDefault()
     const element = wrapper.value!
-    arrangeEvent.value = null
+    arrangeEvent.value = undefined
     element.classList.remove('dragged')
     element.style.top = addPX(props.index * 60)
     document.body.style.removeProperty('cursor')
@@ -118,7 +118,7 @@
   }
 
   function dragMove(e: MouseEvent | TouchEvent) {
-    const oldEvent: MouseEvent | TouchEvent | null = arrangeEvent.value
+    const oldEvent: MouseEvent | TouchEvent | undefined = arrangeEvent.value
     if (!oldEvent) return
     e.preventDefault()
 

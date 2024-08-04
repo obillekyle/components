@@ -1,51 +1,70 @@
 <script setup lang="ts">
-  import type { HTMLAttributes, Component } from 'vue'
+  import type { Component, HTMLAttributes } from 'vue'
 
-  import IconOrComponent from '../Misc/icon-or-component.vue'
-  import { evaluate } from '@/utils/object'
-  import { clamp, mapNumberToRange } from '@/utils/number'
-  import {
-    ref,
-    onBeforeMount,
-    watch,
-    onBeforeUnmount,
-    onMounted
-  } from 'vue'
   import { getClientPos } from '@/utils/dom'
+  import { clamp, mapNumberToRange } from '@/utils/number'
+  import { evaluate } from '@/utils/object'
+  import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+  import IconOrComponent from '../Misc/icon-or-component.vue'
 
-  interface MasterSliderProps extends /* @vue-ignore */ HTMLAttributes {
+  interface MasterSliderProperties
+    extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
+    value?: number
     defaultValue?: number
     min?: number
     max?: number
     step?: number
     decimal?: number
     icon?: string | Component
-    change?: (value: number) => void
+    onChange?: (value: number) => void
   }
 
-  const props = withDefaults(defineProps<MasterSliderProps>(), {
+  defineOptions({ name: 'MdBlockSlider' })
+  const props = withDefaults(defineProps<MasterSliderProperties>(), {
     min: 0,
     max: 100,
     step: 1,
     decimal: 0
   })
 
-  const model = defineModel<number>()
-  const wrapper = ref<HTMLElement | null>(null)
+  let timeout: any
+  let observer: ResizeObserver
   const dragging = ref(false)
-  const position = ref(0)
+  const model = defineModel<number>()
+  const wrapper = ref<HTMLElement>()
+  const rect = ref({ width: 0, height: 0 })
+
+  const sliderVal = computed({
+    get: () =>
+      props.value ??
+      model.value ??
+      props.defaultValue ??
+      props.min ??
+      props.max / 2,
+    set(value) {
+      model.value = clamp(value, props.min, props.max)
+      evaluate(props.onChange, model.value)
+    }
+  })
+
+  const steps = computed(() => props.step ?? 1 / 10 ** props.decimal)
+  const position = computed(() => {
+    const newMin = rect.value.height / rect.value.width
+    const oldMin = (sliderVal.value - props.min) / (props.max - props.min)
+    return mapNumberToRange(oldMin * 100, 0, 100, newMin * 100, 100)
+  })
 
   function dragDown(e: MouseEvent | TouchEvent) {
-    e.preventDefault()
+    timeout && clearTimeout(timeout)
     dragging.value = true
     dragMove(e)
   }
 
   function dragMove(e: MouseEvent | TouchEvent) {
-    const element = wrapper.value!
-
-    if (!element) return
     if (!dragging.value) return
+    if (!wrapper.value) return
+
+    const element = wrapper.value
     const rect = element.getBoundingClientRect()
 
     e.preventDefault()
@@ -53,9 +72,10 @@
     const clientX = getClientPos(e).x
     const pos = clientX - rect.left
 
-    const cursorPos = pos > rect.height / 2 ? pos : 0
+    const cursorPos = clamp(pos - rect.height, 0, rect.width)
+    const pad = (cursorPos / rect.width) * rect.height
 
-    const offset = clamp(cursorPos - rect.height / 2, 0, rect.width)
+    const offset = clamp(cursorPos + pad, 0, rect.width)
     const value = (offset / rect.width) * (props.max - props.min)
 
     model.value = props.step
@@ -67,50 +87,39 @@
     dragging.value = false
   }
 
-  onBeforeMount(() => {
-    model.value ??= Math.max(
-      Math.min(props.defaultValue ?? 0, props.max),
-      props.min
-    )
-  })
-
-  function getPosition() {
-    if (!wrapper.value) return 0
-    const rect = wrapper.value.getBoundingClientRect()
-    const min = 100 * (rect.height / rect.width)
-
-    const num =
-      (((model.value || 0) - props.min) / (props.max - props.min)) * 100
-
-    return mapNumberToRange(num, 0, 100, min, 100)
+  const keyHandlers: Record<string, (e: KeyboardEvent) => any> = {
+    ArrowLeft: () => (sliderVal.value -= steps.value),
+    ArrowRight: () => (sliderVal.value += steps.value)
   }
 
-  watch(model, () => {
-    evaluate(props.change, model.value)
-    position.value = getPosition()
-  })
+  function handleKeydown(e: KeyboardEvent) {
+    const root = e.currentTarget as HTMLElement
+    if (e.key in keyHandlers) {
+      e.preventDefault()
+      keyHandlers[e.key](e)
 
-  defineOptions({
-    name: 'MdBlockSlider'
-  })
+      root.classList.add('dragging')
+      timeout && clearTimeout(timeout)
+      timeout = setTimeout(() => root.classList.remove('dragging'), 500)
+    }
+  }
 
   onMounted(() => {
-    const observer = new ResizeObserver(() => {
-      position.value = getPosition()
+    observer = new ResizeObserver(([entry]) => {
+      rect.value = entry.contentRect
     })
-    observer.observe(wrapper.value!)
 
+    observer.observe(wrapper.value!)
     document.addEventListener('mousemove', dragMove)
     document.addEventListener('mouseup', dragUp)
-
     document.addEventListener('touchmove', dragMove)
     document.addEventListener('touchend', dragUp)
   })
 
   onBeforeUnmount(() => {
+    observer.disconnect()
     document.removeEventListener('mousemove', dragMove)
     document.removeEventListener('mouseup', dragUp)
-
     document.removeEventListener('touchmove', dragMove)
     document.removeEventListener('touchend', dragUp)
   })
@@ -118,14 +127,16 @@
 
 <template>
   <div
-    class="md-block-slider"
+    tabindex="0"
     ref="wrapper"
+    class="md-block-slider"
+    :class="{ dragging }"
     @mousedown="dragDown"
     @touchstart="dragDown"
-    :class="{ dragging }"
+    @keydown="handleKeydown"
     :style="{ '--pos': position }"
   >
-    <div class="md-block-slider-icon" :data-value="model">
+    <div class="md-block-slider-icon" :data-value="sliderVal">
       <IconOrComponent :icon="props.icon" />
     </div>
     <div class="md-block-slider-content">
@@ -136,7 +147,7 @@
 
 <style lang="scss">
   .md-block-slider {
-    --height: var(--size-md);
+    --height: var(--component-xxl);
 
     user-select: none;
     position: relative;
@@ -146,8 +157,9 @@
     gap: var(--xs);
     grid-template-columns: var(--height) 1fr;
     min-height: var(--height);
-    background-color: var(--primary-50-50);
+    background: var(--secondary-container);
     border-radius: calc(var(--height) / 2.25);
+    font-size: var(--font-lg);
 
     &-icon {
       width: var(--height);
@@ -161,7 +173,7 @@
     &::after {
       content: '';
       position: absolute;
-      background-color: var(--primary-container);
+      background-color: var(--inverse-primary);
     }
 
     &::before {
@@ -170,11 +182,12 @@
       min-width: var(--height);
       height: 100%;
       border-radius: inherit;
+      transition: border-radius 0.2s;
     }
 
     &::after {
-      right: calc(var(--height) / 4);
       top: 50%;
+      right: calc(var(--height) / 4);
       width: calc(var(--height) * 0.1);
       aspect-ratio: 1;
       transform: translateY(-50%);
@@ -183,8 +196,8 @@
 
     &.dragging {
       &::before {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
+        border-top-right-radius: var(--xxs);
+        border-bottom-right-radius: var(--xxs);
       }
 
       .md-block-slider-icon {
@@ -206,7 +219,6 @@
       z-index: 1;
       display: flex;
       align-items: center;
-      color: var(--primary-80);
     }
   }
 </style>

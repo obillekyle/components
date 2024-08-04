@@ -1,64 +1,62 @@
 <script setup lang="ts">
-  import type { InputHTMLAttributes, Component } from 'vue'
-  import type { AppSizes } from '@/utils/css'
   import '@/assets/input.scss'
+  import type { Component, InputHTMLAttributes } from 'vue'
 
-  import Counter from './counter.vue'
+  import { evaluate } from '@/utils/object'
+  import { computed, ref } from 'vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'
-  import { ref, onBeforeMount } from 'vue'
-  import { getCSSValue } from '@/utils/css'
+  import Counter from './counter.vue'
 
   interface InputText
-    extends /** @vue-ignore */ Omit<InputHTMLAttributes, 'height'> {
+    extends /** @vue-ignore */ Omit<InputHTMLAttributes, 'onChange'> {
     leftIcon?: string | Component
     rightIcon?: string | Component
+    placeholder?: string
+    value?: string
     defaultValue?: string
-    radius?: 'rounded' | AppSizes | String | number
-    height?: AppSizes | String | number
+    onChange?: (v: string) => any
+    prefix?: string
+    suffix?: string
+    variant?: 'filled' | 'outlined'
     counter?: boolean
     span?: boolean
   }
 
-  const inputRef = ref<HTMLInputElement | null>(null)
-  const props = withDefaults(defineProps<InputText>(), {
-    // eslint-disable-next-line vue/require-valid-default-prop
-    height: 'md',
-    radius: 'xs',
-    span: false,
-    counter: false
-  })
-  const model = defineModel<string>({
-    default: ''
-  })
+  const inputRef = ref<HTMLInputElement>()
+  const props = defineProps<InputText>()
+  const model = defineModel<string>()
 
-  onBeforeMount(() => {
-    model.value ??= props.defaultValue ?? ''
-  })
-
-  defineExpose({
-    value: model,
-    input: inputRef
+  const inputValue = computed({
+    get: () => props.value ?? model.value ?? props.defaultValue ?? '',
+    set: (value) => {
+      model.value = value
+      evaluate(props.onChange, value)
+    }
   })
 </script>
 
 <template>
   <div
     class="md-input text"
-    :class="{ span }"
-    @click="() => inputRef?.focus()"
-    :style="{
-      '--radius': getCSSValue(props.radius),
-      '--height': getCSSValue(props.height, 'px', 'size')
-    }"
+    @click="inputRef?.focus()"
+    :class="{ span, [variant ?? 'filled']: true }"
   >
     <IconOrComponent class="md-input-icon left" :icon="leftIcon" />
-    <div class="md-input-content">
-      <input type="text" v-bind="$attrs" v-model="model" ref="inputRef" />
+    <div class="md-input-content" :data-placeholder="placeholder">
+      <span v-if="prefix">{{ prefix }}</span>
+      <input
+        type="text"
+        placeholder=""
+        v-bind="$attrs"
+        v-model="inputValue"
+        ref="inputRef"
+      />
       <Counter
         v-if="counter"
-        :length="model.length"
+        :length="inputValue.length"
         :max="$attrs.maxlength"
       />
+      <span v-if="suffix">{{ suffix }}</span>
     </div>
     <IconOrComponent class="md-input-icon right" :icon="rightIcon" />
   </div>

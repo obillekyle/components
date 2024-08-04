@@ -1,27 +1,31 @@
 <script setup lang="ts">
+  import { evaluate } from '@/utils/object'
+  import { computed, provide, ref, watch, type HTMLAttributes } from 'vue'
   import type { NavigationBarProps } from './type'
-  import { type HTMLAttributes, provide, ref } from 'vue'
 
-  interface Props
-    extends NavigationBarProps,
-      /* @vue-ignore */ HTMLAttributes {}
+  const props = defineProps<
+    NavigationBarProps & /* @vue-ignore */ HTMLAttributes
+  >()
+  defineOptions({ name: 'MdNavigationBar' })
 
-  const count = ref(0)
-  const parent = ref<HTMLDivElement | null>(null)
-  const props = withDefaults(defineProps<Props>(), {
-    labels: 'always',
-    active: -1
+  const parent = ref<HTMLElement>()
+  const model = defineModel({ default: 0 })
+
+  const active = computed({
+    get: () => props.active ?? model.value,
+    set: (value) => (model.value = value)
   })
 
-  provide('parent-props', props)
+  watch(model, (value) => {
+    evaluate(props.onChange, value)
+  })
+
+  provide('active', active)
   provide('parent', parent)
-  provide('root', parent)
-  provide('count', count)
-  defineOptions({ name: 'MdNavigationBar' })
 </script>
 
 <template>
-  <div class="md-navbar" :class="labels" ref="parent">
+  <div :class="['md-navbar', labels ?? 'always']" ref="parent">
     <slot />
   </div>
 </template>
@@ -30,20 +34,23 @@
   .md-navbar {
     display: flex;
     position: absolute;
+    overflow: hidden;
     flex-direction: column;
-    height: 100dvh;
-    left: 0;
     top: 0;
+    left: 0;
     bottom: 0;
     width: var(--navbar-size, 88px);
-    background: var(--primary-10);
+    background: var(--surface-container);
 
     &-container {
       display: flex;
       position: absolute;
       justify-content: center;
       flex-direction: column;
-      inset: 0;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: auto;
     }
 
     &-container + &-content {
@@ -57,29 +64,27 @@
       justify-content: center;
       background: none;
       user-select: none;
-      color: var(--primary-80);
-      padding-block: var(--padding-xs);
-      margin-bottom: var(--padding-xs);
+      color: var(--on-surface-variant);
+      padding-block: var(--sm);
 
       * {
         pointer-events: none;
       }
 
       &-icon {
-        place-self: end center;
         contain: content;
-        margin-bottom: 4px;
+        place-self: end center;
         border-radius: 999px;
         display: grid;
         position: relative;
         overflow: hidden;
         place-items: center;
-        width: var(--size-sm);
-        height: var(--icon-lg);
+        width: var(--component-xl);
+        height: var(--icon-xl);
         font-size: var(--icon-md);
         transition:
           background-color 0.2s,
-          scale 0.2s;
+          transform 0.2s;
 
         > * {
           transition: scale 0.2s;
@@ -91,7 +96,7 @@
           display: block;
           position: absolute;
           inset: 0;
-          width: var(--icon-lg);
+          width: var(--icon-md);
           margin-inline: auto;
           transition:
             width 0.2s,
@@ -105,7 +110,8 @@
       }
 
       &-name {
-        font-size: var(--font-xs);
+        font-size: var(--font-sm);
+        padding-block: var(--xxs);
         font-weight: 500;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -118,8 +124,8 @@
       }
     }
 
-    &.hidden &,
-    &.active & {
+    &.hidden &-item,
+    &.active &-item {
       margin-bottom: 0;
       padding-top: var(--md);
       padding-bottom: 0;
@@ -129,27 +135,27 @@
       scale: 0.9;
     }
 
-    &-item:hover .icon {
-      background-color: var(--primary-40-20);
+    &-item:hover &-item-icon {
+      background: var(--surface);
     }
 
     &-item.active {
       .md-navbar-item-icon {
-        color: var(--on-primary-container);
+        color: var(--on-secondary-container);
 
         &::before {
-          background-color: var(--primary-container);
           width: var(--size-lg);
+          background: var(--secondary-container);
         }
       }
 
       .md-navbar-item-name {
-        color: var(--primary-90);
+        color: var(--on-surface);
       }
     }
 
-    &.hidden &-item .name,
-    &.active &-item:not(.active) .name {
+    &.hidden &-item &-item-name,
+    &.active &-item:not(.active) &-item-name {
       transform: translateY(50%);
       opacity: 0;
     }
@@ -157,9 +163,9 @@
 
   @media screen and (width <= 600px) {
     .md-navbar {
-      width: 100dvw;
-      height: var(--navbar-size, 88px);
+      height: var(--navbar-size, 80px);
       inset: auto 0 0;
+      width: 100%;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 
@@ -173,47 +179,15 @@
         display: grid;
       }
 
-      &-item {
-        margin-bottom: 0;
-        padding-top: var(--padding-sm);
-
-        &-name {
-          font-size: var(--font-md);
-        }
-
-        &-icon {
-          height: var(--icon-xl);
-          width: var(--size-md);
-          transition: transform 0.25s var(--timing-standard);
-        }
-
-        &.active {
-          .md-navbar-item-icon::before {
-            width: var(--size-md);
-          }
-        }
-      }
-
-      &.hidden &-item .name,
-      &.active &-item:not(.active) .name {
-        opacity: 0;
-        transform: translateY(100%);
-      }
-
-      &.hidden &-item .icon,
-      &.active &-item:not(.active) .icon {
-        transform: translateY(20%);
+      &.hidden &-item &-item-icon,
+      &.active &-item:not(.active) &-item-icon {
+        transform: translateY(40%);
       }
 
       &.hidden &-item.active,
       &.active &-item.active {
-        .name {
+        .md-navbar-item-name {
           opacity: 1;
-          transform: translateY(-25%);
-        }
-
-        .icon {
-          transform: translateY(-15%);
         }
       }
 

@@ -10,10 +10,10 @@
 <template>
   <div class="md-input-number-arrows">
     <div class="arrow-increase" @click="model++">
-      <Icon icon="mdi:chevron-up" />
+      <Icon icon="mdi:chevron-up" :width="20" />
     </div>
     <div class="arrow-decrease" @click="model--">
-      <Icon icon="mdi:chevron-down" />
+      <Icon icon="mdi:chevron-down" :width="20" />
     </div>
   </div>
 </template>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { evaluate } from '@/utils/object'
-  import type { HTMLAttributes } from 'vue'
   import { Icon } from '@iconify/vue'
+  import type { HTMLAttributes } from 'vue'
   import { computed } from 'vue'
 
-  interface SwitcherProps extends /* @vue-ignore */ HTMLAttributes {
+  interface SwitcherProperties extends /* @vue-ignore */ HTMLAttributes {
     change?: (value: number, oldValue: number) => void
     defaultValue?: number
     width?: number
@@ -14,22 +14,22 @@
     }[]
   }
 
-  const props = defineProps<SwitcherProps>()
+  const properties = defineProps<SwitcherProperties>()
   const value = defineModel<number>()
   defineOptions({ name: 'MdSwitcher' })
 
   function handleClick(index: number) {
-    evaluate(props.change, index, value.value)
+    evaluate(properties.change, index, value.value)
     value.value = index
   }
 
   const maxChars = computed(() => {
     let max = 0
-    props.items.forEach((item) => {
+    for (const item of properties.items) {
       if (item.name.length > max) {
         max = item.name.length
       }
-    })
+    }
 
     return max + 2
   })

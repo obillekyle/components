@@ -1,20 +1,20 @@
 <script setup lang="ts">
-  import { provide } from 'vue'
   import { addPX } from '@/utils/css'
+  import { provide } from 'vue'
   import ListItem from './list-item.vue'
-  import type { ListProps } from './types'
+  import type { ListProps as ListProperties } from './types'
 
-  const props = withDefaults(defineProps<ListProps>(), {
+  const properties = withDefaults(defineProps<ListProperties>(), {
     swipe: 'off',
     listComp: 'div',
     items: () => []
   })
 
-  provide('items', props.items)
-  provide('parentProps', props)
+  provide('items', properties.items)
+  provide('parentProps', properties)
 
   defineOptions({ name: 'MdList' })
-  const height = addPX((props.items.length + 1) * 60)
+  const height = addPX((properties.items.length + 1) * 60)
 </script>
 
 <template>
@@ -46,7 +46,7 @@
       &.dragged {
         z-index: 10;
         transition: none;
-        box-shadow: 0 0 6px var(--mono-20-40);
+        box-shadow: var(--shadow-3);
       }
     }
 
@@ -55,7 +55,7 @@
       width: 100%;
       display: flex;
       height: inherit;
-      background: var(--background-secondary);
+      background: var(--surface-container-low);
       transition: left 0.1s;
       z-index: 2;
 

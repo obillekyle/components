@@ -1,11 +1,8 @@
 <script setup lang="ts">
-  import type { NavigationBarProps } from './type'
-  import type { Ref, ButtonHTMLAttributes } from 'vue'
+  import type { ButtonHTMLAttributes } from 'vue'
 
   import { Icon } from '@iconify/vue'
-  import { evaluate } from '@/utils/object'
-  import { inject, onMounted, onUnmounted, ref, watch } from 'vue'
-  import { $ } from '@/utils/dom'
+  import { computed, inject, ref } from 'vue'
 
   interface NavigationItemProps
     extends /** @vue-ignore */ ButtonHTMLAttributes {
@@ -14,49 +11,36 @@
     value?: number
   }
 
-  const index = ref<number>(0)
-  const element = ref<HTMLElement | null>(null)
-  const count = inject<Ref<number>>('count')!
-  const parentProps = inject<NavigationBarProps>('parent-props')!
-  const root = inject<Ref<HTMLDivElement | null>>('parent')!
-
+  const element = ref<HTMLElement>()
+  const active = inject('active', ref(0))
+  const root = inject('parent', ref<HTMLDivElement>())
   const props = defineProps<NavigationItemProps>()
+
   defineOptions({ name: 'MdNavigationItem' })
 
-  function updateIndex() {
-    if (root.value) {
-      const parent = $('.md-navbar-container', root.value) ?? root.value
+  const index = computed({
+    get: () => {
+      if (props.value) return props.value
 
-      index.value = Array.from(parent.children)
-        .filter((e) => e.matches('button.md-navbar-item.special'))
-        .indexOf(element.value!)
-    }
-  }
+      if (root.value) {
+        const parent = root.value
 
-  function setValue() {
-    if (parentProps.active !== (props.value ?? index.value)) {
-      evaluate(parentProps.change, props.value ?? index.value)
-    }
-  }
-
-  watch(count, updateIndex)
-
-  onMounted(() => {
-    count.value += 1
-    updateIndex()
-  })
-
-  onUnmounted(() => {
-    count.value -= 1
+        return [...parent.children]
+          .filter((e) => e.matches('button.md-navbar-item.special'))
+          .indexOf(element.value!)
+      }
+      return 0
+    },
+    set: () => {}
   })
 </script>
 
 <template>
   <button
     ref="element"
-    @click="setValue"
     class="md-navbar-item special"
-    :class="{ active: (value ?? index) == parentProps.active }"
+    @click="active = value ?? index"
+    :class="{ active: (value ?? index) == active }"
   >
     <div class="md-navbar-item-icon">
       <Icon :icon="icon" />

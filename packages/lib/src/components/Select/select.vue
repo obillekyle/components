@@ -1,104 +1,71 @@
 <script setup lang="ts">
   import type { Component, HTMLAttributes } from 'vue'
-  import { ref, computed, watch, onMounted } from 'vue'
-  import OptionItem from './option-item.vue'
-  import { Icon } from '@iconify/vue'
-  import { $, keyboardClick, rippleEffect } from '@/utils/dom'
+  import type { SelectItem } from './util'
+
+  import { keyboardClick, rippleEffect } from '@/utils/dom'
   import { evaluate } from '@/utils/object'
+  import { fnRef } from '@/utils/ref'
+  import { Icon } from '@iconify/vue'
+  import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+  import OptionItem from './option-item.vue'
+  import { filterByName, toSelectItems, toggleItem } from './util'
 
-  export type SelectItem = {
-    readonly id: string | number
-    readonly name: string
-    [key: string]: any
-  }
-
-  interface SelectProps extends /* @vue-ignore */ HTMLAttributes {
+  interface SelectProperties
+    extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
     value?: number[]
-    items?: SelectItem[] | string[]
+    defaultValue?: number[]
+    items?: (number | string | SelectItem)[]
+    span?: boolean
     optionComp?: Component
-    searchByKey?: string[]
     multiple?: boolean
     required?: boolean
     placeholder?: string
-    span?: boolean
-    change?: (value: number[]) => void
+    onChange?: (value: number[]) => any
   }
-
-  const values = computed(() =>
-    props.items.map((item) =>
-      typeof item === 'object' ? item : { id: item, name: item }
-    )
-  )
 
   const show = ref(false)
   const search = ref('')
-  const select = ref<HTMLElement | null>(null)
-  const props = withDefaults(defineProps<SelectProps>(), {
+  const options = ref<HTMLElement[]>([])
+  const setOptions = fnRef(options)
+  const select = ref<HTMLElement>()
+  const props = withDefaults(defineProps<SelectProperties>(), {
     optionComp: OptionItem,
-    searchByKey: () => [],
     multiple: false,
     required: false,
-    items: () => [],
-    value: () => []
+    items: () => []
   })
 
-  const modelValue = defineModel<number[]>()
-
-  const items = computed(() => {
-    return values.value.filter(
-      (item) =>
-        item.id
-          .toString()
-          .toLowerCase()
-          .includes(search.value.toLowerCase()) ||
-        props.searchByKey.some((key) =>
-          item.props[key]!.toString()
-            .toLowerCase()
-            .includes(search.value.toLowerCase())
-        )
-    )
+  const values = computed(() => toSelectItems(props.items))
+  const model = defineModel<number[]>()
+  const selected = computed({
+    get: () => props.value ?? model.value ?? props.defaultValue ?? [],
+    set: (value) => {
+      model.value = value
+      evaluate(props.onChange, value)
+    }
   })
 
-  defineExpose({ items })
+  const filteredItems = computed(() => {
+    const query = search.value.toLowerCase()
+    return query ? filterByName(values.value, query) : values.value
+  })
+
   defineOptions({ name: 'MdSelect' })
 
-  const toggle = () => (show.value = !show.value)
-  const val = computed(() => modelValue.value || props.value)
   function handleClick(index?: number) {
     if (index === undefined) {
       if (props.multiple || props.required) return
-      if (modelValue.value) modelValue.value = []
-      evaluate(props.change, [])
+      selected.value = []
       return
     }
 
-    if (modelValue.value) {
-      if (props.multiple) {
-        modelValue.value = modelValue.value.includes(index)
-          ? modelValue.value.filter((i) => i !== index)
-          : [...modelValue.value, index]
-      } else {
-        modelValue.value = [index]
-      }
-    }
-
-    if (props.multiple) {
-      const value = val.value.includes(index)
-        ? val.value.filter((i) => i !== index)
-        : [...val.value, index]
-      evaluate(props.change, value)
-    } else {
-      evaluate(props.change, [index])
-    }
+    selected.value = props.multiple
+      ? toggleItem(selected.value, index)
+      : [index]
   }
 
   watch(show, (show) => {
-    if (show && select.value) {
-      $(
-        '.md-select-options-dropdown .md-select-option',
-        select.value
-      )?.focus()
-    }
+    if (show) options.value[0]?.focus()
   })
 
   function closeIfClickOutside(event: MouseEvent) {
@@ -107,11 +74,8 @@
     }
   }
 
-  onMounted(() => {
-    if (props.value) handleClick(props.value[0])
-
-    document.addEventListener('click', closeIfClickOutside)
-  })
+  onMounted(() => addEventListener('click', closeIfClickOutside))
+  onUnmounted(() => removeEventListener('click', closeIfClickOutside))
 </script>
 
 <template>
@@ -119,20 +83,23 @@
     <div
       tabindex="0"
       class="md-select-wrapper"
-      @click="toggle"
+      @click="show = !show"
       @pointerdown="rippleEffect"
       @keydown="keyboardClick"
     >
       <div
         class="md-select-single"
-        v-if="value?.length === 1 && !multiple && items[value[0]]"
+        v-if="selected.length === 1 && !multiple && items[selected[0]]"
       >
         <div class="md-select-option">
-          <component :is="optionComp" v-bind="items[value[0]]" />
+          <optionComp v-bind="values[selected[0]]" />
         </div>
       </div>
 
-      <div class="md-select-single" v-if="value?.length === 0 && !multiple">
+      <div
+        class="md-select-single"
+        v-if="selected.length === 0 && !multiple"
+      >
         <div class="md-select-placeholder">{{ placeholder }}</div>
       </div>
 
@@ -149,26 +116,27 @@
       </div>
     </div>
 
-    <div class="md-select-options-dropdown" @click="toggle">
+    <div class="md-select-options-dropdown" @click="show = false">
       <div
         tabindex="0"
         class="md-select-option empty"
         v-if="!required && !multiple"
-        @click="() => handleClick()"
+        @click="handleClick()"
         @pointerdown="rippleEffect"
-        :class="{ active: val.length === 0 }"
+        :class="{ active: selected.length === 0 }"
       />
       <div
+        v-for="(item, index) in filteredItems"
         tabindex="0"
         class="md-select-option"
-        v-for="(item, index) in items"
         :key="index"
+        :ref="setOptions"
         :data-index="index"
+        @click="handleClick(index)"
         @pointerdown="rippleEffect"
-        @click="() => handleClick(index)"
-        :class="{ active: val.includes(index) }"
+        :class="{ active: selected.includes(index) }"
       >
-        <component :is="optionComp" v-bind="item" />
+        <optionComp v-bind="item" />
       </div>
     </div>
   </div>
@@ -178,7 +146,7 @@
   .md-select {
     position: relative;
 
-    --size: var(--size-md);
+    --size: var(--component-lg);
 
     &.span {
       width: 100%;
@@ -192,8 +160,8 @@
       height: var(--size);
       position: relative;
       overflow: hidden;
-      border-radius: var(--xs);
-      border: 1px solid var(--primary-60-30);
+      border-radius: var(--xxs);
+      border: 1px solid var(--outline);
 
       &:empty::after {
         content: 'No item selected';
@@ -220,9 +188,9 @@
       top: var(--size);
       left: 0;
       width: 100%;
-      background: var(--primary-10);
-      border: 1px solid var(--primary-60-30);
-      border-radius: 0 0 var(--xs) var(--xs);
+      background: var(--surface-container);
+      border: 1px solid var(--outline);
+      border-radius: 0 0 var(--xxs) var(--xxs);
       border-top: none;
       overflow: auto;
       pointer-events: none;
@@ -243,11 +211,26 @@
       position: relative;
       overflow: hidden;
       height: var(--size);
-      border-bottom: 1px solid var(--primary-60-10);
+      color: var(--on-surface-variant);
       cursor: pointer;
 
+      &::before {
+        content: '';
+        position: absolute;
+        inset: var(--xxs);
+        opacity: 0;
+        z-index: -1;
+        border-radius: var(--xxs);
+        background: var(--primary-container);
+        transition: opacity 0.25s var(--timing-standard);
+      }
+
       &.active {
-        background: var(--primary-60-10);
+        color: var(--on-primary-container);
+
+        &::before {
+          opacity: 1;
+        }
       }
 
       &:last-child {

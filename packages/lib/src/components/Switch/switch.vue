@@ -1,40 +1,42 @@
 <script setup lang="ts">
+  import type { SizesString } from '@/utils/css'
   import type { InputHTMLAttributes } from 'vue'
-  import type { AppSizes } from '@/utils/css'
 
-  import { ref, onMounted } from 'vue'
   import { getCSSValue } from '@/utils/css'
   import { keyboardClick } from '@/utils/dom'
   import { evaluate } from '@/utils/object'
+  import { computed, ref } from 'vue'
 
   interface SwitchProps
-    extends /* @vue-ignore */ Omit<InputHTMLAttributes, 'size'> {
-    size?: AppSizes | number | String
-    change?: (v: boolean) => any
+    extends /* @vue-ignore */ Omit<
+      InputHTMLAttributes,
+      'size' | 'onChange'
+    > {
+    size?: SizesString
+    value?: boolean
+    onChange?: (v: boolean) => any
     defaultChecked?: boolean
     variant?: 'outline' | 'filled'
+    length?: number
   }
 
-  const inputRef = ref<HTMLInputElement | null>(null)
-  const model = defineModel<boolean | undefined>({
-    default: undefined
-  })
+  const inputRef = ref<HTMLInputElement>()
+  const model = defineModel<boolean>()
 
   const props = withDefaults(defineProps<SwitchProps>(), {
-    // eslint-disable-next-line vue/require-valid-default-prop
-    size: 'xs',
-    variant: 'outline'
+    size: '#xs',
+    value: undefined,
+    defaultChecked: undefined,
+    variant: 'outline',
+    length: 1.9
   })
 
-  function handleClick() {
-    const element = inputRef.value!
-    if (element.disabled) return
-    model.value = !model.value
-    evaluate(props.change, model.value)
-  }
-
-  onMounted(() => {
-    model.value ??= props.defaultChecked ?? false
+  const inputValue = computed({
+    get: () => props.value ?? model.value ?? props.defaultChecked ?? false,
+    set: (value) => {
+      model.value = value
+      evaluate(props.onChange, model.value)
+    }
   })
 
   defineOptions({
@@ -49,29 +51,34 @@
     class="md-switch"
     :class="variant"
     @keydown="keyboardClick"
-    @click="() => inputRef?.click()"
-    :style="`--size: ${getCSSValue(size, 'px', 'component')}`"
+    @click="inputRef?.click()"
+    :style="{
+      '--size': getCSSValue(size, 'px', 'component'),
+      '--length': length
+    }"
   >
     <input
       type="checkbox"
       v-bind="$attrs"
-      v-model="model"
+      v-model="inputValue"
       ref="inputRef"
-      @click="handleClick"
     />
   </div>
 </template>
 
 <style lang="scss">
   .md-switch {
+    --size: var(--component-xs);
+    --length: 1.9;
+
     position: relative;
     display: inline-block;
-    width: calc(var(--size) * 2);
+    width: calc(var(--size) * var(--length));
     height: var(--size);
     flex-shrink: 0;
     border-radius: var(--size);
-    background-color: var(--mono-10);
-    box-shadow: 0 0 0 2px var(--mono-50);
+    box-shadow: 0 0 0 2px inset var(--outline);
+    background: var(--surface-container);
     transition: all 0.15s var(--timing-standard);
 
     input {
@@ -79,43 +86,50 @@
     }
 
     &.filled {
-      box-shadow: 0 0 0 2px var(--mono-20);
-      background-color: var(--mono-20);
+      background: var(--outline);
+      box-shadow: 0 0 0 2px inset var(--outline);
 
-      &::after {
-        background-color: #fafafa;
-        scale: 0.8;
+      &::after,
+      &::before {
+        background: #fafafa;
+        scale: 0.75;
       }
     }
 
-    &::after {
+    &::after,
+    &::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
-      scale: 0.6;
+      scale: 0.5;
       width: var(--size);
       height: var(--size);
-      background-color: var(--mono-60);
       border-radius: var(--size);
       transition:
         inset 0.2s var(--timing-standard),
         scale 0.25s var(--timing-standard);
     }
 
-    &:focus-visible::after {
-      outline: calc(var(--size) / 2) solid var(--mono-80-30);
+    &::after {
+      background: var(--outline);
+    }
+
+    &:focus-visible::before {
+      outline: calc(var(--size) / 2) solid var(--outline);
+      opacity: 0.5;
     }
   }
 
   .md-switch:has(input:checked) {
-    background-color: var(--primary);
-    box-shadow: 0 0 0 2px var(--primary);
+    background: var(--primary);
+    box-shadow: 0 0 0 2px inset var(--primary);
 
-    &::after {
-      scale: 0.8;
-      left: var(--size);
-      background-color: var(--on-primary);
+    &::after,
+    &::before {
+      scale: 0.75;
+      left: calc(var(--size) * (var(--length) - 1));
+      background: var(--on-primary);
     }
   }
 
