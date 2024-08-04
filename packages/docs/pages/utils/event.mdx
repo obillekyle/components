@@ -1,0 +1,143 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+export const meta = {
+  title: 'Event',
+  description: 'A custom event for your class',
+  source: 'packages/lib/src/utils/event.ts',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { CustomEventHandler } from '@vue-material/core/utils/event'
+
+    type Events = {
+      'event-name': [arg1: string, arg2?: number]
+    }
+
+    // extend using the CustomEventHandler
+    // accepts type for intellisense
+    class MyClass extends CustomEventHandler<Events> {
+      constructor() {
+        super()
+      }
+
+      set(value: string) {
+        this.emit('event-name', [value, 0])
+        this.dispatchEvent('event-name', [value, 0])
+      }
+    }
+
+    // initialize your class
+    const myClass = new MyClass();
+
+    // start using event in your class
+    const eventCb: (arg1: string, arg2: number) => console.log(arg1, arg2);
+    myClass.addEventListener('event-name', eventCb);
+    myClass.set('value');
+
+    myClass.removeEventListener('event-name', eventCb);
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Import
+
+<Preview>
+  <CodeHighlight>
+    ```ts import {CustomEventHandler} from '@vue-material/core' import{' '}
+    {CustomEventHandler} from '@vue-material/core/utils' import{' '}
+    {CustomEventHandler} from '@vue-material/core/utils/event' ```
+  </CodeHighlight>
+</Preview>
+
+## Some things to consider
+
+> [!WARNING]
+> This is incompatible with existing dom event implementations.
+> You must not extend your class with `CustomEventHandler` if it already
+> extends another class with built in dom event implementations.
+>
+> <Preview>
+>   <CodeHighlight>
+>     ```ts // Don't do this class MyClass extends CustomEventHandler,
+>     HTMLElement{' '}
+>     {
+>       // ...my code
+>     }
+>     ```
+>   </CodeHighlight>
+>   <CodeHighlight>
+>     ```ts // Do this if you're creating a custom html element class
+>     MyClass extends HTMLElement{' '}
+>     {
+>       // ...my code
+>     }
+>     ```
+>   </CodeHighlight>
+> </Preview>
+
+## API
+
+### `Overview`
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    class CustomEventHandler<Events extends EventType = {}> {
+      addEventListener(type: string, callback: () => any): void
+      dispatchEvent(event: string, arguments_: any[] = []): void
+      removeEventListener(type: string, callback: () => any): void
+      removeAllEvents(): void
+
+      emit = this.dispatchEvent
+      on = this.addEventListener
+      listen = this.addEventListener
+      attach = this.addEventListener
+      detach = this.removeEventListener
+    }
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+### Properties and Methods
+
+**`addEventListener()`**: void
+
+- Registers a new event listener
+- Parameters
+  - `type`: string
+  - `callback`: () =&gt; void
+- Aliases
+  - `on`
+  - `listen`
+  - `attach`
+
+**`dispatchEvent()`**: void
+
+- Dispatches an event
+- Parameters
+  - `event`: string
+  - `arguments_?`: any[]
+- Aliases
+  - `emit`
+
+**`removeEventListener()`**: void
+
+- Removes an event listener
+- Parameters
+  - `type`: string
+  - `callback`: () =&gt; void
+- Aliases
+  - `detach`
+
+**`removeAllEvents()`**: void
+
+- Removes all event listeners

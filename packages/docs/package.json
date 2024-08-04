@@ -1,17 +1,36 @@
 {
-  "name": "nuxt-app",
+  "name": "docs",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@mdx-js/loader": "^3.0.1",
+    "@mdx-js/rollup": "^3.0.1",
+    "@mdx-js/vue": "^3.0.1",
     "@vue-material/core": "*",
-    "nuxt": "^3.12.3",
-    "vue": "latest"
+    "remark-gfm": "^4.0.0",
+    "remark-github-blockquote-alert": "^1.2.1",
+    "rehype-slug": "^6.0.0",
+    "@shikijs/rehype": "^1.11.0",
+    "animated-scroll-to": "^2.3.0",
+    "vue": "^3.4.34",
+    "vue-router": "^4.3.3"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@types/node": "^20.14.5",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vue/tsconfig": "^0.5.1",
+    "npm-run-all2": "^6.2.0",
+    "typescript": "~5.4.0",
+    "vite": "^5.3.1",
+    "vue-tsc": "^2.0.21"
   }
 }

@@ -1,0 +1,122 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Chip from '@vue-material/core/Chip'
+import Flex from '@vue-material/core/Box/Flex'
+
+export const meta = {
+  title: 'Chip',
+  description: 'A basic chip component.',
+  source: 'packages/lib/src/components/Chip',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="200">
+    <Chip left-icon="material-symbols:add">Add Something</Chip>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import PlusIcon from '@/components/Icons/plus-icon.vue'
+
+      import { Chip } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Chip :left-icon="PlusIcon">Add Something</Chip>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    // This import will include both Card and Card.Group
+    import { Chip } from '@vue-material/core'
+    import Chip from '@vue-material/core/Chip'
+
+    // import only the chip component
+    import Chip from '@vue-material/core/Chip/chip.vue'
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Variants
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex gap='#sm' wrap='wrap' justify="center">
+      <Chip variant="filled">Filled</Chip>
+      <Chip variant="tonal">Tonal</Chip>
+      <Chip variant="elevated">Elevated</Chip>
+      <Chip variant="outlined">Outlined</Chip>
+      <Chip variant="text">Text</Chip>
+    </Flex>
+    <Flex gap='#sm' wrap='wrap' justify="center">
+      <Chip variant="filled" disabled>Filled</Chip>
+      <Chip variant="tonal" disabled>Tonal</Chip>
+      <Chip variant="elevated" disabled>Elevated</Chip>
+      <Chip variant="outlined" disabled>Outlined</Chip>
+      <Chip variant="text" disabled>Text</Chip>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight hide>
+    ```vue
+    <script setup lang="ts">
+      import { Chip, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap='#sm' wrap='wrap' justify="center">
+        <Chip variant="filled">Filled</Chip>
+        <Chip variant="tonal">Tonal</Chip>
+        <Chip variant="elevated">Elevated</Chip>
+        <Chip variant="outlined">Outlined</Chip>
+        <Chip variant="text">Text</Chip>
+      </Flex>
+      <Flex gap='#sm' wrap='wrap' justify="center">
+        <Chip variant="filled" disabled>Filled</Chip>
+        <Chip variant="tonal" disabled>Tonal</Chip>
+        <Chip variant="elevated" disabled>Elevated</Chip>
+        <Chip variant="outlined" disabled>Outlined</Chip>
+        <Chip variant="text" disabled>Text</Chip>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+> #### Inherits `BoxProps`, `vue.BtnHTMLAttributes`
+
+`variant?`: filled | outlined | text | tonal | elevated
+
+- The variant of the chip
+- Default: `"filled"`
+
+`left-icon?`: string | vue.Component
+
+- The component that will be used to render the left icon
+- Default: `undefined`
+
+`right-icon?`: string | vue.Component
+
+- The component that will be used to render the right icon
+- Default: `undefined`
+
+`label?`: string
+
+- The label of the chip, can be overridden by the `slot:default`
+- Default: `undefined`

@@ -1,0 +1,156 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+export const meta = {
+  title: 'Colors',
+  description: 'All colors and stuff',
+  source: 'packages/lib/src/utils/colors.ts',
+  inherits: []
+}
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+      import { <fn> } from '@vue-material/core'
+      import { <fn> } from '@vue-material/core/utils'
+      import { <fn> } from '@vue-material/core/utils/colors'
+    ``` 
+  </CodeHighlight>
+</Preview>
+
+## Methods and Properties
+
+### class Colors
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    export class Colors {
+      static from(color: string | String | Colors): Colors
+      static isLight(color: string): boolean
+
+      constructor(color?: string | String, curve?: Curve)
+      private main: [number, number, number, number]
+      private curve: BezierEasing
+
+      set(colorString: string | String): Colors
+      shade(shade: number, alpha = 1): string
+      isLight(shade>: number): string
+
+      get opposite: Colors;
+      get hex: string
+
+      toString(): string
+    }
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+**`static from()`**: Colors
+
+- Create a new color object from a string or an existing color object
+- Parameters
+  - `color`: string | String | Colors
+
+**`static isLight()`**: boolean
+
+- Check if a color is light
+- Parameters
+  - `color`: string
+
+**`constructor()`**: Colors
+
+- Creates an instance of Colors
+- Parameters
+  - `color`: string | String
+    - Default: `'white'`
+  - `curve`: BezierEasing
+    - Bezier easing function
+    - Default: `BezierEasing([0.2, 0.2, 1, 1])`
+
+**`set()`**: Colors
+
+- Updates and returns the Colors object
+- Parameters
+  - `colorString`: string | String
+
+**`shade()`**: string
+
+- Get a shade of the current color
+- Parameters
+  - `shade`: number
+  - `alpha?`: number
+    - Default: `1`
+
+**`isLight()`**: string
+
+- Check if the current color is light
+- Parameters
+  - `shade?`: number
+    - Default: `50`
+
+**`get opposite`**: Colors
+
+- Get the opposite of the current color
+
+**`get hex`**: string
+
+- Get the hex value of the current color
+
+**`toString()`**: string
+
+- Get the string representation of the current color
+
+---
+
+### parseColors()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type colorsParam = string | String | Partial<ColorOptions<string | String | Colors>>
+    function parseColors(color: colorsParam): ColorOptions<Colors>;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`parseColors()`**: ColorOptions
+
+- Parse a string into a `ColorOptions` dictionary
+- Parameters
+  - `color`: string | String | Partial\<ColorOptions\<string | String | Colors\>>
+
+## Types
+
+### Curve
+
+<Preview>
+  <CodeHighlight>
+    ```ts 
+    type Curve = [number, number, number, number]; 
+    ```
+  </CodeHighlight>
+</Preview>
+
+---
+
+### ColorOptions
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type ColorOptions<T> = {
+      primary: T;
+      secondary: T;
+      tertiary: T;
+      error: T;
+      neutral: T;
+      [key: string]: T
+    };
+    ```
+  </CodeHighlight>
+</Preview>

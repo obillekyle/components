@@ -1,0 +1,244 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+export const meta = {
+  title: 'String',
+  description: 'Utils for strings manipulation',
+  source: '',
+  inherits: []
+}
+
+## Inports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { <fn> } from '@vue-material/core'
+    import { <fn> } from '@vue-material/core/utils'
+    import { <fn> } from '@vue-material/core/utils/string'
+    ```
+  </CodeHighlight>
+</Preview>
+
+## Methods and Properties
+
+### escapeHtml()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function escapeHtml(unsafeText: string): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`escapeHtml()`**: string
+- Escape HTML characters in a string
+- Parameters:
+  - `unsafeText`: string
+
+---
+
+### unescapeHtml()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function unescapeHtml(unsafeText: string): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`unescapeHtml()`**: string
+- Unescape HTML characters in a string
+- Parameters:
+  - `unsafeText`: string
+
+---
+
+### insertAt()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function insertAt(text: string, index: number, value: string);
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`insertAt()`**: string
+- Insert a string at an index
+- Parameters
+  - `text`: string
+  - `index`: number
+    - Position where to insert the text
+  - `value`: string
+
+---
+
+### replaceRange()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function replaceRange(text: string, [start, end]: [number, number], value: string);
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`replaceRange()`**: string
+- Replace a range in a string to a new value
+- Parameters
+  - `text`: string
+  - `position`: [number, number]
+  - `value`: string
+
+---
+
+### reverseString()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function reverseString(text: string): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`reverseString()`**: string
+- Reverse a string
+- Parameters
+  - `text`: string
+
+---
+
+### fixLineBreaks()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function fixLineBreaks(string_: string): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`fixLineBreaks()`**: string
+- Replaces multiple \n, \r\n, \n\n with a single \n
+- Parameters
+  - `string_`: string
+
+---
+
+### hashStr()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function hashStr(string_: string, limit?: number): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`hashStr()`**: string
+- Generate a hash from a string
+- Parameters
+  - `string_`: string
+  - `limit?`: number
+    - Truncate the hash
+    - Default: `undefined`
+
+---
+
+### toKebabCase()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function toKebabCase(string_: string): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`toKebabCase()`**: string
+- Convert a string to kebab-case
+- Parameters
+  - `string_`: string
+
+---
+
+### toCamelCase()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function toCamelCase(string_: string): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`toCamelCase()`**: string
+- Convert a string to camelCase
+- Parameters
+  - `string_`: string
+
+---
+
+### toPascalCase()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function toPascalCase(string_: string): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`toPascalCase()`**: string
+- Convert a string to PascalCase
+- Parameters
+  - `string_`: string
+
+---
+
+### class MutableString
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    class MutableString extends String {
+      constructor(text: string);
+
+      fixLineBreaks(): MutableString;
+      replaceRange(position: [number, number], value: string): MutableString;
+      insert(index: number, value: string): MutableString;
+      reverse(): MutableString;
+      escape(): MutableString;
+      unescape(): MutableString;
+      toKebabCase(): MutableString;
+      toCamelCase(): MutableString;
+      toPascalCase(): MutableString;
+    }
+    ```
+  </CodeHighlight>
+</Preview>
+
+All of the string methods are available on the `MutableString` class
+
+---
+
+### mt()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function mt(template: TemplateString | string, ...args: any[]): MutableString;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`mt()`**: MutableString
+- Create a mutable string
+- Parameters
+  - `template`: TemplateString | string
+  - `...args`: any[]

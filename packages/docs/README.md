@@ -1,75 +1,33 @@
-# Nuxt 3 Minimal Starter
+# docs
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This template should help get you started developing with Vue 3 in Vite.
 
-## Setup
+## Recommended IDE Setup
 
-Make sure to install the dependencies:
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-```bash
-# npm
-npm install
+## Type Support for `.vue` Imports in TS
 
-# pnpm
-pnpm install
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
 
-# yarn
-yarn install
+## Customize configuration
 
-# bun
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+```sh
 bun install
 ```
 
-## Development Server
+### Compile and Hot-Reload for Development
 
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+```sh
+bun dev
 ```
 
-## Production
+### Type-Check, Compile and Minify for Production
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+```sh
+bun build
 ```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

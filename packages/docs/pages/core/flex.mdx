@@ -1,0 +1,135 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Flex from '@vue-material/core/Box/Flex'
+import Button from '@vue-material/core/Button'
+
+export const meta = {
+  title: 'Flex',
+  description: 'A flex component',
+  source: 'packages/lib/src/components/Box/Flex',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex
+      gap="#xxs"
+      direction="row"
+    >
+      <Button left-icon="material-symbols:star-outline">Star</Button>
+      <Button left-icon="material-symbols:star-outline">Star</Button>
+      <Button left-icon="material-symbols:star-outline">Star</Button>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import StarIcon from '@/components/Icons/star-icon.vue'
+
+      import { Button, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex
+        gap="#xxs"
+        direction="row"
+      >
+        <Button :left-icon="StarIcon">Star</Button>
+        <Button :left-icon="StarIcon">Star</Button>
+        <Button :left-icon="StarIcon">Star</Button>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Make elements take up the remaining space
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex
+      gap="#xxs"
+      width="100%"
+      direction="row"
+    >
+      <Button span left-icon="material-symbols:star-outline">Star</Button>
+      <Button left-icon="material-symbols:star-outline">Star</Button>
+      <Button left-icon="material-symbols:star-outline">Star</Button>
+    </Flex>
+
+    <Flex
+      mt="#xxs"
+      gap="#xxs"
+      width="100%"
+      direction="row"
+    >
+      <Flex.Span>
+        <Button left-icon="material-symbols:star-outline">Star</Button>
+      </Flex.Span>
+      <Button left-icon="material-symbols:star-outline">Star</Button>
+      <Button left-icon="material-symbols:star-outline">Star</Button>
+    </Flex>
+
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import StarIcon from '@/components/Icons/star-icon.vue'
+
+      import { Button, Flex, FlexSpan } from '@vue-material/core'
+    </script>
+
+    <template>
+
+      <!-- using the {span} property on a child-->
+      <Flex
+        gap="#xxs"
+        width="100%"
+        direction="row"
+      >
+        <Button span :left-icon="StarIcon">Star</Button>
+        <Button :left-icon="StarIcon">Star</Button>
+        <Button :left-icon="StarIcon">Star</Button>
+      </Flex>
+
+      <!-- wrapping the child in a Flex.Span -->
+      <Flex
+        mt="#xxs"
+        gap="#xxs"
+        width="100%"
+        direction="row"
+      >
+        <FlexSpan>
+          <Button :left-icon="StarIcon">Star</Button>
+        </FlexSpan>
+        <Button :left-icon="StarIcon">Star</Button>
+        <Button :left-icon="StarIcon">Star</Button>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+## Props
+
+### `FlexProps`
+
+- > **Inherits `BoxProps`**
+- `direction?`: 'row' | 'column' | 'row-reverse' | 'column-reverse'
+  - The direction of the flex
+  - Default: `undefined`
+- `wrap?`: 'nowrap' | 'wrap' | 'wrap-reverse'
+  - The wrap of the flex
+  - Default: `undefined`
+- `align?`: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly'
+  - The align of the flex
+  - Default: `undefined`
+- `justify?`: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly'
+  - The justify of the flex
+  - Default: `undefined`

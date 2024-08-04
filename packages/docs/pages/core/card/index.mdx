@@ -1,0 +1,191 @@
+import CardExample from './card-example.vue'
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import Card from '@vue-material/core/Card'
+import Flex from '@vue-material/core/Box/Flex'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Button from '@vue-material/core/Button'
+
+export const meta = {
+  title: 'Card',
+  description: 'A card component with a title and content',
+  source: 'packages/lib/src/components/Card',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="600">
+    <CardExample />
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import Card from '@vue-material/core/Card'
+      import Button from '@vue-material/core/Button'
+    </script>
+
+    <template>
+      <Card class="my-card" variant="outlined" width="400px">
+        <Card.Head header="Title" subheader="Subtitle" />
+        <Card.Image
+          r="0"
+          :as="BlockImage"
+          :width="400"
+          :height="200"
+          src="https://picsum.photos/400/200?random=1"
+        />
+        <Card.Body>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </Card.Body>
+        <Card.Actions separator>
+          <template #sub>
+            <Button.Icon
+              icon="material-symbols:star-outline"
+              variant="standard"
+            />
+          </template>
+          <Button>Button</Button>
+        </Card.Actions>
+      </Card>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    // this also imports supporting components:
+    // `Card.Head`, `Card.Image`, `Card.Body` and `Card.Actions`
+    import { Card } from '@vue-material/core'
+    import Card from '@vue-material/core/Card'
+
+    // import components individually
+    import Card from '@vue-material/core/Card/card.vue'
+    import CardHead from '@vue-material/core/Card/card-head.vue'
+    import CardImage from '@vue-material/core/Card/card-image.vue'
+    import CardBody from '@vue-material/core/Card/card-body.vue'
+    import CardActions from '@vue-material/core/Card/card-actions.vue'
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Variants
+
+<Preview>
+  <PreviewFrame height="400">
+    <Flex gap="#sm" wrap="wrap" justify="center">
+      <Card height="150" width="200" variant="elevated">
+        <Card.Body>
+          Elevated
+        </Card.Body>
+        <Card.Actions>
+          <Button>Button</Button>
+        </Card.Actions>
+      </Card>
+
+      <Card height="150" width="200" variant="filled">
+        <Card.Body>
+          Filled
+        </Card.Body>
+        <Card.Actions>
+          <Button>Button</Button>
+        </Card.Actions>
+      </Card>
+
+      <Card height="150" width="200" variant="outlined">
+        <Card.Body>
+          Outlined
+        </Card.Body>
+        <Card.Actions>
+          <Button>Button</Button>
+        </Card.Actions>
+      </Card>
+    </Flex>
+
+  </PreviewFrame>
+
+  <CodeHighlight hide>
+    ```vue
+    <script setup lang="ts">
+      import Card from '@vue-material/core/Card'
+      import Button from '@vue-material/core/Button'
+    </script>
+
+    <template>
+      <Flex gap="#sm" wrap="wrap" justify="center">
+        <Card variant="elevated">
+          <Card.Body>
+            Elevated
+          </Card.Body>
+          <Card.Actions>
+            <Button>Button</Button>
+          </Card.Actions>
+        </Card>
+
+        <Card variant="filled">
+          <Card.Body>
+            Filled
+          </Card.Body>
+          <Card.Actions>
+            <Button>Button</Button>
+          </Card.Actions>
+        </Card>
+
+        <Card variant="outlined">
+          <Card.Body>
+            Outlined
+          </Card.Body>
+          <Card.Actions>
+            <Button>Button</Button>
+          </Card.Actions>
+        </Card>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+### `Card`
+
+- **BaseCard**
+
+  - > **Inherits `BoxProps`**
+  - `variant?`: elevated | filled | outlined
+    - The variant theme of the card
+    - Default: `"outlined"`
+
+- **Card.Head**
+
+  - > **Inherits `BoxProps`**
+  - `header?`: string
+    - The title of the card
+    - Default: `undefined`
+  - `subheader?`: string
+    - The subtitle of the card
+    - Default: `undefined`
+
+- **Card.Image**
+
+  - > **Inherits `BoxProps`, `vue.ImgHTMLAttributes`**
+
+- **Card.Actions**
+  - > **Inherits `BoxProps`**
+  - `#sub`: slot
+    - The container for actions at the left side of the card
+  - `separator?`: boolean
+    - Whether to add a separator at the top of the actions container
+    - Default: `false`

@@ -1,0 +1,70 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import { Chip } from '@vue-material/core'
+import InstallOptions from './install-options.vue'
+
+## Some things to consider
+
+> [!WARNING]
+> This component library is still in **Alpha** stage and I can't guarantee stability.
+> Anyway, if you really want to use this, you can follow the steps below.
+
+### Requirements
+
+\- `vue ^3.4.0`
+
+\- `@iconify/vue`
+
+It is recommended to use this component on a typescript enabled project
+
+## Installation
+
+### Command
+
+<InstallOptions />
+
+All of the components that uses icons use `@iconify/vue` when passed a valid icon string.
+You can look for icons at the [Iconify](https://icon-sets.iconify.design) website
+
+---
+
+### NPM Tags
+
+`@latest` - Latest stable version
+
+`@beta` - Latest features but may contain bugs
+
+`@alpha` - Alpha version, may contain breaking changes
+
+---
+
+### Wrap your app with the Layout component
+
+Some components can be standalone, but to make sure that components work
+correctly, we recommend you to wrap your entire app with the [Layout](/core/Layout) component.
+This allows the components styling be consistent across your entire application
+
+<Preview>
+  <CodeHighlight>
+    ```vue
+    ./src/app.vue
+
+    <script setup lang="ts">
+      import { Layout } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Layout :options="{ <layout options> }">
+        <!--
+          My Application
+        -->
+      </Layout>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+You can configure the theme of your application via the `options` prop.
+Check of [Layout Docs](/core/Layout) for available options

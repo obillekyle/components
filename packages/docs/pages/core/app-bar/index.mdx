@@ -1,0 +1,101 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+import AppBar from './topbar-example.vue'
+
+export const meta = {
+  title: 'AppBar',
+  description: 'An app bar component',
+  source: 'packages/lib/src/components/AppBar',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="300">
+    <AppBar />
+  </PreviewFrame>
+
+  <CodeHighlight height="400">
+    ```vue
+    <script setup lang="ts">
+      import {
+        Layout,
+        TopAppBar,
+        IconButton,
+        BlockImage,
+        Headline
+      } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Layout>
+        <template #header>
+          <TopAppBar>
+
+            <IconButton icon="material-symbols:menu" />
+
+            <template #actions>
+              <IconButton icon="mdi:dots-vertical" />
+            </template>
+          </TopAppBar>
+        </template>
+
+        <Headline title="Title" />
+        <h2 class="info">These are the apps contents</h2>
+        <BlockImage
+          :ratio="3 / 2"
+          src="https://picsum.photos/300/200?random=1"
+        />
+      </Layout>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { TopAppBar, Headline } from '@vue-material/core'
+
+    import { TopAppBar, Headline } from '@vue-material/core/AppBar'
+
+    import TopAppBar from '@vue-material/core/AppBar/top-bar.vue'
+    import Headline from '@vue-material/core/AppBar/headline.vue'
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Headline
+
+The `Headline` component can be used to set the title of the AppBar.
+Make sure to that the component is nested inside of the `Layout`
+components' `default` slot.
+
+<Preview>
+  <CodeHighlight>
+    ```vue
+    <Headline title="Title" />
+    ```
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+### `Headline`
+
+- > **Inherits `BoxProps`**
+- `title?`: string
+  - The title that will be displayed in the AppBar
+  - Default: `undefined`
+
+### `TopAppBar`
+
+- `#actions`: slot
+  - The actions that will be displayed in the right side of the AppBar

@@ -1,0 +1,163 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+export const meta = {
+  title: 'Color Engine',
+  description: 'All colors and stuff',
+  source: 'utils/color-engine.ts',
+  inherits: ['utils/colors']
+}
+
+## Usage
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { ColorEngine } from '@vue-material/core/utils/color-engine'
+
+    // example usage
+    const colorEngine = new ColorEngine();
+    /**
+     * @param {string} theme - light or dark
+     * @return {Record<string, string>}
+     */
+    colorEngine.getColorVariables(<theme>);
+
+    /**
+     * @param {string} theme - light or dark
+     * @return {Record<string, string>}
+     */
+
+    colorEngine.getShades(<theme>);
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## API
+
+### Overview
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    class ColorEngine {
+      colors: ColorOptions<Colors>;
+
+      constructor(color?: string | Partial<ColorOptions<string | Colors>>);
+
+      getColorVariables(theme: 'light' | 'dark' = 'light'): ColorVariables;
+      getShades(theme: 'light' | 'dark' = 'light'): Record<string, string>;
+    }
+    ```
+
+  </CodeHighlight>
+
+  <CodeHighlight>
+    ```ts
+    interface ColorOptions<T> {
+      primary: T;
+      secondary: T;
+      tertiary: T;
+      error: T;
+      neutral: T;
+      [key: string]: T ;
+    }
+
+    interface ColorObject {
+      primary: string;
+      secondary: string;
+      tertiary: string;
+      error: string;
+
+      onPrimary: string;
+      onSecondary: string;
+      onTertiary: string;
+      onError: string;
+
+      primaryContainer: string;
+      secondaryContainer: string;
+      tertiaryContainer: string;
+      errorContainer: string;
+
+      onPrimaryContainer: string;
+      onSecondaryContainer: string;
+      onTertiaryContainer: string;
+      onErrorContainer: string;
+
+      primaryFixed: string;
+      secondaryFixed: string;
+      tertiaryFixed: string;
+
+      primaryFixedDim: string;
+      secondaryFixedDim: string;
+      tertiaryFixedDim: string;
+
+      onPrimaryFixed: string;
+      onSecondaryFixed: string;
+      onTertiaryFixed: string;
+
+      onPrimaryFixedVariant: string;
+      onSecondaryFixedVariant: string;
+      onTertiaryFixedVariant: string;
+
+      surface: string;
+      surfaceDim: string;
+      surfaceBright: string;
+
+      surfaceContainerLowest: string;
+      surfaceContainerLow: string;
+      surfaceContainer: string;
+      surfaceContainerHigh: string;
+      surfaceContainerHighest: string;
+
+      onSurface: string;
+      onSurfaceVariant: string;
+
+      inverseSurface: string;
+      inverseOnSurface: string;
+      inversePrimary: string;
+
+      outline: string;
+      outlineVariant: string;
+
+      scrim: string;
+      shadow: string;
+    }
+
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+### Properties and Methods
+
+**`colors`: ColorObject**
+
+- Stores all the colors passed on the constructor
+
+**`constructor(colors)`: ColorEngine**
+
+- Creates an instance of ColorEngine
+- Parameters
+  - `color?`: string | Partial\<ColorOptions\<string | Colors>>
+    - Default: `'white'`
+
+**`getColorVariables(theme)`: ColorVariables**
+
+- generate a color pallete based on the MD3's color system guidelines
+- Parameters
+  - `theme?`: 'light' | 'dark'
+    - Specify which theme to use when generating the pallete
+    - Default: `'light'`
+
+**`getShades(theme)`: Record\<string, string>**
+
+- generate a shades object
+- Format `<color-key>-<shade> | <color-key>-<shade>-<opacity>`
+- Parameters
+  - `theme?`: 'light' | 'dark'
+    - Specify which theme to use when generating the shades
+    - Reverses the shades when dark, so shade 20 in light theme is 80 in dark theme
+    - Default: `'light'`

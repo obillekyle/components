@@ -1,0 +1,37 @@
+{
+  "Doc Imports": {
+    "prefix": "$m",
+    "scope": "mdx",
+    "body": [
+      "import Preview from '@/helper/preview.vue'",
+      "import PreviewFrame from '@/helper/preview-frame.vue'",
+      "import CodeHighlight from '@/helper/code-highlight.vue'",
+      "",
+      "export const meta = {",
+      "  title: '$1',",
+      "  description: '$2',",
+      "  source: '$3',",
+      "  inherits: [$4]",
+      "}",
+      "",
+      "## Usage",
+      "",
+      "$5"
+    ],
+    "description": "default markdown imports"
+  },
+  "Vue Setup": {
+    "prefix": "$s",
+    "scope": "vue",
+    "body": [
+      "<script setup lang=\"ts\">",
+      "  $1",
+      "</script>",
+      "",
+      "<template>",
+      "  $2",
+      "</template>"
+    ],
+    "description": "default vue setup template"
+  }
+}

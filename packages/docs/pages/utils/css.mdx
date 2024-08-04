@@ -1,0 +1,242 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+export const meta = {
+  title: 'CSS Utils',
+  description: 'Tools for converting components\' custom variables to CSS',
+  source: '',
+  inherits: []
+}
+
+## Import
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { <fn> } from '@vue-material/core'
+    import { <fn> } from '@vue-material/core/utils'
+    import { <fn> } from '@vue-material/core/utils/css'
+    ```
+  </CodeHighlight>
+</Preview>
+
+## Methods and Properties
+
+### sizes and prefixes
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    const sizes = ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl'] as const
+    ```
+  </CodeHighlight>
+    <CodeHighlight>
+    ```ts
+    const prefixes = ['font', 'size', 'icon', 'padding', 'component'] as const
+    ```
+  </CodeHighlight>
+</Preview>
+
+These are the prefixes used for custom size variables\
+css: `var(--<prefix>-<size>)`\
+vue: `#<prefix>-<size>`
+
+---
+
+### DefaultSizes
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    const DefaultSizes: SizeRecord;
+    ```
+  </CodeHighlight>
+</Preview>
+
+Default sizes provided by the `Layout` component
+
+---
+
+### isNumberString()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function isNumberString(value: string | number | String): boolean;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`isNumberString()`**: boolean
+- Checks if a string can be parsed as a number
+- Parameters
+  - `value`: string | number | String
+
+---
+
+### addUnit()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function addUnit(value: SizeType, unit?: SizeUnits): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`addUnit()`**: string
+- Add a unit to a valid number
+- Parameters
+  - `value`: SizeType
+  - `unit?`: SizeUnits
+    - Default: `'px'`
+
+---
+
+### toVar()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function toVar(key: string | String, value?: String | string | number): `var(--${string})`;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`toVar()`: \`var(--$\{string})\`**
+- Returns a css variables string
+- Parameters
+  - `key`: string | String
+    - The name of the css variable, without the `--` 
+  - `value?`: String | string | number
+    - The fallback value if `key` is not found
+    - Default: `undefined`
+
+---
+
+### addPX()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function addPX(value: SizeType): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`addPX()`**: string
+- Alias of `addUnit()`
+- Adds a `px` unit to a valid number
+- Parameters
+  - `value`: SizeType
+
+---
+
+### getCSSValue()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function getCSSValue(value?: SizeType, unit?: SizeUnits, type?: SizePrefixes | String): string | undefined;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`getCSSValue()`**: string
+- Parses custom size variables to CSS variable
+- Adds a unit to a valid number, returns `undefined` if `value` is unset
+- Parameters
+  - `value?`: SizeType
+  - `unit?`: SizeUnits
+    - Default: `'px'`
+  - `type?`: SizePrefixes | String
+    - Default: `'font'`
+
+---
+
+### shades and colorVariants
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    const shades = [
+      0, 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100
+    ] as const;
+    ```
+  </CodeHighlight>
+  <CodeHighlight>
+    ```ts
+    const colorVariants = [
+      'primary', 'secondary', 'tertiary', 'error', 'neutral'
+    ] as const;
+    ```
+  </CodeHighlight>
+</Preview>
+
+These are the properties used for custom color variables\
+css: `var(--<variant>-<shade>-<alpha>)`\
+vue: `$<variant>-<shade>-<alpha>`
+
+---
+
+### getCSSColor()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function getCSSColor(color: ColorString): string;
+    ```
+  </CodeHighlight>
+  <CodeHighlight>
+    ```ts
+    (alias) c = getCSSColor
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`getCSSColor()`**: string
+- Parses custom color variables to CSS variable
+- Parameters
+  - `color`: ColorString
+
+## Types
+
+### `Sizes` 
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type SizePrefixes = (typeof prefixes)[number];
+    type Sizes = (typeof units)[number];
+
+    type SizeUnits = 'px' | 'rem' | 'em' | 'vh' | 'vw' | 'vmin' | 'vmax' | '%' | 'ch' | 'cm' | 'mm' | 'in' | 'pt' | 'pc' | 'dvh' | 's' | 'ms' | 'deg' | 'dvw'
+    type SizeType = 'auto' | 'initial' | 'inherit' | 'unset' | String | number
+
+    type SizeDict = { [key in Sizes]: SizeType }
+    type SizeRecord = { [key in SizePrefixes]: SizeDict }
+    type SizeString = SizeType | `#${Sizes}` | `#${SizePrefixes}-${Sizes}` | '#rounded';
+    ```
+  </CodeHighlight>
+</Preview>
+
+---
+
+### Colors
+
+<Preview> 
+  <CodeHighlight>
+    ```ts
+    type ColorShades = (typeof shades)[number];
+    type ColorAlphas = number[];
+    type ColorVariants = (typeof colorVariants)[number];
+
+    type ColorString = 
+      | `$${ColorVariants}`
+      | `$${ColorVariants}-${ColorShades}`
+      | `$${ColorVariants}-${ColorShades}-${ColorAlphas}`
+      | String;
+    ```
+  </CodeHighlight>
+</Preview>  
+

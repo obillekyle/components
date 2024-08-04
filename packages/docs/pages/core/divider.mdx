@@ -1,0 +1,154 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import { Divider, WavyDivider, Box, Flex } from '@vue-material/core'
+
+export const meta = {
+  title: 'Divider',
+  description: 'A divider component',
+  source: 'packages/lib/src/components/Divider',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="200">
+    <Box width="100%" p="#md">
+      <Divider direction="x"/>
+      <Divider label="안녕하세요!"/>
+      <WavyDivider />
+    </Box>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Divider, WavyDivider } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Divider direction="x"/>
+      <Divider label="안녕하세요!"/>
+      <WavyDivider />
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { Divider, WavyDivider } from '@vue-material/core'
+    import { Divider, WavyDivider } from '@vue-material/core/Divider'
+
+    import Divider from '@vue-material/core/Divider/divider.vue'
+    import WavyDivider from '@vue-material/core/Divider/wavy-divider.vue'
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Variants
+
+### `WavyDivider`
+
+<Preview>
+  <PreviewFrame height="125">
+    <Box width="100%" p="#md">
+      <WavyDivider />
+    </Box>
+  </PreviewFrame>
+
+  <CodeHighlight hide>
+    ```vue
+    <script setup lang="ts">
+      import { WavyDivider } from '@vue-material/core'
+    </script>
+
+    <template>
+      <WavyDivider />
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+### `Divider`
+
+<Preview>
+  <PreviewFrame height="200">
+    <Box width="100%" p="#md">
+      <Divider direction="x"/>
+    </Box>
+
+    <Box width="100%" p="#md">
+      <Divider label="안녕하세요!"/>
+    </Box>
+
+    <Flex width="100%" height="80" p="#md" gap="#md">
+      <Divider direction="y"/>
+      <Divider direction="y"/>
+      <Divider direction="y"/>
+      <Divider direction="y"/>
+      <Divider direction="y"/>
+      <Divider direction="y"/>
+    </Flex>
+
+  </PreviewFrame>
+
+  <CodeHighlight hide>
+    ```vue
+    <script setup lang="ts">
+      import { Divider, Box, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Box width="100%" p="#md">
+        <Divider direction="x"/>
+      </Box>
+
+      <Box width="100%" p="#md">
+        <Divider label="안녕하세요!"/>
+      </Box>
+
+      <Flex width="100%" height="80" p="#md" gap="#md">
+        <Divider direction="y"/>
+        <Divider direction="y"/>
+        <Divider direction="y"/>
+        <Divider direction="y"/>
+        <Divider direction="y"/>
+        <Divider direction="y"/>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+### `Divider`
+
+- `label?`: string
+  - The label of the divider, overrides the direction to `x` if set
+  - Default: `undefined`
+- `direction?`: 'x' | 'y'
+  - The direction of the divider
+  - Default: `'x'`
+- `size?`: SizesString
+  - The size of the divider, width if direction is `x`, height if direction is `y`
+  - Default: `'100%'`
+- `margin?`: SizesString
+  - The margin of the divider
+  - Default: `'auto'`
+
+### `WavyDivider`
+
+- > **Inherits** `BoxProps`
+- `color?`: SizesString
+  - The color of the wavy divider
+  - Default: `'$surface-container-highest'`

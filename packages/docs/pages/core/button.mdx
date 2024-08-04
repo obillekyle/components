@@ -1,0 +1,121 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Button from '@vue-material/core/Button'
+import Flex from '@vue-material/core/Box/Flex'
+
+export const meta = {
+  title: 'Button',
+  description: 'A basic button component.',
+  source: 'packages/lib/src/components/Button',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="200">
+    <Button left-icon="material-symbols:add">Add Something</Button>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import PlusIcon from '@/components/Icons/plus-icon.vue'
+      import { Button } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Button :left-icon="PlusIcon">Add Something</Button>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    // This import will include both Button, Button.Group and Button.Icon 
+    import { Button } from '@vue-material/core'
+    import Button from '@vue-material/core/Button'
+
+    // import only the button component
+    import Button from '@vue-material/core/Button/button.vue'
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Variants
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex gap='#sm' wrap='wrap' justify="center">
+      <Button variant="filled">Filled</Button>
+      <Button variant="tonal">Tonal</Button>
+      <Button variant="elevated">Elevated</Button>
+      <Button variant="outlined">Outlined</Button>
+      <Button variant="text">Text</Button>
+    </Flex>
+    <Flex gap='#sm' wrap='wrap' justify="center">
+      <Button variant="filled" disabled>Filled</Button>
+      <Button variant="tonal" disabled>Tonal</Button>
+      <Button variant="elevated" disabled>Elevated</Button>
+      <Button variant="outlined" disabled>Outlined</Button>
+      <Button variant="text" disabled>Text</Button>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight hide>
+    ```vue
+    <script setup lang="ts">
+      import { Button, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap='#sm' wrap='wrap' justify="center">
+        <Button variant="filled">Filled</Button>
+        <Button variant="tonal">Tonal</Button>
+        <Button variant="elevated">Elevated</Button>
+        <Button variant="outlined">Outlined</Button>
+        <Button variant="text">Text</Button>
+      </Flex>
+      <Flex gap='#sm' wrap='wrap' justify="center">
+        <Button variant="filled" disabled>Filled</Button>
+        <Button variant="tonal" disabled>Tonal</Button>
+        <Button variant="elevated" disabled>Elevated</Button>
+        <Button variant="outlined" disabled>Outlined</Button>
+        <Button variant="text" disabled>Text</Button>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+> #### Inherits `BoxProps`, `vue.BtnHTMLAttributes`
+
+`variant?`: filled | outlined | text | tonal | elevated
+
+- The variant of the button
+- Default: `"filled"`
+
+`left-icon?`: string | vue.Component
+
+- The component that will be used to render the left icon
+- Default: `undefined`
+
+`right-icon?`: string | vue.Component
+
+- The component that will be used to render the right icon
+- Default: `undefined`
+
+`label?`: string
+
+- The label of the button, can be overridden by the `slot:default`
+- Default: `undefined`

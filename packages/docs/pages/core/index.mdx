@@ -1,0 +1,40 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+## Overview
+
+This package contains all of the core components in Vue Material.
+
+All of the components are exported via `@vue-material/core`
+
+You can use components by importing the whole package via
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { <package> } from '@vue-material/core'
+
+    // example usage
+    import { Box } from '@vue-material/core'
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+> [!TIP]
+> Consider importing individual components. Unused components will be tree shaken,
+> significantly reducing the bundle size of your application.
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { Box } from '@vue-material/core/Box'
+
+    // or by importing only the vue component
+    import Box from '@vue-material/core/Box/box.vue'
+
+    ```
+
+  </CodeHighlight>
+</Preview>

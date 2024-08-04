@@ -1,0 +1,187 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+export const meta = {
+  title: 'Object',
+  description: 'object utils',
+  source: 'packages/lib/src/utils/object.ts',
+  inherits: []
+}
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+      import { <fn> } from '@vue-material/core'
+      import { <fn> } from '@vue-material/core/utils'
+      import { <fn> } from '@vue-material/core/utils/object'
+    ``` 
+  </CodeHighlight>
+</Preview>
+
+## Methods and Properties
+
+### dataURLtoBlob()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function dataURLtoBlob(dataURL: string): Blob | undefined;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`dataURLtoBlob()`**: Blob | undefined
+- Convert a data url to a blob
+- Parameters
+  - `dataURL`: string
+
+---
+
+### evaluate()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function evaluate<K extends unknown, V = K extends () => any ? ReturnType<K> : K>(object: K, ...arguments_: V extends (...arguments_: infer P) => any ? P : any): V;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`evaluate()`**: typeof object
+- Calls `object` with `arguments_` if it is a function else returns `object`
+- Parameters
+  - `object`: any
+  - `arguments_`: V extends (...arguments_: infer P) => any ? P : any
+
+---
+
+### pick()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function pick<T extends any, K extends (keyof T)[] = []>(object: T, keys: K): Pick<T, K[number]>;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`pick()`**: T
+- Pick properties from object
+- Parameters
+  - `object`: extends object
+  - `keys?`: K extends (keyof T)[]
+    - Default: `[]`
+
+---
+
+### exclude()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function exclude<T extends unknown, K extends (keyof T)[] = []>(object: T, keys: K): Omit<T, K[number]>;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`exclude()`**: T
+- Exclude properties from object
+- Parameters
+  - `object`: extends object
+  - `keys?`: K extends (keyof T)[]
+    - Default: `[]`
+
+---
+
+### is()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type Types = 'string' | 'number' | 'boolean' | 'null' | 'undefined' | 'object' | 'function' | 'bigint' | 'symbol'
+    
+    function is(value: any, type: Types): boolean;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`is()`**: boolean
+- Check if value is of type `type`
+- Parameters
+  - `value`: any
+  - `type`: Types
+
+---
+
+### clean()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function clean(objectUrl?: string): void;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`clean()`**: void
+- Clean object url
+- Parameters
+  - `objectUrl?`: string
+
+---
+
+### as()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function as<T>(value: T): T;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`as()`**: T
+- Cast value to type `T`
+- Alias of typescript's `as` keyword
+- Useless in javascript projects
+- Parameters
+  - `value`: any
+
+---
+
+### stringify()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function stringify(object: any): string;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`stringify()`**: string
+- Stringify object
+- Parameters
+  - `object`: any
+
+---
+
+### parser()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function parser<T extends any>(string: string): T;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`parser()`**: string
+- Parses a stringified objects
+- only works on objects returned by `stringify()`
+- Parameters: 
+  - `string`: string
+    - The string object

@@ -1,0 +1,205 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Button from '@vue-material/core/Button'
+import Flex from '@vue-material/core/Box/Flex'
+import Box from '@vue-material/core/Box'
+
+export const meta = {
+  title: 'Box',
+  description: 'Customizable box element',
+  source: 'packages/lib/src/components/Box',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="200">
+    <Box 
+      r="#sm" 
+      p="24px"
+      style="background: var(--primary-container)" 
+    >
+      Box
+    </Box>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Box } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Box
+        r="#sm"
+        p="24px"
+        style="background: var(--primary-container)"
+      >
+        Box
+      </Box>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    // this import will include, Box, Box.Flex, Box.Flex.Span
+    import { Box } from '@vue-material/core'
+    import Box from '@vue-material/core/Box'
+
+    // this import will only include Box
+    import Box from '@vue-material/core/Box/box.vue'
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Render other elements
+
+<Preview>
+  <PreviewFrame height="200">
+    <Box as="a" href="#">
+      This is a box as a link
+    </Box>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Box } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Box as="a" href="#">
+        This is a box as a link
+      </Box>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Wrapping custom components
+
+<Preview>
+  <CodeHighlight>
+    ```vue
+    ./my-custom-panel.vue
+
+    <script setup lang="ts">
+      import { Box, getBoxProps, type BoxProps } from '@vue-material/core'
+
+      // Extending using BoxProps
+      interface PanelProps extends BoxProps {
+        title: string
+      }
+
+      const props = defineProps<PanelProps>()
+      const boxProps = getBoxProps(props, {
+        // add default box props here or use vue.withDefaults
+        as: 'header'
+        height: '#component-lg'
+      })
+    </script>
+
+    <template>
+      <Box
+        v-bind="boxProps"
+        class="my-custom-panel"
+      >
+        <h1>{{ props.title }}</h1>
+      </Box>
+    </template>
+
+    <style>
+      /* Custom styles */
+    </style>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+<Preview>
+  <CodeHighlight>
+    ```vue
+    ./app.vue
+
+    <script setup lang="ts">
+      import MyCustomPanel from './my-custom-panel.vue'
+    </script>
+
+    You can now use BoxProps in the MyCustomPanel component
+
+    <template>
+      <MyCustomPanel
+        title="My Custom Panel"
+        width="100%"
+        :mb="16"
+      />
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+#### Interface `BoxProps`
+
+`as?`: string | vue.Component
+- The component that will be used to render the box
+- Default: `"div"`
+
+`p?`: SizesString
+- css.padding
+- The padding of the box
+- Default: `undefined`
+- **Subprops**:
+  - `px?`: SizesString - css.padding-inline
+  - `py?`: SizesString - css.padding-block
+  - `pl?`: SizesString - css.padding-left
+  - `pr?`: SizesString - css.padding-right
+  - `pt?`: SizesString - css.padding-top
+  - `pb?`: SizesString - css.padding-bottom
+
+`m?`: SizesString
+- css.margin
+- The margin of the box
+- Default: `undefined`
+- **Subprops**:
+  - `mx?`: SizesString - css.margin-inline
+  - `my?`: SizesString - css.margin-block
+  - `ml?`: SizesString - css.margin-left
+  - `mr?`: SizesString - css.margin-right
+  - `mt?`: SizesString - css.margin-top
+  - `mb?`: SizesString - css.margin-bottom
+
+`r?`: SizesString
+- **css.border-radius**
+- The border radius of the box
+- Default: `undefined`
+
+`width?`: SizesString
+- css.width
+- The width of the box
+- Default: `auto`
+
+`height?`: SizesString
+- css.height
+- The height of the box
+- Default: `auto`
+
+~~`@deprecated bg?`: ColorVariants | 'on-bg'~~
+- The color theme of the box
+- Default: `undefined`
+
+~~`@deprecated exclude?`: boolean~~
+- Remove the property `md-box` from the component
+  - Default: `false`

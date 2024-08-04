@@ -1,0 +1,189 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Slider from '@vue-material/core/Slider/slider.vue'
+import BlockSlider from '@vue-material/core/Slider/block-slider.vue'
+import Flex from '@vue-material/core/Box/Flex'
+import Box from '@vue-material/core/Box/box.vue'
+import SliderVariants from './slider-variants.vue'
+
+export const meta = {
+  title: 'Slider',
+  description: 'A slider component',
+  source: 'packages/lib/src/components/Slider',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height={200}>
+    <Flex width="100%" direction="column" gap="#xxs" p="#md">
+      <Slider />
+      <BlockSlider icon="material-symbols:ring-volume">
+        Block Slider
+      </BlockSlider>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight height={400}>
+    ```vue
+    <script setup lang="ts">
+      import Flex from '@vue-material/core/Box/Flex'
+      import { Slider, BlockSlider } from '@vue-material/core/Slider'
+      import RingerVolume from './components/ringer-volume.vue'
+    </script>
+
+    <template>
+      <Flex
+        width="100%"
+        direction='column'
+        gap='#xxs'
+        p="#md"
+      >
+        <Slider />
+        <BlockSlider :icon="RingerVolume">
+          Block Slider
+        </BlockSlider>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { Slider, BlockSlider } from '@vue-material/core'
+    import { Slider, BlockSlider } from '@vue-material/core/Slider'
+
+    import Slider from '@vue-material/core/Slider/slider.vue'
+    import BlockSlider from '@vue-material/core/Slider/block-slider.vue'
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## States
+
+### `BlockSlider`
+
+<Preview>
+  <PreviewFrame height={200} p="#md">
+    <BlockSlider icon="material-symbols:ring-volume">
+      Ring Volume
+    </BlockSlider>
+  </PreviewFrame>
+</Preview>
+
+### `Slider`
+
+<Preview>
+  <PreviewFrame height={500} p="#md">
+    <SliderVariants/>
+  </PreviewFrame>
+
+  <CodeHighlight height={500}>
+    ```vue
+    <script setup lang="ts">
+      import Slider from '@vue-material/core/Slider/slider.vue'
+      import Flex from '@vue-material/core/Box/Flex'
+    </script>
+
+    <template>
+      <Flex gap="#xs" p="#md" direction="column" width="100%">
+        Default w/ show-value
+        <Slider show-value />
+        min max
+        <Slider :min="15" :max="50" />
+        Preset values
+        <Slider :values="[10, 20, 25, 30, 41]" />
+        Preset values, unsorted w/ show-label
+        <Slider :values="[600, 100, 120, 400, 300]" show-label />
+        Step
+        <Slider :step="5" />
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+### `Slider`
+
+- `default-value?`: number
+  - The default value of the slider
+  - Default: `props.min` | `props.values.sort()[0]` | `0`
+- `values?`: number[] | \{label: string, value: number}[]
+  - The values of the slider, overwrites `min`, `max` and `step` if defined
+  - Default: `undefined`
+- `min?`: number
+  - The minimum value of the slider
+  - Default: `0`
+- `max?`: number
+  - The maximum value of the slider
+  - Default: `100`
+- `step?`: number
+  - The step of the slider
+  - Default: `1`
+- `decimal?`: number'
+  - The number of decimal places to show
+  - Default: `0`
+- `show-value?`: boolean
+  - Whether to show the value of the slider
+  - Default: `false`
+- `show-label?`: boolean
+  - Whether to show the value labels of the slider, only if `values` is defined
+  - Default: `false`
+- `v-model:modelValue`: number
+  - The value of the slider
+  - Default: `undefined`
+- `change?`: (value: number) => void
+  - The callback when the value of the slider changes
+  - Default: `undefined`
+
+### `BlockSlider`
+
+- `default-value?`: number
+
+  - The default value of the slider
+  - Default: `props.min` | `0`
+
+- `min?`: number
+
+  - The minimum value of the slider
+  - Default: `0`
+
+- `max?`: number
+
+  - The maximum value of the slider
+  - Default: `100`
+
+- `step?`: number
+
+  - The step of the slider
+  - Default: `1`
+
+- `decimal?`: number
+
+  - The number of decimal places to show
+  - Default: `0`
+
+- `icon?`: string | vue.Component
+
+  - The icon of the slider
+  - Default: `undefined`
+
+- `v-model:modelValue`: number
+
+  - The value of the slider
+  - Default: `undefined`
+
+- `change?`: (value: number) => void
+  - The callback when the value of the slider changes
+  - Default: `undefined`

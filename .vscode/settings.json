@@ -5,9 +5,21 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "**/Thumbs.db": true,
-    "node_modules": true
+    "**/Thumbs.db": true
   },
-  "hide-files.files": ["node_modules"],
-  "cSpell.words": ["hexa", "okyle"]
+  "hide-files.files": [
+    "packages/docs/node_modules/.cache/vite/client/deps"
+  ],
+  "cSpell.words": ["deepmerge", "hexa", "okyle", "Roboto"],
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "cssVariables.lookupFiles": [".variables/**/*"],
+  "dependencyDependent.entryPoints": [
+    "packages/lib/src/**/*.{ts,js,tsx,jsx,vue}"
+  ],
+  "editor.tokenColorCustomizations": {
+    "comments": "",
+    "textMateRules": []
+  },
+  "explorer.excludeGitIgnore": true,
+  "autoHide.autoHidePanel": false
 }

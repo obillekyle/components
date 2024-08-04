@@ -1,0 +1,200 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import ThemeProviderExample from './provider-example.vue'
+
+export const meta = {
+  title: 'ThemeProvider',
+  description:
+    'For providing and modifying global theme variables used by components',
+  source: 'packages/lib/src/components/Layout',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="400">
+    <ThemeProviderExample />
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Button, ThemeProvider } from '@vue-material/core'
+      import { computed, ref } from 'vue'
+
+      const light = ref(true)
+      const theme = computed(() => light.value ? 'light' : 'dark')
+    </script>
+
+    <template>
+      <ThemeProvider
+        class="theme-provider"
+        :options="{ theme }"
+      >
+        <Button @click="light = !light">
+          Look, it's a {{ theme }} theme button!
+        </Button>
+      </ThemeProvider>
+    </template>
+
+    <style scoped>
+      .theme-provider {
+        padding: var(--xl);
+        background-color: var(--surface);
+        color: var(--on-surface);
+      }
+    </style>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Provides
+
+#### [Color Variables](/docs/color-variables)
+
+#### [ThemeObject](#themeobject) via provide('options')
+
+## Props
+
+**`options?`**: PartialDeep\<ThemeOptions>
+
+- `theme?`: "light" | "dark"
+
+  - App theme
+  - Default: `"light"`
+
+- `color?`: string
+
+  - css.color
+  - Default: `"$on-surface"`
+
+- `colors?`: string | ColorOptions\<Colors | string>
+
+  - The sizes object, refer to [Colors](/utils/css#colors)
+  - Default: `DefaultThemeObject.colors`
+
+- `fontFamily?`: string
+
+  - css.fontFamily
+  - Default: `"Roboto, sans-serif"`
+
+- `sizes?`: SizesRecord
+
+  - The sizes object, refer to [Sizes](/utils/css#sizes)
+  - Default: ThemeObject.sizes
+
+- `component?`: ElementSizes
+
+  - Default: `ThemeObject.component`
+
+- `other?`: LayoutOther
+  - Add custom objects to the theme object
+  - Default: `ThemeObject.other`
+
+**`inherit`**: boolean
+
+- Whether to inherit the theme from the nearest `ThemeProvider`
+  - Default: `false`
+
+**`md3`**: boolean
+
+- Whether to use the MD3 theme
+  - Default: `true`
+
+**`global`**: boolean
+
+- Whether to attach the styles to the global scope
+  - Default: `false`
+
+## Extras
+
+> [!NOTE]
+> All of these can be exported from `@vue-material/core/Layout/util`
+
+---
+
+### DefaultThemeObject
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    export const DefaultThemeObject: ThemeObject = {
+      theme: 'dark',
+      color: '#primary-99',
+      colors: Object.assign({}, color.colors, {
+        $vars: color.getColorVariables()
+      }),
+      fontFamily: 'Roboto, sans-serif',
+      sizes: DefaultSizes,
+      component: DefaultElementSizes,
+      other: {}
+    }
+    ```
+  </CodeHighlight>
+</Preview>
+
+---
+
+### useTheme()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function useTheme(): Ref<ThemeObject>;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`useTheme()`**: ThemeObject
+
+- Get the current theme object
+
+## Types
+
+### ThemeBase
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type ThemeBase = {
+      theme: 'light' | 'dark'
+      color: ColorString
+      fontFamily: string
+      sizes: SizesRecord
+      component: ElementSizes
+      other: LayoutOther
+    };
+    ```
+  </CodeHighlight>
+</Preview>
+
+---
+
+### ThemeOptions
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type ThemeBase = ThemeBase &{
+      colors: string | Partial<ColorOptions<Colors | string>>
+    };
+    ```
+  </CodeHighlight>
+</Preview>
+
+---
+
+### ThemeObject
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type ThemeObject = ThemeBase & {
+      colors: ColorOptions<Colors> & { $vars: ColorVariables }
+    };
+    ```
+  </CodeHighlight>
+</Preview>

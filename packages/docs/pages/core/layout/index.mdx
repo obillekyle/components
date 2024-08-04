@@ -1,0 +1,107 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import LayoutExample from './layout-example.vue'
+
+export const meta = {
+  title: 'Layout',
+  description:
+    'A layout component, provides variables, styles and props for components',
+  source: 'packages/lib/src/components/Layout',
+  inherits: ['core/ThemeProvider', 'core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="400">
+    <LayoutExample />
+  </PreviewFrame>
+  <CodeHighlight height="500">
+    ```vue
+    <template>
+      <Layout
+        inherit
+        :options="{
+          colors: {
+            primary: 'orange'
+          }
+        }"
+      >
+        <template #header>
+          <TopAppBar>
+            <IconButton icon="material-symbols:menu" />
+            <template #actions>
+              <IconButton icon="mdi:dots-vertical" />
+            </template>
+          </TopAppBar>
+        </template>
+
+        <template #fab>
+          <Fab icon="mdi:plus"> New </Fab>
+        </template>
+
+        <template #navbar>
+          <Navigation>
+            <Navigation.Container center>
+              <Navigation.Item name="Home" icon="mdi:home-outline" />
+              <Navigation.Item name="Settings" icon="mdi:cog-outline" />
+            </Navigation.Container>
+          </Navigation>
+        </template>
+
+        <Headline title="My App" />
+        <MasterSwitch name="Top Switch" />
+
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque
+          sed consequuntur quisquam enim unde porro animi alias suscipit
+          sapiente. Error, sit omnis consequatur quisquam facilis ut dolorum at
+          blanditiis quaerat. Aliquid dolore error ipsam, omnis tempore
+          reiciendis. Incidunt, necessitatibus deserunt aut, doloremque, aliquid
+          sequi mollitia laborum maiores sapiente veritatis modi excepturi
+          laudantium sed quisquam voluptatum earum. Debitis, atque. Eius,
+          necessitatibus. Sunt odio dolorem nesciunt tempore tempora nisi vero
+          placeat provident consequuntur rem magni hic, commodi libero quia
+          voluptate autem, natus dolor aut voluptatem laudantium exercitationem
+          non! Ipsam, fuga distinctio? Sit. A dicta nulla quo eaque inventore
+          praesentium nisi quos et repudiandae repellat? Accusamus eaque hic est
+          corrupti illo odit ratione temporibus ut, a quasi tempore, mollitia
+          quas voluptatem? Labore, delectus? Sed eos incidunt ipsam esse
+          provident minima sit perferendis molestiae assumenda fuga enim iste
+          quibusdam cupiditate odit, sint nihil, neque reiciendis fugit! Magni
+          unde, ullam consequatur natus commodi ab aspernatur. Animi vitae, ea
+          quam eveniet minima provident nesciunt esse nobis non itaque tempore,
+          magni iusto. Non error minima repellendus ab magnam. Voluptates libero
+          quam dolores saepe enim necessitatibus, nulla quisquam?
+        </p>
+      </Layout>
+    </template>
+
+    <script setup lang="ts">
+      import {
+        Fab,
+        Headline,
+        IconButton,
+        Layout,
+        MasterSwitch,
+        Navigation,
+        TopAppBar
+      } from '@vue-material/core'
+    </script>
+    ```
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+> [!NOTE]
+> All props are inherited from [`core/ThemeProvider`](/core/theme-provider#props)
+
+**`#default`**: slot
+
+**`#header`**: slot
+
+**`#fab`**: slot
+
+**`#navbar`**: slot

@@ -1,0 +1,188 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Image from '@vue-material/core/Image'
+import Flex from '@vue-material/core/Box/Flex'
+import Text from '@vue-material/core/Text/text.vue'
+
+export const meta = {
+  title: 'Image',
+  description: 'An image component',
+  source: 'packages/lib/src/components/Image',
+  inherits: ['core/Box', 'core/Misc/ViewObserver']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="300">
+    <Flex gap="#md">
+      <Image.Square
+        src="https://picsum.photos/200?random=1"
+        alt="random image"
+        frame="circle"
+        size="200"
+      />
+
+      <Image
+        src="https://picsum.photos/250/200?random=3"
+        alt="random image"
+        width="250"
+        height="200"
+      />
+    </Flex>
+
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Image } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Image.Square
+        src="https://picsum.photos/200?random=1"
+        alt="random image"
+        frame="circle"
+        :size="200"
+      />
+
+      <Image
+        src="https://picsum.photos/250/200?random=3"
+        alt="random image"
+        :width="250"
+        :height="200"
+      />
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Variants
+
+### BaseImage
+
+<Preview>
+  <PreviewFrame>
+    <Image
+      src="https://picsum.photos/250/200?random=4"
+      alt="random image"
+      width="250"
+      height="200"
+      r="#md"
+      lazy
+    />
+  </PreviewFrame>
+</Preview>
+
+### Image.Square
+
+<Preview>
+  <PreviewFrame>
+    <Flex gap="#md">
+      <Flex align="center" direction="column">
+        <Text p="#xs">Default</Text>
+        <Image.Square
+          src="https://picsum.photos/200?random=5"
+          alt="random image"
+          frame="default"
+          size="200"
+          lazy
+        />
+      </Flex>
+
+      <Flex align="center" direction="column">
+        <Text p="#xs">Clover</Text>
+        <Image.Square
+          src="https://picsum.photos/200?random=6"
+          alt="random image"
+          frame="clover"
+          size="200"
+          lazy
+        />
+      </Flex>
+
+      <Flex align="center" direction="column">
+        <Text p="#xs">Circle</Text>
+        <Image.Square
+          src="https://picsum.photos/200?random=7"
+          alt="random image"
+          frame="circle"
+          size="200"
+          lazy
+        />
+      </Flex>
+
+      <Flex align="center" direction="column">
+        <Text p="#xs">Hexagon</Text>
+        <Image.Square
+          src="https://picsum.photos/200?random=8"
+          alt="random image"
+          frame="hexagon"
+          size="200"
+          lazy
+        />
+      </Flex>
+    </Flex>
+
+  </PreviewFrame>
+</Preview>
+
+## Props
+
+### `BlockImage`
+
+- > **Inherits `BoxProps`**
+- `src?`: string | Blob
+  - The source of the image
+  - Default: `undefined`
+- `alt?`: string
+  - The alt of the image
+  - Default: `undefined`
+- `width?`: number
+  - css.width
+  - the image's width
+  - Default: `undefined`
+- `height?`: number
+  - css.height
+  - The image's height
+  - Default: `undefined`
+- `lazy?`: boolean
+  - Whether to lazy load the image when it's visible on the screen
+  - Default: `false`
+- `fit?`: 'contain' | 'cover' | 'fill'
+  - css.object-fit
+  - How to fit the image to the frame
+  - Default: `'cover'`
+- `position?`: 'left' | 'center' | 'right' | 'top' | 'bottom'
+  - css.object-position
+  - The position of the image in the frame
+  - Default: `'center'`
+- `span?`: boolean
+  - Whether to span the frame to the parent element
+  - Default: `false`
+- `ratio?`: number
+  - css.aspect-ratio
+  - The ratio of the image
+  - Default: `undefined`
+
+### `SquareImage`
+
+- > **Inherits `BoxProps`**
+- `src?`: string | Blob
+  - The source of the image
+  - Default: `undefined`
+- `size?`: number
+  - the image's height and width
+  - Default: `96`
+- `lazy?`: boolean
+  - Whether to lazy load the image when it's visible on the screen
+  - Default: `false`
+- `frame?`: 'circle' | 'clover' | 'hexagon' | 'default'
+  - The shape of the image
+  - Default: `'default'`
+- `radius?`: number
+  - The radius of the image frame. Only works when `frame` is `'default'`
+  - Default: `'#xs'`

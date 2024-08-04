@@ -1,0 +1,237 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import FnRef from './fn-ref.vue'
+import CustomRef from './custom-ref.vue'
+import LocalStorage from './local-storage.vue'
+import UseToggle from './use-toggle.vue'
+
+export const meta = {
+  title: 'Ref',
+  description: 'Some custom refs',
+  source: 'packages/lib/src/utils/ref.ts',
+  inherits: []
+}
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { <fn> } from '@vue-material/core'
+    import { <fn> } from '@vue-material/core/utils'
+    import { <fn> } from '@vue-material/core/utils/ref'
+    ```
+  </CodeHighlight>
+</Preview>
+
+## Methods
+
+### fnRef()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function fnRef<T extends Ref>(ref: T): RefGetter;
+    ```
+  </CodeHighlight>
+</Preview>
+
+<Preview>
+  <PreviewFrame height="100">
+    <FnRef />
+  </PreviewFrame>
+  <CodeHighlight>
+    ```vue
+    Usage example
+
+    <script setup lang="ts">
+      import { ref } from 'vue'
+      import { Box, fnRef } from '@vue-material/core'
+
+      const root = ref<HTMLElement>()
+      const setRef = fnRef(root)
+
+      function changeText() {
+        if (!root.value) return
+        root.value.innerHTML = 'Hello World!'
+      }
+    </script>
+
+    <template>
+      <Box :ref="setRef" @click="changeText"> Click me </Box>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+**`fnRef()`**: RefGetter
+
+- Returns a function that can be used to set the ref
+- Useful when you need to get custom components' html element
+- Parameters
+  - `ref`: extends Ref\<Element | Element[]>>
+
+---
+
+### customRef()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function customRef<T>(defaultValue: T): [Ref<T>, StateFn<T>];
+    function customRef<T>(): [Ref<T | undefined>, T extends Element ? RefGetter : StateFn<T | undefined>];
+    ```
+  </CodeHighlight>
+</Preview>
+
+<Preview>
+  <PreviewFrame height="100">
+    <CustomRef />
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    Usage example
+
+    <script setup lang="ts">
+      import { Box, customRef } from '@vue-material/core'
+
+      const [root, setRef] = customRef<HTMLElement>()
+      const [text, setText] = customRef('Click me!')
+
+      function changeText() {
+        if (!root.value) return
+
+        root.value.style.color = 'green'
+        setText('Hello World!')
+      }
+    </script>
+
+    <template>
+      <Box :ref="setRef" @click="changeText"> {{ text }} </Box>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+**`customRef()`**: [RefGetter](#fnref) | [StateFn](#statefn)
+
+- Returns a ref and a state function similar to that one other ui library.
+- Parameters
+  - `defaultValue`: extends any;
+
+---
+
+### useLocalStorage()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function useLocalStorage<T>(key: string, defaultValue: T): Ref<T>;
+    ```
+  </CodeHighlight>
+</Preview>
+
+<Preview>
+  <PreviewFrame height="100">
+    <LocalStorage />
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    Usage example
+
+    <script setup lang="ts">
+      import { TextInput, useLocalStorage } from '@vue-material/core'
+      const text = useLocalStorage('text', 'Hello World!')
+    </script>
+
+    <template>
+      <TextInput span v-model="text" placeholder="Enter some text and reload" />
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+**`useLocalStorage()`**: Ref
+
+- Returns a ref that saves data in the local storage
+- Parameters
+  - `key`: string
+  - `defaultValue`: any
+
+---
+
+### useToggle()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type ToggleValues = boolean | ('on' | 'off') | (1 | 0);
+    function useToggle<T extends ToggleValues>(defaultValue: T): [Ref<T>, ToggleFn<T>];
+    ```
+  </CodeHighlight>
+  <PreviewFrame>
+    <UseToggle />
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { useToggle } from '@vue-material/core'
+
+      const [value, toggle] = useToggle()
+      const [onOff, toggleOnOff] = useToggle('on')
+      const [value2, toggle2] = useToggle(0)
+    </script>
+
+    <template>
+      <div class="use-toggle">
+        <div @click="toggle">Boolean: {{ value }}</div>
+        <div @click="toggleOnOff">String: {{ onOff }}</div>
+        <div @click="toggle2">Number: {{ value2 }}</div>
+      </div>
+    </template>
+
+    <style scoped>
+      .use-toggle {
+        cursor: pointer;
+        user-select: none;
+      }
+    </style>
+    ```
+  </CodeHighlight>
+</Preview>
+
+
+## Types
+
+### RefGetter
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type RefGetter = (
+      ref: Element | Component | null, 
+      refs: Record<string, any>
+    ) => void;
+    ```
+  </CodeHighlight>
+</Preview>
+
+### ToggleFn
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type ToggleFn<T extends ToggleValues> = {
+      (): void
+      (value: T | ((value: T) => T)): void
+    };
+    ```
+  </CodeHighlight>
+</Preview>

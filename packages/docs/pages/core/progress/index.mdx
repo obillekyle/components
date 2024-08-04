@@ -1,0 +1,191 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Flex from '@vue-material/core/Box/Flex'
+import Box from '@vue-material/core/Box'
+import LinearProgress from '@vue-material/core/Progress/linear-progress.vue'
+import CircularProgress from '@vue-material/core/Progress/circular-progress.vue'
+
+export const meta = {
+  title: 'Progress',
+  description:
+    'Indicate the progress of an operation with these progress components',
+  source: 'packages/lib/src/components/Progress',
+  inherits: ['core/Box', 'core/ViewObserver']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="100">
+    <Flex p="#xl" width="100%" gap="#xs" direction="column">
+      <LinearProgress value={50}/>
+      <LinearProgress value={Infinity}/>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Flex, LinearProgress } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex p="#xl" width="100%" gap="#xs" direction="column">
+        <LinearProgress :value="50"/>
+        <LinearProgress :value="Infinity"/>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex gap="#xs">
+      <CircularProgress value={50}/>
+      <CircularProgress value={60} rotate/>
+      <CircularProgress value={Infinity}/>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import {Flex, CircularProgress } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap="#xs">
+        <CircularProgress :value="50"/>
+        <CircularProgress :value="60" rotate/>
+        <CircularProgress :value="Infinity"/>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    import { LinearProgress, CircularProgress } from '@vue-material/core'
+
+    // import components individually
+    import LinearProgress from '@vue-material/core/Progress/linear-progress.vue'
+    import CircularProgress from '@vue-material/core/Progress/circular-progress.vue'
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Variants
+
+<Preview>
+  <PreviewFrame height="150">
+    <Flex p="#xl" width="100%" gap="#xs" direction="column">
+      Deterministic
+      <LinearProgress value={50} />
+
+      Infinite
+      <LinearProgress value={Infinity} />
+    </Flex>
+
+  </PreviewFrame>
+
+  <CodeHighlight hide>
+    ```vue
+    <script setup lang="ts">
+      import { Flex, LinearProgress } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex p="#xl" width="100%" gap="#xs" direction="column">
+        Deterministic
+        <LinearProgress :value="50" />
+
+        Infinite
+        <LinearProgress :value="Infinity" />
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+<Preview>
+  <PreviewFrame>
+    <Flex gap="#xs" direction="column">
+      <Flex gap="#md" align="center">
+        <CircularProgress value={50} />
+        Deterministic
+      </Flex>
+      <Flex gap="#md" align="center">
+        <CircularProgress value={60} rotate />
+        Deterministic + rotating
+      </Flex>
+      <Flex gap="#md" align="center">
+        <CircularProgress value={Infinity} />
+        Infinite
+      </Flex>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight hide>
+    ```vue
+    <script setup lang="ts">
+      import { Flex, CircularProgress } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap="#xs" direction="column">
+        <Flex gap="#md" align="center">
+          <CircularProgress :value="50" />
+          Deterministic
+        </Flex>
+        <Flex gap="#md" align="center">
+          <CircularProgress :value="60" rotate />
+          Deterministic + rotating
+        </Flex>
+        <Flex gap="#md" align="center">
+          <CircularProgress :value="Infinity" />
+          Infinite
+        </Flex>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+### `LinearProgress`
+
+- `value?`: number
+  - The value of the progress, set to a number between 0 and 100
+  - Setting it to `Infinity` or a non finite number will make the progress infinite
+  - Default: `Infinity`
+- `size?`: number | string
+  - The height of the progress bar
+  - Default: `4`
+
+### `CircularProgress`
+
+- `value?`: number
+  - The value of the progress, set to a number between 0 and 100
+  - Setting it to `Infinity` or a non finite number will make the progress infinite
+  - Default: `Infinity`
+- `rotate?`: boolean
+  - Whether to rotate the progress when it's deterministic
+  - Default: `false`
+- `diameter?`: number
+  - The diameter of the circular progress
+  - Default: `48`
+- `stroke?`: number
+  - The width of the circular progress
+  - Default: `5`

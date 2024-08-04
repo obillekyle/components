@@ -1,0 +1,230 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+export const meta = {
+  title: 'DOM',
+  description: 'Utility functions for DOM manipulation',
+  source: 'packages/lib/src/utils/dom.ts',
+  inherits: [
+    'utils/css'
+  ]
+}
+
+## Some things to consider
+
+> [!WARNING]
+> Methods here might not work on ssr and ssg environments where `window` or 
+> `document` is unavailabe. Make sure to only execute these methods on the 
+> client side.
+
+## Imports
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+      import { <fn> } from '@vue-material/core'
+      import { <fn> } from '@vue-material/core/utils'
+      import { <fn> } from '@vue-material/core/utils/dom'
+    ``` 
+  </CodeHighlight>
+</Preview>
+
+## Methods and Properties
+
+### $()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function $(selector: string, parent: Element | EventTarget | null): HTMLElement;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`$()`**: HTMLElement
+- An alias for `<HTMLElement>.querySelector`.
+- Parameters
+  - `selector`: string
+  - `parent?`: Element | EventTarget | null
+
+---
+
+### getParent()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function getParent(element: HTMLElement, selector: string, self?: boolean, deep?: number): HTMLElement | null;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`getParent()`**: HTMLElement
+- Looks for the first parent element that matches the selector
+- Parameters
+  - `element`: HTMLElement
+    - The element to start searching from
+  - `selector`: string
+    - The selector to look for
+  - `self?`: boolean
+    - Whether to include the element itself
+  - `deep?`: number
+    - How many levels of parents to go up
+
+---
+
+### onSelfEvent()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function onSelfEvent<T extends Event>(event: T, handler: (event: T) => any);
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`onSelfEvent()`**: HTMLElement
+- Checks if the event target is the same as the current target and if so, calls the handler
+- Parameters
+  - `event`: extends Event
+  - `handler`: (event: extends Event) => any
+
+---
+
+### FilePicker
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    type FilePickerOptions = {
+      accept?: string
+      multiple?: boolean
+    }
+
+    async function openFilePickerAsync(options?: FilePickerOptions): Promise<File[] File | null>;
+    function openFilePicker(callback: (file: File[] | File | null) => any, options?: FilePickerOptions): void;
+    ```
+  </CodeHighlight>
+  
+</Preview>
+
+**`openFilePickerAsync()`**: Promise\<File[] | File | null>
+- Opens a file picker
+- Parameters
+  - `options?`: FilePickerOptions
+    - Options for the file picker
+
+**`openFilePicker()`**: void
+- Opens a file picker
+- Parameters
+  - `callback`: (file: File[] | File | null) => any
+  - `options?`: FilePickerOptions
+    - Options for the file picker
+
+---
+
+### rippleEffect()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function rippleEffect(event: MouseEvent): void;
+    ```
+  </CodeHighlight>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { rippleEffect } from '@vue-material/core/utils/dom'
+    </script>
+
+    <template>
+      <button 
+        class="my-element-with-ripple" 
+        @pointerDown="rippleEffect"
+      >
+        Click me
+      </button>
+    </template>
+
+    <style>
+      .my-element-with-ripple {
+        position: relative;
+        overflow: hidden;
+      }
+    </style>
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`rippleEffect()`**: void
+- Adds a Material ripple effect to an element
+- Parameters
+  - `event`: MouseEvent
+  - `to?`: string
+    - The element to add the ripple effect element to
+
+---
+
+### keyboardClick()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function keyboardClick(event: KeyboardEvent): void;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`keyboardClick()`**: void
+- Make it so that the element can be clicked with the space key
+- Parameters
+  - `event`: KeyboardEvent
+
+---
+
+### getClientPos()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function getClientPos(event: TouchEvent | MouseEvent): { x: number, y: number };
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`getClientPos()`**: \{ x: number, y: number }
+- Gets the client position of the click from touch or mouse events
+- Parameters
+  - `event`: TouchEvent | MouseEvent
+
+---
+
+### isMobile()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function isMobile(): boolean;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`isMobile()`**: boolean
+- Checks if the useragent is a mobile device
+
+---
+
+### isInputFocused()
+
+<Preview>
+  <CodeHighlight>
+    ```ts
+    function isInputFocused(): boolean;
+    ```
+  </CodeHighlight>
+</Preview>
+
+**`isInputFocused()`**: boolean
+- Checks if the dom has focused form elements
