@@ -1,39 +1,24 @@
 <script setup lang="ts">
-  import { $, Button, Text } from '@vue-material/core'
-  import animatedScrollTo from 'animated-scroll-to'
-  import { inject, onMounted, ref, watch } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { Button, Text } from '@vue-material/core'
+  import { computed, inject, onMounted, ref, watch } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
+  import { scrollTo, scrollToHash } from './content-utils'
 
   const route = useRoute()
-
+  const router = useRouter()
+  const hash = computed(() => route.hash)
   const content = inject('content', ref<HTMLElement>())
   const headers = inject('headers', ref<HTMLElement[]>([]))
 
-  function scrollTo(header: HTMLElement, animate = true) {
-    if (!content.value) return
-    const parent = content.value
-    const top = (header.offsetTop || 0) - 62
-    history.replaceState(true, '', `#${header.id}`)
-
-    if (animate) {
-      animatedScrollTo(top, {
-        elementToScroll: parent
-      })
-    } else {
-      parent.scrollTop = top
-    }
-  }
-
+  watch(hash, (hash) => scrollToHash(content.value!, hash))
   watch(headers, () => {
-    if (route.hash.length > 1) {
-      setTimeout(() => {
-        const header = $(route.hash)
-        header && scrollTo(header)
-      }, 200)
-    }
+    const parent = content.value!
+    scrollToHash(parent, route.hash)
     if (headers.value.length > 0) {
       for (const head of headers.value) {
-        head.addEventListener('click', () => scrollTo(head))
+        head.addEventListener('click', () => {
+          scrollToHash(parent, `#${head.id}`)
+        })
       }
     }
   })
@@ -42,6 +27,24 @@
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual'
     }
+
+    const parent = content.value!
+    parent.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement
+      const link = target.closest('a') as HTMLAnchorElement
+      if (link && !link.href) return
+
+      if (link) {
+        event.preventDefault()
+        const isOutbound = link.host !== location.host
+        if (isOutbound) window.open(link.href, '_blank')
+        else if (link.pathname === location.pathname) {
+          scrollToHash(parent, link.hash)
+        } else {
+          router.push(link.href + link.hash)
+        }
+      }
+    })
   })
 </script>
 
@@ -52,7 +55,7 @@
     </Text>
 
     <Button
-      @click="scrollTo(header)"
+      @click="scrollTo(content!, header, 62)"
       v-for="header in headers"
       :key="header.id"
       variant="text"

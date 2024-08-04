@@ -1,4 +1,5 @@
-import { toKebabCase } from '@vue-material/core'
+import { $, toKebabCase } from '@vue-material/core'
+import animatedScrollTo from 'animated-scroll-to'
 
 export type MetaOptions = {
   title?: string
@@ -33,4 +34,26 @@ export async function fetchComponent(category: string, file?: string) {
   }
 
   return component
+}
+
+export function scrollTo(
+  parent: HTMLElement,
+  target: HTMLElement,
+  offset = 0
+) {
+  const top = (target.offsetTop || 0) - offset
+
+  animatedScrollTo(top, {
+    elementToScroll: parent
+  })
+}
+
+export function scrollToHash(parent: HTMLElement, hash: string) {
+  if (hash.length > 1) {
+    const element = $(hash)
+    if (element) {
+      scrollTo(parent, element, 62)
+      history.pushState(true, '', hash)
+    }
+  }
 }

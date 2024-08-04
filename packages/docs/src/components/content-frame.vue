@@ -20,7 +20,7 @@
     ref,
     watch
   } from 'vue'
-  import { useRoute, useRouter } from 'vue-router'
+  import { useRoute } from 'vue-router'
   import { fetchComponent } from './content-utils'
 
   import ContentDocs from './content-docs.vue'
@@ -31,7 +31,6 @@
   import ContentOutline from './content-outline.vue'
 
   const route = useRoute()
-  const router = useRouter()
   const headers = ref<HTMLElement[]>([])
   const [content, setRef] = customRef<HTMLElement>()
   const isDark = inject('is-dark', ref(false))
@@ -82,29 +81,7 @@
     }, 200)
   }
 
-  onMounted(() => {
-    getHeaders()
-
-    if (content.value) {
-      const element = content.value
-
-      element.addEventListener('click', (event) => {
-        const target = event.target as HTMLElement
-        const link = target.closest('a') as HTMLAnchorElement
-        if (link && !link.href) return
-
-        if (link) {
-          event.preventDefault()
-          const isOutbound = link.host !== window.location.host
-          if (isOutbound) window.open(link.href, '_blank')
-          else {
-            router.push(link.pathname + link.hash)
-          }
-        }
-      })
-    }
-  })
-
+  onMounted(() => getHeaders())
   onBeforeUnmount(() => clearTimeout(timeout))
   watch(loadComponent, getHeaders)
 </script>
