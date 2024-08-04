@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  import { clamp } from '@/utils/number'
   import { addUnit, getCSSValue } from '@/utils/css'
+  import { clamp } from '@/utils/number'
+  import { fnRef } from '@/utils/ref'
   import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
   import ViewObserver from '../Misc/view-observer.vue'
-  import { fnRef } from '@/utils/ref'
 
-  const observer = ref<ResizeObserver | null>(null)
-  const root = ref<HTMLElement | null>(null)
+  let observer: ResizeObserver | undefined
   const speed = ref(2)
-  const props = withDefaults(
+  const root = ref<HTMLElement>()
+  const properties = withDefaults(
     defineProps<{
       value?: number
       size?: number | string
@@ -19,7 +19,7 @@
     }
   )
   const md3 = inject('md3', false)
-  const noSpace = computed(() => props.value <= 0)
+  const noSpace = computed(() => properties.value <= 0)
 
   function setSpeed() {
     const rect = root.value!.getBoundingClientRect()
@@ -29,12 +29,13 @@
 
   onMounted(() => {
     setSpeed()
-    observer.value = new ResizeObserver(setSpeed)
-    observer.value.observe(root.value!)
+    observer = new ResizeObserver(setSpeed)
+    observer.observe(root.value!)
   })
 
   onBeforeUnmount(() => {
-    observer.value?.disconnect()
+    observer?.disconnect?.()
+    observer = undefined
   })
 
   const setRef = fnRef(root)
@@ -60,9 +61,115 @@
 </template>
 
 <style lang="scss">
+  @keyframes infinite-load {
+    0% {
+      left: 0%;
+      right: 100%;
+    }
+
+    20% {
+      left: 0%;
+    }
+
+    40% {
+      left: 30%;
+      right: 0%;
+    }
+
+    70% {
+      left: 100%;
+      right: 0%;
+    }
+  }
+
+  @keyframes infinite-load-2 {
+    50% {
+      right: 100%;
+    }
+
+    75% {
+      right: 30%;
+      left: 0%;
+    }
+
+    90% {
+      right: 0%;
+    }
+
+    100% {
+      left: 100%;
+      right: 0%;
+    }
+  }
+
+  @keyframes infinite-load-bg-1 {
+    0% {
+      left: var(--xxs);
+      right: 0%;
+    }
+
+    40% {
+      left: calc(100% + var(--xxs));
+      right: 0%;
+    }
+
+    40.001% {
+      left: 0%;
+      right: 100%;
+    }
+
+    50% {
+      left: 0%;
+      right: 100%;
+    }
+
+    75% {
+      right: calc(100% + var(--xxs));
+      left: 0%;
+    }
+
+    100% {
+      right: calc(0% + var(--xxs));
+      left: 0%;
+    }
+  }
+
+  @keyframes infinite-load-bg-2 {
+    20% {
+      right: calc(100% + var(--xxs));
+      left: 0%;
+    }
+
+    40% {
+      left: 0%;
+      right: calc(70% + var(--xxs));
+    }
+
+    50% {
+      left: var(--xxs);
+    }
+
+    70% {
+      right: 0%;
+    }
+
+    75% {
+      left: calc(70% + var(--xxs));
+    }
+
+    90% {
+      left: calc(100% + var(--xxs));
+    }
+
+    100% {
+      left: calc(100% + var(--xxs));
+      right: 0%;
+    }
+  }
+
   .md-progress {
     position: relative;
-    background: var(--mono-10);
+    background: var(--surface-container);
     overflow: hidden;
     width: 100%;
 
@@ -76,8 +183,8 @@
 
     &-bar {
       height: inherit;
-      background: var(--primary);
       overflow: hidden;
+      background: var(--primary);
       width: calc(var(--value) * 1%);
       transition: width 0.25s var(--timing-standard);
       will-change: width;
@@ -106,82 +213,17 @@
           top: 0;
           bottom: 0;
           height: inherit;
-          background: var(--primary-20);
+          background: var(--secondary-container);
           will-change: left, right;
           border-radius: inherit;
         }
 
         &::after {
           animation: infinite-load-bg-1 infinite var(--speed) linear;
-
-          @keyframes infinite-load-bg-1 {
-            0% {
-              left: var(--xxs);
-              right: 0%;
-            }
-
-            40% {
-              left: calc(100% + var(--xxs));
-              right: 0%;
-            }
-
-            40.001% {
-              left: 0%;
-              right: 100%;
-            }
-
-            50% {
-              left: 0%;
-              right: 100%;
-            }
-
-            75% {
-              right: calc(100% + var(--xxs));
-              left: 0%;
-            }
-
-            100% {
-              right: calc(0% + var(--xxs));
-              left: 0%;
-            }
-          }
         }
 
         &::before {
           animation: infinite-load-bg-2 infinite var(--speed) linear;
-
-          @keyframes infinite-load-bg-2 {
-            20% {
-              right: calc(100% + var(--xxs));
-              left: 0%;
-            }
-
-            40% {
-              left: 0%;
-              right: calc(70% + var(--xxs));
-            }
-
-            50% {
-              left: var(--xxs);
-            }
-
-            70% {
-              right: 0%;
-            }
-
-            75% {
-              left: calc(70% + var(--xxs));
-            }
-
-            90% {
-              left: calc(100% + var(--xxs));
-            }
-
-            100% {
-              left: calc(100% + var(--xxs));
-              right: 0%;
-            }
-          }
         }
       }
 
@@ -198,51 +240,10 @@
 
       &::before {
         animation: infinite-load infinite var(--speed) linear;
-
-        @keyframes infinite-load {
-          0% {
-            left: 0%;
-            right: 100%;
-          }
-
-          20% {
-            left: 0%;
-          }
-
-          40% {
-            left: 30%;
-            right: 0%;
-          }
-
-          70% {
-            left: 100%;
-            right: 0%;
-          }
-        }
       }
 
       &::after {
         animation: infinite-load-2 infinite var(--speed) linear;
-
-        @keyframes infinite-load-2 {
-          50% {
-            right: 100%;
-          }
-
-          75% {
-            right: 30%;
-            left: 0%;
-          }
-
-          90% {
-            right: 0%;
-          }
-
-          100% {
-            left: 100%;
-            right: 0%;
-          }
-        }
       }
     }
 
@@ -264,7 +265,7 @@
         }
 
         &::before {
-          background: var(--primary-20);
+          background: var(--secondary-container);
           left: calc(var(--value) * 1% + var(--xxs));
         }
 

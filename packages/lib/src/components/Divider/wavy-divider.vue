@@ -2,21 +2,19 @@
   import Box from '@/components/Box/box.vue'
   import type { BoxProps } from '@/components/Box/util'
   import { getBoxProps } from '@/components/Box/util'
-  import { getCSSColor } from '@/utils'
-  import { computed } from 'vue'
+  import { getCSSColor, type ColorString } from '@/utils/css'
 
-  interface WavyDividerProps extends BoxProps {
-    color?: string
+  interface WavyDividerProperties extends BoxProps {
+    color?: ColorString
   }
 
   defineOptions({ name: 'MdWavyDivider' })
-  const props = defineProps<WavyDividerProps>()
-  const boxProps = computed(() =>
-    getBoxProps(props, {
-      my: 'lg',
-      p: 'md'
-    })
-  )
+  const props = defineProps<WavyDividerProperties>()
+  // @ts-ignore
+  const boxProps = getBoxProps(props, {
+    my: '#lg',
+    p: '#md'
+  })
 </script>
 
 <template>
@@ -54,6 +52,6 @@
 <style lang="scss" scoped>
   .md-wavy-divider {
     width: 100%;
-    color: var(--primary-30-50);
+    color: var(--surface-container-highest);
   }
 </style>

@@ -9,29 +9,29 @@
  * ```
  */
 const formats: Record<string, string> = {
-  B: '\x1b[1m',
-  U: '\x1b[4m',
-  S: '\x1b[9m',
-  I: '\x1b[3m',
-  R: '\x1b[0m',
+  B: '\u001B[1m',
+  U: '\u001B[4m',
+  S: '\u001B[9m',
+  I: '\u001B[3m',
+  R: '\u001B[0m',
 
-  black: '\x1b[30m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  magenta: '\x1b[35m',
-  cyan: '\x1b[36m',
-  white: '\x1b[37m',
-  gray: '\x1b[90m'
+  black: '\u001B[30m',
+  red: '\u001B[31m',
+  green: '\u001B[32m',
+  yellow: '\u001B[33m',
+  blue: '\u001B[34m',
+  magenta: '\u001B[35m',
+  cyan: '\u001B[36m',
+  white: '\u001B[37m',
+  gray: '\u001B[90m'
 }
 
 export class Logger {
   constructor(private name: string) {}
 
   private format(message: string): string {
-    return message.replace(/(\$\w+);/g, (match) => {
-      return formats[match.replace(/[$;]/g, '')] || match
+    return message.replaceAll(/(\$\w+);/g, (match) => {
+      return formats[match.replaceAll(/[$;]/g, '')] || match
     })
   }
 
@@ -42,14 +42,20 @@ export class Logger {
   log(...messages: string[]) {
     console.log(
       this.prefix +
-        this.format('$green; ' + messages.map(this.format).join(' '))
+        this.format(
+          '$green; ' +
+            messages.map((element) => this.format(element)).join(' ')
+        )
     )
   }
 
   error(...messages: string[]) {
     console.error(
       this.prefix +
-        this.format('$red; ' + messages.map(this.format).join(' '))
+        this.format(
+          '$red; ' +
+            messages.map((element) => this.format(element)).join(' ')
+        )
     )
   }
 

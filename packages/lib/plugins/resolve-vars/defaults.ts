@@ -56,7 +56,7 @@ export const DefaultColors: Record<string, string> = {
 }
 
 export const DefaultElementSizes: Record<string, AppSizes> = {
-  navbar: 'xl',
-  header: 'md',
-  fab: 'md'
+  navbar: 'lg',
+  header: 'sm',
+  fab: 'xs'
 }

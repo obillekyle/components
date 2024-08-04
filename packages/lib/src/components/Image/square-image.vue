@@ -1,67 +1,76 @@
 <script setup lang="ts">
+  import type { SizesString } from '@/utils/css'
   import type { HTMLAttributes } from 'vue'
-  import type { AppSizes } from '@/utils/css'
 
-  import { getCSSValue, addUnit } from '@/utils/css'
-  import { clean, resolveImage } from './util'
+  import { addUnit, getCSSValue } from '@/utils/css'
+  import { as, clean } from '@/utils/object'
+  import { customRef } from '@/utils/ref'
   import { hashStr } from '@/utils/string'
-  import { ref, watch, inject, onUnmounted } from 'vue'
-  import { dummyRef, fnRef } from '@/utils/ref'
   import { Icon } from '@iconify/vue'
-  import { computed, onMounted } from 'vue'
-  import { as } from '@/utils/object'
+  import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
+  import { resolveImage } from './util'
 
+  import Box from '../Box/box.vue'
+  import { getBoxProps, type BoxProps } from '../Box/util'
   import ViewObserver from '../Misc/view-observer.vue'
   import CircularProgress from '../Progress/circular-progress.vue'
 
-  interface SquareImageProps extends /* @vue-ignore */ HTMLAttributes {
+  interface SquareImageProperties
+    extends BoxProps,
+      /* @vue-ignore */ HTMLAttributes {
     src?: string | Blob
     size?: number | string
     frame?: 'default' | 'clover' | 'circle' | 'hexagon'
-    radius?: AppSizes
+    radius?: SizesString
     lazy?: boolean
   }
 
-  const props = withDefaults(defineProps<SquareImageProps>(), {
+  const props = withDefaults(defineProps<SquareImageProperties>(), {
     frame: 'default',
-    radius: 'sm',
+    radius: '#xs',
     size: 96
   })
 
-  const root = ref<HTMLElement | null>(null)
-  const rotate = inject('rotate', dummyRef(0))!
+  const [root, setRef] = customRef<HTMLElement>()
+  const rotate = inject('rotate', ref(0))
   const progress = ref(0)
   const image = ref<string>()
   const error = ref(false)
   const visible = ref(false)
-  const setRef = fnRef(root)
   const id = computed(
-    () => 'img-' + hashStr((props.src || '').toString() + props.frame, 6)
+    () => 'img-' + hashStr(String(props.src) + props.frame, 6)
   )
 
   async function resolve() {
     error.value = false
-    let src = props.src
+    let source = props.src
 
     if (image.value) {
       clean(image.value)
       image.value = undefined
     }
 
-    if (!src) {
+    if (!source) {
       error.value = true
       return
     }
 
-    src =
-      src instanceof Blob
-        ? URL.createObjectURL(src)
-        : src.replace(/\[size\]/g, String(props.size))
+    source =
+      source instanceof Blob
+        ? URL.createObjectURL(source)
+        : source.replaceAll('[size]', String(props.size))
 
     try {
-      const data = await resolveImage(src, (e) => (progress.value = e))
-      setTimeout(() => (image.value = URL.createObjectURL(data)), 200)
-    } catch (e) {
+      const data = await resolveImage(
+        source,
+        (value) => (progress.value = value)
+      )
+
+      setTimeout(() => {
+        image.value = URL.createObjectURL(data)
+      }, 200)
+    } catch (error_) {
+      console.warn(error_)
       error.value = true
     }
   }
@@ -83,13 +92,16 @@
   watch(() => props.src, resolve)
   onMounted(() => !props.lazy && resolve())
   onUnmounted(() => clean(image.value))
+  const boxProps = getBoxProps(props)
 </script>
 
 <template>
   <ViewObserver
+    :as="Box"
+    :offset="50"
     :ref="setRef"
     apply="visible"
-    :offset="50"
+    v-bind="boxProps"
     class="md-square-image"
     :change="(v) => (visible = v)"
     :class="{ loaded: image, [frame]: true, error }"
@@ -144,7 +156,7 @@
           y="0"
           :width="size"
           :height="size"
-          fill="var(--mono-10)"
+          fill="var(--surface-container)"
         />
         <image
           :href="image"
@@ -180,6 +192,7 @@
     display: inline-flex;
     height: max-content;
     width: max-content;
+    vertical-align: top;
     max-width: 100%;
     aspect-ratio: 1;
     flex-shrink: 0;
@@ -188,26 +201,11 @@
 
     &.default {
       border-radius: var(--radius);
-      background-color: var(--mono-10);
+      background: var(--surface-container);
     }
 
     img {
       border-radius: inherit;
-    }
-
-    &.circle.visible .md-image {
-      pattern {
-        rotate: calc(var(--rotate) * -1);
-      }
-
-      path {
-        rotate: var(--rotate);
-      }
-
-      path,
-      pattern {
-        transform-origin: center center;
-      }
     }
 
     .hidden {
@@ -249,6 +247,8 @@
     }
 
     &.loaded {
+      background: none;
+
       .md-loader {
         opacity: 0;
         pointer-events: none;
@@ -257,6 +257,21 @@
       image,
       img {
         opacity: 1;
+      }
+    }
+
+    &.circle.visible .md-image {
+      image {
+        rotate: calc(var(--rotate) * -1);
+      }
+
+      path {
+        rotate: var(--rotate);
+      }
+
+      path,
+      image {
+        transform-origin: center center;
       }
     }
   }

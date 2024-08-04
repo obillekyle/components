@@ -1,8 +1,9 @@
-import path from 'node:path'
-import fs from 'node:fs'
-import { gzipSync } from 'node:zlib'
 import { transform } from 'esbuild'
+import fs from 'node:fs'
+import path from 'node:path'
+import { gzipSync } from 'node:zlib'
 import type { Plugin, ResolvedConfig } from 'vite'
+import Logger from '../logger'
 import {
   formatCss,
   getHelperFileContent,
@@ -10,14 +11,13 @@ import {
   hash,
   isCSS,
   normalize,
-  relativeFromSrc
+  relativeFromSrc as relativeFromSource
 } from './utils'
-import Logger from '../logger'
 
 let packSize = 0
 let fileSize = 0
 let moduleSize = 0
-let modSizeGzip = 0
+let moduleSizeGzip = 0
 let logger = new Logger('attach-styles')
 const css: Record<string, string> = {}
 const importedMap: Record<string, string[]> = {}
@@ -49,20 +49,20 @@ async function deleteCSSFiles(
       } else {
         packSize += stats.size
         if (file.endsWith('.js')) {
-          const content = await fs.promises.readFile(filePath, 'utf-8')
-          const newContent = content.replace(
+          const content = await fs.promises.readFile(filePath, 'utf8')
+          const newContent = content.replaceAll(
             /\/\* empty css\s*\*\/\n/gm,
             ''
           )
           await fs.promises.writeFile(filePath, newContent)
-          modSizeGzip += gzipSync(newContent).length
+          moduleSizeGzip += gzipSync(newContent).length
           moduleSize += new Blob([newContent]).size
           fileSize += content.length - newContent.length
         }
       }
     }
-  } catch (err) {
-    logger.error(`Failed to delete CSS file: ${dir} ${err}`)
+  } catch (error) {
+    logger.error(`Failed to delete CSS file: ${dir} ${error}`)
   }
 }
 
@@ -103,11 +103,11 @@ export function attachStyles({
 
         if (entry.endsWith('.vue')) {
           const cssString = await formatCss(code)
-          const iMap = importedMap[entry]
+          const indexMap = importedMap[entry]
           css[entry] = (css[entry] || '') + cssString
 
-          if (!iMap) importedMap[entry] = [entry]
-          else if (!iMap.includes(entry)) iMap.push(entry)
+          if (!indexMap) importedMap[entry] = [entry]
+          else if (!indexMap.includes(entry)) indexMap.push(entry)
 
           return
         }
@@ -135,15 +135,15 @@ export function attachStyles({
       if (imports?.length) {
         for (const imported of imports) {
           if (imported.endsWith('.vue')) {
-            const cssStr = t(css[imported], imported)
+            const cssString = t(css[imported], imported)
 
-            if (cssStr) {
+            if (cssString) {
               if (!added) {
-                const root = relativeFromSrc(name)
+                const root = relativeFromSource(name)
                 code = `import $i from '${root}/attach-styles.js';\n` + code
                 added = true
               }
-              code += `\n$i(${JSON.stringify(cssStr)}, '${hash(imported)}');`
+              code += `\n$i(${JSON.stringify(cssString)}, '${hash(imported)}');`
             }
             continue
           }
@@ -160,41 +160,37 @@ export function attachStyles({
       }
 
       if (isCSS(name)) {
-        const cssStr = t(css[name], name)
-        const root = relativeFromSrc(name)
+        const cssString = t(css[name], name)
+        const root = relativeFromSource(name)
         const newFile = `
           import i from '${root}/attach-styles.js';
-          i(${JSON.stringify(cssStr)},'${hash(name)}');
+          i(${JSON.stringify(cssString)},'${hash(name)}');
         `
 
         const file = path.parse(name)
-
-        await fs.promises.mkdir(
-          path.join(process.cwd(), config.build.outDir, file.dir),
-          { recursive: true }
+        const minified = await transform(newFile, { loader: 'js' })
+        const parentDir = path.join(
+          process.cwd(),
+          config.build.outDir,
+          file.dir
         )
 
+        await fs.promises.mkdir(parentDir, { recursive: true })
         await fs.promises.writeFile(
-          path.resolve(
-            process.cwd(),
-            config.build.outDir,
-            path.join(file.dir, file.name + '.css.js')
-          ),
-          (await transform(newFile, { loader: 'js' })).code
+          path.join(parentDir, file.name + '.css.js'),
+          minified.code
         )
       }
     },
 
     async writeBundle() {
       const script = getHelperFileContent('', prefix)
+      const parentDir = path.join(process.cwd(), config.build.outDir)
+      const minified = await transform(script, { loader: 'js' })
 
       await fs.promises.writeFile(
-        path.resolve(
-          process.cwd(),
-          config.build.outDir,
-          'attach-styles.js'
-        ),
-        (await transform(script, { loader: 'js' })).code
+        path.join(parentDir, 'attach-styles.js'),
+        minified.code
       )
 
       console.log(``)
@@ -209,10 +205,10 @@ export function attachStyles({
         const elapsed = end - start
         const size = (fileSize / 1024).toFixed(2)
         const pack = (packSize / 1024).toFixed(2)
-        const mod = (moduleSize / 1024).toFixed(2)
-        const modGzip = (modSizeGzip / 1024).toFixed(2)
-        const packPad = Math.max(pack.length, mod.length)
-        const sizePad = Math.max(size.length, modGzip.length)
+        const module_ = (moduleSize / 1024).toFixed(2)
+        const moduleGzip = (moduleSizeGzip / 1024).toFixed(2)
+        const packPad = Math.max(pack.length, module_.length)
+        const sizePad = Math.max(size.length, moduleGzip.length)
 
         logger.log(`Clean CSS files...`)
         logger.log(`Cleaned CSS files in ${elapsed}ms.`)
@@ -221,8 +217,8 @@ export function attachStyles({
           `$R;$gray;│ save: ${size.padStart(sizePad, ' ')} kB$R;`
         )
         logger.log(
-          `$cyan;Packaged: $gray;$B;${mod.padStart(packPad, ' ')} kB`,
-          `$R;$gray;│ gzip: ${modGzip.padStart(sizePad, ' ')} kB$R;\n`
+          `$cyan;Packaged: $gray;$B;${module_.padStart(packPad, ' ')} kB`,
+          `$R;$gray;│ gzip: ${moduleGzip.padStart(sizePad, ' ')} kB$R;\n`
         )
       }
     }

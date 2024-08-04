@@ -1,11 +1,20 @@
-.md-layout {
-  --background-body: var(--primary-5, #111);
-  --background-secondary: var(--primary-10, #333);
-  --shadow-1: 0px 1px 2px 0px #0000004d, 0px 1px 3px 1px #00000026;
-  --shadow-2: 0px 1px 2px 0px #0000004d, 0px 2px 6px 2px #00000026;
-  --shadow-3: 0px 1px 3px 0px #0000004d, 0px 3px 8px 3px #00000026;
-  --navbar-size: var(--size-xl);
+*,
+*::before,
+*::after {
+  outline: 0 solid var(--primary);
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.md-theme-provider {
+  --background-body: var(--surface);
+  --background-secondary: var(--primary-95);
+  --shadow-1: 0px 1px 2px 0px #0004, 0px 1px 3px 1px #0002;
+  --shadow-2: 0px 1px 2px 0px #0004, 0px 2px 6px 2px #0002;
+  --shadow-3: 0px 1px 3px 0px #0004, 0px 3px 8px 3px #0002;
   --timing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --navbar-size: var(--size-xl);
   --header-size: var(--size-md);
   --xxs: var(--padding-xxs);
   --xs: var(--padding-xs);
@@ -15,27 +24,17 @@
   --xl: var(--padding-xl);
   --xxl: var(--padding-xxl);
 
-  color: var(--primary-99, currentColor);
-  position: absolute;
+  color: var(--primary-0, currentColor);
   background: var(--background-body);
-  inset: 0;
-
-  *,
-  *::before,
-  *::after {
-    outline: 0 solid var(--primary);
-    -webkit-tap-highlight-color: transparent;
-    box-sizing: border-box;
-    margin: 0;
-  }
 
   *:focus-visible {
     animation: focus 0.25s forwards;
   }
+}
 
-  &.light {
-    --background-body: var(--primary-1, #fff);
-  }
+.md-layout {
+  position: absolute;
+  inset: 0;
 
   .md-layout-content {
     position: absolute;

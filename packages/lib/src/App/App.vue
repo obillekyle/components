@@ -1,219 +1,89 @@
 <script setup lang="ts">
-  import Layout from '@/components/Layout/layout.vue'
-  import Button from '@/components/Button'
-  import Input from '@/components/Input'
-  import Navigation from '@/components/Navigation'
-  import MdHeader from '@/components/Header/header.vue'
+  import Headline from '@/components/AppBar/headline.vue'
+  import TopAppBar from '@/components/AppBar/top-bar.vue'
   import IconButton from '@/components/Button/icon-button.vue'
-  import HeaderTitle from '@/components/Header/header-title.vue'
-  import MasterSwitch from '@/components/Switch/master-switch.vue'
   import SquareImage from '@/components/Image/square-image.vue'
-  import LinearProgress from '@/components/Progress/linear-progress.vue'
-  import CircularProgress from '@/components/Progress/circular-progress.vue'
-  import Chip from '@/components/Chip'
-  import Select from '@/components/Select/select.vue'
-  import WavyDivider from '@/components/Divider/wavy-divider.vue'
-  import Scroller from '@/components/Text/scroller.vue'
-  import Slider from '@/components/Slider/slider.vue'
-  import Switch from '@/components/Switch/switch.vue'
   import Fab from '@/components/Layout/fab.vue'
-  import MdBox from '@/components/Box'
-  import BlockImage from '@/components/Image/block-image.vue'
-  import ColorBlock from '@/components/Misc/color-block.vue'
-  import Text from '@/components/Text'
+  import Layout from '@/components/Layout/layout.vue'
+  import NavBar from '@/components/Navigation/navigation-bar.vue'
+  import NavContainer from '@/components/Navigation/navigation-container.vue'
+  import NavContent from '@/components/Navigation/navigation-content.vue'
+  import NavEntry from '@/components/Navigation/navigation-entry.vue'
+  import NavItem from '@/components/Navigation/navigation-item.vue'
+  import MasterSwitch from '@/components/Switch/master-switch.vue'
+  import { useLocalStorage } from '@/utils/ref'
   import { ref } from 'vue'
+  import AppCards from './app-cards.vue'
+  import AppComp from './app-comp.vue'
+  import ColorShades from './color-shades.vue'
+  import LayoutInherit from './layout-inherit.vue'
 
-  const tab = ref(0)
-  const isDark = ref(true)
-  const color = ref('#4ed47b')
+  const tab = useLocalStorage('tab', 0)
+  const color = useLocalStorage('theme-color', '#386a1f')
+  const isDark = useLocalStorage('dark', true)
+  const colorInput = ref<HTMLInputElement>()
 </script>
 
 <template>
   <Layout
     global-style
     :options="{
+      fontFamily: 'Roboto, sans-serif',
       theme: isDark ? 'dark' : 'light',
-      colors: { primary: color }
+      colors: {
+        primary: color
+      }
     }"
   >
     <template #navbar>
-      <Navigation.Bar :active="tab" :change="(t) => (tab = t)">
-        <Navigation.Container center>
-          <Navigation.Item
-            name="Home"
-            icon="material-symbols:home-outline"
-          />
-          <Navigation.Item
-            name="Library"
-            icon="material-symbols:library-books-outline"
-          />
-        </Navigation.Container>
-      </Navigation.Bar>
+      <NavBar v-model="tab" labels="active">
+        <NavContent mt="#xl">
+          <SquareImage alt="App Logo" src="/favicon.svg" :size="60" />
+        </NavContent>
+
+        <NavContainer center>
+          <NavItem name="Home" icon="material-symbols:home-outline" />
+          <NavItem name="Colors" icon="material-symbols:colors-sharp" />
+          <NavItem name="Cards" icon="material-symbols:cards-outline" />
+          <NavItem name="Layout" icon="mdi:application-outline" />
+          <NavEntry name="Settings" icon="mdi:cog-outline" />
+        </NavContainer>
+      </NavBar>
     </template>
 
     <template #header>
-      <MdHeader>
+      <TopAppBar>
         <template #actions>
+          <IconButton
+            icon="material-symbols:palette-outline"
+            @click="colorInput?.click()"
+            :style="{ color: color }"
+          />
+
+          <input
+            ref="colorInput"
+            type="color"
+            :defaultValue="color"
+            style="opacity: 0; width: 0; height: 0; padding: 0"
+            :onChange="(e: any) => (color = e.target.value)"
+          />
+
           <IconButton icon="material-symbols:help-outline" />
         </template>
-      </MdHeader>
+      </TopAppBar>
     </template>
 
     <template #fab>
       <Fab icon="material-symbols:star-outline">Fab</Fab>
     </template>
 
-    <HeaderTitle title="Header Title" />
+    <Headline title="Header Title" />
     <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
 
-    <div class="wrapper">
-      <div class="flex">
-        <Button.Group>
-          <Button variant="outline">Button</Button>
-          <Button variant="outline">Button</Button>
-          <Button variant="outline">Button</Button>
-        </Button.Group>
-
-        <Chip.Group>
-          <Chip variant="outline">Chip</Chip>
-          <Chip variant="outline">Chip</Chip>
-          <Chip variant="outline">Chip</Chip>
-        </Chip.Group>
-      </div>
-
-      <div class="flex">
-        <Button left-icon="material-symbols:star-outline">Star</Button>
-        <Button variant="outline" left-icon="material-symbols:fullscreen">
-          Fullscreen
-        </Button>
-        <Button variant="subtle" right-icon="material-symbols:open-in-new">
-          Open in new tab
-        </Button>
-        <Button variant="transparent">Transparent Button</Button>
-      </div>
-
-      <div class="flex">
-        <Chip left-icon="material-symbols:devices-other-outline">
-          Device: Mobile
-        </Chip>
-        <Chip variant="outline">Time: 1 week</Chip>
-        <Chip variant="subtle" left-icon="material-symbols:add">
-          Add Filter
-        </Chip>
-      </div>
-      <div class="flex">
-        <Input
-          class="input"
-          placeholder="Input"
-          left-icon="material-symbols:search"
-        />
-        <Input.Number
-          class="input"
-          placeholder="Input"
-          left-icon="material-symbols:monetization-on-outline-rounded"
-        />
-        <Select placeholder="Select" span />
-      </div>
-      <LinearProgress />
-      <LinearProgress :value="20" />
-
-      <div class="flex">
-        <CircularProgress />
-        <CircularProgress :value="20" />
-        <CircularProgress rotate :value="80" />
-        <Switch />
-        <Switch variant="filled" />
-        <Switch variant="filled" default-checked />
-      </div>
-
-      <MdBox class="primary" p="100">Box</MdBox>
-      <Text color="red" as="h1">Hello</Text>
-
-      <div class="flex">
-        <SquareImage
-          frame="circle"
-          alt="random image"
-          src="https://picsum.photos/[size]?random=1"
-        />
-        <SquareImage
-          frame="default"
-          alt="random image"
-          src="https://picsum.photos/[size]?random=2"
-        />
-        <SquareImage
-          alt="random image"
-          frame="clover"
-          src="https://picsum.photos/[size]?random=3"
-        />
-        <SquareImage
-          alt="random image"
-          frame="hexagon"
-          src="https://picsum.photos/[size]?random=4"
-        />
-      </div>
-
-      <BlockImage
-        :b-radius="4"
-        alt="random image"
-        src="https://picsum.photos/[width]/[height]?random=4"
-        :width="400"
-        :height="300"
-        :ratio="4 / 3"
-      />
-
-      <Slider :values="[5, 15, 30, 60]" />
-
-      <Scroller>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi a
-        ea natus qui aliquid error atque eveniet in temporibus placeat quam
-        expedita obcaecati laborum, dolorum soluta eaque praesentium nostrum
-        ab.
-      </Scroller>
-
-      <WavyDivider />
-
-      <input
-        type="color"
-        :defaultValue="color"
-        :onChange="(e: any) => (color = e.target.value)"
-      />
-
-      <div class="flex">
-        <ColorBlock color="primary" />
-        <ColorBlock color="primary-1" />
-        <ColorBlock color="primary-5" />
-        <ColorBlock color="primary-10" />
-        <ColorBlock color="primary-20" />
-        <ColorBlock color="primary-30" />
-        <ColorBlock color="primary-40" />
-        <ColorBlock color="primary-50" />
-        <ColorBlock color="primary-60" />
-        <ColorBlock color="primary-70" />
-        <ColorBlock color="primary-80" />
-        <ColorBlock color="primary-90" />
-        <ColorBlock color="primary-95" />
-        <ColorBlock color="primary-99" />
-        <ColorBlock color="primary-100" />
-      </div>
-
-      <div class="flex">
-        <ColorBlock color="secondary" />
-        <ColorBlock color="secondary-1" />
-        <ColorBlock color="secondary-5" />
-        <ColorBlock color="secondary-10" />
-        <ColorBlock color="secondary-20" />
-        <ColorBlock color="secondary-30" />
-        <ColorBlock color="secondary-40" />
-        <ColorBlock color="secondary-50" />
-        <ColorBlock color="secondary-60" />
-        <ColorBlock color="secondary-70" />
-        <ColorBlock color="secondary-80" />
-        <ColorBlock color="secondary-90" />
-        <ColorBlock color="secondary-95" />
-        <ColorBlock color="secondary-99" />
-        <ColorBlock color="secondary-100" />
-      </div>
-    </div>
+    <AppComp v-if="tab === 0" />
+    <ColorShades v-else-if="tab === 1" />
+    <AppCards v-else-if="tab === 2" />
+    <LayoutInherit v-else-if="tab === 3" />
   </Layout>
 </template>
 

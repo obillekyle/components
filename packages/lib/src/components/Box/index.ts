@@ -1,7 +1,7 @@
 import Box from './box.vue'
 import Flex from './Flex'
-export * from './util'
 export * from './Flex'
+export * from './util'
 
 type BoxComponent = typeof Box & {
   Flex: typeof Flex
@@ -11,4 +11,6 @@ const BoxElement: BoxComponent = Box as BoxComponent
 BoxElement.Flex = Flex
 
 export default BoxElement
-export { Box, Flex }
+
+export { default as BoxElement } from './box.vue'
+export { default as Flex } from './Flex'

@@ -1,9 +1,5 @@
 <script setup lang="ts">
-  import {
-    getCSSColor,
-    getCSSValue,
-    type AppSizesString
-  } from '@/utils/css'
+  import { getCSSColor, getCSSValue, type SizesString } from '@/utils/css'
   import type { Component } from 'vue'
 
   type Positions =
@@ -17,19 +13,19 @@
     | 'bottom-left'
     | 'bottom-right'
 
-  interface FloaterProps {
+  interface FloaterProperties {
     text?: Component | string
     color?: string
-    offset?: AppSizesString
-    size?: AppSizesString
+    offset?: SizesString
+    size?: SizesString
     pos?: Positions
   }
 
   defineOptions({ name: 'MdFloatingIndicator' })
-  withDefaults(defineProps<FloaterProps>(), {
-    color: 'primary-200',
+  withDefaults(defineProps<FloaterProperties>(), {
+    color: '$error-container',
     offset: 0,
-    size: 'xxs',
+    size: '#xxs',
     pos: 'top-right'
   })
 </script>
@@ -69,6 +65,7 @@
       z-index: 1;
       box-shadow: 0 0 2px var(--mono-60);
       font-size: var(--sm);
+      color: var(--surface);
 
       &.top {
         top: var(--offset);

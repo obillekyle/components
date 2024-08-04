@@ -3,11 +3,11 @@
   import { computed, inject, onMounted, ref, watch } from 'vue'
   import ViewObserver from '../Misc/view-observer.vue'
 
-  const svg = ref<SVGSVGElement | null>(null)
-  const circle = ref<SVGCircleElement | null>(null)
-  const circle2 = ref<SVGCircleElement | null>(null)
+  const svg = ref<SVGSVGElement>()
+  const circle = ref<SVGCircleElement>()
+  const circle2 = ref<SVGCircleElement>()
 
-  const props = withDefaults(
+  const properties = withDefaults(
     defineProps<{
       value?: number
       diameter?: number
@@ -23,9 +23,11 @@
 
   const md3 = inject('md3', false)
 
-  const isInfinite = computed(() => !isFinite(props.value))
-  const circleRadius = computed(() => (props.diameter - props.stroke) / 2)
-  const circleStrokeWidth = computed(() => addPX(props.stroke))
+  const isInfinite = computed(() => !Number.isFinite(properties.value))
+  const circleRadius = computed(
+    () => (properties.diameter - properties.stroke) / 2
+  )
+  const circleStrokeWidth = computed(() => addPX(properties.stroke))
 
   const circleCircumference = computed(
     () => 2 * Math.PI * circleRadius.value
@@ -36,63 +38,65 @@
   )
 
   const circleStrokeDashOffset = computed(() =>
-    !isInfinite.value
-      ? addPX((circleCircumference.value * (100 - props.value)) / 100)
-      : addPX(circleCircumference.value * 0.2)
+    isInfinite.value
+      ? addPX(circleCircumference.value * 0.2)
+      : addPX((circleCircumference.value * (100 - properties.value)) / 100)
   )
 
-  const space = computed(() => props.stroke * 3)
+  const space = computed(() => properties.stroke * 3)
   const hasSpace = computed(
-    () => props.value > props.stroke && props.value < 100 - space.value
+    () =>
+      properties.value > properties.stroke &&
+      properties.value < 100 - space.value
   )
 
   const circle2StrokeDashOffset = computed(() => {
     const offset = hasSpace.value ? space.value : 0
-    const value = circleCircumference.value * props.value
+    const value = circleCircumference.value * properties.value
     const total = circleCircumference.value * offset
     return addPX((value + total) / 100)
   })
 
   const circle2StrokeRotate = computed(() => {
     const offset = hasSpace.value ? space.value / 2 : 0
-    return (360 * (props.value + offset)) / 100 + 'deg'
+    return (360 * (properties.value + offset)) / 100 + 'deg'
   })
 
   function attachStyles() {
     const svgRoot = svg.value!
-    const circleElem = circle.value!
-    const circle2Elem = circle2.value
+    const circleElement = circle.value!
+    const circle2Element = circle2.value
 
-    const size = addPX(props.diameter)
+    const size = addPX(properties.diameter)
     svgRoot.style.width = size
     svgRoot.style.height = size
 
-    circleElem.style.strokeDashoffset = circleStrokeDashOffset.value
-    circleElem.style.strokeDasharray = circleStrokeDashArray.value
-    circleElem.style.strokeWidth = circleStrokeWidth.value
+    circleElement.style.strokeDashoffset = circleStrokeDashOffset.value
+    circleElement.style.strokeDasharray = circleStrokeDashArray.value
+    circleElement.style.strokeWidth = circleStrokeWidth.value
 
-    if (circle2Elem) {
-      circle2Elem.style.strokeWidth = circleStrokeWidth.value
-      circle2Elem.style.strokeDasharray = circleStrokeDashArray.value
-      circle2Elem.style.strokeDashoffset = circle2StrokeDashOffset.value
-      circle2Elem.style.rotate = circle2StrokeRotate.value
+    if (circle2Element) {
+      circle2Element.style.strokeWidth = circleStrokeWidth.value
+      circle2Element.style.strokeDasharray = circleStrokeDashArray.value
+      circle2Element.style.strokeDashoffset = circle2StrokeDashOffset.value
+      circle2Element.style.rotate = circle2StrokeRotate.value
     }
 
     if (
-      !circleElem.classList.contains('animate') ||
-      !circle2Elem?.classList.contains('animate')
+      !circleElement.classList.contains('animate') ||
+      !circle2Element?.classList.contains('animate')
     ) {
       setTimeout(() => {
-        circleElem.classList.toggle('animate', true)
-        circle2Elem?.classList.toggle('animate', true)
+        circleElement.classList.toggle('animate', true)
+        circle2Element?.classList.toggle('animate', true)
       })
     }
 
-    circleElem.style.setProperty(
+    circleElement.style.setProperty(
       '--md-progress-spinner-start-value',
       String(0.99 * circleCircumference.value)
     )
-    circleElem.style.setProperty(
+    circleElement.style.setProperty(
       '--md-progress-spinner-end-value',
       String(0.2 * circleCircumference.value)
     )
@@ -102,7 +106,7 @@
     name: 'MDCircularProgress'
   })
 
-  watch(props, () => attachStyles())
+  watch(properties, () => attachStyles())
   onMounted(() => attachStyles())
 </script>
 
@@ -117,9 +121,9 @@
     }"
   >
     <svg
+      focusable="false"
       class="md-progress-spinner-draw"
       preserveAspectRatio="xMidYMid meet"
-      focusable="false"
       :viewBox="`0 0 ${diameter} ${diameter}`"
       ref="svg"
     >
@@ -317,7 +321,7 @@
     }
 
     .md-progress-spinner-bg {
-      stroke: var(--mono-20);
+      stroke: var(--secondary-container);
     }
 
     &.md3 {

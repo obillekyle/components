@@ -1,26 +1,36 @@
 <script setup lang="ts">
+  import type { Sizes } from '@/utils/css'
   import type { ButtonHTMLAttributes } from 'vue'
-  import type { AppSizes } from '@/utils/css'
 
-  import { Icon } from '@iconify/vue'
   import { getCSSValue } from '@/utils/css'
   import { rippleEffect } from '@/utils/dom'
+  import { Icon } from '@iconify/vue'
 
-  interface IconButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
+  interface IconButtonProperties
+    extends /* @vue-ignore */ ButtonHTMLAttributes {
     icon: string
-    size?: AppSizes | number | String
+    size?: Sizes | number | String
+    selected?: boolean
+    variant?: 'filled' | 'tonal' | 'outlined' | 'standard'
   }
 
-  defineProps<IconButtonProps>()
+  defineProps<IconButtonProperties>()
   defineOptions({ name: 'MdIconButton' })
 </script>
 
 <template>
-  <button class="md-icon-button" type="button">
-    <div class="md-icon-button-wrapper" @pointerdown="rippleEffect">
+  <button
+    type="button"
+    class="md-icon-button"
+    @pointerdown="(e) => rippleEffect(e, '.md-icon-button-wrapper')"
+  >
+    <div
+      class="md-icon-button-wrapper"
+      :class="{ selected, [variant ?? 'standard']: true }"
+    >
       <Icon
         :icon="icon"
-        :style="{ fontSize: getCSSValue(size ?? 'md', 'px', 'icon') }"
+        :style="{ fontSize: getCSSValue(size ?? '#md', 'px', 'icon') }"
       />
     </div>
   </button>
@@ -28,45 +38,93 @@
 
 <style lang="scss">
   .md-icon-button {
+    padding: 0;
     border: none;
     outline: none;
-    display: block;
     background: none;
-    color: var(--primary-90, inherit);
+    cursor: pointer;
+    vertical-align: top;
+    display: inline-block;
+    width: var(--component-md);
+    height: var(--component-md);
     -webkit-tap-highlight-color: transparent;
 
     &-wrapper {
       display: grid;
-      cursor: pointer;
       place-items: center;
       place-content: center;
       position: relative;
       overflow: hidden;
-      width: 48px;
-      height: 48px;
+      margin: var(--xxs);
       border-radius: 999px;
+      pointer-events: none;
+      width: var(--component-sm);
+      height: var(--component-sm);
       transition: background-color 0.2s;
 
       > * {
         pointer-events: none;
       }
-    }
 
-    &:focus-visible {
-      .md-icon-wrapper {
-        outline: 2px dashed var(--primary-60);
-        background-color: var(--primary-60-20);
+      &.filled {
+        background: var(--surface-container-highest);
+        color: var(--primary);
+
+        &.selected {
+          background: var(--primary);
+          color: var(--on-primary);
+        }
+      }
+
+      &.tonal {
+        background: var(--surface-container-highest);
+        color: var(--on-surface-variant);
+
+        &.selected {
+          background: var(--secondary-container);
+          color: var(--on-secondary-container);
+        }
+      }
+
+      &.outlined {
+        background: transparent;
+        box-shadow: 0 0 0 1px var(--outline);
+        color: var(--on-surface-variant);
+
+        &.selected {
+          background: var(--inverse-surface);
+          color: var(--inverse-on-surface);
+        }
+      }
+
+      &.standard {
+        background: transparent;
+        color: var(--on-surface-variant);
+
+        &.selected {
+          color: var(--primary);
+        }
       }
     }
 
-    &:disabled .md-icon-wrapper {
-      color: var(--mono-50);
-      pointer-events: none;
+    &-wrapper::after {
+      content: '';
+      inset: 0;
+      opacity: 0;
+      position: absolute;
+      transition: opacity 0.2s;
+      background: var(--on-surface);
     }
 
-    &:hover:not(:disabled) .md-icon-wrapper {
-      background-color: var(--primary-60-20);
-      cursor: pointer;
+    &:hover &-wrapper::after {
+      opacity: 0.08;
+    }
+
+    &:disabled &-wrapper {
+      opacity: 0.5;
+      background: var(--surface-container);
+      filter: grayscale(1);
+      cursor: not-allowed;
     }
   }
 </style>

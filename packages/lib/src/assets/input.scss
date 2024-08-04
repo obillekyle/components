@@ -1,23 +1,22 @@
+/* stylelint-disable no-descending-specificity */
 .md-input {
   display: inline-flex;
   align-items: center;
   align-self: center;
-  box-shadow: 0 0 0 1px inset var(--primary-60-30);
-  transition: box-shadow 0.2s;
-  min-height: var(--height, var(--size-md));
-  border-radius: var(--radius, var(--xs));
   width: max-content;
+  position: relative;
+  transition: box-shadow 0.2s;
+  min-height: var(--component-lg);
+  color: var(--on-surface-variant);
 
-  &.span {
-    width: 100%;
+  &.span,
+  &-content,
+  input {
+    flex: 1 1 auto;
   }
 
-  &-content {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    min-height: inherit;
+  &.span {
+    min-width: initial;
   }
 
   input {
@@ -27,40 +26,142 @@
     height: 100%;
     width: 100%;
     min-height: inherit;
-    font: inherit;
+    margin-left: -2px;
     color: inherit;
+    font: inherit;
+
+    &:focus {
+      color: var(--on-surface);
+    }
   }
 
-  &:has(input:disabled) {
-    filter: grayscale(1);
+  &:focus-within [data-placeholder]::after {
+    color: var(--primary);
+  }
 
-    input {
+  &.outlined {
+    border-radius: var(--xxs);
+    box-shadow: 0 0 0 1px inset var(--outline);
+
+    &:focus-within {
+      box-shadow: 0 0 0 2px inset var(--primary);
+    }
+
+    [data-placeholder]::after {
+      top: 0;
+      transform: translate(0, -45%);
+      padding-inline: var(--xxs);
+      margin-left: calc(var(--xxs) * -1);
+      font-size: var(--font-sm);
+      background: var(--surface);
+    }
+
+    &:has(.md-input-icon.left) [data-placeholder]::after {
+      transform: translate(calc(var(--icon-xxl) * -1), -45%);
+    }
+  }
+
+  &-content {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    min-height: inherit;
+    padding-inline: var(--md);
+    font-size: var(--font-lg);
+
+    &:has(span) {
+      gap: var(--xs);
+    }
+
+    span {
+      align-items: center;
+      display: inline-flex;
+    }
+
+    &[data-placeholder]::after {
+      content: attr(data-placeholder);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: absolute;
+      max-width: calc(100% - var(--md));
+      left: var(--md);
+      transition:
+        top 0.2s,
+        color 0.2s,
+        font-size 0.2s,
+        transform 0.2s;
+    }
+
+    &:has(input:placeholder-shown):not(:focus-within) {
+      span {
+        opacity: 0;
+      }
+
+      &[data-placeholder]::after {
+        color: currentcolor;
+        font-size: var(--font-lg);
+        transform: none !important;
+        top: calc(var(--component-lg) * 0.3);
+      }
+    }
+  }
+
+  &.filled {
+    border-radius: var(--xxs) var(--xxs) 0 0;
+    background: var(--surface-container-highest);
+
+    &::before,
+    &::after {
+      content: '';
+      bottom: 0;
+      position: absolute;
+      background: var(--on-surface-variant);
       pointer-events: none;
+      height: 1px;
+      width: 100%;
     }
-  }
 
-  &:has(input:focus),
-  &:active,
-  &:focus-within {
-    box-shadow: 0 0 0 2px inset var(--primary);
-  }
-
-  &:not(:has(.md-input-icon.left)) {
-    .md-input-content {
-      padding-left: var(--md);
+    &::after {
+      scale: 0 1;
+      transition:
+        background-color 0.2s,
+        scale 0.2s;
+      height: 2px;
     }
-  }
 
-  &:not(:has(.md-input-icon.right, .md-input-number-arrows)) {
-    .md-input-content {
-      padding-right: var(--md);
+    &:focus-within {
+      &::after {
+        scale: 1 1;
+        background: var(--primary);
+      }
+    }
+
+    [data-placeholder] {
+      input,
+      span {
+        padding-top: var(--sm);
+      }
+
+      &::after {
+        font-size: var(--font-sm);
+        top: var(--xxs);
+      }
     }
   }
 
   &-icon {
     display: inherit;
     align-items: center;
-    padding-inline: var(--sm);
+
+    &:first-child {
+      padding-left: var(--sm);
+    }
+
+    &:last-child {
+      padding-right: var(--sm);
+    }
   }
 
   &-counter {
@@ -81,8 +182,10 @@
     grid-template-rows: 1fr 1fr;
     place-items: center;
     line-height: 0;
+    height: 100%;
+    position: absolute;
+    right: 0;
     user-select: none;
-    border-left: 1px solid var(--primary-60-30);
 
     > * {
       height: 100%;
@@ -92,9 +195,12 @@
       cursor: pointer;
     }
 
-    > *:first-child {
-      padding-top: 1px;
-      border-bottom: 1px solid var(--primary-60-30);
+    :first-child {
+      align-items: end;
+    }
+
+    :last-child {
+      align-items: start;
     }
   }
 }

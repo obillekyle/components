@@ -1,32 +1,31 @@
 <script setup lang="ts">
-  import type { HTMLAttributes } from 'vue'
   import type { BoxProps } from '@/components/Box/util'
-  import type { AppSizesString } from '@/utils/css'
+  import type { SizesString } from '@/utils/css'
+  import type { HTMLAttributes } from 'vue'
 
   import { getCSSValue } from '@/utils/css'
-  import { getBoxProps } from '../util'
-  import { computed } from 'vue'
   import Box from '../box.vue'
+  import { getBoxProps as getBoxProperties } from '../util'
 
-  interface FlexBoxProps
+  interface FlexBoxProperties
     extends BoxProps,
       /** @vue-ignore */ HTMLAttributes {
     direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse'
-    align?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
-    justify?: 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
+    align?: 'start' | 'center' | 'end'
+    justify?: 'start' | 'center' | 'end'
     wrap?: 'wrap' | 'nowrap' | 'wrap-reverse'
 
-    gap?: AppSizesString
+    gap?: SizesString
   }
 
   defineOptions({ name: 'MdFlexBox' })
-  const props = defineProps<FlexBoxProps>()
-  const boxProps = computed(() => getBoxProps(props))
+  const props = defineProps<FlexBoxProperties>()
+  const boxProps = getBoxProperties(props)
 </script>
 
 <template>
   <Box
-    class="md-flexbox"
+    class="md-flex"
     v-bind="boxProps"
     :style="{
       flexDirection: props.direction,
@@ -41,7 +40,12 @@
 </template>
 
 <style lang="scss">
-  .md-flexbox {
+  .md-flex {
     display: flex;
+
+    > .md-flex-span,
+    > [span] {
+      flex: 1 1 auto;
+    }
   }
 </style>

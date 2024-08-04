@@ -1,14 +1,19 @@
 <script setup lang="ts">
   import type { BoxProps } from '@/components/Box/util'
 
-  import { evaluate } from '@/utils/object'
-  import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-  import { getBoxProps } from '@/components/Box/util'
   import Box from '@/components/Box/box.vue'
+  import { getBoxProps } from '@/components/Box/util'
+  import { evaluate } from '@/utils/object'
+  import { onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
+
+  interface ScrollPosition {
+    x: number
+    y: number
+  }
 
   interface ScrollContainerProps extends BoxProps {
     scrollable?: boolean
-    scrollChange?: (value: { x: number; y: number }) => void
+    onChange?: (value: ScrollPosition) => void
   }
 
   const props = withDefaults(defineProps<ScrollContainerProps>(), {
@@ -16,17 +21,19 @@
   })
 
   const boxProps = getBoxProps(props)
-  const element = ref<HTMLElement | null>(null)
-  const model = defineModel<{ x: number; y: number }>({
+  const element = ref<HTMLElement>()
+  const model = defineModel<ScrollPosition>({
     default: { x: 0, y: 0 }
   })
+
+  provide('scroll-container', model.value)
 
   function onScroll() {
     if (element.value) {
       const x = element.value.scrollLeft
       const y = element.value.scrollTop
       model.value = { x, y }
-      evaluate(props.scrollChange, model.value)
+      evaluate(props.onChange, model.value)
     }
   }
 
@@ -50,11 +57,7 @@
 </script>
 
 <template>
-  <div
-    class="md-scroll"
-    :class="{ scrollable: scrollable ?? true }"
-    ref="element"
-  >
+  <div class="md-scroll" :class="{ scrollable }" ref="element">
     <Box v-bind="boxProps" class="md-scroll-wrapper">
       <slot />
     </Box>
@@ -69,24 +72,41 @@
     height: 100%;
     width: 100%;
 
+    &:not(.scrollable) {
+      overflow: hidden;
+    }
+
     &-wrapper {
-      padding: var(--padding-md);
+      padding: var(--md);
       width: 100%;
+
+      > .md-scroll {
+        width: calc(100% + (var(--md) * 2));
+        margin-inline: calc(var(--md) * -1);
+
+        &:first-child {
+          margin-top: calc(var(--md) * -1);
+        }
+
+        &:last-child {
+          margin-bottom: calc(var(--md) * -1);
+        }
+      }
 
       &:has(
           > .md-master-switch:first-child,
           > .md-master-switch:nth-child(2)
         ) {
         .md-master-switch {
+          --value: calc((var(--header-size) + var(--sm)) * -1) var(--sm)
+            var(--header-size) var(--background-body);
+
           box-shadow:
-            0 calc(var(--size-xs) * -1) 0 var(--xl) var(--background-body),
-            var(--shadow-2);
+            var(--shadow-2),
+            200px var(--value),
+            -200px var(--value);
         }
       }
-    }
-
-    &:not(.scrollable) {
-      overflow: hidden;
     }
   }
 </style>

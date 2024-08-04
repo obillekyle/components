@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import type { Component } from 'vue'
 
-  import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
-  import { fnRef } from '@/utils/ref'
   import { addPX } from '@/utils/css'
+  import { customRef } from '@/utils/ref'
+  import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
   const props = defineProps<{
     as?: string | Component
@@ -15,8 +15,8 @@
   }>()
 
   const isVisible = ref(false)
-  const root = ref<HTMLElement | null>(null)
-  let observer: IntersectionObserver | null = null
+  const [root, setRef] = customRef<HTMLElement>()
+  let observer: IntersectionObserver | undefined
 
   const applyProps = computed(() => {
     if (!isVisible.value) return {}
@@ -25,7 +25,7 @@
   })
 
   const intersectionCallback: IntersectionObserverCallback = (entries) => {
-    entries.forEach((entry) => {
+    for (const entry of entries) {
       if (entry.isIntersecting) {
         isVisible.value = true
         props.change?.(true)
@@ -33,12 +33,13 @@
         isVisible.value = false
         props.change?.(false)
       }
-    })
+    }
   }
 
   onMounted(() => {
     observer = new IntersectionObserver(intersectionCallback, {
       rootMargin: addPX(props.offset || 0),
+      // eslint-disable-next-line unicorn/no-null
       root: props.parent ?? null,
       threshold: props.threshold
     })
@@ -50,15 +51,14 @@
 
   onBeforeUnmount(() => {
     observer?.disconnect()
-    observer = null
+    observer = undefined
   })
 
-  const setRef = fnRef(root)
   defineOptions({ name: 'MdViewObserver' })
 </script>
 
 <template>
-  <component :ref="setRef" :is="as || 'div'" v-bind="applyProps" observe>
+  <component :ref="setRef" :is="as ?? 'div'" v-bind="applyProps" observe>
     <slot />
   </component>
 </template>

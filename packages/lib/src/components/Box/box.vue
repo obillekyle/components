@@ -1,53 +1,14 @@
 <script setup lang="ts">
-  import type { BoxComponentProps } from './util'
+  import type { BoxProps } from './util'
   import { processBoxProps } from './util'
-  import { computed } from 'vue'
 
   defineOptions({ name: 'MdBox' })
-  const props = defineProps<BoxComponentProps>()
-  const style = computed(() => processBoxProps(props))
-  const mdBox = computed(() => (props.exclude ? null : props.bg ?? ''))
+  const props = defineProps<BoxProps>()
+  const className = processBoxProps(props)
 </script>
 
 <template>
-  <component :md-box="mdBox" :is="as ?? 'div'" :style>
+  <component :class="className" :is="as ?? 'div'" md-box>
     <slot />
   </component>
 </template>
-
-<style lang="scss">
-  [md-box] {
-    color: var(--color);
-    background: var(--bg);
-
-    > * {
-      --bg: unset;
-      --color: unset;
-    }
-
-    &[md-box='primary'] {
-      --bg: var(--primary);
-      --color: var(--on-primary);
-    }
-
-    &[md-box='secondary'] {
-      --bg: var(--secondary);
-      --color: var(--on-secondary);
-    }
-
-    &[md-box='error'] {
-      --bg: var(--error);
-      --color: var(--on-error);
-    }
-
-    &[md-box='mono'] {
-      --bg: var(--mono-10);
-      --color: var(--mono-80);
-    }
-
-    &[md-box='on-bg'] {
-      color: var(--bg);
-      background: var(--color);
-    }
-  }
-</style>

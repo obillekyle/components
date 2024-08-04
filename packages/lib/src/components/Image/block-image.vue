@@ -4,19 +4,19 @@
 
   import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
-  import CircularProgress from '../Progress/circular-progress.vue'
-  import { computed, onUnmounted, ref, watch, onMounted } from 'vue'
   import { Icon } from '@iconify/vue'
-  import { resolveImage } from './util'
+  import { onMounted, onUnmounted, ref, watch } from 'vue'
   import ViewObserver from '../Misc/view-observer.vue'
+  import CircularProgress from '../Progress/circular-progress.vue'
+  import { resolveImage } from './util'
 
-  interface BlockImageProps
+  interface BlockImageProperties
     extends BoxProps,
       /** @vue-ignore */ HTMLAttributes {
     src?: string | Blob
     alt?: string
-    fit?: 'contain' | 'cover'
-    position?: 'left' | 'center' | 'right'
+    fit?: 'contain' | 'cover' | 'fill'
+    position?: 'left' | 'center' | 'right' | 'top' | 'bottom'
     ratio?: number
     lazy?: boolean
     cover?: boolean
@@ -25,45 +25,43 @@
     span?: boolean
   }
 
-  const props = withDefaults(defineProps<BlockImageProps>(), {
-    size: 'md',
+  const props = withDefaults(defineProps<BlockImageProperties>(), {
     fit: 'cover',
     position: 'center',
-    cover: false,
-    r: 'sm'
+    cover: false
   })
 
   const progress = ref(0)
   const image = ref<string>()
   const error = ref(false)
   const visible = ref(false)
-  const boxProps = computed(() => getBoxProps(props))
+  const boxProps = getBoxProps(props)
 
   async function resolve() {
     error.value = false
-    let src = props.src
+    let source = props.src
 
     if (image.value) {
       URL.revokeObjectURL(image.value)
       image.value = undefined
     }
 
-    if (!src) {
+    if (!source) {
       error.value = true
       return
     }
 
-    src =
-      src instanceof Blob
-        ? URL.createObjectURL(src)
-        : src
-            .replace(/\[width\]/g, String(props.width))
-            .replace(/\[height\]/g, String(props.height))
+    source =
+      source instanceof Blob
+        ? URL.createObjectURL(source)
+        : source
+            .replaceAll('[width]', String(props.width))
+            .replaceAll('[height]', String(props.height))
 
     try {
-      const data = await resolveImage(src, (e) => (progress.value = e))
+      const data = await resolveImage(source, (e) => (progress.value = e))
       setTimeout(() => (image.value = URL.createObjectURL(data)), 200)
-    } catch (e) {
+    } catch {
       error.value = true
     }
   }
@@ -84,7 +82,6 @@
 
 <template>
   <ViewObserver
-    exclude
     :as="Box"
     :offset="50"
     v-bind="boxProps"
@@ -97,10 +94,10 @@
         <Icon
           icon="material-symbols:refresh"
           :width="24"
-          color="red"
           v-if="error"
           @click="resolve"
           style="cursor: pointer"
+          color="var(--error, red)"
         />
       </CircularProgress>
     </Box>
@@ -108,14 +105,23 @@
   </ViewObserver>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-block-image {
     position: relative;
     overflow: hidden;
     width: max-content;
     height: max-content;
+    border-radius: var(--sm);
     aspect-ratio: v-bind('props.ratio');
-    background-color: var(--mono-10);
+    background: var(--surface-container);
+
+    .md-fade-enter-active {
+      opacity: 1;
+    }
+
+    .md-fade-leave-active {
+      opacity: 0;
+    }
 
     img {
       display: block;
@@ -154,6 +160,8 @@
     }
 
     &.loaded {
+      background: none;
+
       .md-loader {
         opacity: 0;
         pointer-events: none;

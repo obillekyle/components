@@ -1,8 +1,8 @@
-import type { AppSizesString } from '@/utils/css'
+import type { SizeType } from '@/utils/css'
 
 export type TextProps = {
   color?: string
-  size?: AppSizesString
+  size?: SizeType
   weight?: number
   italic?: boolean
   spacing?: number

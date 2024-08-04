@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  import { getCSSValue, type AppSizesString } from '@/utils/css'
+  import { getCSSValue, type SizesString } from '@/utils/css'
 
-  interface DividerProps {
+  interface DividerProperties {
     label?: string
     direction?: 'x' | 'y'
-    size?: AppSizesString
-    margin?: AppSizesString
+    size?: SizesString
+    margin?: SizesString
   }
 
-  defineProps<DividerProps>()
+  defineProps<DividerProperties>()
   defineOptions({ name: 'MdDivider' })
 </script>
 
@@ -32,15 +32,15 @@
   .md-divider {
     place-self: center;
     display: block;
-    background-color: var(--mono-50-50);
+    background: var(--surface-container-highest);
 
-    .x {
+    &.x {
       height: 1px;
       width: var(--size);
       margin-block: var(--margin);
     }
 
-    .y {
+    &.y {
       width: 1px;
       height: var(--size);
       margin-inline: var(--margin);
@@ -69,7 +69,7 @@
       display: block;
       height: 1px;
       grid-area: line;
-      background-color: var(--primary-60-20);
+      background: var(--surface-container-highest);
     }
   }
 </style>

@@ -1,151 +1,80 @@
-import { Colors, isLight } from '@/utils/colors'
+import { ColorEngine, type ColorVariables } from '@/utils/color-engine'
+import { Colors, type ColorOptions } from '@/utils/colors'
 import {
-  type AppSizes,
-  type AppSizesPrefixes,
-  type AppSizesString,
+  DefaultSizes,
+  addPX,
   type ColorString,
-  type AppColorVariants,
-  type SizesString,
-  type AppColorString,
-  addPX
+  type SizeDict,
+  type SizeRecord,
+  type SizeType
 } from '@/utils/css'
+import { inject, shallowRef, type ShallowRef } from 'vue'
 
-export type SizesObject = { [key in AppSizes]: SizesString }
-export type AppSizesObject = { [key in AppSizesPrefixes]: SizesObject }
-export const AppShades = [
-  0, 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100
-] as const
-export type AppColorShades = (typeof AppShades)[number]
-
-export const DefaultSizes: AppSizesObject = {
-  padding: {
-    xxs: 4,
-    xs: 8,
-    sm: 12,
-    md: 16,
-    lg: 20,
-    xl: 24,
-    xxl: 28
-  },
-  component: {
-    xxs: 24,
-    xs: 32,
-    sm: 40,
-    md: 48,
-    lg: 56,
-    xl: 64,
-    xxl: 72
-  },
-  size: {
-    xxs: 24,
-    xs: 36,
-    sm: 48,
-    md: 60,
-    lg: 72,
-    xl: 84,
-    xxl: 96
-  },
-  font: {
-    xxs: 10,
-    xs: 12,
-    sm: 14,
-    md: 16,
-    lg: 18,
-    xl: 20,
-    xxl: 22
-  },
-  icon: {
-    xxs: 8,
-    xs: 12,
-    sm: 16,
-    md: 24,
-    lg: 28,
-    xl: 32,
-    xxl: 36
-  }
-}
-
-export function getShades(
-  color: string | String | Colors,
-  prefix: string,
-  theme: 'light' | 'dark'
-) {
-  const colors = Colors.from(color)
-  const isDark = theme == 'dark'
-  const values: Record<string, string> = {}
-
-  for (const shade of AppShades) {
-    const key = prefix + '-' + shade
-    const val = isDark ? shade : Math.abs(100 - shade)
-    values[key] = colors.shade(val)
-
-    for (let i = 0; i < 9; i++) {
-      const color = colors.shade(val, (i + 1) * 0.1)
-      values[key + '-' + (i + 1) * 10] = color
-    }
-  }
-
-  const main = colors.shade(50)
-  values[prefix] = main
-  values['on-' + prefix] = colors.shade(isLight(main) ? 5 : 95)
-
-  const container = colors.shade(isDark ? 90 : 80)
-  values[prefix + '-container'] = container
-  values['on-' + prefix + '-container'] = colors.shade(
-    isLight(container) ? 5 : 95
-  )
-
-  return values
-}
-
-export function getSizes(object: SizesObject, prefix: string) {
-  const obj: Record<string, string> = {}
+export function getSizes(object: SizeDict, prefix: string) {
+  const object_: Record<string, string> = {}
   const sizes = object as Record<string, number>
 
   for (const key in sizes) {
-    obj[prefix + '-' + key] = addPX(sizes[key])
+    object_[prefix + '-' + key] = addPX(sizes[key])
   }
 
-  return obj
+  return object_
 }
 
 export type ElementSizes = {
-  navbar: AppSizesString
-  header: AppSizesString
-  fab: AppSizesString
+  navbar: SizeType
+  header: SizeType
+  fab: SizeType
 }
 
 export const DefaultElementSizes: ElementSizes = {
-  navbar: 'xl',
-  header: 'md',
-  fab: 'md'
+  navbar: '#lg',
+  header: '#sm',
+  fab: '#xs'
 }
 
 export interface LayoutOther {
   [key: string]: any
 }
 
-export type LayoutOptions = {
+export type ThemeBase = {
   theme: 'light' | 'dark'
-  color: AppColorString
-  colors: { [key in AppColorVariants]: ColorString | Colors }
+  color: ColorString
   fontFamily: string
-  sizes: AppSizesObject
+  sizes: SizeRecord
   component: ElementSizes
   other: LayoutOther
 }
 
-export const DefaultLayoutOptions: LayoutOptions = {
+export type ThemeOptions = {
+  colors: string | Partial<ColorOptions<Colors | string>>
+} & ThemeBase
+
+export type ThemeObject = {
+  colors: ColorOptions<Colors> & { $vars: ColorVariables }
+} & ThemeBase
+
+export type ThemeProps = {
+  global?: boolean
+  options?: Partial<ThemeOptions>
+  inherit?: boolean
+  md3?: boolean
+}
+
+const color = new ColorEngine('#0df')
+
+export const DefaultThemeObject: ThemeObject = {
   theme: 'dark',
-  color: 'primary-99',
-  colors: {
-    primary: '#1a73e8',
-    secondary: '#ffbe0d',
-    error: '#f01c00',
-    mono: '#000000'
-  },
+  color: '#primary-99',
+  colors: Object.assign({}, color.colors, {
+    $vars: color.getColorVariables()
+  }),
   fontFamily: 'Roboto, sans-serif',
   sizes: DefaultSizes,
   component: DefaultElementSizes,
   other: {}
+}
+
+export function useTheme(): ShallowRef<ThemeObject> {
+  return inject('theme', shallowRef(DefaultThemeObject))
 }

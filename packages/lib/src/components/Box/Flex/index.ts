@@ -6,5 +6,7 @@ type FlexBoxComponent = typeof FlexBox & { Span: typeof FlexSpan }
 const Flex: FlexBoxComponent = FlexBox as FlexBoxComponent
 Flex.Span = FlexSpan
 
-export { FlexBox, FlexSpan }
 export default Flex
+
+export { default as FlexBox } from './flex-box.vue'
+export { default as FlexSpan } from './flex-span.vue'

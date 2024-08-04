@@ -1,20 +1,19 @@
 <script setup lang="ts">
   import type { BoxProps } from '@/components/Box/util'
-  import type { AppSizesString } from '@/utils/css'
+  import type { SizeType } from '@/utils/css'
   import type { HTMLAttributes } from 'vue'
-  import type { TextProps } from './util'
+  import type { TextProps as TextProperties } from './util'
 
-  import { getCSSValue } from '@/utils/css'
-  import { computed } from 'vue'
   import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
+  import { getCSSValue } from '@/utils/css'
 
-  interface Props
+  interface Properties
     extends BoxProps,
-      TextProps,
+      TextProperties,
       /** @vue-ignore */ HTMLAttributes {
     color?: string
-    size?: AppSizesString
+    size?: SizeType
     weight?: number
     italic?: boolean
     spacing?: number
@@ -25,8 +24,8 @@
   }
 
   defineOptions({ name: 'MdText' })
-  const props = defineProps<Props>()
-  const boxProps = computed(() => getBoxProps(props))
+  const props = defineProps<Properties>()
+  const boxProps = getBoxProps(props)
 </script>
 
 <template>

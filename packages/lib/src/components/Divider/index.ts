@@ -1,4 +1,2 @@
-import Divider from './divider.vue'
-import WavyDivider from './wavy-divider.vue'
-
-export { Divider, WavyDivider }
+export { default as Divider } from './divider.vue'
+export { default as WavyDivider } from './wavy-divider.vue'

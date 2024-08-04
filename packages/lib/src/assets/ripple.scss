@@ -3,13 +3,13 @@
   border-radius: 999px;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  opacity: 0.25;
+  opacity: 0.1;
   scale: 0.1;
   transform-origin: left top;
   background-image: radial-gradient(
       circle,
-      var(--mono-60) 0%,
-      var(--mono-60) 50%,
+      var(--inverse-surface) 0%,
+      var(--inverse-surface) 50%,
       #0000 60%,
       #0000 100%
     ),
@@ -32,10 +32,6 @@
   }
 
   @keyframes fade {
-    from {
-      opacity: 0.25;
-    }
-
     to {
       opacity: 0;
     }
@@ -43,7 +39,7 @@
 
   @keyframes rippled {
     to {
-      scale: 2.5;
+      scale: 3;
       background-size: 100%, 12px;
     }
   }

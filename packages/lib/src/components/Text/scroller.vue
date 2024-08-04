@@ -1,22 +1,21 @@
 <script setup lang="ts">
-  import { type HTMLAttributes } from 'vue'
   import { addPX, addUnit } from '@/utils/css'
-  import { onMounted, ref } from 'vue'
+  import { onMounted, ref, type HTMLAttributes } from 'vue'
   import ViewObserver from '../Misc/view-observer.vue'
 
-  interface ScrollerProps extends /* @vue-ignore */ HTMLAttributes {
+  interface ScrollerProperties extends /* @vue-ignore */ HTMLAttributes {
     speed?: number
     spacing?: number
     continuous?: boolean
   }
 
-  const props = withDefaults(defineProps<ScrollerProps>(), {
+  const properties = withDefaults(defineProps<ScrollerProperties>(), {
     speed: 24
   })
 
   const cloned = ref(false)
-  const wrapper = ref<HTMLDivElement | null>(null)
-  const content = ref<HTMLDivElement | null>(null)
+  const wrapper = ref<HTMLDivElement>()
+  const content = ref<HTMLDivElement>()
 
   function setScroll() {
     cloned.value = false
@@ -25,9 +24,9 @@
         const wRect = wrapper.value.getBoundingClientRect()
         const cRect = content.value.getBoundingClientRect()
 
-        const spacing = props.spacing ?? wRect.width / 2
+        const spacing = properties.spacing ?? wRect.width / 2
         cloned.value = wRect.width < content.value.offsetWidth
-        const speed = (cRect.width + spacing) / props.speed
+        const speed = (cRect.width + spacing) / properties.speed
         wrapper.value.style.setProperty('--spacing', addPX(spacing))
         wrapper.value.style.setProperty(
           '--speed',
