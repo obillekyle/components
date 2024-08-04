@@ -26,18 +26,19 @@ export const meta = {
 ### getUnique()
 
 > [!WARNING]
-> This method is unreliable for SSR and SSG environments.
+> This method is unreliable for SSR and SSG environments. 
 > Please use [`hashStr()`](/utils/string#hashstr) instead.
 
 <Preview>
   <CodeHighlight>
-    ```ts function getUnique(): number; function getUnique(prefix?: string):
-    string; ```
+    ```ts
+    function getUnique(): number;
+    function getUnique(prefix?: string): string;
+    ```
   </CodeHighlight>
 </Preview>
 
 **`getUnique()`**: string | number
-
 - Get a continuous incremental unique number
 - Parameters
   - `prefix?`: string
@@ -49,12 +50,13 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts function rand(min: number, max: number): number; ```
+    ```ts
+    function rand(min: number, max: number): number;
+    ```
   </CodeHighlight>
 </Preview>
 
 **`rand()`**: number
-
 - Returns a pseudorandom number
 - Parameters
   - `min`: number
@@ -68,13 +70,19 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts function mapNumberToRange( number: number, oldMin: number, oldMax:
-    number, newMin: number, newMax: number ): number; ```
+    ```ts
+    function mapNumberToRange(
+      number: number,
+      oldMin: number,
+      oldMax: number,
+      newMin: number,
+      newMax: number
+    ): number;
+    ```
   </CodeHighlight>
 </Preview>
 
 **`mapNumberToRange()`**: number
-
 - Maps a number from one range to another
 - Parameters
   - `number`: number
@@ -89,13 +97,13 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts function findNearestNumber(number: number, numbers: number[]):
-    number; ```
+    ```ts
+    function findNearestNumber(number: number, numbers: number[]): number;
+    ```
   </CodeHighlight>
 </Preview>
 
 **`findNearestNumber()`**: number
-
 - Finds the nearest number in an array
 - Parameters
   - `number`: number
@@ -107,13 +115,13 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts function clamp(number: number, min: number, max: number): number;
+    ```ts
+    function clamp(number: number, min: number, max: number): number;
     ```
   </CodeHighlight>
 </Preview>
 
 **`clamp()`**: number
-
 - Clamps a number between two values
 - Parameters
   - `number`: number
@@ -132,13 +140,12 @@ export const meta = {
     toFileSize.bits = (value: number) => toFileSize(value, 'bit')
     toFileSize.bytes = (value: number) => toFileSize(value, 'byte')
     ```
-
   </CodeHighlight>
 </Preview>
 
 **`toFileSize()`**: string
-
 - Convert a number to a file size
 - Parameters
   - `value`: number
   - `type`: 'bit' | 'byte'
+

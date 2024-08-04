@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { $, Button, Text } from '@vue-material/core'
   import animatedScrollTo from 'animated-scroll-to'
-  import { inject, ref, watch } from 'vue'
+  import { inject, onMounted, ref, watch } from 'vue'
   import { useRoute } from 'vue-router'
 
   const route = useRoute()
@@ -9,36 +9,38 @@
   const content = inject('content', ref<HTMLElement>())
   const headers = inject('headers', ref<HTMLElement[]>([]))
 
-  function scrollTo(header: HTMLElement) {
+  function scrollTo(header: HTMLElement, animate = true) {
+    if (!content.value) return
     const parent = content.value
-    if (!parent) return
+    const top = (header.offsetTop || 0) - 62
+    history.replaceState(true, '', `#${header.id}`)
 
-    animatedScrollTo(header, {
-      elementToScroll: parent
-    }).then(() => {
-      location.hash = header.id
-    })
-  }
-
-  watch(
-    () => route.hash,
-    () => {
-      if (route.hash.length > 1) {
-        const header = $(route.hash)
-        header && scrollTo(header)
-      }
+    if (animate) {
+      animatedScrollTo(top, {
+        elementToScroll: parent
+      })
+    } else {
+      parent.scrollTop = top
     }
-  )
+  }
 
   watch(headers, () => {
     if (route.hash.length > 1) {
-      const header = $(route.hash)
-      header && scrollTo(header)
+      setTimeout(() => {
+        const header = $(route.hash)
+        header && scrollTo(header)
+      }, 200)
     }
     if (headers.value.length > 0) {
       for (const head of headers.value) {
         head.addEventListener('click', () => scrollTo(head))
       }
+    }
+  })
+
+  onMounted(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
     }
   })
 </script>

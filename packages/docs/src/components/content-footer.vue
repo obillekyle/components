@@ -88,6 +88,7 @@
     display: flex;
     padding-block: var(--component-xl);
     user-select: none;
+    gap: var(--sm);
 
     &-btn {
       border-radius: var(--xs);

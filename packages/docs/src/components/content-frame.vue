@@ -13,6 +13,7 @@
   import {
     computed,
     defineAsyncComponent,
+    inject,
     onBeforeUnmount,
     onMounted,
     provide,
@@ -33,6 +34,8 @@
   const router = useRouter()
   const headers = ref<HTMLElement[]>([])
   const [content, setRef] = customRef<HTMLElement>()
+  const isDark = inject('is-dark', ref(false))
+  const inputColor = inject('input-color', ref<HTMLInputElement>())
 
   let timeout: any
   const error = ref(false)
@@ -116,8 +119,21 @@
           icon="material-symbols:menu"
           @click="sidebar = !sidebar"
         />
-        <Text class="content-title">{{ meta?.title }}</Text>
-        <IconButton mr="auto" icon="material-symbols:theme-light-dark" />
+        <Text class="content-title" mr="auto">{{ meta?.title }}</Text>
+        <IconButton
+          @click="isDark = !isDark"
+          :icon="
+            isDark
+              ? 'material-symbols:dark-mode-outline'
+              : 'material-symbols:light-mode-outline'
+          "
+        />
+        <IconButton
+          selected
+          variant="filled"
+          @click="inputColor?.click()"
+          icon="material-symbols:palette-outline"
+        />
       </Box>
       <ContentHeader :meta v-if="meta && !error" />
       <div class="content-inner marked-content">
@@ -148,7 +164,7 @@
       display: none;
       background: var(--surface);
       border-bottom: 1px solid var(--neutral-80);
-      height: var(--component-xl);
+      height: var(--header-size);
       padding-inline: var(--xs);
     }
 
@@ -268,6 +284,10 @@
     .content {
       grid-template-columns: auto;
 
+      > *::-webkit-scrollbar {
+        display: none;
+      }
+
       &-docs {
         position: absolute;
         left: 0;
@@ -287,6 +307,35 @@
       &-app-bar {
         display: flex;
         align-items: center;
+      }
+
+      &-inner,
+      &-header {
+        padding-inline: 0;
+
+        > * {
+          margin-inline: var(--md) !important;
+          max-width: calc(100% - 2 * var(--md)) !important;
+        }
+      }
+
+      &-inner {
+        > h1,
+        > h2,
+        > h3 {
+          position: sticky;
+          z-index: 2;
+          max-width: 100% !important;
+          margin-inline: 0 !important;
+          padding-inline: var(--md);
+          background: var(--surface);
+          top: calc(var(--header-size) - 2px);
+
+          &::before {
+            width: 1.5ch !important;
+            color: var(--primary);
+          }
+        }
       }
 
       &-docs {

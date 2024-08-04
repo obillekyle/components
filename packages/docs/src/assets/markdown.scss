@@ -54,6 +54,12 @@
     }
   }
 
+  h3 {
+    &:not(.preview *) {
+      box-shadow: 0 0 0 var(--xs) var(--surface);
+    }
+  }
+
   a:not(.preview *) {
     color: var(--primary);
     text-decoration: underline;
@@ -68,8 +74,9 @@
   }
 
   ul:not(.preview *) {
+    padding-left: 1.2em;
+
     &:not(:has(ul)) {
-      padding-left: 1.2em;
       padding-bottom: 1em;
     }
 
@@ -85,6 +92,19 @@
 
     &:has(> strong > code) {
       margin-bottom: 0.25em;
+    }
+  }
+
+  p,
+  h3 {
+    &:not(.preview *) {
+      + ul {
+        margin-top: -0.25em;
+      }
+
+      &:has(> strong > code, > code) {
+        margin-bottom: 0.25em;
+      }
     }
   }
 

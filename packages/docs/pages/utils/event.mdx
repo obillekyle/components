@@ -40,20 +40,21 @@ export const meta = {
     const eventCb: (arg1: string, arg2: number) => console.log(arg1, arg2);
     myClass.addEventListener('event-name', eventCb);
     myClass.set('value');
-
+    
     myClass.removeEventListener('event-name', eventCb);
     ```
-
   </CodeHighlight>
 </Preview>
 
-## Import
+## Import 
 
 <Preview>
   <CodeHighlight>
-    ```ts import {CustomEventHandler} from '@vue-material/core' import{' '}
-    {CustomEventHandler} from '@vue-material/core/utils' import{' '}
-    {CustomEventHandler} from '@vue-material/core/utils/event' ```
+    ```ts
+    import { CustomEventHandler } from '@vue-material/core'
+    import { CustomEventHandler } from '@vue-material/core/utils'
+    import { CustomEventHandler } from '@vue-material/core/utils/event'
+    ```
   </CodeHighlight>
 </Preview>
 
@@ -61,27 +62,26 @@ export const meta = {
 
 > [!WARNING]
 > This is incompatible with existing dom event implementations.
-> You must not extend your class with `CustomEventHandler` if it already
+> You must not extend your class with `CustomEventHandler` if it already 
 > extends another class with built in dom event implementations.
->
 > <Preview>
 >   <CodeHighlight>
->     ```ts // Don't do this class MyClass extends CustomEventHandler,
->     HTMLElement{' '}
->     {
+>     ```ts
+>     // Don't do this
+>     class MyClass extends CustomEventHandler, HTMLElement {
 >       // ...my code
 >     }
 >     ```
->   </CodeHighlight>
+>    </CodeHighlight>
 >   <CodeHighlight>
->     ```ts // Do this if you're creating a custom html element class
->     MyClass extends HTMLElement{' '}
->     {
+>     ```ts
+>     // Do this if you're creating a custom html element
+>     class MyClass extends HTMLElement {
 >       // ...my code
 >     }
 >     ```
->   </CodeHighlight>
-> </Preview>
+>    </CodeHighlight>
+>  </Preview>
 
 ## API
 
@@ -103,14 +103,12 @@ export const meta = {
       detach = this.removeEventListener
     }
     ```
-
   </CodeHighlight>
 </Preview>
 
 ### Properties and Methods
 
 **`addEventListener()`**: void
-
 - Registers a new event listener
 - Parameters
   - `type`: string
@@ -121,7 +119,6 @@ export const meta = {
   - `attach`
 
 **`dispatchEvent()`**: void
-
 - Dispatches an event
 - Parameters
   - `event`: string
@@ -130,7 +127,6 @@ export const meta = {
   - `emit`
 
 **`removeEventListener()`**: void
-
 - Removes an event listener
 - Parameters
   - `type`: string
@@ -139,5 +135,4 @@ export const meta = {
   - `detach`
 
 **`removeAllEvents()`**: void
-
 - Removes all event listeners
