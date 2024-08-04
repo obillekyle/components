@@ -1,6 +1,3 @@
-import { evaluate } from './object'
-import type { TemplateString } from './types'
-
 export function escapeHtml(unsafeText: string): string {
   const map: Record<string, string> = {
     '&': '&amp;',
@@ -10,7 +7,7 @@ export function escapeHtml(unsafeText: string): string {
     "'": '&#39;'
   }
 
-  return unsafeText.replace(/[&<>"']/g, (match) => map[match])
+  return unsafeText.replaceAll(/["&'<>]/g, (match) => map[match])
 }
 
 export function unescapeHtml(unsafeText: string): string {
@@ -23,7 +20,7 @@ export function unescapeHtml(unsafeText: string): string {
   }
 
   const regex = new RegExp(`(${Object.keys(map).join('|')})`, 'g')
-  return unsafeText.replace(regex, (match) => map[match])
+  return unsafeText.replaceAll(regex, (match) => map[match])
 }
 
 export function insertAt(text: string, index: number, value: string) {
@@ -38,34 +35,34 @@ export function replaceRange(
   return text.slice(0, start) + value + text.slice(end)
 }
 
-export function reverseString(str: string) {
-  return str.split('').reverse().join('')
+export function reverseString(string: string) {
+  return [...string].reverse().join('')
 }
 
-export function fixLineBreaks(str: string) {
-  if (str === '' || str === '\n') return ''
+export function fixLineBreaks(string_: string) {
+  if (string_ === '' || string_ === '\n') return ''
   let text = ''
   let skip = true
 
-  str = str.endsWith('\n') ? str.slice(0, -1) : str
-  const arr = str.split('\n') as string[]
+  string_ = string_.endsWith('\n') ? string_.slice(0, -1) : string_
+  const array = string_.split('\n') as string[]
 
-  for (let i = 0; i < arr.length; i++) {
-    const line = arr[i].replace('\r', '')
-    if (i == 0 && line == '') {
+  for (let index = 0; index < array.length; index++) {
+    const line = array[index].replace('\r', '')
+    if (index == 0 && line == '') {
       text += '\n'
       continue
-    } else if (arr[i - 1] == '' && line == '' && skip) {
+    } else if (array[index - 1] == '' && line == '' && skip) {
       text += ''
       skip = false
       continue
-    } else if (line == '' && i !== arr.length - 1) {
+    } else if (line == '' && index !== array.length - 1) {
       text += '\n'
       skip = true
       continue
-    } else if (line == '' && i === arr.length - 1) {
+    } else if (line == '' && index === array.length - 1) {
       continue
-    } else if (i == arr.length - 1) {
+    } else if (index == array.length - 1) {
       text += line
       skip = false
       break
@@ -78,17 +75,41 @@ export function fixLineBreaks(str: string) {
   return text
 }
 
-export function hashStr(str: string, limit?: number) {
+export function hashStr(string_: string, limit?: number) {
   let hash = 5381
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash * 33) ^ str.charCodeAt(i)
+  for (let index = 0; index < string_.length; index++) {
+    hash = (hash * 33) ^ (string_.codePointAt(index) ?? 0)
   }
   return (hash >>> 0).toString(16).slice(0, limit)
 }
 
+export function toKebabCase(string_: string) {
+  return string_
+    .replaceAll(/([\da-z])([A-Z])/g, '$1-$2')
+    .replaceAll(/\s+/g, '-')
+    .toLowerCase()
+}
+
+export function toCamelCase(string_: string) {
+  return string_
+    .replaceAll(/-([a-z])/g, (match) => match[1].toUpperCase())
+    .replaceAll(/\s+/g, '')
+}
+
+export function toPascalCase(str: string) {
+  if (str.includes('-')) {
+    return str
+      .split('-')
+      .map((word) => word[0].toUpperCase() + word.slice(1))
+      .join('')
+  }
+
+  return str[0].toUpperCase() + str.slice(1)
+}
+
 export class MutableString extends String {
-  constructor(str: string) {
-    super(str)
+  constructor(string_: string) {
+    super(string_)
   }
 
   fixLineBreaks() {
@@ -116,16 +137,27 @@ export class MutableString extends String {
   unescape() {
     return new MutableString(unescapeHtml(this.toString()))
   }
+
+  toKebabCase() {
+    return new MutableString(toKebabCase(this.toString()))
+  }
+
+  toCamelCase() {
+    return new MutableString(toCamelCase(this.toString()))
+  }
+
+  toPascalCase() {
+    return new MutableString(toPascalCase(this.toString()))
+  }
 }
 
-function toRegularString(parts: TemplateString[0], ...args: any[]): string {
-  return parts.reduce(
-    (result, part, i) =>
-      result + part + (args[i] ? String(evaluate(args[i])) : ''),
-    ''
+type TemplateString = { raw: readonly string[] | ArrayLike<string> }
+
+export const mt = (
+  template: TemplateString | string,
+  ...args: unknown[]
+) => {
+  return new MutableString(
+    typeof template === 'string' ? template : String.raw(template, ...args)
   )
-}
-
-export const mt = (...args: TemplateString | [string]) => {
-  return new MutableString(toRegularString(args))
 }
