@@ -34,7 +34,16 @@ export function getHelperFileContent(css: string, prefix: string) {
         
         style.id = '${prefix}-' + hash;
         style.textContent = css;
-        document.head.contains(style) || document.head.appendChild(style);
+
+        const head = document.head;
+        const styleTags = head.querySelectorAll('style[id^=${prefix}-]');
+
+        if (styleTags.length > 0) {
+          const lastStyleTag = styleTags[styleTags.length - 1];
+          lastStyleTag.insertAdjacentElement('afterend', style);
+        } else {
+          head.prepend(style);
+        }
       }
     }
   `
