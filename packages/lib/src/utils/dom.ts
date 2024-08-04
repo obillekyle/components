@@ -1,5 +1,6 @@
-import { addPX } from './css'
+/* eslint-disable unicorn/no-null */
 import '@/assets/ripple.scss'
+import { addPX } from './css'
 
 export function $<T extends Element = HTMLElement>(
   selector: string,
@@ -30,44 +31,6 @@ export function onSelfEvent<T extends Event>(
   if (target === currentTarget) handler(event)
 }
 
-export type BoxDimensions = {
-  height: number
-  width: number
-}
-let cdtID: ReturnType<typeof setTimeout> | null = null
-export function charDimensions(
-  parent?: HTMLElement,
-  text = 'A'
-): BoxDimensions {
-  parent ??= document.body
-  let span: HTMLSpanElement | null = $('span.char-dimensions', parent)
-
-  if (!span) {
-    span = document.createElement('span')
-    span.style.position = 'fixed'
-    span.style.whiteSpace = 'pre'
-    span.style.visibility = 'hidden'
-    span.style.pointerEvents = 'none'
-    span.style.opacity = '0'
-    span.className = 'char-dimensions'
-    parent.appendChild(span)
-  }
-
-  span.textContent = text
-
-  const rect = span.getBoundingClientRect()
-  const width = Number(rect.width.toFixed(2))
-  const height = Number(rect.height.toFixed(2))
-
-  if (cdtID) {
-    clearTimeout(cdtID)
-    cdtID = null
-  }
-
-  cdtID = setTimeout(() => span && span.remove(), 50)
-  return { width, height }
-}
-
 export async function openFilePickerAsync(): Promise<File | null>
 export async function openFilePickerAsync(options: {
   accept?: string
@@ -85,14 +48,14 @@ export async function openFilePickerAsync(
   input.multiple = options.multiple ?? false
 
   return new Promise<File | File[] | null>((resolve) => {
-    input.onchange = function () {
+    input.addEventListener('change', function () {
       resolve(
         options.multiple
           ? [...(input.files || [])]
           : input.files?.[0] || null
       )
       this.removeEventListener('change', input.onchange!)
-    }
+    })
     input.click()
   })
 }
@@ -139,7 +102,7 @@ export function rippleEffect(e: PointerEvent, to?: string) {
   document.addEventListener('pointerup', removeRipple)
   document.addEventListener('pointercancel', removeRipple)
 
-  element.appendChild(ripple)
+  element.append(ripple)
 }
 
 export function keyboardClick(event: KeyboardEvent) {
@@ -160,7 +123,7 @@ export function getClientPos(event: TouchEvent | MouseEvent) {
 }
 
 export function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+  return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
     navigator.userAgent
   )
 }

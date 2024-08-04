@@ -37,7 +37,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "bun run build"
+        "prepareCmd": "npm run build"
       }
     ],
     [

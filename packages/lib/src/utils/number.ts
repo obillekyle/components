@@ -33,25 +33,25 @@ export function mapNumberToRange(
 }
 
 export function findNearestNumber(
-  target: number,
-  numberSet: number[]
-): number | null {
-  let nearestNumber: number | null = null
+  number: number,
+  numbers: number[]
+): number | undefined {
+  let nearestNumber: number | undefined
   let minDifference: number = Number.POSITIVE_INFINITY
 
-  for (const num of numberSet) {
-    const difference = Math.abs(target - num)
+  for (const number_ of numbers) {
+    const difference = Math.abs(number - number_)
     if (difference < minDifference) {
       minDifference = difference
-      nearestNumber = num
+      nearestNumber = number_
     }
   }
 
   return nearestNumber
 }
 
-export function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value))
+export function clamp(number: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, number))
 }
 
 /** @deprecated */
@@ -67,10 +67,11 @@ export function toFileSize(value: number, type: 'bit' | 'byte'): string {
     unitIndex++
   }
 
-  const unit =
-    type == 'byte' ? units[unitIndex].toUpperCase() : units[unitIndex]
-  return `${value.toFixed(0)} ${unit}`
+  const unit = units[unitIndex]
+  const suffix = type == 'byte' ? unit.toUpperCase() : unit
+
+  return `${value.toFixed(0)} ${suffix}`
 }
 
-toFileSize.bytes = (value: number) => toFileSize(value, 'byte')
 toFileSize.bits = (value: number) => toFileSize(value, 'bit')
+toFileSize.bytes = (value: number) => toFileSize(value, 'byte')

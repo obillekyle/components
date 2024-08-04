@@ -1,10 +1,9 @@
-import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import VueDevTools from 'vite-plugin-vue-devtools'
-import dts from 'vite-plugin-dts'
 import path from 'node:path'
+import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
+import VueDevTools from 'vite-plugin-vue-devtools'
 import { attachStyles, resolver } from './plugins'
-import { version } from './package.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,22 +23,25 @@ export default defineConfig({
       transform: resolver()
     })
   ],
-  esbuild: {
-    banner: `// v${version}`
-  },
   build: {
-    minify: true,
+    minify: false,
     copyPublicDir: false,
     cssCodeSplit: true,
     lib: {
       formats: ['es'],
-      entry: path.resolve(__dirname, 'src/index.ts'),
+      entry: path.resolve(import.meta.dirname, 'src/index.ts'),
       fileName: '[name]'
     },
     rollupOptions: {
       treeshake: false,
       preserveEntrySignatures: 'strict',
-      external: ['vue', 'color2k', '@iconify/vue', 'deepmerge'],
+      external: [
+        'vue',
+        'color2k',
+        '@iconify/vue',
+        'bezier-easing',
+        'deepmerge'
+      ],
       output: {
         preserveModules: true,
         entryFileNames: '[name].js',
@@ -49,14 +51,15 @@ export default defineConfig({
           vue: 'Vue',
           color2k: 'color2k',
           deepmerge: 'deepmerge',
-          '@iconify/vue': 'Iconify'
+          '@iconify/vue': 'Iconify',
+          'bezier-easing': 'bezierEasing'
         }
       }
     }
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src')
+      '@': path.resolve(import.meta.dirname, 'src')
     }
   }
 })
