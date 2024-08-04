@@ -28,8 +28,14 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ## Screenshots
 
-![Components in Light Mode](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview-light.png)
-![Components in Dark Mode](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview-dark.png)
+![Preview](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview.png)
+
+## Docs
+
+- [**Home**](https://vue-mdc.okyle.xyz)
+- [**Getting Started**](https://vue-mdc.okyle.xyz/docs/getting-started)
+- [**Components**](https://vue-mdc.okyle.xyz/core)
+- [**Utils**](https://vue-mdc.okyle.xyz/utils)
 
 ## Install
 
@@ -65,7 +71,3 @@ bun install @vue-material/core @iconify/vue
 - [Slider](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Slider)
 - [Switch](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Switch)
 - [Text](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Text)
-
-## Docs
-
-- None

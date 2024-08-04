@@ -71,8 +71,7 @@
       <Switch variant="filled" default-checked />
     </div>
 
-    <MdBox class="primary" p="100">Box</MdBox>
-    <Text color="red" as="h1">Hello</Text>
+    <Text color="$primary" as="h1">Hello</Text>
 
     <div class="flex">
       <SquareImage
@@ -96,15 +95,6 @@
         src="https://picsum.photos/[size]?random=4"
       />
     </div>
-
-    <BlockImage
-      :b-radius="4"
-      alt="random image"
-      src="https://picsum.photos/[width]/[height]?random=4"
-      :width="400"
-      :height="300"
-      :ratio="4 / 3"
-    />
 
     <Slider show-value :values="[5, 15, 30, 60]" />
 
@@ -154,11 +144,20 @@
       <ColorBlock color="$secondary-99" />
       <ColorBlock color="$secondary-100" />
     </Box.Flex>
+
+    <BlockImage
+      :b-radius="4"
+      alt="random image"
+      src="https://picsum.photos/[width]/[height]?random=4"
+      :width="400"
+      :height="300"
+      :ratio="4 / 3"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { default as Box, default as MdBox } from '@/components/Box'
+  import { default as Box } from '@/components/Box'
   import Button from '@/components/Button'
   import Chip from '@/components/Chip'
   import WavyDivider from '@/components/Divider/wavy-divider.vue'

@@ -2,15 +2,15 @@
   import type { BoxProps } from '@/components/Box/util'
   import type { SizeType } from '@/utils/css'
   import type { HTMLAttributes } from 'vue'
-  import type { TextProps as TextProperties } from './util'
+  import type { TextProps as SharedTextProps } from './util'
 
   import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
-  import { getCSSValue } from '@/utils/css'
+  import { getCSSColor, getCSSValue } from '@/utils/css'
 
-  interface Properties
+  interface TextProps
     extends BoxProps,
-      TextProperties,
+      SharedTextProps,
       /** @vue-ignore */ HTMLAttributes {
     color?: string
     size?: SizeType
@@ -24,7 +24,7 @@
   }
 
   defineOptions({ name: 'MdText' })
-  const props = defineProps<Properties>()
+  const props = defineProps<TextProps>()
   const boxProps = getBoxProps(props)
 </script>
 
@@ -35,13 +35,13 @@
     v-bind="boxProps"
     :as="props.as || 'p'"
     :style="{
-      color,
       textAlign,
       lineHeight,
       fontWeight: weight,
       textWrap: wrap ?? null,
       fontStyle: italic ? 'italic' : null,
       fontSize: getCSSValue(size, 'px', 'font'),
+      color: getCSSColor(color ?? 'currentColor'),
       letterSpacing: getCSSValue(spacing, 'px', 'padding'),
       '--lines': lines || 'none'
     }"

@@ -25,13 +25,22 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ## Screenshots
 
-![Components in Light Mode](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview-light.png)
-![Components in Dark Mode](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview-dark.png)
+![Preview](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview.png)
+
+## Docs
+
+Still incomplete
+
+- [**Home**](https://vue-mdc.okyle.xyz)
+- [**Getting Started**](https://vue-mdc.okyle.xyz/docs/getting-started)
+- [**Components**](https://vue-mdc.okyle.xyz/core)
+- [**Utils**](https://vue-mdc.okyle.xyz/utils)
 
 ## Packages
 
 - [Main Library](https://github.com/obillekyle/components/tree/main/packages/lib)
 - [Documentation](https://github.com/obillekyle/components/tree/main/packages/docs)
+
 
 ## Get Started
 
