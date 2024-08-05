@@ -16,6 +16,8 @@
 <style lang="scss">
   .content-loader {
     display: flex;
+    position: absolute;
+    inset: 0;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -25,7 +27,7 @@
     &-too-long {
       opacity: 0;
       color: var(--outline);
-      animation: text-fade 0s forwards ease-out;
+      animation: text-fade 4s forwards ease-out;
       text-wrap: balance;
       text-align: center;
 
