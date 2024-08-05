@@ -56,7 +56,7 @@
   <GlobalFooter max-width="1000px" />
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .container {
     width: 100%;
     max-width: 1000px;
@@ -98,6 +98,11 @@
       &-logo {
         margin-inline: auto;
         margin-bottom: var(--lg);
+
+        image,
+        path {
+          animation-play-state: paused !important;
+        }
       }
 
       &-content {

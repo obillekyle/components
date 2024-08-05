@@ -124,7 +124,7 @@
         <div class="content-inner marked-content">
           <loadComponent />
         </div>
-        <ContentFooter v-if="headers.length > 0" />
+        <ContentFooter v-if="ready" />
       </div>
 
       <ContentError v-if="error" />
