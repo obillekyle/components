@@ -6,6 +6,9 @@
   ],
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-angular": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/prompt-cli": "^19.3.1",
     "@rushstack/eslint-patch": "^1.10.3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^6.0.3",
@@ -16,6 +19,7 @@
     "@types/node": "^20.14.12",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
+    "commitizen": "^4.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-unicorn": "^54.0.0",
     "eslint-plugin-vue": "^9.27.0",
@@ -45,11 +49,7 @@
     "build:lib": "bun run --filter @vue-material/core build",
     "check": "run-s check:format check:stylelint check:eslint build",
     "format": "run-s format:prettier format:eslint format:stylelint",
-    "commit": "commit",
+    "commit": "cz",
     "build": "run-s build:lib"
-  },
-  "dependencies": {
-    "@commitlint/config-angular": "^19.3.0",
-    "@commitlint/prompt-cli": "^19.3.1"
   }
 }
