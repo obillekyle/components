@@ -4,9 +4,8 @@
   import type { HTMLAttributes } from 'vue'
   import type { ThemeProps } from './util'
 
-  import { interval, removeInterval } from '@/utils/performance'
   import { hashStr } from '@/utils/string'
-  import { computed, onMounted, onUnmounted, provide, ref } from 'vue'
+  import { computed, provide, ref } from 'vue'
 
   import ScrollContainer from './scroll-container.vue'
   import ThemeProvider from './theme-provider.vue'
@@ -23,8 +22,6 @@
     return 'layout-' + hashStr(object, 6)
   })
 
-  const rotate = ref(0)
-  let intervalKey: number
   const contentScrollTop = ref(0)
   const headerTitle = ref('')
 
@@ -32,20 +29,9 @@
     name: 'MdLayout'
   })
 
-  function rotater() {
-    intervalKey = interval(
-      () => (rotate.value = (rotate.value + 0.5) % 360),
-      { time: 1000 / 24 }
-    )
-  }
-
   provide('layout-id', name)
   provide('content-scroll-top', contentScrollTop)
   provide('header-title', headerTitle)
-  provide('rotate', rotate)
-
-  onMounted(() => rotater())
-  onUnmounted(() => removeInterval(intervalKey))
 </script>
 
 <template>

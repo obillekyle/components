@@ -73,13 +73,6 @@
     }
   }
 
-  watch(rotate, () => {
-    if (!visible.value) return
-    if (root.value && props.frame == 'circle') {
-      root.value.style.setProperty('--rotate', addUnit(rotate.value, 'deg'))
-    }
-  })
-
   watch(visible, (v) => {
     if (!props.lazy) return
     if (v && !progress.value && !image.value && !error.value) {
@@ -260,16 +253,26 @@
 
     &.circle.visible .md-image {
       image {
-        rotate: calc(var(--rotate) * -1);
+        animation: rotate-image 30s linear infinite reverse;
       }
 
       path {
-        rotate: var(--rotate);
+        animation: rotate-image 30s linear infinite;
       }
 
       path,
       image {
         transform-origin: center center;
+      }
+    }
+
+    @keyframes rotate-image {
+      from {
+        rotate: 0;
+      }
+
+      to {
+        rotate: 360deg;
       }
     }
   }
