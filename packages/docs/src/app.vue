@@ -6,7 +6,7 @@
 
   import Navigation from '@vue-material/core/Navigation'
 
-  import { computed, provide, ref } from 'vue'
+  import { computed, onMounted, provide, ref } from 'vue'
   import { RouterView, useRoute, useRouter } from 'vue-router'
 
   const route = useRoute()
@@ -33,14 +33,16 @@
    * while `packages/lib` uses root node_modules
    * because of that, types won't match
    */
-  const color = useLocalStorage('theme-color', '#00ddff')
+  const color = useLocalStorage('theme-color', '#44BD87')
   const isDark = useLocalStorage('is-dark', true)
+  const version = useLocalStorage('version', 'unknown')
   const inputColor = ref<HTMLInputElement>()
 
   const hoverPage = ref<string>()
   provide('hover-page', hoverPage)
   provide('is-dark', isDark)
   provide('input-color', inputColor)
+  provide('version', version)
 
   const page = computed(() => {
     const [, page] = route.path.split('/')
@@ -50,6 +52,12 @@
   const tab = computed(() =>
     Object.keys(pages).indexOf(page.value || 'home')
   )
+
+  onMounted(async () => {
+    const req = await fetch('https://registry.npmjs.org/@vue-material/core')
+    const json = await req.json()
+    version.value = json['dist-tags'].latest
+  })
 </script>
 
 <template>
@@ -64,10 +72,13 @@
   >
     <template #navbar>
       <Navigation :active="tab">
-        <template :key v-for="({ name, icon, active }, key) in pages">
+        <template
+          :key
+          v-for="({ name, icon, active, pages }, key) in pages"
+        >
           <Navigation.Item
             v-if="key == 'home'"
-            :icon="page === key ? (active ?? icon) : icon"
+            :icon="page == '' ? (active ?? icon) : icon"
             @click="router.push('/')"
           >
             {{ name }}
@@ -77,11 +88,7 @@
             v-else
             :icon="page === key ? (active ?? icon) : icon"
             @click="router.push('/' + key)"
-            @mouseenter="
-              () => {
-                if (route.path != '/') hoverPage = key
-              }
-            "
+            @mouseenter="pages && (hoverPage = key)"
           >
             {{ name }}
           </Navigation.Item>

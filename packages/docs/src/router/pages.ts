@@ -145,6 +145,10 @@ const pages: Record<string, Page> = {
     icon: 'mdi:pencil-ruler-outline',
     active: 'mdi:pencil-ruler',
     pages: utilsPages
+  },
+  search: {
+    name: 'Search',
+    icon: 'material-symbols:search'
   }
 }
 
