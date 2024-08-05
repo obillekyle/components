@@ -61,7 +61,7 @@
 
     try {
       const data = await resolveImage(source, (e) => (progress.value = e))
-      setTimeout(() => (image.value = URL.createObjectURL(data)), 200)
+      image.value = URL.createObjectURL(data)
     } catch {
       error.value = true
     }
@@ -91,7 +91,7 @@
     :class="{ loaded: image, 'image-error': error, span }"
   >
     <Box class="md-loader">
-      <CircularProgress :value="error ? 0 : progress" rotate>
+      <CircularProgress :value="error ? 0 : progress" :rotate="!image">
         <Icon
           icon="material-symbols:refresh"
           :width="24"

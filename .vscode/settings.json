@@ -20,6 +20,5 @@
     "comments": "",
     "textMateRules": []
   },
-  "explorer.excludeGitIgnore": true,
-  "autoHide.autoHidePanel": false
+  "explorer.excludeGitIgnore": true
 }

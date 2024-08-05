@@ -19,18 +19,20 @@
     src?: string | Blob
     size?: number | string
     frame?: 'default' | 'clover' | 'circle' | 'hexagon'
-    radius?: SizesString
     lazy?: boolean
   }
 
   const props = withDefaults(defineProps<SquareImageProps>(), {
     frame: 'default',
-    radius: '#xs',
     size: 96
   })
 
-  const [root, setRef] = customRef<HTMLElement>()
-  const rotate = inject('rotate', ref(0))
+  const boxProps = getBoxProps(props, {
+    width: props.size,
+    height: props.size,
+    r: '#xs'
+  })
+
   const progress = ref(0)
   const image = ref<string>()
   const error = ref(false)
@@ -64,9 +66,7 @@
         (value) => (progress.value = value)
       )
 
-      setTimeout(() => {
-        image.value = URL.createObjectURL(data)
-      }, 200)
+      image.value = URL.createObjectURL(data)
     } catch (error_) {
       console.warn(error_)
       error.value = true
@@ -83,28 +83,21 @@
   watch(() => props.src, resolve)
   onMounted(() => !props.lazy && resolve())
   onUnmounted(() => clean(image.value))
-  const boxProps = getBoxProps(props)
 </script>
 
 <template>
   <ViewObserver
     :as="Box"
     :offset="50"
-    :ref="setRef"
     apply="visible"
     v-bind="boxProps"
     v-model="visible"
     class="md-square-image"
     :class="{ loaded: image, [frame]: true, error }"
     :title="as<string>($attrs['alt'])"
-    :style="{
-      width: addUnit(size),
-      height: addUnit(size),
-      '--radius': getCSSValue(radius)
-    }"
   >
     <div class="md-loader">
-      <CircularProgress :size="size" :value="error ? 0 : progress" rotate>
+      <CircularProgress :value="error ? 0 : progress" :rotate="!image">
         <Icon
           icon="material-symbols:refresh"
           :width="24"
@@ -122,9 +115,7 @@
       :width="size"
       :height="size"
       :class="{ hidden: frame !== 'default' }"
-      :style="{
-        objectFit: 'cover'
-      }"
+      :style="{ objectFit: 'cover' }"
     />
 
     <svg
@@ -177,7 +168,7 @@
   </ViewObserver>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-square-image {
     position: relative;
     display: inline-flex;
@@ -191,7 +182,6 @@
     align-items: center;
 
     &.default {
-      border-radius: var(--radius);
       background: var(--surface-container);
     }
 

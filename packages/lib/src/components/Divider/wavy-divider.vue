@@ -49,7 +49,7 @@
   </Box>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-wavy-divider {
     width: 100%;
     color: var(--surface-container-highest);
