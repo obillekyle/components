@@ -5,6 +5,7 @@ export type MetaOptions = {
   title?: string
   description?: string
   source?: string
+  hide?: boolean
   inherits?: string[]
 }
 
@@ -52,7 +53,7 @@ export function scrollToHash(parent: HTMLElement, hash: string) {
   if (hash.length > 1) {
     const element = $(hash)
     if (element) {
-      scrollTo(parent, element, 62)
+      scrollTo(parent, element, -2)
       history.pushState(true, '', hash)
     }
   }

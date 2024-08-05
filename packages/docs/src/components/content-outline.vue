@@ -41,7 +41,7 @@
         else if (link.pathname === location.pathname) {
           scrollToHash(parent, link.hash)
         } else {
-          router.push(link.href + link.hash)
+          router.push(link.pathname + link.hash)
         }
       }
     })

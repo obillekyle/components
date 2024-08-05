@@ -86,6 +86,7 @@
 <style lang="scss">
   .content-footer {
     display: flex;
+    margin-top: auto;
     padding-block: var(--component-xl);
     user-select: none;
     gap: var(--sm);

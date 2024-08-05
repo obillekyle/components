@@ -4,6 +4,11 @@ import CodeHighlight from '@/helper/code-highlight.vue'
 import { Chip } from '@vue-material/core'
 import InstallOptions from './install-options.vue'
 
+export const meta = {
+  title: 'Getting Started',
+  hide: true
+}
+
 ## Some things to consider
 
 > [!WARNING]
@@ -39,11 +44,12 @@ You can look for icons at the [Iconify](https://icon-sets.iconify.design) websit
 
 ---
 
-### Wrap your app with the Layout component
+### Wrap your app with the ThemeProvider component
 
 Some components can be standalone, but to make sure that components work
-correctly, we recommend you to wrap your entire app with the [Layout](/core/Layout) component.
-This allows the components styling be consistent across your entire application
+correctly, we recommend you to wrap your entire app with the 
+[ThemeProvider](/core/theme-provider) component. This allows the components 
+styling be consistent across your entire application
 
 <Preview>
   <CodeHighlight>
@@ -51,15 +57,15 @@ This allows the components styling be consistent across your entire application
     ./src/app.vue
 
     <script setup lang="ts">
-      import { Layout } from '@vue-material/core'
+      import { ThemeProvider } from '@vue-material/core'
     </script>
 
     <template>
-      <Layout :options="{ <layout options> }">
+      <ThemeProvider :options="{ <layout options> }">
         <!--
           My Application
         -->
-      </Layout>
+      </ThemeProvider>
     </template>
     ```
 
@@ -67,4 +73,4 @@ This allows the components styling be consistent across your entire application
 </Preview>
 
 You can configure the theme of your application via the `options` prop.
-Check of [Layout Docs](/core/Layout) for available options
+Check of [ThemeProvider Docs](/core/theme-provider#props) for available options

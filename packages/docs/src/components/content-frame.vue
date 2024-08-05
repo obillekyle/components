@@ -4,6 +4,7 @@
   import type { MetaOptions } from './content-utils'
 
   import {
+    $,
     Box,
     IconButton,
     ScrollContainer,
@@ -29,6 +30,7 @@
   import ContentHeader from './content-header.vue'
   import ContentLoader from './content-loader.vue'
   import ContentOutline from './content-outline.vue'
+  import GlobalFooter from './global-footer.vue'
 
   const route = useRoute()
   const headers = ref<HTMLElement[]>([])
@@ -70,6 +72,7 @@
     ready.value = false
     meta.value = undefined
     headers.value = []
+    content.value?.scrollTo(0, 0)
   })
 
   function getHeaders() {
@@ -77,7 +80,8 @@
     timeout = setTimeout(() => {
       const element = content.value
       if (!element || element.textContent === '') return getHeaders()
-      headers.value = [...element.querySelectorAll('h1, h2, h3')] as any[]
+      const wrapper = $('.content-wrapper', element) ?? element
+      headers.value = [...wrapper.querySelectorAll('h1, h2, h3')] as any[]
     }, 200)
   }
 
@@ -90,36 +94,42 @@
   <div class="content">
     <ContentDocs />
 
+    <Box class="content-app-bar">
+      <IconButton
+        icon="material-symbols:menu"
+        @click="sidebar = !sidebar"
+      />
+      <Text class="content-title" mr="auto">{{ meta?.title }}</Text>
+      <IconButton
+        @click="isDark = !isDark"
+        :icon="
+          isDark
+            ? 'material-symbols:dark-mode-outline'
+            : 'material-symbols:light-mode-outline'
+        "
+      />
+      <IconButton
+        selected
+        variant="filled"
+        @click="inputColor?.click()"
+        icon="material-symbols:palette-outline"
+      />
+    </Box>
     <ScrollContainer class="content-body" p="0" :ref="setRef">
-      <Box class="content-app-bar">
-        <IconButton
-          icon="material-symbols:menu"
-          @click="sidebar = !sidebar"
-        />
-        <Text class="content-title" mr="auto">{{ meta?.title }}</Text>
-        <IconButton
-          @click="isDark = !isDark"
-          :icon="
-            isDark
-              ? 'material-symbols:dark-mode-outline'
-              : 'material-symbols:light-mode-outline'
-          "
-        />
-        <IconButton
-          selected
-          variant="filled"
-          @click="inputColor?.click()"
-          icon="material-symbols:palette-outline"
-        />
-      </Box>
-      <ContentHeader :meta v-if="meta && !error" />
-      <div class="content-inner marked-content">
-        <loadComponent />
+      <ContentHeader
+        :meta
+        v-if="meta && !meta.hide && route.params.content[1]"
+      />
+      <div class="content-wrapper">
+        <div class="content-inner marked-content">
+          <loadComponent />
+        </div>
         <ContentFooter v-if="headers.length > 0" />
       </div>
 
       <ContentError v-if="error" />
       <ContentLoader v-else-if="!ready" />
+      <GlobalFooter />
     </ScrollContainer>
 
     <ContentOutline />
@@ -140,7 +150,7 @@
       z-index: 2;
       display: none;
       background: var(--surface);
-      border-bottom: 1px solid var(--neutral-80);
+      box-shadow: 0 0 0 1px var(--neutral-80);
       height: var(--header-size);
       padding-inline: var(--xs);
     }
@@ -165,6 +175,7 @@
       background: var(--surface);
       color: var(--on-surface);
       padding: var(--xl);
+      padding-bottom: 0;
     }
 
     &-outline {
@@ -223,11 +234,16 @@
       max-width: 1200px;
     }
 
-    &-inner {
-      padding-inline: var(--xl);
+    &-wrapper {
+      padding: var(--xl);
+      display: flex;
+      flex-direction: column;
       max-width: 800px;
+      min-height: calc(100dvh - var(--header-size));
       margin-inline: auto;
+    }
 
+    &-inner {
       > * {
         opacity: 0;
         animation: in 0.2s forwards;
@@ -286,27 +302,34 @@
         align-items: center;
       }
 
-      &-inner,
-      &-header {
+      &-wrapper {
         padding-inline: 0;
+      }
+
+      &-footer {
+        flex-wrap: wrap;
+        padding-inline: var(--lg);
 
         > * {
-          margin-inline: var(--md) !important;
-          max-width: calc(100% - 2 * var(--md)) !important;
+          flex: 1 1 auto;
         }
       }
 
       &-inner {
-        > h1,
+        > * {
+          margin-inline: var(--lg) !important;
+          max-width: calc(100% - 2 * var(--lg)) !important;
+        }
+
         > h2,
         > h3 {
           position: sticky;
-          z-index: 2;
+          z-index: 3;
           max-width: 100% !important;
           margin-inline: 0 !important;
-          padding-inline: var(--md);
+          padding-inline: var(--lg);
           background: var(--surface);
-          top: calc(var(--header-size) - 2px);
+          top: -2px;
 
           &::before {
             width: 1.5ch !important;
