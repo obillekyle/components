@@ -1,8 +1,19 @@
 <script setup lang="ts">
   import { Button, Text } from '@vue-material/core'
-  import { computed, inject, onMounted, ref, watch } from 'vue'
+  import {
+    computed,
+    inject,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    watch
+  } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
-  import { scrollTo, scrollToHash } from './content-utils'
+  import {
+    handleContentClick,
+    scrollTo,
+    scrollToHash
+  } from './content-utils'
 
   const route = useRoute()
   const router = useRouter()
@@ -12,16 +23,13 @@
 
   watch(hash, (hash) => scrollToHash(content.value!, hash))
   watch(headers, () => {
-    const parent = content.value!
-    scrollToHash(parent, route.hash)
-    if (headers.value.length > 0) {
-      for (const head of headers.value) {
-        head.addEventListener('click', () => {
-          scrollToHash(parent, `#${head.id}`)
-        })
-      }
-    }
+    setTimeout(() => {
+      const parent = content.value!
+      scrollToHash(parent, route.hash)
+    }, 200)
   })
+
+  const handleClick = (e: MouseEvent) => handleContentClick(e, router)
 
   onMounted(() => {
     if ('scrollRestoration' in history) {
@@ -29,22 +37,12 @@
     }
 
     const parent = content.value!
-    parent.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement
-      const link = target.closest('a') as HTMLAnchorElement
-      if (link && !link.href) return
+    parent?.addEventListener('click', handleClick)
+  })
 
-      if (link) {
-        event.preventDefault()
-        const isOutbound = link.host !== location.host
-        if (isOutbound) window.open(link.href, '_blank')
-        else if (link.pathname === location.pathname) {
-          scrollToHash(parent, link.hash)
-        } else {
-          router.push(link.pathname + link.hash)
-        }
-      }
-    })
+  onBeforeUnmount(() => {
+    const parent = content.value!
+    parent?.removeEventListener('click', handleClick)
   })
 </script>
 
@@ -55,12 +53,12 @@
     </Text>
 
     <Button
-      @click="scrollTo(content!, header, 62)"
+      variant="text"
       v-for="header in headers"
       :key="header.id"
-      variant="text"
       :ml="['H1', 'H2'].includes(header.tagName) ? '0' : '#sm'"
       class="content-outline-item"
+      @click="scrollTo(content!, header)"
     >
       {{ header.textContent }}
     </Button>
