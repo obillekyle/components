@@ -1,21 +1,19 @@
 <script setup lang="ts">
-  import type { SizesString } from '@/utils/css'
   import type { HTMLAttributes } from 'vue'
+  import type { BoxProps } from '../Box/util'
 
-  import { addUnit, getCSSValue } from '@/utils/css'
   import { as, clean } from '@/utils/object'
-  import { customRef } from '@/utils/ref'
   import { hashStr } from '@/utils/string'
   import { Icon } from '@iconify/vue'
-  import { computed, inject, onMounted, onUnmounted, ref, watch } from 'vue'
+  import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+  import { getBoxProps } from '../Box/util'
   import { resolveImage } from './util'
 
   import Box from '../Box/box.vue'
-  import { getBoxProps, type BoxProps } from '../Box/util'
   import ViewObserver from '../Misc/view-observer.vue'
   import CircularProgress from '../Progress/circular-progress.vue'
 
-  interface SquareImageProperties
+  interface SquareImageProps
     extends BoxProps,
       /* @vue-ignore */ HTMLAttributes {
     src?: string | Blob
@@ -25,7 +23,7 @@
     lazy?: boolean
   }
 
-  const props = withDefaults(defineProps<SquareImageProperties>(), {
+  const props = withDefaults(defineProps<SquareImageProps>(), {
     frame: 'default',
     radius: '#xs',
     size: 96
@@ -102,8 +100,8 @@
     :ref="setRef"
     apply="visible"
     v-bind="boxProps"
+    v-model="visible"
     class="md-square-image"
-    :change="(v) => (visible = v)"
     :class="{ loaded: image, [frame]: true, error }"
     :title="as<string>($attrs['alt'])"
     :style="{

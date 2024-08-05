@@ -2,24 +2,29 @@
   import type { Component } from 'vue'
 
   import { addPX } from '@/utils/css'
+  import { evaluate } from '@/utils/object'
   import { customRef } from '@/utils/ref'
-  import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+  import { computed, onBeforeUnmount, onMounted } from 'vue'
 
-  const props = defineProps<{
+  type ViewObserverProps = {
     as?: string | Component
     apply?: string | Record<string, any>
-    change?: (isVisible: boolean) => void
     offset?: number
     threshold?: number
     parent?: HTMLElement
-  }>()
+    onViewChange?: (visible: boolean) => void
+  }
 
-  const isVisible = ref(false)
+  const props = defineProps<ViewObserverProps>()
+  const visible = defineModel<boolean>({
+    default: false
+  })
+
   const [root, setRef] = customRef<HTMLElement>()
   let observer: IntersectionObserver | undefined
 
   const applyProps = computed(() => {
-    if (!isVisible.value) return {}
+    if (!visible.value) return {}
     if (typeof props.apply === 'string') return { class: props.apply }
     return props.apply || {}
   })
@@ -27,11 +32,11 @@
   const intersectionCallback: IntersectionObserverCallback = (entries) => {
     for (const entry of entries) {
       if (entry.isIntersecting) {
-        isVisible.value = true
-        props.change?.(true)
+        visible.value = true
+        evaluate(props.onViewChange, true)
       } else {
-        isVisible.value = false
-        props.change?.(false)
+        visible.value = false
+        evaluate(props.onViewChange, false)
       }
     }
   }

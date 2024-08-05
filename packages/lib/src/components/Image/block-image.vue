@@ -2,13 +2,14 @@
   import type { BoxProps } from '@/components/Box/util'
   import type { HTMLAttributes } from 'vue'
 
-  import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
   import { Icon } from '@iconify/vue'
   import { onMounted, onUnmounted, ref, watch } from 'vue'
+  import { resolveImage } from './util'
+
+  import Box from '@/components/Box/box.vue'
   import ViewObserver from '../Misc/view-observer.vue'
   import CircularProgress from '../Progress/circular-progress.vue'
-  import { resolveImage } from './util'
 
   interface BlockImageProperties
     extends BoxProps,
@@ -84,9 +85,9 @@
   <ViewObserver
     :as="Box"
     :offset="50"
+    v-model="visible"
     v-bind="boxProps"
     class="md-block-image"
-    :change="(v) => (visible = v)"
     :class="{ loaded: image, 'image-error': error, span }"
   >
     <Box class="md-loader">
