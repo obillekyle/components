@@ -37,7 +37,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "check:types": "vue-tsc --noEmit",
+    "test": "vitest",
+    "check:types": "vue-tsc --build --force",
     "check:format": "prettier --check . --ignore-path .gitignore",
     "check:stylelint": "stylelint src/**/*.{vue,css,scss}",
     "check:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
@@ -46,7 +47,8 @@
     "format:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format:stylelint": "stylelint src/**/*.{vue,css,scss} --fix",
     "format": "run-s format:prettier format:eslint format:stylelint",
-    "build": "vue-tsc --build --force && vite build",
+    "build-only": "vite build",
+    "build": "run-s check:types build-only",
     "preview": "vite preview"
   },
   "dependencies": {

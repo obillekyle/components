@@ -7,8 +7,10 @@
     "nightwatch.conf.*",
     "playwright.config.*",
     "plugins/**/*.ts",
-    "src/utils/color*"
+    "src/utils/color*",
+    "src/utils/color*/**/*.ts"
   ],
+  "exclude": ["src/**/*.test.ts"],
   "compilerOptions": {
     "composite": true,
     "noEmit": true,

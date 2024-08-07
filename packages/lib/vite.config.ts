@@ -15,7 +15,7 @@ export default defineConfig({
       pathsToAliases: false,
       tsconfigPath: 'tsconfig.app.json',
       strictOutput: true,
-      exclude: ['src/**/__tests__/*', 'src/main.ts', 'plugins/**/*']
+      exclude: ['src/**/*.test.ts', 'src/main.ts', 'plugins/**/*']
     }),
     vue(),
     VueDevTools(),
@@ -33,7 +33,6 @@ export default defineConfig({
       fileName: '[name]'
     },
     rollupOptions: {
-      treeshake: false,
       preserveEntrySignatures: 'strict',
       external: [
         'vue',
