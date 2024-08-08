@@ -56,6 +56,10 @@
     "color2k": "^2.0.3",
     "deepmerge": "^4.3.1"
   },
+  "sideEffects": [
+    "./dist/attach-styles.js",
+    "./dist/assets/*.css.js"
+  ],
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/tsconfig": "^0.5.1",

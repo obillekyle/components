@@ -1,4 +1,5 @@
 import vue from '@vitejs/plugin-vue'
+import glob from 'fast-glob'
 import path from 'node:path'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
@@ -19,9 +20,7 @@ export default defineConfig({
     }),
     vue(),
     VueDevTools(),
-    attachStyles({
-      transform: resolver()
-    })
+    attachStyles({ transform: resolver() })
   ],
   build: {
     minify: false,
@@ -29,11 +28,13 @@ export default defineConfig({
     cssCodeSplit: true,
     lib: {
       formats: ['es'],
-      entry: path.resolve(import.meta.dirname, 'src/index.ts'),
-      fileName: '[name]'
+      fileName: '[name]',
+      entry: path.resolve(import.meta.dirname, 'src/index.ts')
     },
     rollupOptions: {
-      preserveEntrySignatures: 'strict',
+      input: glob
+        .sync('src/**/index.ts')
+        .map((file) => path.resolve(import.meta.dirname, file)),
       external: [
         'vue',
         'color2k',
