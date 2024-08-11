@@ -4,7 +4,6 @@
   outline: 0 solid var(--primary);
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
-  margin: 0;
 }
 
 .md-theme-provider {
@@ -26,6 +25,7 @@
 
   color: var(--primary-0, currentColor);
   background: var(--background-body);
+  line-height: 1.5;
 
   *:focus-visible {
     animation: focus 0.25s forwards;

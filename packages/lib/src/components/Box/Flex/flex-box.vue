@@ -1,38 +1,34 @@
 <script setup lang="ts">
   import type { BoxProps } from '@/components/Box/util'
   import type { SizesString } from '@/utils/css'
-  import type { HTMLAttributes } from 'vue'
 
-  import { getCSSValue } from '@/utils/css'
   import Box from '../box.vue'
-  import { getBoxProps as getBoxProperties } from '../util'
+  import { getBoxProps } from '../util'
 
-  interface FlexBoxProperties
-    extends BoxProps,
-      /** @vue-ignore */ HTMLAttributes {
+  interface FlexBoxProps extends BoxProps {
     direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse'
-    align?: 'start' | 'center' | 'end'
-    justify?: 'start' | 'center' | 'end'
+    align?: 'start' | 'center' | 'end' | (string & {})
+    justify?: 'start' | 'center' | 'end' | (string & {})
     wrap?: 'wrap' | 'nowrap' | 'wrap-reverse'
-
     gap?: SizesString
   }
 
   defineOptions({ name: 'MdFlexBox' })
-  const props = defineProps<FlexBoxProperties>()
-  const boxProps = getBoxProperties(props)
+  const props = defineProps<FlexBoxProps>()
+  const boxProps = getBoxProps(props)
 </script>
 
 <template>
   <Box
     class="md-flex"
     v-bind="boxProps"
-    :style="{
+    :styled="{
       flexDirection: props.direction,
       justifyContent: props.justify,
       alignItems: props.align,
       flexWrap: props.wrap,
-      gap: getCSSValue(props.gap)
+      gap: props.gap,
+      ...styled
     }"
   >
     <slot />

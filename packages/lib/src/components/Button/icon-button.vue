@@ -2,8 +2,8 @@
   import type { SizesString } from '@/utils/css'
   import type { ButtonHTMLAttributes } from 'vue'
 
-  import { getCSSValue } from '@/utils/css'
-  import { rippleEffect } from '@/utils/dom'
+  import { getCSSValue } from '@/utils/css/sizes'
+  import { rippleEffect } from '@/utils/dom/ripple'
   import { Icon } from '@iconify/vue'
 
   interface IconButtonProperties

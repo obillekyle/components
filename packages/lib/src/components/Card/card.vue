@@ -49,13 +49,21 @@
       &:hover {
         box-shadow: var(--shadow-2);
       }
+
+      .md-card-actions.separator {
+        background: var(--surface-container);
+      }
     }
 
     &.filled {
-      background: var(--surface-container-highest);
+      background: var(--surface-container-high);
 
       &:hover {
         box-shadow: var(--shadow-1);
+      }
+
+      .md-card-actions.separator {
+        background: var(--surface-container-highest);
       }
     }
 
@@ -67,6 +75,10 @@
         box-shadow:
           0 0 0 1px var(--outline),
           var(--shadow-1);
+      }
+
+      .md-card-actions.separator {
+        border-top: 1px solid var(--outline-variant);
       }
     }
 
@@ -84,11 +96,23 @@
       font-weight: 400;
       font-size: var(--component-xs);
       margin-bottom: var(--xxs);
+      margin-block: 0;
     }
 
     &-subhead {
       font-size: var(--font-lg);
       font-weight: 400;
+      margin-block: 0;
+    }
+
+    &-body {
+      p:first-child {
+        margin-top: 0;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
     }
 
     &-image {
@@ -108,10 +132,6 @@
         display: flex;
         margin-right: auto;
         align-items: center;
-      }
-
-      &.separator {
-        border-top: 1px solid var(--outline-variant);
       }
     }
   }

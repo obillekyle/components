@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import type { BoxProps } from '@/components/Box/util'
-  import type { HTMLAttributes } from 'vue'
 
   import { getBoxProps } from '@/components/Box/util'
   import { Icon } from '@iconify/vue'
@@ -11,9 +10,7 @@
   import ViewObserver from '../Misc/view-observer.vue'
   import CircularProgress from '../Progress/circular-progress.vue'
 
-  interface BlockImageProperties
-    extends BoxProps,
-      /** @vue-ignore */ HTMLAttributes {
+  interface BlockImageProperties extends BoxProps {
     src?: string | Blob
     alt?: string
     fit?: 'contain' | 'cover' | 'fill'

@@ -8,7 +8,7 @@
   import { parseColors } from '@/utils/colors/parse-colors'
   import { createStyle, getCSSColor, getCSSValue } from '@/utils/css'
   import { toKebabCase } from '@/utils/string'
-  import { inject, provide, ref, watch } from 'vue'
+  import { inject, provide, shallowRef, watch } from 'vue'
   import { DefaultThemeObject as DTO, getSizes } from './util'
 
   import deepmerge from 'deepmerge'
@@ -16,19 +16,18 @@
 
   interface ThemeProviderProps
     extends /* @vue-ignore */ BoxProps,
-      ThemeProps {
-    name?: string
-  }
+      ThemeProps {}
 
   defineOptions({ name: 'MdLayoutStyles' })
   const props = withDefaults(defineProps<ThemeProviderProps>(), {
     md3: true
   })
 
-  const parentOptions = inject('options', ref(DTO))
+  const parentOptions = inject('options', shallowRef(DTO))
+  const themeOptions = shallowRef<ThemeObject>(getThemeObject())
 
-  const themeOptions = computed(() => {
-    const defs: any = props.inherit ? parentOptions.value : DTO
+  function getThemeObject() {
+    const defs = props.inherit ? parentOptions.value : DTO
     const opts = Object.assign({}, defs, props.options)
     const opts_: Record<string, any> = {}
 
@@ -53,107 +52,60 @@
     })
 
     return opts_ as ThemeObject
+  }
+
+  const className = createStyle(
+    () => {
+      let values: Record<string, string> = {}
+      const theme = themeOptions.value.theme
+      const colors = themeOptions.value.colors
+      const colorEngine = new ColorEngine(colors)
+      const sizes: any = themeOptions.value.sizes
+      const components: any = themeOptions.value.component
+
+      Object.assign(values, colorEngine.getShades(theme))
+      Object.assign(values, colorEngine.getColorVariables(theme))
+
+      for (const size in sizes) {
+        Object.assign(values, getSizes(sizes[size], size))
+      }
+
+      for (const id in components) {
+        values[`${id}-size`] = getCSSValue(components[id], 'px', 'size')
+      }
+
+      values = Object.fromEntries(
+        Object.entries(values).map(([key, value]) => {
+          return ['--' + toKebabCase(key), value]
+        })
+      )
+
+      const { color, fontFamily } = themeOptions.value
+
+      return Object.assign(values, {
+        colorScheme: theme,
+        color: getCSSColor(color),
+        fontFamily: fontFamily
+      })
+    },
+    { prefix: 'md-theme-', resolveVars: false }
+  )
+
+  function updateThemeObject() {
+    themeOptions.value = getThemeObject()
+  }
+
+  watch(props, updateThemeObject)
+  watch(parentOptions, () => {
+    props.inherit && updateThemeObject()
   })
 
-  const styleId = computed(() => {
-    return props.name
-      ? toKebabCase(props.name)
-      : 'md' + hashStr(JSON.stringify(themeOptions.value), 7)
-  })
-
-  function setColors() {
-    let value = ''
-    const values: Record<string, string> = {}
-    const theme = themeOptions.value.theme
-    const colors = themeOptions.value.colors
-    const colorEngine = new ColorEngine(colors)
-
-    Object.assign(values, colorEngine.getShades(theme))
-    Object.assign(values, colorEngine.getColorVariables(theme))
-
-    for (const key in values) {
-      value += `--${toKebabCase(key)}: ${values[key]};`
-    }
-
-    return value
-  }
-
-  function setSizes() {
-    let value = ''
-    const values: Record<string, string> = {}
-    const sizes = themeOptions.value.sizes as any
-    const components = themeOptions.value.component as any
-
-    for (const size in sizes) {
-      Object.assign(values, getSizes(sizes[size], size))
-    }
-
-    for (const id in components) {
-      values[`${id}-size`] = getCSSValue(components[id], 'px', 'size')
-    }
-
-    for (const key in values) {
-      value += `--${toKebabCase(key)}: ${values[key]};`
-    }
-
-    return value
-  }
-
-  function dismount(id: string) {
-    const styleOld = $(`style[for=${id}]`)
-
-    if (styleOld) {
-      const count = Number(styleOld.dataset.count || 0) - 1
-
-      if (count <= 0) styleOld.remove()
-      else styleOld.dataset.count = String(count)
-    }
-  }
-
-  function mountStyle(id: string) {
-    const styleNew = $(`style[for=${id}]`)
-
-    if (styleNew) {
-      const count = Number(styleNew.dataset.count || 0) + 1
-      styleNew.dataset.count = String(count)
-    } else {
-      const style = document.createElement('style')
-      style.setAttribute('for', id)
-      style.dataset.count = '1'
-
-      const colors = setColors()
-      const sizes = setSizes()
-      const { color, theme, fontFamily } = themeOptions.value
-
-      const value = `
-        ${props.global ? 'html, body' : '#' + styleId.value} {
-        ${sizes} ${colors}
-        color: ${getCSSColor(color)};
-        color-scheme: ${theme};
-        font-family: ${fontFamily}
-      }`
-
-      style.innerHTML = value
-      document.head.append(style)
-    }
-  }
-
-  function setStyle(newId: string, oldId?: string) {
-    if (typeof window === 'undefined') return
-
-    if (oldId) dismount(oldId)
-    mountStyle(newId)
-  }
-
-  watch(styleId, setStyle)
-  onBeforeMount(() => setStyle(styleId.value))
-  onUnmounted(() => dismount(styleId.value))
   provide('options', themeOptions)
   provide('md3', props.md3)
 </script>
 
 <template>
-  <Box class="md-theme-provider" :id="styleId">
+  <Box class="md-theme-provider" :class="className">
     <slot />
   </Box>
 </template>

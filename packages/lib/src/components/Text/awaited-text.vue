@@ -1,14 +1,14 @@
 <script setup lang="ts">
   import { onMounted, ref, watch, type Component } from 'vue'
 
-  interface AwaitedTextProperties {
+  interface AwaitedTextProps {
     text: Promise<string>
     fallback?: string
     element?: Component | string
   }
 
   const awaitedText = ref('')
-  const props = defineProps<AwaitedTextProperties>()
+  const props = defineProps<AwaitedTextProps>()
   defineOptions({ name: 'MdAwaitedText' })
 
   onMounted(async () => {

@@ -1,17 +1,17 @@
 <template>
   <div class="wrapper">
     <div class="flex">
-      <Button.Group>
+      <ButtonGroup>
         <Button variant="outlined">Button</Button>
         <Button variant="outlined">Button</Button>
         <Button variant="outlined" disabled>Button</Button>
-      </Button.Group>
+      </ButtonGroup>
 
-      <Chip.Group>
+      <ChipGroup>
         <Chip variant="outlined">Chip</Chip>
         <Chip variant="outlined">Chip</Chip>
         <Chip variant="outlined">Chip</Chip>
-      </Chip.Group>
+      </ChipGroup>
     </div>
 
     <div class="flex">
@@ -36,20 +36,20 @@
       </Chip>
     </div>
     <div class="flex">
-      <Input
+      <TextInput
         class="input"
         placeholder="Input"
         left-icon="material-symbols:search"
         span
         prefix="Hello"
       />
-      <Input.Number
+      <NumberInput
         class="input"
         placeholder="Input"
         span
         left-icon="material-symbols:monetization-on-outline-rounded"
       />
-      <Input
+      <TextInput
         class="input"
         placeholder="Input"
         left-icon="material-symbols:search"
@@ -109,7 +109,7 @@
 
     <WavyDivider />
 
-    <Box.Flex>
+    <Flex>
       <ColorBlock color="$primary" />
       <ColorBlock color="$primary-1" />
       <ColorBlock color="$primary-5" />
@@ -125,9 +125,9 @@
       <ColorBlock color="$primary-95" />
       <ColorBlock color="$primary-99" />
       <ColorBlock color="$primary-100" />
-    </Box.Flex>
+    </Flex>
 
-    <Box.Flex>
+    <Flex>
       <ColorBlock color="$secondary" />
       <ColorBlock color="$secondary-1" />
       <ColorBlock color="$secondary-5" />
@@ -143,7 +143,7 @@
       <ColorBlock color="$secondary-95" />
       <ColorBlock color="$secondary-99" />
       <ColorBlock color="$secondary-100" />
-    </Box.Flex>
+    </Flex>
 
     <BlockImage
       :b-radius="4"
@@ -157,13 +157,16 @@
 </template>
 
 <script setup lang="ts">
-  import { default as Box } from '@/components/Box'
-  import Button from '@/components/Button'
-  import Chip from '@/components/Chip'
+  import Flex from '@/components/Box/Flex/flex-box.vue'
+  import ButtonGroup from '@/components/Button/button-group.vue'
+  import Button from '@/components/Button/button.vue'
+  import ChipGroup from '@/components/Chip/chip-group.vue'
+  import Chip from '@/components/Chip/chip.vue'
   import WavyDivider from '@/components/Divider/wavy-divider.vue'
   import BlockImage from '@/components/Image/block-image.vue'
   import SquareImage from '@/components/Image/square-image.vue'
-  import Input from '@/components/Input'
+  import NumberInput from '@/components/Input/number-input.vue'
+  import TextInput from '@/components/Input/text-input.vue'
   import ColorBlock from '@/components/Misc/color-block.vue'
   import CircularProgress from '@/components/Progress/circular-progress.vue'
   import LinearProgress from '@/components/Progress/linear-progress.vue'
@@ -171,8 +174,8 @@
   import BlockSlider from '@/components/Slider/block-slider.vue'
   import Slider from '@/components/Slider/slider.vue'
   import Switch from '@/components/Switch/switch.vue'
-  import Text from '@/components/Text'
   import Scroller from '@/components/Text/scroller.vue'
+  import Text from '@/components/Text/text.vue'
 </script>
 
 <style lang="scss" scoped>

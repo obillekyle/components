@@ -30,8 +30,6 @@
   font: inherit;
   font-weight: 500;
   cursor: pointer;
-  color: var(--on-primary);
-  background: var(--primary);
   transition:
     color 0.2s,
     background-color 0.2s,
@@ -64,6 +62,8 @@
   &.filled {
     background: var(--primary);
     color: var(--on-primary);
+
+    --ripple-color: var(--primary-container);
   }
 
   &.tonal {
@@ -102,14 +102,10 @@
 
   &-group {
     display: inline-flex;
-    flex-grow: 1;
-    width: 100%;
+  }
 
-    .md-button,
-    .md-chip {
-      flex: 1 1 auto;
-      box-shadow: 0 0 0 1px inset var(--outline) !important;
-    }
+  &-group & {
+    box-shadow: 0 0 0 1px inset var(--outline) !important;
   }
 
   &:disabled {
@@ -122,11 +118,10 @@
   &-group.span {
     flex-grow: 1;
     width: 100%;
+  }
 
-    .md-button,
-    .md-chip {
-      flex: 1 1 auto;
-    }
+  &-group.span & {
+    flex: 1 1 auto;
   }
 
   &-group &:not(:first-child) {

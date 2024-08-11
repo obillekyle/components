@@ -1,17 +1,16 @@
 <script setup lang="ts">
-  import type { HTMLAttributes } from 'vue'
   import type { BoxProps as BoxProperties } from '../util'
 
-  interface FlexSpanProperties
-    extends BoxProperties,
-      /** @vue-ignore */ HTMLAttributes {}
+  import Box from '../box.vue'
 
+  interface FlexSpanProperties extends /* @vue-ignore */ BoxProperties {}
   defineProps<FlexSpanProperties>()
   defineOptions({ name: 'MdFlexSpan' })
 </script>
 
 <template>
-  <Box class="md-flex-span" v-bind="$props">
+  <Box class="md-flex-span">
+    <MdFlexSpan />
     <slot />
   </Box>
 </template>

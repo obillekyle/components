@@ -1,4 +1,6 @@
 .md-ripple {
+  --color: var(--ripple-color, var(--inverse-surface));
+
   position: absolute;
   border-radius: 999px;
   transform: translate(-50%, -50%);
@@ -8,8 +10,8 @@
   transform-origin: left top;
   background-image: radial-gradient(
       circle,
-      var(--inverse-surface) 0%,
-      var(--inverse-surface) 50%,
+      var(--color) 0%,
+      var(--color) 50%,
       #0000 60%,
       #0000 100%
     ),

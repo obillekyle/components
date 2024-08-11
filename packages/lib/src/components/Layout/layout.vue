@@ -1,25 +1,15 @@
 <script setup lang="ts">
   import '@/assets/layout.scss'
 
-  import type { HTMLAttributes } from 'vue'
   import type { ThemeProps } from './util'
 
-  import { hashStr } from '@/utils/string'
-  import { computed, provide, ref } from 'vue'
+  import { provide, ref } from 'vue'
 
   import ScrollContainer from './scroll-container.vue'
   import ThemeProvider from './theme-provider.vue'
 
-  interface LayoutProps
-    extends ThemeProps,
-      /** @vue-ignore */ HTMLAttributes {}
-  const props = withDefaults(defineProps<LayoutProps>(), {
+  withDefaults(defineProps<ThemeProps>(), {
     md3: true
-  })
-
-  const name = computed(() => {
-    const object = JSON.stringify(props)
-    return 'layout-' + hashStr(object, 6)
   })
 
   const contentScrollTop = ref(0)
@@ -29,13 +19,12 @@
     name: 'MdLayout'
   })
 
-  provide('layout-id', name)
   provide('content-scroll-top', contentScrollTop)
   provide('header-title', headerTitle)
 </script>
 
 <template>
-  <ThemeProvider class="md-layout" v-bind="$props" :name>
+  <ThemeProvider class="md-layout" v-bind="$props">
     <slot name="navbar" />
     <slot name="sidebar" />
     <slot name="header" />

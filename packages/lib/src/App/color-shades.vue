@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import Box from '@/components/Box'
+  import Flex from '@/components/Box/Flex/flex-box.vue'
   import ScrollContainer from '@/components/Layout/scroll-container.vue'
   import ColorBlock from '@/components/Misc/color-block.vue'
 </script>
 
 <template>
   <ScrollContainer>
-    <Box.Flex gap="#xxs">
-      <Box.Flex direction="column" for="primary">
+    <Flex gap="#xxs">
+      <Flex direction="column" for="primary">
         <ColorBlock
           color="$primary"
           text="$on-primary"
@@ -37,7 +37,7 @@
           On Primary Container
         </ColorBlock>
 
-        <Box.Flex pt="#md">
+        <Flex pt="#md">
           <ColorBlock
             color="$primary-fixed"
             text="$on-primary-fixed"
@@ -54,7 +54,7 @@
           >
             Primary Fixed Dim
           </ColorBlock>
-        </Box.Flex>
+        </Flex>
 
         <ColorBlock
           color="$on-primary-fixed"
@@ -70,9 +70,9 @@
         >
           On Primary Fixed Variant
         </ColorBlock>
-      </Box.Flex>
+      </Flex>
 
-      <Box.Flex direction="column" for="secondary">
+      <Flex direction="column" for="secondary">
         <ColorBlock
           color="$secondary"
           text="$on-secondary"
@@ -102,7 +102,7 @@
           On Secondary Container
         </ColorBlock>
 
-        <Box.Flex pt="#md">
+        <Flex pt="#md">
           <ColorBlock
             color="$secondary-fixed"
             text="$on-secondary-fixed"
@@ -119,7 +119,7 @@
           >
             Secondary Fixed Dim
           </ColorBlock>
-        </Box.Flex>
+        </Flex>
 
         <ColorBlock
           color="$on-secondary-fixed"
@@ -135,9 +135,9 @@
         >
           On Secondary Fixed Variant
         </ColorBlock>
-      </Box.Flex>
+      </Flex>
 
-      <Box.Flex direction="column" for="tertiary">
+      <Flex direction="column" for="tertiary">
         <ColorBlock
           color="$tertiary"
           text="$on-tertiary"
@@ -167,7 +167,7 @@
           On Tertiary Container
         </ColorBlock>
 
-        <Box.Flex pt="#md">
+        <Flex pt="#md">
           <ColorBlock
             color="$tertiary-fixed"
             text="$on-tertiary-fixed"
@@ -184,7 +184,7 @@
           >
             Tertiary Fixed Dim
           </ColorBlock>
-        </Box.Flex>
+        </Flex>
 
         <ColorBlock
           color="$on-tertiary-fixed"
@@ -200,9 +200,9 @@
         >
           On Tertiary Fixed Variant
         </ColorBlock>
-      </Box.Flex>
+      </Flex>
 
-      <Box.Flex ml="#md" direction="column" for="error">
+      <Flex ml="#md" direction="column" for="error">
         <ColorBlock
           color="$error"
           text="$on-error"
@@ -231,12 +231,12 @@
         >
           On Error Container
         </ColorBlock>
-      </Box.Flex>
-    </Box.Flex>
+      </Flex>
+    </Flex>
 
-    <Box.Flex gap="#md" mt="#md" width="fit-content">
-      <Box.Flex for="surfaces" direction="column" :width="760" gap="xxs">
-        <Box.Flex for="shades">
+    <Flex gap="#md" mt="#md" width="fit-content">
+      <Flex for="surfaces" direction="column" :width="760" gap="xxs">
+        <Flex for="shades">
           <ColorBlock :height="80" span color="$surface-dim">
             Surface Dim
           </ColorBlock>
@@ -246,9 +246,9 @@
           <ColorBlock :height="80" span color="$surface-bright">
             Surface Bright
           </ColorBlock>
-        </Box.Flex>
+        </Flex>
 
-        <Box.Flex for="container" span>
+        <Flex for="container" span>
           <ColorBlock span height="auto" color="$surface-container-lowest">
             Surface Container Lowest
           </ColorBlock>
@@ -264,9 +264,9 @@
           <ColorBlock span height="auto" color="$surface-container-highest">
             Surface Container Highest
           </ColorBlock>
-        </Box.Flex>
+        </Flex>
 
-        <Box.Flex for="other" span>
+        <Flex for="other" span>
           <ColorBlock
             span
             text="$surface-container-lowest"
@@ -291,10 +291,10 @@
           <ColorBlock span text="$neutral-0" color="$outline-variant">
             Outline Variant
           </ColorBlock>
-        </Box.Flex>
-      </Box.Flex>
+        </Flex>
+      </Flex>
 
-      <Box.Flex :width="250" direction="column" gap="xxs">
+      <Flex :width="250" direction="column" gap="xxs">
         <ColorBlock
           width="100%"
           color="$inverse-surface"
@@ -317,14 +317,14 @@
           Inverse Primary
         </ColorBlock>
 
-        <Box.Flex width="100%" mt="auto" gap="#md">
+        <Flex width="100%" mt="auto" gap="#md">
           <ColorBlock span color="$scrim" text="white"> Scrim </ColorBlock>
           <ColorBlock span color="$shadow" text="white">
             Shadow
           </ColorBlock>
-        </Box.Flex>
-      </Box.Flex>
-    </Box.Flex>
+        </Flex>
+      </Flex>
+    </Flex>
   </ScrollContainer>
 </template>
 

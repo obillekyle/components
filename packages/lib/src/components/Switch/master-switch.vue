@@ -63,6 +63,8 @@
     z-index: 10;
     box-shadow: var(--shadow-3);
 
+    --ripple-color: var(--on-primary-fixed-variant);
+
     &-toggle {
       pointer-events: none;
       position: absolute;

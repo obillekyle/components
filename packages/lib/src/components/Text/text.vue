@@ -4,7 +4,6 @@
 
   import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
-  import { getCSSColor, getCSSValue } from '@/utils/css'
 
   interface TextProps extends BoxProps, SharedTextProps {}
 
@@ -17,17 +16,16 @@
   <Box
     class="md-text"
     v-bind="boxProps"
-    :as="props.as || 'p'"
-    :style="{
-      textAlign,
-      lineHeight,
-      fontWeight: weight,
-      textWrap: wrap ?? null,
-      fontStyle: italic ? 'italic' : null,
-      fontSize: getCSSValue(size, 'px', 'font'),
-      color: getCSSColor(color ?? 'currentColor'),
-      letterSpacing: getCSSValue(spacing, 'px', 'padding'),
-      '--lines': lines || 'none'
+    :styled="{
+      color: props.color,
+      textAlign: props.textAlign,
+      lineHeight: props.lineHeight,
+      fontWeight: props.weight,
+      textWrap: props.wrap,
+      fontSize: props.size,
+      fontStyle: props.italic ? 'italic' : undefined,
+      letterSpacing: props.spacing,
+      ...styled
     }"
   >
     <slot />
