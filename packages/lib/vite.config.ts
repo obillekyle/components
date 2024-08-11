@@ -22,6 +22,10 @@ export default defineConfig({
     VueDevTools(),
     attachStyles({ transform: resolver() })
   ],
+  server: {
+    strictPort: true,
+    port: 6270
+  },
   build: {
     minify: false,
     copyPublicDir: false,
