@@ -3,8 +3,8 @@
   import type { Component, InputHTMLAttributes } from 'vue'
   import { computed, ref, useAttrs } from 'vue'
 
+  import { evaluate } from '@/utils/function/evaluate'
   import { clamp } from '@/utils/number'
-  import { evaluate } from '@/utils/object'
   import IconOrComponent from '../Misc/icon-or-component.vue'
   import NumberArrows from './number-arrows.vue'
 

@@ -29,7 +29,7 @@
           .filter((e) => e.matches('button.md-navbar-item.special'))
           .indexOf(element.value!)
       }
-      return 0
+      return Number.NaN
     },
     set: () => {}
   })

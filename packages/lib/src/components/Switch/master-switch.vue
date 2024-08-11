@@ -1,8 +1,10 @@
 <script setup lang="ts">
-  import { keyboardClick, rippleEffect } from '@/utils/dom'
-  import { evaluate } from '@/utils/object'
   import type { HTMLAttributes } from 'vue'
+
+  import { rippleEffect } from '@/utils/dom'
+  import { evaluate } from '@/utils/function/evaluate'
   import { computed } from 'vue'
+
   import Switch from './switch.vue'
 
   interface MasterSwitchProps
@@ -31,11 +33,9 @@
 
 <template>
   <div
-    tabindex="0"
     class="md-master-switch"
     @click="inputValue = !inputValue"
     @pointerdown="rippleEffect"
-    @keydown="keyboardClick"
   >
     <div class="label">
       <slot>{{ name }}</slot>

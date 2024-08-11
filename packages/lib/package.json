@@ -30,7 +30,8 @@
     "./*.vue": "./dist/components/*.vue.js",
     "./*.js": "./dist/components/*.js",
     "./utils": "./dist/utils/index.js",
-    "./utils/*": "./dist/utils/*.js"
+    "./utils/*": "./dist/utils/*/index.js",
+    "./utils/*.js": "./dist/utils/*.js"
   },
   "files": [
     "dist"

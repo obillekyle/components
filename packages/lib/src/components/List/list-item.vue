@@ -3,7 +3,7 @@
 
   import { addPX } from '@/utils/css'
   import { getClientPos } from '@/utils/dom'
-  import { evaluate } from '@/utils/object'
+  import { evaluate } from '@/utils/function/evaluate'
   import { Icon } from '@iconify/vue'
   import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'

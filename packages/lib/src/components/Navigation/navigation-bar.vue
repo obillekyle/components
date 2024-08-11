@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { evaluate } from '@/utils/object'
+  import { evaluate } from '@/utils/function/evaluate'
   import { computed, provide, ref, watch, type HTMLAttributes } from 'vue'
   import type { NavigationBarProps } from './type'
 

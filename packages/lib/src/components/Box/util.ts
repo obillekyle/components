@@ -6,6 +6,8 @@ import { $ } from '@/utils/dom'
 import { hashStr } from '@/utils/string'
 import { computed, onBeforeMount, onUnmounted, watch } from 'vue'
 const boxKeys = [
+  'm',
+  'p',
   'px',
   'py',
   'pl',
@@ -20,11 +22,9 @@ const boxKeys = [
   'mb',
   'width',
   'height',
-  'm',
-  'p',
   'r',
   'as',
-  'bg'
+  'styled'
 ] as const
 
 export type BoxProps = {

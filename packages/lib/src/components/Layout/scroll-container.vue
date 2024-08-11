@@ -3,7 +3,7 @@
 
   import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
-  import { evaluate } from '@/utils/object'
+  import { evaluate } from '@/utils/function/evaluate'
   import { onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 
   interface ScrollPosition {

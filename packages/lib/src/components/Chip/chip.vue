@@ -26,8 +26,8 @@
     as="button"
     type="button"
     class="md-chip"
-    :class="variant"
     v-bind="boxProps"
+    :class="variant ?? 'filled'"
     @pointerdown="rippleEffect"
   >
     <IconOrComponent class="md-chip-icon left" :icon="leftIcon" />

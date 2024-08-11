@@ -2,7 +2,7 @@
   import type { Component } from 'vue'
 
   import { addPX } from '@/utils/css'
-  import { evaluate } from '@/utils/object'
+  import { evaluate } from '@/utils/function/evaluate'
   import { customRef } from '@/utils/ref'
   import { computed, onBeforeUnmount, onMounted } from 'vue'
 

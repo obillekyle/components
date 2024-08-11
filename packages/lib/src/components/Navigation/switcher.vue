@@ -1,7 +1,8 @@
 <script setup lang="ts">
-  import { evaluate } from '@/utils/object'
-  import { Icon } from '@iconify/vue'
   import type { HTMLAttributes } from 'vue'
+
+  import { evaluate } from '@/utils/function/evaluate'
+  import { Icon } from '@iconify/vue'
   import { computed } from 'vue'
 
   interface SwitcherProperties extends /* @vue-ignore */ HTMLAttributes {

@@ -1,4 +1,4 @@
-import { evaluate } from './object'
+import { evaluate } from '../evaluate'
 
 type ThrottlerStore = Record<string, number>
 type ThrottlerOptions = {
@@ -31,7 +31,7 @@ export function throttler(
 
   if (endCall) {
     debounce(
-      function () {
+      () => {
         delete throttlerStore[key]
         evaluate(endCall)
       },
@@ -40,7 +40,7 @@ export function throttler(
   }
 }
 
-type TimingStore = Record<string | number, number>
+type TimingStore = Record<string | number, any>
 const intervalStore: TimingStore = {}
 let intervalID = 0
 

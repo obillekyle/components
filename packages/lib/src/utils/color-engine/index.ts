@@ -1,93 +1,22 @@
-import { adjustHue, darken, saturate } from 'color2k'
-import { Colors, parseColors, type ColorOptions } from './colors'
+import type { ColorOptions } from '../colors'
+import type { ColorEngineVars } from './types'
+
+import { darken, saturate } from 'color2k'
+import { AppShades, Colors, parseColors } from '../colors'
 
 function dim(color: string, amount: number) {
   return saturate(darken(color, amount), -0.2)
 }
 
-export type ColorVariables = {
-  primary: string
-  secondary: string
-  tertiary: string
-  error: string
-
-  onPrimary: string
-  onSecondary: string
-  onTertiary: string
-  onError: string
-
-  primaryContainer: string
-  secondaryContainer: string
-  tertiaryContainer: string
-  errorContainer: string
-
-  onPrimaryContainer: string
-  onSecondaryContainer: string
-  onTertiaryContainer: string
-  onErrorContainer: string
-
-  primaryFixed: string
-  secondaryFixed: string
-  tertiaryFixed: string
-
-  primaryFixedDim: string
-  secondaryFixedDim: string
-  tertiaryFixedDim: string
-
-  onPrimaryFixed: string
-  onSecondaryFixed: string
-  onTertiaryFixed: string
-
-  onPrimaryFixedVariant: string
-  onSecondaryFixedVariant: string
-  onTertiaryFixedVariant: string
-
-  surface: string
-  surfaceDim: string
-  surfaceBright: string
-
-  surfaceContainerLowest: string
-  surfaceContainerLow: string
-  surfaceContainer: string
-  surfaceContainerHigh: string
-  surfaceContainerHighest: string
-
-  onSurface: string
-  onSurfaceVariant: string
-
-  inverseSurface: string
-  inverseOnSurface: string
-  inversePrimary: string
-
-  outline: string
-  outlineVariant: string
-
-  scrim: string
-  shadow: string
-}
-
-export const AppShades = [
-  0, 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100
-] as const
-
 export class ColorEngine {
-  colors: ColorOptions<Colors> = {
-    primary: Colors.from('#0af'),
-    secondary: Colors.from(saturate('#0af', -0.5)),
-    tertiary: Colors.from(adjustHue('#0af', 240)),
-    error: Colors.from('red'),
-    neutral: Colors.from('gray')
-  }
+  colors: ColorOptions<Colors>
 
   constructor(color?: string | Partial<ColorOptions<string | Colors>>) {
     this.colors = parseColors(color ?? 'white')
   }
 
-  getColorVariables(theme: 'light' | 'dark' = 'light'): ColorVariables {
-    function use(light: number, dark: number) {
-      return theme === 'light' ? light : dark
-    }
-
+  getColorVariables(theme: 'light' | 'dark' = 'light'): ColorEngineVars {
+    const use = (l: number, d: number) => (theme === 'light' ? l : d)
     const { primary, secondary, tertiary, error, neutral } = this.colors
 
     return {
@@ -176,3 +105,6 @@ export class ColorEngine {
     this.colors = undefined as any
   }
 }
+
+export default ColorEngine
+export type * from './types'

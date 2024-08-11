@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { getClientPos } from '@/utils/dom'
+  import { evaluate } from '@/utils/function/evaluate'
   import {
     clamp,
     findNearestNumber,
     mapNumberToRange
   } from '@/utils/number'
-  import { evaluate } from '@/utils/object'
   import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
   interface SliderProperties {
@@ -86,17 +86,17 @@
     if (!element) return
     if (!dragging.value) return
     const rect = element.getBoundingClientRect()
+    const min = minVal.value
+    const max = maxVal.value
 
     e.preventDefault()
 
     const clientX = getClientPos(e).x
     const offset = clamp(clientX - rect.left, 0, rect.width)
 
-    const maxOffset = maxVal.value - minVal.value
+    const maxOffset = max - min
 
     if (props.values) {
-      const min = minVal.value
-      const max = maxVal.value
       const value = Math.round((offset / rect.width) * (max - min) + min)
       sliderVal.value = findNearestNumber(value, values.value)!
       return
@@ -105,7 +105,7 @@
     if (props.step) {
       const value = (offset / rect.width) * maxOffset
       const rounded = Math.round(value / props.step) * props.step
-      sliderVal.value = Math.max(rounded, minVal.value)
+      sliderVal.value = Math.max(rounded, min)
       return
     }
 

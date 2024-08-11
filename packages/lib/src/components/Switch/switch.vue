@@ -2,9 +2,9 @@
   import type { SizesString } from '@/utils/css'
   import type { InputHTMLAttributes } from 'vue'
 
-  import { getCSSValue } from '@/utils/css'
-  import { keyboardClick } from '@/utils/dom'
-  import { evaluate } from '@/utils/object'
+  import { getCSSValue } from '@/utils/css/sizes'
+  import { keyClick } from '@/utils/dom'
+  import { evaluate } from '@/utils/function/evaluate'
   import { computed, ref } from 'vue'
 
   interface SwitchProps
@@ -50,7 +50,7 @@
     tabindex="0"
     class="md-switch"
     :class="variant"
-    @keydown="keyboardClick"
+    @keydown="keyClick"
     @click="inputRef?.click()"
     :style="{
       '--size': getCSSValue(size, 'px', 'component'),

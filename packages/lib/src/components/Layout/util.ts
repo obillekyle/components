@@ -1,4 +1,4 @@
-import { ColorEngine, type ColorVariables } from '@/utils/color-engine'
+import { ColorEngine, type ColorEngineVars } from '@/utils/color-engine'
 import { Colors, type ColorOptions } from '@/utils/colors'
 import {
   DefaultSizes,
@@ -51,7 +51,7 @@ export type ThemeOptions = {
 } & ThemeBase
 
 export type ThemeObject = {
-  colors: ColorOptions<Colors> & { $vars: ColorVariables }
+  colors: ColorOptions<Colors> & { $vars: ColorEngineVars }
 } & ThemeBase
 
 export type ThemeProps = {

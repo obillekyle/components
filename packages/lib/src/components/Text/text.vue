@@ -1,36 +1,20 @@
 <script setup lang="ts">
   import type { BoxProps } from '@/components/Box/util'
-  import type { SizeType } from '@/utils/css'
-  import type { HTMLAttributes } from 'vue'
   import type { TextProps as SharedTextProps } from './util'
 
   import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
   import { getCSSColor, getCSSValue } from '@/utils/css'
 
-  interface TextProps
-    extends BoxProps,
-      SharedTextProps,
-      /** @vue-ignore */ HTMLAttributes {
-    color?: string
-    size?: SizeType
-    weight?: number
-    italic?: boolean
-    spacing?: number
-    lines?: number
-    lineHeight?: number | string
-    wrap?: 'wrap' | 'nowrap' | 'balance' | 'pretty' | 'stable'
-    textAlign?: 'left' | 'center' | 'right'
-  }
+  interface TextProps extends BoxProps, SharedTextProps {}
 
   defineOptions({ name: 'MdText' })
   const props = defineProps<TextProps>()
-  const boxProps = getBoxProps(props)
+  const boxProps = getBoxProps(props, { as: 'p' })
 </script>
 
 <template>
   <Box
-    exclude
     class="md-text"
     v-bind="boxProps"
     :as="props.as || 'p'"

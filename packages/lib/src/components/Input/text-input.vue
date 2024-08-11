@@ -2,7 +2,7 @@
   import '@/assets/input.scss'
   import type { Component, InputHTMLAttributes } from 'vue'
 
-  import { evaluate } from '@/utils/object'
+  import { evaluate } from '@/utils/function/evaluate'
   import { computed, ref } from 'vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'
   import Counter from './counter.vue'

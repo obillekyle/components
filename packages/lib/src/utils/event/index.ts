@@ -2,7 +2,7 @@ type CustomEventCallback<T extends any[] | undefined> = T extends any[]
   ? ((...args: T) => any) | (() => any)
   : () => any
 
-type EventType = {
+export type EventType = {
   [key: string]: any[] | undefined
 }
 

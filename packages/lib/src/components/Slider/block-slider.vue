@@ -2,8 +2,8 @@
   import type { Component, HTMLAttributes } from 'vue'
 
   import { getClientPos } from '@/utils/dom'
+  import { evaluate } from '@/utils/function/evaluate'
   import { clamp, mapNumberToRange } from '@/utils/number'
-  import { evaluate } from '@/utils/object'
   import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'
 

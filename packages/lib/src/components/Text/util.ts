@@ -1,11 +1,12 @@
-import type { SizeType } from '@/utils/css'
+import type { ColorString, SizesString } from '@/utils/css'
 
 export type TextProps = {
-  color?: string
-  size?: SizeType
+  color?: ColorString
+  size?: SizesString
   weight?: number
   italic?: boolean
-  spacing?: number
-  lineHeight?: number | string
+  spacing?: SizesString
+  lineHeight?: SizesString
   textAlign?: 'left' | 'center' | 'right'
+  wrap?: 'wrap' | 'nowrap' | 'balance' | 'pretty' | 'stable'
 }

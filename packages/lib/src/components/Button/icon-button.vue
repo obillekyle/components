@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { Sizes } from '@/utils/css'
+  import type { SizesString } from '@/utils/css'
   import type { ButtonHTMLAttributes } from 'vue'
 
   import { getCSSValue } from '@/utils/css'
@@ -9,7 +9,7 @@
   interface IconButtonProperties
     extends /* @vue-ignore */ ButtonHTMLAttributes {
     icon: string
-    size?: Sizes | number | String
+    size?: SizesString
     selected?: boolean
     variant?: 'filled' | 'tonal' | 'outlined' | 'standard'
   }
@@ -22,7 +22,7 @@
   <button
     type="button"
     class="md-icon-button"
-    @pointerdown="(e) => rippleEffect(e, '.md-icon-button-wrapper')"
+    @pointerdown="rippleEffect($event, '.md-icon-button-wrapper')"
   >
     <div
       class="md-icon-button-wrapper"

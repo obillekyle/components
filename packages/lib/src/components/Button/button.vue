@@ -1,10 +1,12 @@
 <script setup lang="ts">
   import '@/assets/button.scss'
   import type { ButtonHTMLAttributes, Component } from 'vue'
+  import type { BoxProps } from '../Box/util'
 
   import { rippleEffect } from '@/utils/dom'
+  import { getBoxProps } from '../Box/util'
+
   import Box from '../Box/box.vue'
-  import { getBoxProps, type BoxProps } from '../Box/util'
   import IconOrComponent from '../Misc/icon-or-component.vue'
 
   interface ButtonProps
@@ -28,8 +30,8 @@
     as="button"
     type="button"
     class="md-button"
-    :class="variant"
     v-bind="boxProps"
+    :class="variant ?? 'filled'"
     @pointerdown="rippleEffect"
   >
     <IconOrComponent class="md-button-icon left" :icon="leftIcon" />

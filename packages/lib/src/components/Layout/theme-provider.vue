@@ -5,19 +5,10 @@
   import type { ThemeObject, ThemeProps } from './util'
 
   import { ColorEngine } from '@/utils/color-engine'
-  import { parseColors } from '@/utils/colors'
-  import { getCSSColor, getCSSValue } from '@/utils/css'
-  import { $ } from '@/utils/dom'
-  import { hashStr, toKebabCase } from '@/utils/string'
-  import {
-    computed,
-    inject,
-    onBeforeMount,
-    onUnmounted,
-    provide,
-    ref,
-    watch
-  } from 'vue'
+  import { parseColors } from '@/utils/colors/parse-colors'
+  import { createStyle, getCSSColor, getCSSValue } from '@/utils/css'
+  import { toKebabCase } from '@/utils/string'
+  import { inject, provide, ref, watch } from 'vue'
   import { DefaultThemeObject as DTO, getSizes } from './util'
 
   import deepmerge from 'deepmerge'

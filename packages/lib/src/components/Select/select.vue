@@ -2,8 +2,8 @@
   import type { Component, HTMLAttributes } from 'vue'
   import type { SelectItem } from './util'
 
-  import { keyboardClick, rippleEffect } from '@/utils/dom'
-  import { evaluate } from '@/utils/object'
+  import { keyClick, rippleEffect } from '@/utils/dom'
+  import { evaluate } from '@/utils/function/evaluate'
   import { fnRef } from '@/utils/ref'
   import { Icon } from '@iconify/vue'
   import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
@@ -85,7 +85,7 @@
       class="md-select-wrapper"
       @click="show = !show"
       @pointerdown="rippleEffect"
-      @keydown="keyboardClick"
+      @keypress="keyClick"
     >
       <div
         class="md-select-single"

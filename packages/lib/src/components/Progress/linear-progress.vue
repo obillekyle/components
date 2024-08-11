@@ -5,6 +5,8 @@
   import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
   import ViewObserver from '../Misc/view-observer.vue'
 
+  // TODO: use svg instead of html elements for animation
+
   let observer: ResizeObserver | undefined
   const speed = ref(2)
   const root = ref<HTMLElement>()
@@ -145,8 +147,16 @@
       right: calc(70% + var(--xxs));
     }
 
+    49.999% {
+      left: 0%;
+    }
+
     50% {
       left: var(--xxs);
+    }
+
+    69.999% {
+      right: var(--xxs);
     }
 
     70% {
