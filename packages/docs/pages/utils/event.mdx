@@ -39,7 +39,7 @@ export const meta = {
     // start using event in your class
     const eventCb: (arg1: string, arg2: number) => console.log(arg1, arg2);
     myClass.addEventListener('event-name', eventCb);
-    myClass.set('value');
+    myClass.set('value'); // emits 'event-name'
     
     myClass.removeEventListener('event-name', eventCb);
     ```
@@ -84,8 +84,6 @@ export const meta = {
 >  </Preview>
 
 ## API
-
-### `Overview`
 
 <Preview>
   <CodeHighlight>

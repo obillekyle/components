@@ -1,16 +1,37 @@
 <script setup lang="ts">
   import pages from '@/router/pages'
-  import { useLocalStorage } from '@vue-material/core'
   import IconButton from '@vue-material/core/Button/icon-button.vue'
   import Layout from '@vue-material/core/Layout/layout.vue'
+  import { useLocalStorage } from '@vue-material/core/utils/ref'
 
   import Navigation from '@vue-material/core/Navigation'
 
+  import { LinearProgress } from '@vue-material/core'
   import { computed, onMounted, provide, ref } from 'vue'
   import { RouterView, useRoute, useRouter } from 'vue-router'
 
   const route = useRoute()
   const router = useRouter()
+  const loader = ref<HTMLDivElement>()
+
+  const loading = ref(false)
+
+  let timeout: any = 0
+  router.beforeEach((to, from, next) => {
+    loading.value = true
+    clearTimeout(timeout)
+    loader.value?.setAttribute('show', '')
+    next()
+  })
+
+  router.afterEach(() => {
+    if (loader.value) {
+      loader.value.removeAttribute('show')
+      timeout = setTimeout(() => {
+        loading.value = false
+      }, 200)
+    }
+  })
 
   /**
    * Ref<string> is still the type inside template
@@ -98,6 +119,7 @@
           <IconButton
             variant="outlined"
             @click="isDark = !isDark"
+            aria-label="Change Theme"
             :icon="
               isDark
                 ? 'material-symbols:light-mode-outline'
@@ -111,10 +133,12 @@
             v-model="color"
             class="input-color"
             ref="inputColor"
+            aria-label="Change Color Input"
           />
           <IconButton
             selected
             variant="filled"
+            aria-label="Change Color"
             @click="inputColor?.click()"
             icon="material-symbols:palette-outline"
           />
@@ -122,11 +146,15 @@
       </Navigation>
     </template>
 
+    <div class="loader" ref="loader">
+      <LinearProgress v-if="loading" />
+    </div>
+
     <RouterView />
   </Layout>
 </template>
 
-<style>
+<style lang="scss">
   .input-color {
     margin: 0;
     padding: 0;
@@ -134,5 +162,19 @@
     height: 0;
     opacity: 0;
     pointer-events: none;
+  }
+
+  .loader {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 10;
+    transform: translateY(-100%);
+    transition: transform 0.2s;
+    pointer-events: none;
+
+    &[show] {
+      transform: translateY(0);
+    }
   }
 </style>

@@ -3,7 +3,7 @@
   import pages from '@/router/pages'
   import { Icon } from '@iconify/vue'
   import {
-    keyboardClick,
+    keyClick,
     toKebabCase,
     useLocalStorage
   } from '@vue-material/core'
@@ -69,7 +69,7 @@
         v-for="page in mapped"
         :key="page.path"
         class="search-item"
-        @keypress="keyboardClick"
+        @keypress="keyClick($event, ['Enter', ' '])"
         @click="router.push(page.path)"
       >
         <Icon :icon="page.icon" :width="24" />
@@ -92,6 +92,7 @@
       margin-bottom: var(--md);
       border: 1px solid var(--outline);
       transition: border 0.2s;
+      background: var(--surface);
 
       &:focus {
         border: 1px solid var(--primary);

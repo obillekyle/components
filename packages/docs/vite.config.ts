@@ -21,6 +21,19 @@ export default defineConfig({
       })
     }
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'docs.js',
+        chunkFileNames: 'docs-[name]-[hash].js',
+        assetFileNames: 'docs-[name]-[hash].[ext]'
+      }
+    }
+  },
+  server: {
+    port: 6280,
+    strictPort: true
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('src', import.meta.url)),

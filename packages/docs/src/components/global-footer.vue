@@ -1,11 +1,10 @@
 <script setup lang="ts">
+  import { getCSSValue, type SizesString } from '@vue-material/core/utils'
+
   import { Icon } from '@iconify/vue'
-  import {
-    getCSSValue,
-    Scroller,
-    WavyDivider,
-    type SizesString
-  } from '@vue-material/core'
+  import { Text } from '@vue-material/core'
+  import WavyDivider from '@vue-material/core/Divider/wavy-divider.vue'
+  import Scroller from '@vue-material/core/Text/scroller.vue'
   import { inject, ref } from 'vue'
 
   type Link = {
@@ -68,7 +67,7 @@
     <div class="global-footer-grid">
       <div class="global-footer-info">
         <Icon icon="mdi:shape-outline" :width="48" />
-        <h3>Material Components</h3>
+        <Text size="#xxl" :weight="600">Material Components</Text>
 
         <p>
           <strong>@vue-material/core</strong> is a collection of Material
@@ -78,7 +77,7 @@
         <p class="global-footer-version">v{{ version }}</p>
       </div>
       <div class="global-footer-links">
-        <h3>Links:</h3>
+        <Text size="#lg" :weight="600">Links:</Text>
         <a
           :key="index"
           :href="link.url"
@@ -94,7 +93,7 @@
         </a>
       </div>
       <div class="global-footer-links">
-        <h3>See also:</h3>
+        <Text size="#lg" :weight="600">See Also:</Text>
         <a
           :key="index"
           :href="link.url"
@@ -129,6 +128,10 @@
       gap: var(--lg);
       padding-left: var(--md);
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+      * {
+        margin: 0;
+      }
     }
 
     &-info {

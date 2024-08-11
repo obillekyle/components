@@ -1,24 +1,9 @@
 /* stylelint-disable no-descending-specificity */
 .marked-content {
-  font-size: var(--font-md);
-
   :not(.preview, .preview *) {
-    margin: revert;
     color: var(--on-surface-variant);
     letter-spacing: 0.02em;
     line-height: 1.5;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    &:not(.preview *) {
-      margin: revert;
-      color: var(--on-surface);
-    }
   }
 
   h1,
@@ -32,6 +17,7 @@
   h2,
   h3 {
     &:not(.preview *) {
+      color: var(--on-surface);
       display: flex;
       align-items: center;
 
@@ -75,13 +61,11 @@
 
   ul:not(.preview *) {
     padding-left: 1.2em;
+    padding-bottom: 1em;
 
-    &:not(:has(ul)) {
-      padding-bottom: 1em;
-    }
-
-    p {
+    ul {
       padding-bottom: 0;
+      font-size: 0.9em;
     }
   }
 
@@ -99,51 +83,12 @@
   h3 {
     &:not(.preview *) {
       + ul {
-        margin-top: -0.25em;
+        margin-top: 0;
       }
 
-      &:has(> strong > code, > code) {
-        margin-bottom: 0.25em;
+      &:has(> strong > code, > code, > del > code) {
+        margin-bottom: 0;
       }
-    }
-  }
-
-  li:not(.preview *) {
-    position: relative;
-    padding-top: var(--xxs);
-
-    &::marker {
-      color: transparent;
-      padding-left: var(--xs);
-    }
-
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      background-color: var(--surface-container-highest);
-    }
-
-    &::before {
-      top: 0;
-      left: -1em;
-      width: 1px;
-      height: 100%;
-    }
-
-    &::after {
-      top: 0.9em;
-      left: -1em;
-      width: 0.75em;
-      height: 1px;
-    }
-
-    &:last-child::before {
-      height: 0.9em;
-    }
-
-    > * {
-      margin: 0 !important;
     }
   }
 

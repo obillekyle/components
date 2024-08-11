@@ -1,5 +1,8 @@
 <script setup lang="ts">
-  import { Box } from '@vue-material/core'
+  import { Box, Button } from '@vue-material/core'
+  import { useRouter } from 'vue-router'
+
+  const router = useRouter()
 
   const kaomojis = [
     '(╯°□°）╯︵ ┻━┻',
@@ -30,5 +33,7 @@
     <Text class="content-error-description">
       The page you are looking for does not exist, yet...
     </Text>
+
+    <Button @click="router.back()" variant="tonal">Go back</Button>
   </Box>
 </template>

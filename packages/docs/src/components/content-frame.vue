@@ -168,14 +168,15 @@
     }
 
     &-header {
-      display: flex;
-      flex-direction: column;
       grid-area: header;
-      gap: var(--sm);
       background: var(--surface);
       color: var(--on-surface);
       padding: var(--xl);
       padding-bottom: 0;
+
+      h1 {
+        margin-bottom: 0;
+      }
     }
 
     &-outline {
@@ -200,8 +201,10 @@
     }
 
     &-error {
+      top: 0;
       width: 100%;
       display: grid;
+      position: absolute;
       margin-top: 20dvh;
       text-align: center;
       place-items: center;

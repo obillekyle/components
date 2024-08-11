@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Icon } from '@iconify/vue'
+  import { keyClick } from '@vue-material/core'
   import Box from '@vue-material/core/Box'
   import { $ } from '@vue-material/core/utils/dom'
   import { customRef } from '@vue-material/core/utils/ref'
@@ -60,25 +61,35 @@
     <div class="code-header">
       <span class="code-language">{{ language }}</span>
       <span class="code-actions">
-        <Icon
-          :icon="
-            copied
-              ? 'material-symbols:check'
-              : 'material-symbols:content-copy-outline'
-          "
-          :width="24"
+        <span
+          tabindex="0"
           @click="copy"
-          :color="copied ? 'green' : undefined"
-        />
-        <Icon
-          :icon="
-            hidden
-              ? 'material-symbols:expand-content'
-              : 'material-symbols:hide'
-          "
-          :width="24"
+          @keypress="keyClick($event, ['Enter', ' '])"
+        >
+          <Icon
+            :icon="
+              copied
+                ? 'material-symbols:check'
+                : 'material-symbols:content-copy-outline'
+            "
+            :width="24"
+            :color="copied ? 'green' : undefined"
+          />
+        </span>
+        <span
+          tabindex="0"
           @click="hidden = !hidden"
-        />
+          @keypress="keyClick($event, ['Enter', ' '])"
+        >
+          <Icon
+            :icon="
+              hidden
+                ? 'material-symbols:expand-content'
+                : 'material-symbols:hide'
+            "
+            :width="24"
+          />
+        </span>
       </span>
     </div>
     <slot />
@@ -98,6 +109,7 @@
     }
 
     pre {
+      margin: 0;
       line-height: 1.5;
 
       &::-webkit-scrollbar {
@@ -139,6 +151,7 @@
       align-items: center;
       min-height: var(--component-sm);
       font-size: var(--font-sm);
+      line-height: 0;
       background: var(--surface-container);
 
       .code-actions {
