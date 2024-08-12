@@ -16,6 +16,7 @@
   import AppCards from './app-cards.vue'
   import AppComp from './app-comp.vue'
   import ColorShades from './color-shades.vue'
+  import DominantColor from './dominant-color.vue'
   import LayoutInherit from './layout-inherit.vue'
 
   const tab = useLocalStorage('tab', 0)
@@ -46,6 +47,7 @@
           <NavItem name="Colors" icon="material-symbols:colors-sharp" />
           <NavItem name="Cards" icon="material-symbols:cards-outline" />
           <NavItem name="Layout" icon="mdi:application-outline" />
+          <NavItem name="Extract" icon="mdi:palette-outline" />
           <NavEntry name="Settings" icon="mdi:cog-outline" />
         </NavContainer>
       </NavBar>
@@ -84,6 +86,7 @@
     <ColorShades v-else-if="tab === 1" />
     <AppCards v-else-if="tab === 2" />
     <LayoutInherit v-else-if="tab === 3" />
+    <DominantColor v-else-if="tab === 4" />
   </Layout>
 </template>
 
