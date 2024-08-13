@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { addUnit, getCSSValue } from '@/utils/css'
-  import { clamp } from '@/utils/number'
+  import { clamp } from '@/utils/number/range'
   import { fnRef } from '@/utils/ref'
   import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
   import ViewObserver from '../Misc/view-observer.vue'

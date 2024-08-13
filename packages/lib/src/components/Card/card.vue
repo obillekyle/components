@@ -2,10 +2,11 @@
   import type { HTMLAttributes } from 'vue'
   import type { BoxProps } from '../Box/util'
 
-  import { getCSSValue } from '@/utils'
-  import { exclude } from '@/utils/object'
-  import Box from '../Box/box.vue'
+  import { getCSSValue } from '@/utils/css/sizes'
+  import { exclude } from '@/utils/object/modify'
   import { getBoxProps } from '../Box/util'
+
+  import Box from '../Box/box.vue'
 
   interface CardProps extends BoxProps, /* @vue-ignore */ HTMLAttributes {
     variant?: 'elevated' | 'filled' | 'outlined'

@@ -1,13 +1,7 @@
-import {
-  escapeHtml,
-  insertAt,
-  replaceRange,
-  reverseString,
-  unescapeHtml
-} from '.'
 import { pipe } from '../function/pipe'
 import { toCamelCase, toKebabCase, toPascalCase } from './cases'
-import { normalizeNewLines } from './normalize'
+import { escapeHtml, normalizeNewLines, unescapeHtml } from './normalize'
+import { insertAt, replaceRange, reverseString } from './transform'
 
 export class MutableString extends String {
   constructor(string_: string) {

@@ -1,7 +1,8 @@
-import { toVar } from '.'
-import { ColorEngine } from '../color-engine'
-import { toCamelCase } from '../string'
 import type { ColorString } from './type'
+
+import { ColorEngine } from '../color-engine'
+import { toCamelCase } from '../string/cases'
+import { toVar } from './main'
 
 const engine = new ColorEngine('#0df')
 const engineShades: Record<string, string> = engine.getShades()

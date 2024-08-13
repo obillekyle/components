@@ -4,7 +4,7 @@
   import { computed, ref, useAttrs } from 'vue'
 
   import { evaluate } from '@/utils/function/evaluate'
-  import { clamp } from '@/utils/number'
+  import { clamp } from '@/utils/number/range'
   import IconOrComponent from '../Misc/icon-or-component.vue'
   import NumberArrows from './number-arrows.vue'
 

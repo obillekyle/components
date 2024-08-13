@@ -2,6 +2,7 @@ import vue from '@vitejs/plugin-vue'
 import glob from 'fast-glob'
 import path from 'node:path'
 import { defineConfig } from 'vite'
+import circleDependency from 'vite-plugin-circular-dependency'
 import dts from 'vite-plugin-dts'
 import VueDevTools from 'vite-plugin-vue-devtools'
 import { attachStyles, resolver } from './plugins'
@@ -20,6 +21,7 @@ export default defineConfig({
     }),
     vue(),
     VueDevTools(),
+    circleDependency(),
     attachStyles({ transform: resolver() })
   ],
   server: {
@@ -47,6 +49,7 @@ export default defineConfig({
         'deepmerge'
       ],
       output: {
+        esModule: true,
         preserveModules: true,
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',

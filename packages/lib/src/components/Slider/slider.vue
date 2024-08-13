@@ -5,7 +5,7 @@
     clamp,
     findNearestNumber,
     mapNumberToRange
-  } from '@/utils/number'
+  } from '@/utils/number/range'
   import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
   interface SliderProperties {

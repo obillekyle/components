@@ -7,7 +7,7 @@
   import { ColorEngine } from '@/utils/color-engine'
   import { parseColors } from '@/utils/colors/parse-colors'
   import { createStyle, getCSSColor, getCSSValue } from '@/utils/css'
-  import { toKebabCase } from '@/utils/string'
+  import { toKebabCase } from '@/utils/string/cases'
   import { inject, provide, shallowRef, watch } from 'vue'
   import { DefaultThemeObject as DTO, getSizes } from './util'
 

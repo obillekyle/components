@@ -3,7 +3,7 @@
 
   import { getClientPos } from '@/utils/dom'
   import { evaluate } from '@/utils/function/evaluate'
-  import { clamp, mapNumberToRange } from '@/utils/number'
+  import { clamp, mapNumberToRange } from '@/utils/number/range'
   import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'
 

@@ -1,14 +1,18 @@
-import { ColorEngine, type ColorEngineVars } from '@/utils/color-engine'
-import { Colors, type ColorOptions } from '@/utils/colors'
-import {
-  DefaultSizes,
-  addPX,
-  type ColorString,
-  type SizeDict,
-  type SizeRecord,
-  type SizeType
-} from '@/utils/css'
-import { inject, shallowRef, type ShallowRef } from 'vue'
+import type { ColorEngineVars } from '@/utils/color-engine/types'
+import type { ColorOptions } from '@/utils/colors/type'
+import type {
+  ColorString,
+  SizeDict,
+  SizeRecord,
+  SizeType
+} from '@/utils/css/type'
+import type { ShallowRef } from 'vue'
+
+import { ColorEngine } from '@/utils/color-engine'
+import { Colors } from '@/utils/colors/class'
+import { DefaultSizes } from '@/utils/css/defaults'
+import { addPX } from '@/utils/css/sizes'
+import { inject, shallowRef } from 'vue'
 
 export function getSizes(object: SizeDict, prefix: string) {
   const object_: Record<string, string> = {}

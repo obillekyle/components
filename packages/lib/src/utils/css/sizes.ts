@@ -1,8 +1,8 @@
 import type { SizePrefixes, SizeType, SizeUnits, SizesString } from './type'
 
-import { canBeNumber, toVar } from '.'
-import { is } from '../object'
+import { is } from '../object/is'
 import { DefaultSizes } from './defaults'
+import { canBeNumber, toVar } from './main'
 import { sizes } from './vars'
 
 export function addUnit(
