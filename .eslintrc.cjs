@@ -8,13 +8,15 @@ module.exports = {
     'eslint:recommended',
     'plugin:unicorn/recommended',
     '@vue/eslint-config-typescript',
-    '@vue/eslint-config-prettier/skip-formatting'
+    '@vue/eslint-config-prettier/skip-formatting',
+    'plugin:prettier/recommended'
   ],
   rules: {
     'vue/valid-v-model-argument': 'off',
     'unicorn/prevent-abbreviations': 'off'
   },
   parserOptions: {
-    ecmaVersion: 'latest'
+    ecmaVersion: 'latest',
+    sourceType: 'module'
   }
 }
