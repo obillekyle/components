@@ -1,16 +1,17 @@
 <script setup lang="ts">
   import type { BoxProps } from '@/components/Box/util'
+  import type { Component } from 'vue'
 
   import { getBoxProps } from '@/components/Box/util'
-  import { Icon } from '@iconify/vue'
+  import { clean } from '@/utils/object/data'
   import { onMounted, onUnmounted, ref, watch } from 'vue'
   import { resolveImage } from './util'
 
   import Box from '@/components/Box/box.vue'
   import ViewObserver from '../Misc/view-observer.vue'
-  import CircularProgress from '../Progress/circular-progress.vue'
+  import DefaultLoader from './default-loader.vue'
 
-  interface BlockImageProperties extends BoxProps {
+  interface BlockImageProps extends BoxProps {
     src?: string | Blob
     alt?: string
     fit?: 'contain' | 'cover' | 'fill'
@@ -21,12 +22,14 @@
     width?: number
     height?: number
     span?: boolean
+    loader?: Component
   }
 
-  const props = withDefaults(defineProps<BlockImageProperties>(), {
+  const props = withDefaults(defineProps<BlockImageProps>(), {
     fit: 'cover',
     position: 'center',
-    cover: false
+    cover: false,
+    loader: DefaultLoader
   })
 
   const progress = ref(0)
@@ -40,7 +43,7 @@
     let source = props.src
 
     if (image.value) {
-      URL.revokeObjectURL(image.value)
+      clean(image.value)
       image.value = undefined
     }
 
@@ -73,7 +76,7 @@
 
   watch(() => props.src, resolve)
   onMounted(() => !props.lazy && resolve())
-  onUnmounted(() => URL.revokeObjectURL(image.value || ''))
+  onUnmounted(() => clean(image.value))
 
   defineOptions({ name: 'MdBlockImage' })
 </script>
@@ -87,18 +90,14 @@
     class="md-block-image"
     :class="{ loaded: image, 'image-error': error, span }"
   >
-    <Box class="md-loader">
-      <CircularProgress :value="error ? 0 : progress" :rotate="!image">
-        <Icon
-          icon="material-symbols:refresh"
-          :width="24"
-          v-if="error"
-          @click="resolve"
-          style="cursor: pointer"
-          color="var(--error, red)"
-        />
-      </CircularProgress>
-    </Box>
+    <div class="md-loader">
+      <loader
+        :error
+        :ready="!image"
+        :progress="progress"
+        @retry="resolve"
+      />
+    </div>
     <img v-if="!error" :src="image" :alt :width :height />
   </ViewObserver>
 </template>
@@ -112,14 +111,6 @@
     border-radius: var(--sm);
     aspect-ratio: v-bind('props.ratio');
     background: var(--surface-container);
-
-    .md-fade-enter-active {
-      opacity: 1;
-    }
-
-    .md-fade-leave-active {
-      opacity: 0;
-    }
 
     img {
       display: block;
@@ -146,14 +137,6 @@
       img {
         width: 100%;
         height: 100%;
-      }
-    }
-
-    &.image-error {
-      .md-loader {
-        .md-circular-progress-content {
-          bottom: 8px !important;
-        }
       }
     }
 

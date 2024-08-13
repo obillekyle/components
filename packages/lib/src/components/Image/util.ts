@@ -17,8 +17,8 @@ export async function resolveImage(
 
     xhr.send()
 
-    const data = await new Promise<Blob | undefined>((resolve) => {
-      xhr.addEventListener('error', () => resolve(void 0))
+    const data = await new Promise<Blob | void>((resolve) => {
+      xhr.addEventListener('error', () => resolve())
       xhr.addEventListener('load', () => {
         const contentType =
           xhr.getResponseHeader('content-type') || 'image/webp'

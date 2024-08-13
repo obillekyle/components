@@ -233,6 +233,7 @@
     width: max-content;
     height: max-content;
     align-self: center;
+    line-height: 0;
 
     &:not(.animate) * {
       animation-play-state: paused !important;
