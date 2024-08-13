@@ -66,6 +66,7 @@ bun install @vue-material/core @iconify/vue
 - [List](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/List)
 - [Misc](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Misc)
 - [Navigation](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Navigation)
+- [Paper](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Paper)
 - [Progress](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Progress)
 - [Select](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Select)
 - [Slider](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Slider)

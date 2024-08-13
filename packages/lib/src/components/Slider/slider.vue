@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { getClientPos } from '@/utils/dom'
+  import { getClientPos } from '@/utils/dom/events'
   import { evaluate } from '@/utils/function/evaluate'
   import {
     clamp,

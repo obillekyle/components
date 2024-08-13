@@ -1,9 +1,7 @@
-import { transform } from 'esbuild'
-import fs from 'node:fs'
-import path from 'node:path'
-import { gzipSync } from 'node:zlib'
 import type { Plugin, ResolvedConfig } from 'vite'
-import Logger from '../logger'
+
+import { transform } from 'esbuild'
+import { gzipSync } from 'node:zlib'
 import {
   formatCss,
   getHelperFileContent,
@@ -11,14 +9,19 @@ import {
   hash,
   isCSS,
   normalize,
-  relativeFromSrc as relativeFromSource
+  relativeFromSrc
 } from './utils'
 
-let packSize = 0
-let fileSize = 0
-let moduleSize = 0
-let moduleSizeGzip = 0
-let logger = new Logger('attach-styles')
+import fs from 'node:fs'
+import path from 'node:path'
+import Logger from '../logger'
+
+let packSize = 0,
+  fileSize = 0,
+  moduleSize = 0,
+  moduleSizeGzip = 0,
+  logger = new Logger('attach-styles')
+
 const css: Record<string, string> = {}
 const importedMap: Record<string, string[]> = {}
 
@@ -139,7 +142,7 @@ export function attachStyles({
 
             if (cssString) {
               if (!added) {
-                const root = relativeFromSource(name)
+                const root = relativeFromSrc(name)
                 code = `import $i from '${root}/attach-styles.js';\n` + code
                 added = true
               }
@@ -161,7 +164,7 @@ export function attachStyles({
 
       if (isCSS(name)) {
         const cssString = t(css[name], name)
-        const root = relativeFromSource(name)
+        const root = relativeFromSrc(name)
         const newFile = `
           import i from '${root}/attach-styles.js';
           i(${JSON.stringify(cssString)},'${hash(name)}');
