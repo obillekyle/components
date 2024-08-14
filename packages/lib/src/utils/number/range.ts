@@ -44,3 +44,12 @@ export function clamp(number: number, min: number, max: number) {
 
 /** @deprecated use `clamp` instead*/
 export const minMax = clamp
+
+export function offsetRange(
+  length: number,
+  pos: number,
+  offset: number
+): number {
+  const half = length / 2
+  return pos - ((pos - half) / half) * offset
+}
