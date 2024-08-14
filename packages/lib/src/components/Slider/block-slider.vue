@@ -1,13 +1,15 @@
 <script setup lang="ts">
   import type { Component, HTMLAttributes } from 'vue'
 
-  import { getClientPos } from '@/utils/dom'
+  import { getClientPos } from '@/utils/dom/events'
   import { evaluate } from '@/utils/function/evaluate'
   import { clamp, mapNumberToRange } from '@/utils/number/range'
+  import { useRect } from '@/utils/ref/use-rect'
   import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+
   import IconOrComponent from '../Misc/icon-or-component.vue'
 
-  interface MasterSliderProperties
+  interface MasterSliderProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
     value?: number
     defaultValue?: number
@@ -20,7 +22,7 @@
   }
 
   defineOptions({ name: 'MdBlockSlider' })
-  const props = withDefaults(defineProps<MasterSliderProperties>(), {
+  const props = withDefaults(defineProps<MasterSliderProps>(), {
     min: 0,
     max: 100,
     step: 1,
@@ -28,11 +30,10 @@
   })
 
   let timeout: any
-  let observer: ResizeObserver
   const dragging = ref(false)
   const model = defineModel<number>()
   const wrapper = ref<HTMLElement>()
-  const rect = ref({ width: 0, height: 0 })
+  const rect = useRect(wrapper)
 
   const sliderVal = computed({
     get: () =>
@@ -49,6 +50,7 @@
 
   const steps = computed(() => props.step ?? 1 / 10 ** props.decimal)
   const position = computed(() => {
+    if (!rect.value) return 0
     const newMin = rect.value.height / rect.value.width
     const oldMin = (sliderVal.value - props.min) / (props.max - props.min)
     return mapNumberToRange(oldMin * 100, 0, 100, newMin * 100, 100)
@@ -71,14 +73,15 @@
 
     const clientX = getClientPos(e).x
     const pos = clientX - rect.left
+    const maxOffset = props.max - props.min
 
     const cursorPos = clamp(pos - rect.height, 0, rect.width)
     const pad = (cursorPos / rect.width) * rect.height
 
     const offset = clamp(cursorPos + pad, 0, rect.width)
-    const value = (offset / rect.width) * (props.max - props.min)
+    const value = (offset / rect.width) * maxOffset
 
-    model.value = props.step
+    sliderVal.value = props.step
       ? Math.round(value / props.step) * props.step
       : Math.round(value * 10 ** props.decimal) / 10 ** props.decimal
   }
@@ -105,11 +108,6 @@
   }
 
   onMounted(() => {
-    observer = new ResizeObserver(([entry]) => {
-      rect.value = entry.contentRect
-    })
-
-    observer.observe(wrapper.value!)
     document.addEventListener('mousemove', dragMove)
     document.addEventListener('mouseup', dragUp)
     document.addEventListener('touchmove', dragMove)
@@ -117,7 +115,6 @@
   })
 
   onBeforeUnmount(() => {
-    observer.disconnect()
     document.removeEventListener('mousemove', dragMove)
     document.removeEventListener('mouseup', dragUp)
     document.removeEventListener('touchmove', dragMove)

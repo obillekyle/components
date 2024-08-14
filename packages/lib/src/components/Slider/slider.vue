@@ -4,8 +4,10 @@
   import {
     clamp,
     findNearestNumber,
-    mapNumberToRange
+    offsetRange
   } from '@/utils/number/range'
+  import { is } from '@/utils/object/is'
+  import { useRect } from '@/utils/ref/use-rect'
   import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 
   interface SliderProperties {
@@ -31,13 +33,14 @@
   const wrapper = ref<HTMLElement>()
   const model = defineModel<number>()
   const useMD3 = inject('md3', false)
+  const wrapperRect = useRect(wrapper)
 
   // TODO: Organize this mess
 
   const values = computed(() => {
     if (props.values) {
       return props.values
-        .map((v) => (typeof v === 'object' ? v.value : v))
+        .map((v) => (is(v, 'object') ? v.value : v))
         .sort((a, b) => a - b)
     }
 
@@ -64,55 +67,52 @@
   })
 
   function dragDown(e: MouseEvent | TouchEvent) {
-    e.preventDefault()
     dragging.value = true
     dragMove(e)
   }
 
   function getLabel(value: number) {
-    if (props.values) {
-      const item = props.values.find((v) => {
-        return typeof v === 'object' && v.value === value
-      })
-      return typeof item === 'number' ? item : item?.label || value
-    }
+    if (!props.values) return value
 
-    return value
+    const vals = props.values
+    const item = vals.find((v) => is(v, 'object') && v.value === value)
+    return is(item, 'number') ? item : item?.label || value
   }
 
   function dragMove(e: MouseEvent | TouchEvent) {
-    const element = wrapper.value!
+    const rect = wrapperRect.value!
 
-    if (!element) return
+    if (!rect) return
     if (!dragging.value) return
-    const rect = element.getBoundingClientRect()
     const min = minVal.value
     const max = maxVal.value
 
     e.preventDefault()
 
-    const clientX = getClientPos(e).x
-    const offset = clamp(clientX - rect.left, 0, rect.width)
+    const offset = rect.height / 2
+    const length = rect.width
+    const clientX = getClientPos(e).x - rect.left
+    const pos = offsetRange(length, clientX, offset * -1)
 
     const maxOffset = max - min
+    const percent = pos / length
+    const value = clamp(percent * maxOffset + min, min, max)
 
     if (props.values) {
-      const value = Math.round((offset / rect.width) * (max - min) + min)
-      sliderVal.value = findNearestNumber(value, values.value)!
+      sliderVal.value = findNearestNumber(value, values.value)
       return
     }
 
     if (props.step) {
-      const value = (offset / rect.width) * maxOffset
-      const rounded = Math.round(value / props.step) * props.step
+      const step = props.step
+      const rounded = Math.round(value / step) * step
       sliderVal.value = Math.max(rounded, min)
       return
     }
 
-    const value = (offset / rect.width) * maxOffset
-    const rounded =
-      Math.round(value * 10 ** props.decimal) / 10 ** props.decimal
-    sliderVal.value = Math.max(rounded + minVal.value, minVal.value)
+    const decimal = Math.pow(10, props.decimal)
+    const rounded = Math.round(value * decimal) / decimal
+    sliderVal.value = Math.max(rounded, min)
   }
 
   function dragUp() {
@@ -120,38 +120,47 @@
   }
 
   function getPosition(value: number) {
-    const number_ =
-      ((value - minVal.value) / (maxVal.value - minVal.value)) * 100
+    if (!wrapperRect.value) return 0
+    const rect = wrapperRect.value!
+    const maxOffset = maxVal.value - minVal.value
+    const number = (value - minVal.value) / maxOffset
+    const offset = useMD3 ? rect.height / 2 : 0
 
-    return useMD3
-      ? mapNumberToRange(number_, 0, 100, 2.4, 97.6)
-      : mapNumberToRange(number_, 0, 100, 0.8, 99.2)
+    return offsetRange(rect.width, number * rect.width, offset)
   }
 
-  const thumbPos = computed(() => getPosition(sliderVal.value ?? 0))
+  const thumbPos = computed(() => getPosition(sliderVal.value))
 
   function handleKeydown(e: KeyboardEvent) {
     const step = props.step ?? 1 / 10 ** props.decimal
+    const min = minVal.value
+    const max = maxVal.value
+    const vals = values.value
+    const value = sliderVal.value
+
     if (e.key === 'ArrowLeft') {
       if (props.values) {
-        const index = values.value.indexOf(sliderVal.value!)
-        const nextIndex = Math.max(index - 1, 0)
-        sliderVal.value = values.value[nextIndex]
+        const index = vals.indexOf(value)
+        const prevIndex = Math.max(index - 1, 0)
+        sliderVal.value = vals[prevIndex]
         return
       }
 
-      const value = sliderVal.value - step
-      sliderVal.value = Math.max(value, minVal.value)
-    } else if (e.key === 'ArrowRight') {
+      const newValue = value - step
+      sliderVal.value = Math.max(newValue, min)
+      return
+    }
+
+    if (e.key === 'ArrowRight') {
       if (props.values) {
-        const index = values.value.indexOf(sliderVal.value!)
-        const nextIndex = Math.min(index + 1, values.value.length - 1)
-        sliderVal.value = values.value[nextIndex]
+        const index = vals.indexOf(value)
+        const nextIndex = Math.min(index + 1, vals.length - 1)
+        sliderVal.value = vals[nextIndex]
         return
       }
 
-      const value = sliderVal.value + step
-      sliderVal.value = Math.min(value, maxVal.value)
+      const newValue = value + step
+      sliderVal.value = Math.min(newValue, max)
     }
   }
 
@@ -186,19 +195,15 @@
     <div class="md-slider-value" v-if="props.showValue">
       {{ sliderVal }}
     </div>
-    <div
-      ref="wrapper"
-      class="md-slider-wrapper"
-      :style="{ '--thumb-offset': thumbPos }"
-    >
+    <div class="md-slider-wrapper" :style="{ '--thumb-offset': thumbPos }">
       <div
         class="md-slider-thumb"
-        :data-value="getLabel(model!)"
         :dragging
+        :data-value="getLabel(model!)"
         @touchstart="dragDown"
       />
       <input type="range" :min="minVal" :max="maxVal" v-model="sliderVal" />
-      <div class="md-slider-track" />
+      <div class="md-slider-track" ref="wrapper" />
       <div class="md-slider-labels" v-if="props.values">
         <template v-if="props.showLabel">
           <div
@@ -277,7 +282,7 @@
         position: absolute;
         content: '';
         height: 100%;
-        right: calc((var(--thumb-offset) - 100) * -1%);
+        right: calc((var(--thumb-offset) - 100) * -1px);
         background: var(--primary);
       }
     }
@@ -285,13 +290,21 @@
     &-thumb {
       z-index: 1;
       position: absolute;
-      left: calc(var(--thumb-offset) * 1%);
+      left: calc(var(--thumb-offset) * 1px);
       width: var(--thumb-width);
       height: var(--thumb-height);
       border-radius: 999px;
       align-self: center;
       transform: translateX(-50%);
       background: var(--primary);
+
+      &::before {
+        content: '';
+        position: absolute;
+        width: 500%;
+        height: 100%;
+        transform: translateX(-40%);
+      }
 
       &::after {
         content: attr(data-value);
@@ -311,6 +324,8 @@
 
       &[dragging='true'] {
         background: var(--primary);
+        width: calc(var(--thumb-width) * 0.8);
+        margin-left: calc(var(--thumb-width) * -0.2);
 
         &::after {
           transform: translate(-50%, -125%);
@@ -330,7 +345,7 @@
       border-radius: 999px;
 
       .md-slider-indicator {
-        left: calc(var(--offset) * 1%);
+        left: calc(var(--offset) * 1px);
         transform: translateX(-50%);
         position: absolute;
         width: var(--xxs);
@@ -354,7 +369,7 @@
 
       .md-slider-label {
         position: absolute;
-        left: calc(var(--offset) * 1%);
+        left: calc(var(--offset) * 1px);
         transform: translateX(-50%);
         font-size: var(--font-xxs);
         color: var(--mono-50);
@@ -391,7 +406,7 @@
 
         &::before {
           width: calc(
-            (var(--thumb-offset) * 1%) - (var(--thumb-width) * 2)
+            (var(--thumb-offset) * 1px) - (var(--thumb-width) * 2)
           );
           border-radius: 2px;
         }
@@ -403,7 +418,7 @@
           height: 100%;
           position: absolute;
           left: calc(
-            ((var(--thumb-offset) * 1%) + (var(--thumb-width) * 2))
+            ((var(--thumb-offset) * 1px) + (var(--thumb-width) * 2))
           );
           border-radius: 2px;
         }
