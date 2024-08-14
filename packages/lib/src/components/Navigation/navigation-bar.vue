@@ -127,7 +127,7 @@
     &.hidden &-item,
     &.active &-item {
       margin-bottom: 0;
-      padding-top: var(--md);
+      padding-top: var(--xxs);
       padding-bottom: 0;
     }
 
