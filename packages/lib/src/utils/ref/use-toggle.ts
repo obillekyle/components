@@ -1,4 +1,6 @@
-import { ref, type Ref } from 'vue'
+import type { Ref } from 'vue'
+
+import { ref } from 'vue'
 import { evaluate } from '../function/evaluate'
 
 type ToggleValues = boolean | (1 | 0) | ('on' | 'off')
@@ -7,14 +9,14 @@ type ToggleFn<T extends ToggleValues> = {
   (value: T | ((value: T) => T | undefined)): void
 }
 
-export function useToggle(): [Ref<boolean>, ToggleFn<boolean>]
-export function useToggle<T extends 'on' | 'off'>(
-  value: T
-): [Ref<'on' | 'off'>, ToggleFn<'on' | 'off'>]
-export function useToggle<T extends 1 | 0>(
-  value: T
-): [Ref<1 | 0>, ToggleFn<1 | 0>]
-export function useToggle(value: any = false): [Ref<any>, ToggleFn<any>] {
+// prettier-ignore
+type UseToggle = {
+  (): [Ref<boolean>, ToggleFn<boolean>]
+  <T extends 1 | 0>(value: T): [Ref<1 | 0>, ToggleFn<1 | 0>]
+  <T extends 'on' | 'off'>(value: T): [Ref<'on' | 'off'>, ToggleFn<'on' | 'off'>]
+}
+
+export const useToggle: UseToggle = function (value: any = false): any {
   const state = ref(value)
 
   function toggle(value?: any) {
@@ -40,7 +42,12 @@ export function useToggle(value: any = false): [Ref<any>, ToggleFn<any>] {
       return
     }
 
-    state.value = evaluate(value, state.value) ?? state.value
+    if (typeof value === 'function') {
+      toggle(evaluate(value, state.value))
+      return
+    }
+
+    state.value = value
   }
 
   return [state, toggle]
