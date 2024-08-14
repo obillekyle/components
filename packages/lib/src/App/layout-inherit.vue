@@ -31,6 +31,7 @@
 <style lang="scss">
   .layout-wrapper {
     position: relative;
+    contain: content;
     border: 1px solid var(--surface-container);
   }
 </style>
