@@ -30,7 +30,7 @@ export function is<T extends Types>(
 ): value is TypeFromTypes<T> {
   if (type === 'array') return Array.isArray(value)
   if (type === 'null') return value === null
-  if (type === 'object') return value !== null
+  if (type === 'object') return typeof value === 'object' && value !== null
 
   return typeof value === type
 }
