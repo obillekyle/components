@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import Headline from '@/components/AppBar/headline.vue'
   import TopAppBar from '@/components/AppBar/top-bar.vue'
+  import Button from '@/components/Button/button.vue'
   import IconButton from '@/components/Button/icon-button.vue'
   import SquareImage from '@/components/Image/square-image.vue'
   import Fab from '@/components/Layout/fab.vue'
@@ -11,23 +12,29 @@
   import NavEntry from '@/components/Navigation/navigation-entry.vue'
   import NavItem from '@/components/Navigation/navigation-item.vue'
   import MasterSwitch from '@/components/Switch/master-switch.vue'
-  import { useLocalStorage } from '@/utils/ref'
+  import { customRef, useLocalStorage } from '@/utils/ref'
+  import { useTooltip } from '@/utils/ref/use-tooltip'
   import { ref } from 'vue'
   import AppCards from './app-cards.vue'
   import AppComp from './app-comp.vue'
   import ColorShades from './color-shades.vue'
   import DominantColor from './dominant-color.vue'
   import LayoutInherit from './layout-inherit.vue'
+  import Test from './test.vue'
 
   const tab = useLocalStorage('tab', 0)
   const color = useLocalStorage('theme-color', '#386a1f')
   const isDark = useLocalStorage('dark', true)
   const colorInput = ref<HTMLInputElement>()
+  const [root, setRoot] = customRef<HTMLElement>()
+
+  useTooltip(root, ['title', 'alt', 'class'])
 </script>
 
 <template>
   <Layout
     global-style
+    :ref="setRoot"
     :options="{
       fontFamily: 'Roboto, sans-serif',
       theme: isDark ? 'dark' : 'light',
@@ -48,6 +55,7 @@
           <NavItem name="Cards" icon="material-symbols:cards-outline" />
           <NavItem name="Layout" icon="mdi:application-outline" />
           <NavItem name="Extract" icon="mdi:palette-outline" />
+          <NavItem name="Test" icon="mdi:pencil-ruler-outline" />
           <NavEntry name="Settings" icon="mdi:cog-outline" />
         </NavContainer>
       </NavBar>
@@ -87,6 +95,9 @@
     <AppCards v-else-if="tab === 2" />
     <LayoutInherit v-else-if="tab === 3" />
     <DominantColor v-else-if="tab === 4" />
+    <Test text="test" v-else-if="tab === 5">
+      <Button>Hover Me</Button>
+    </Test>
   </Layout>
 </template>
 

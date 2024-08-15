@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { onBeforeMount, onBeforeUnmount, ref, watch } from 'vue'
 
 export function useRect(
   elem: Ref<HTMLElement | undefined>
@@ -8,7 +8,8 @@ export function useRect(
   let observer: ResizeObserver
   const rect = ref<DOMRect>()
 
-  onMounted(() => {
+  onBeforeMount(() => {
+    if (typeof ResizeObserver === 'undefined') return
     observer = new ResizeObserver(([entry]) => {
       rect.value = entry.target.getBoundingClientRect()
     })

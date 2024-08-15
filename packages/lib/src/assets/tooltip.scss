@@ -1,0 +1,41 @@
+.md-tooltip {
+  position: fixed;
+  z-index: 99;
+  font-size: var(--font-sm);
+  color: var(--inverse-on-surface);
+  background: var(--inverse-surface);
+  padding: var(--xxs) var(--sm);
+  border-radius: var(--xxs);
+  pointer-events: none;
+  min-width: min-content;
+  opacity: 0;
+  text-align: center;
+  translate: -50% -120%;
+  transition: opacity 0.2s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    translate: -50% 50%;
+    rotate: 45deg;
+    height: var(--xs);
+    aspect-ratio: 1;
+    background: var(--inverse-surface);
+  }
+
+  &.bottom {
+    translate: -50% 120%;
+
+    &::before {
+      top: 0;
+      bottom: auto;
+      translate: -50% -50%;
+    }
+  }
+
+  &.show {
+    opacity: 1;
+  }
+}
