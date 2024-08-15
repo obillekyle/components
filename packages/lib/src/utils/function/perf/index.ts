@@ -90,8 +90,8 @@ export function debounce(
 ): string | number {
   const id = options.key ?? debounceID++
   const wait = options.wait ?? 1000
+  const start = options.start ?? true
   const ignore = options.ignore ?? false
-  const start = options.start ?? false
 
   if (start && !debounceStore[id]) evaluate(callback, id)
   if (ignore && debounceStore[id]) evaluate(callback, id)

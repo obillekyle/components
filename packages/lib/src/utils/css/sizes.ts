@@ -29,47 +29,45 @@ type ValueGetter = {
 export const getCSSValue: ValueGetter = (value: any, unit = 'px', type) => {
   if (!value) return value
 
-  if (is(value, 'array')) {
-    return value.map((v) => getCSSValue(v, unit, type)).join(' ')
+  function map(a: any[]) {
+    return a.map((v) => getCSSValue(v, unit, type))
   }
+  if (is(value, 'array')) return map(value).join(' ')
 
-  const size = String(value).trim()
-  const varType = String(type || '').trim()
+  value = String(value).trim()
+  type = String(type || '').trim()
 
-  if (size.includes('var(')) return size
+  const match = value.match(/(var\(--.*?\)|#\S+|\S+)/g)
+
+  if (match && match.length > 1) return map(match).join(' ')
   if (canBeNumber(value)) return addUnit(value, unit)
+  if (value.includes('var(')) return value
 
-  if (size.includes(' ')) {
-    return getCSSValue(size.split(' '), unit, type)
-  }
-
-  if (size.startsWith('--')) {
-    return toVar(size.slice(2))
-  }
-
-  if (size.startsWith('#')) {
+  if (value.startsWith('#')) {
     const record = DefaultSizes as Record<string, Record<string, number>>
-    const [, prefix, value] = size.match(/#(\w+)(?:-(\w+))?/) || []
+    const [, prefix, suffix] = value.match(/#(\w+)(?:-(\w+))?/) || []
 
     if (prefix === 'rounded') {
-      return toVar(prefix, addUnit(999))
-    }
-    if (sizes.includes(prefix as any)) {
-      return varType in record
-        ? toVar(
-            varType + '-' + value,
-            addUnit(record[varType][prefix], unit)
-          )
-        : toVar(prefix, addUnit(record.padding[prefix], unit))
+      return toVar(prefix, addPX(999))
     }
 
-    if (prefix in record && value in record[prefix]) {
-      return toVar(
-        prefix + '-' + value,
-        addUnit(record[prefix][value], unit)
-      )
+    if (sizes.includes(prefix as any)) {
+      if (type in record) {
+        const key = type + '-' + suffix
+        const def = record[type][prefix]
+        return toVar(key, addUnit(def, unit))
+      }
+
+      const def = record.padding[suffix]
+      return toVar(prefix, addUnit(def, unit))
+    }
+
+    if (prefix in record && suffix in record[prefix]) {
+      const key = prefix + '-' + suffix
+      const def = record[prefix][suffix]
+      return toVar(key, addUnit(def, unit))
     }
   }
 
-  return addUnit(size, unit)
+  return addUnit(value, unit)
 }

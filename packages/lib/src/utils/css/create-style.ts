@@ -24,8 +24,8 @@ export const cssPropValue: ValueGetter = (value, def, unit) => {
 
   const prop = String(value).trim()
   if (prop.startsWith('$')) return getCSSColor(prop)
-  if (canBeNumber(prop)) return getCSSValue(prop, unit)
   if (prop.includes('#')) return getCSSValue(prop, unit)
+  if (canBeNumber(prop)) return addUnit(prop, unit)
 
   return prop
 }
@@ -81,12 +81,21 @@ type DefaultCSSProperties = CSS.Properties<
   string | number
 >
 
+type CSSVariables = {
+  [key: `--${string}`]:
+    | ColorString
+    | SizesString
+    | SizesString[]
+    | undefined
+}
+
 export type CSSProperties = Omit<
   DefaultCSSProperties,
   keyof AdditionalCSSProperties
 > &
   CustomCSSProperties &
-  AdditionalCSSProperties
+  AdditionalCSSProperties &
+  CSSVariables
 
 type CreateStyleOptions = {
   prefix?: string
@@ -99,51 +108,47 @@ type CreateStyle = (
 ) => ComputedRef<string>
 
 function dismount(name: string) {
-  if (name == '') return
-  if (typeof window === 'undefined') return
+  if (!name || typeof window === 'undefined') return
 
   const style = $(`style[for=${name}]`)
 
-  if (!style) return
-
-  const count = Number(style.dataset.count || 0) - 1
-  if (count <= 0) style.remove()
-  else style.dataset.count = String(count)
+  if (style) {
+    const count = Number(style.dataset.count || 0) - 1
+    count <= 0 ? style.remove() : (style.dataset.count = String(count))
+  }
 }
 
 function mount(name: string, object?: Record<string, any>, resolve = true) {
-  if (name == '') return
-  if (typeof window === 'undefined') return
+  if (!name || typeof window === 'undefined') return
 
-  const styleNew = $(`style[for=${name}]`)
+  let style = $(`style[for=${name}]`)
 
-  if (styleNew) {
-    const count = Number(styleNew.dataset.count || 0) + 1
-    styleNew.dataset.count = String(count)
-  } else {
-    let value: string = ''
-    const style = document.createElement('style')
-    style.setAttribute('for', name)
-    style.dataset.count = '1'
-
-    for (const key in object) {
-      if (key == 'as') continue
-
-      if (object[key]) {
-        const current = object[key]
-        const prop = (keyByPrefix as any)[key] ?? toKebabCase(key)
-        const cssValue = resolve
-          ? cssPropValue(current, undefined, unitsByProp[key])
-          : addUnit(current, unitsByProp[key])
-
-        value += `${prop}: ${cssValue};`
-      }
-    }
-
-    object = undefined
-    document.head.append(style)
-    style.innerHTML = `.${name} { ${value} }`
+  if (style) {
+    const count = Number(style.dataset.count || 0) + 1
+    style.dataset.count = String(count)
+    return
   }
+
+  let value: string = ''
+  style = document.createElement('style')
+  style.setAttribute('for', name)
+  style.dataset.count = '1'
+
+  for (const key in object) {
+    if (object[key]) {
+      const current = object[key]
+      const prop = (keyByPrefix as any)[key] ?? toKebabCase(key)
+      const cssValue = resolve
+        ? cssPropValue(current, undefined, unitsByProp[key])
+        : addUnit(current, unitsByProp[key])
+
+      value += `${prop}: ${cssValue}; `
+    }
+  }
+
+  object = undefined
+  document.head.append(style)
+  style.innerHTML = `.${name} { ${value} }`
 }
 
 // prettier-ignore
