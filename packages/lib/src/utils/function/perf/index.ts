@@ -77,6 +77,7 @@ type DebounceOptions<T> = {
   key?: T
   wait?: number
   ignore?: boolean
+  start?: boolean
 }
 
 export function debounce<T extends number | string = number>(
@@ -90,7 +91,9 @@ export function debounce(
   const id = options.key ?? debounceID++
   const wait = options.wait ?? 1000
   const ignore = options.ignore ?? false
+  const start = options.start ?? false
 
+  if (start && !debounceStore[id]) evaluate(callback, id)
   if (ignore && debounceStore[id]) evaluate(callback, id)
   if (debounceStore[id]) clearTimeout(debounceStore[id])
 
