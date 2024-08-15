@@ -110,8 +110,8 @@
   onMounted(() => {
     document.addEventListener('mousemove', dragMove)
     document.addEventListener('mouseup', dragUp)
-    document.addEventListener('touchmove', dragMove)
-    document.addEventListener('touchend', dragUp)
+    document.addEventListener('touchmove', dragMove, { passive: false })
+    document.addEventListener('touchend', dragUp, { passive: false })
   })
 
   onBeforeUnmount(() => {

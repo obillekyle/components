@@ -170,8 +170,8 @@
     document.addEventListener('mousemove', dragMove)
     document.addEventListener('mouseup', dragUp)
 
-    document.addEventListener('touchmove', dragMove)
-    document.addEventListener('touchend', dragUp)
+    document.addEventListener('touchmove', dragMove, { passive: false })
+    document.addEventListener('touchend', dragUp, { passive: false })
   })
 
   onBeforeUnmount(() => {
@@ -199,7 +199,7 @@
       <div
         class="md-slider-thumb"
         :dragging
-        :data-value="getLabel(model!)"
+        :data-value="getLabel(sliderVal)"
         @touchstart="dragDown"
       />
       <input type="range" :min="minVal" :max="maxVal" v-model="sliderVal" />
@@ -221,7 +221,7 @@
           class="md-slider-indicator"
           :key="value"
           v-for="value in values"
-          :class="{ covered: value <= (model || 0) }"
+          :class="{ covered: value <= sliderVal }"
           :style="{ '--offset': getPosition(value) }"
         />
       </div>
