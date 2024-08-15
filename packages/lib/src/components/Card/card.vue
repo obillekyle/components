@@ -2,7 +2,6 @@
   import type { HTMLAttributes } from 'vue'
   import type { BoxProps } from '../Box/util'
 
-  import { getCSSValue } from '@/utils/css/sizes'
   import { exclude } from '@/utils/object/modify'
   import { getBoxProps } from '../Box/util'
 
@@ -21,7 +20,7 @@
   <Box
     v-bind="boxProps"
     :class="`md-card ${variant ?? 'outlined'}`"
-    :style="{ '--card-padding': getCSSValue(p, 'px', 'padding') }"
+    :styled="{ '--card-padding': p }"
   >
     <slot />
   </Box>
@@ -39,6 +38,7 @@
     overflow: hidden;
     flex-direction: column;
     border-radius: var(--md);
+    box-shadow: var(--shadow-1);
     transition:
       background-color 0.2s,
       box-shadow 0.2s;
