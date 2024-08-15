@@ -91,10 +91,11 @@
     :class="{ loaded: image, 'image-error': error, span }"
   >
     <div class="md-loader">
-      <loader
+      <component
+        :is="loader"
         :error
+        :progress
         :ready="!image"
-        :progress="progress"
         @retry="resolve"
       />
     </div>

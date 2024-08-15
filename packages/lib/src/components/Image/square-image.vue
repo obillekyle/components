@@ -95,10 +95,11 @@
     :title="as<string>($attrs['alt'])"
   >
     <div class="md-loader">
-      <loader
+      <component
+        :is="loader"
+        :error
+        :progress
         :ready="!image"
-        :error="error"
-        :progress="progress"
         @retry="resolve"
       />
     </div>
