@@ -2,7 +2,9 @@ import type { ColorOptions } from '../colors'
 import type { ColorEngineVars } from './types'
 
 import { darken, saturate } from 'color2k'
-import { AppShades, Colors, parseColors } from '../colors'
+import { Colors } from '../colors/class'
+import { parseColors } from '../colors/parse-colors'
+import { AppShades } from '../colors/vars'
 
 function dim(color: string, amount: number) {
   return saturate(darken(color, amount), -0.2)
@@ -12,7 +14,7 @@ export class ColorEngine {
   colors: ColorOptions<Colors>
 
   constructor(color?: string | Partial<ColorOptions<string | Colors>>) {
-    this.colors = parseColors(color ?? 'white')
+    this.colors = parseColors(color ?? '#fff')
   }
 
   getColorVariables(theme: 'light' | 'dark' = 'light'): ColorEngineVars {

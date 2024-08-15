@@ -12,6 +12,5 @@ export type ColorOptions<T = string> = {
 
 export type ColorParam =
   | string
-  | String
   | Colors
-  | Partial<ColorOptions<string | Colors | String>>
+  | Partial<ColorOptions<string | Colors>>
