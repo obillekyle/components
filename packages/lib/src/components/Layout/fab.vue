@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import type { ButtonHTMLAttributes, Component } from 'vue'
 
-  import { keyboardClick, rippleEffect } from '@/utils/dom'
+  import { keyClick } from '@/utils/dom/events'
+  import { rippleEffect } from '@/utils/dom/ripple'
   import { inject, ref } from 'vue'
   import IconOrComponent from '../Misc/icon-or-component.vue'
 
@@ -21,7 +22,7 @@
     tabindex="0"
     :class="{ 'on-top': scrollTop < 6 }"
     @pointerdown="rippleEffect"
-    @keydown="keyboardClick"
+    @keydown="keyClick"
   >
     <IconOrComponent class="md-fab-icon" :icon="icon" />
     <div class="md-fab-label" v-if="$slots.default">

@@ -20,6 +20,7 @@
     "comments": "",
     "textMateRules": []
   },
-  "explorer.excludeGitIgnore": false,
-  "autoHide.autoHideRightSideBar": false
+  "explorer.excludeGitIgnore": true,
+  "autoHide.autoHideRightSideBar": false,
+  "files.eol": "\n"
 }

@@ -14,9 +14,20 @@
 </script>
 
 <template>
-  <div v-if="icon" v-bind="$attrs">
-    <Icon v-if="typeof icon == 'string'" :icon="icon" :width="size ?? 24" />
+  <div v-if="icon" v-bind="$attrs" class="md-icon">
+    <Icon
+      v-if="typeof icon == 'string'"
+      :icon="icon"
+      :width="size ?? 24"
+      :inline="false"
+    />
     <component v-else :is="icon" />
   </div>
   <template v-else />
 </template>
+
+<style lang="scss">
+  .md-icon {
+    line-height: 1;
+  }
+</style>
