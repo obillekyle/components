@@ -36,3 +36,7 @@ export function is<T extends Types>(
 }
 
 export const as = <T>(v: any): T => v
+
+export function assert(value: any, message?: string): asserts value {
+  if (!value) throw new Error(message)
+}

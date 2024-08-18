@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-null */
 import { is } from './is'
 
-// i don't know why aligned it,
+// i don't know why i aligned it,
 // i just wasted my time here
 // prettier-ignore
 test('`is` check', () => {
