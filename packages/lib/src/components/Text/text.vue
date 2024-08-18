@@ -5,7 +5,9 @@
   import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
 
-  interface TextProps extends BoxProps, SharedTextProps {}
+  interface TextProps extends BoxProps, SharedTextProps {
+    lines?: number | (string & {}) | 'auto'
+  }
 
   defineOptions({ name: 'MdText' })
   const props = defineProps<TextProps>()
@@ -34,6 +36,8 @@
 
 <style lang="scss">
   .md-text {
+    --lines: v-bind('props.lines');
+
     display: -webkit-box;
     line-clamp: var(--lines);
     -webkit-line-clamp: var(--lines);
