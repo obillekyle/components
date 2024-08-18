@@ -18,3 +18,21 @@ export const exclude: ExcludeFunction = (object, keys: any): any => {
     Object.entries(object).filter(([key]) => !keys.includes(key))
   )
 }
+
+type ToArrayFunction = {
+  <T>(value: Iterable<T>): T[]
+}
+
+export const toArray: ToArrayFunction = (value) => {
+  if (Array.isArray(value)) return value
+  if (
+    typeof value === 'string' ||
+    value instanceof Map ||
+    value instanceof Set ||
+    value instanceof String ||
+    typeof value[Symbol.iterator] === 'function'
+  )
+    return [...value]
+
+  throw new TypeError('Unsupported type')
+}
