@@ -269,12 +269,9 @@
       stroke-dasharray: var(--stroke-dash-array);
       will-change: stroke-dashoffset, stroke-dasharray, stroke-width,
         animation-name, r;
-
-      &.animate {
-        transition:
-          stroke-dashoffset 0.25s var(--timing-standard),
-          rotate 0.25s var(--timing-standard);
-      }
+      transition:
+        stroke-dashoffset 0.4s var(--timing-standard),
+        rotate 0.4s var(--timing-standard);
     }
 
     .md-progress-spinner-circle {
