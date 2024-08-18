@@ -198,18 +198,15 @@
       aspect-ratio: 1;
     }
 
-    &.circle.visible .md-image {
-      image {
-        animation: rotate-image 30s linear infinite reverse;
-      }
-
-      path {
-        animation: rotate-image 30s linear infinite;
-      }
-
+    &.circle.visible .md-image-element {
       path,
       image {
+        animation: rotate-image 30s linear infinite;
         transform-origin: center center;
+      }
+
+      image {
+        animation-direction: reverse;
       }
     }
 
