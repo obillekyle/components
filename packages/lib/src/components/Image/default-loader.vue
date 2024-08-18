@@ -11,19 +11,25 @@
   }>()
 
   const loading = computed(() => !props.ready && !props.error)
+  const value = computed(() =>
+    loading.value ? (props.progress >= 100 ? Infinity : props.progress) : 0
+  )
 </script>
 
 <template>
-  <div class="md-default-loader">
-    <CircularProgress :value="loading ? 0 : progress" :rotate="!ready">
-      <Icon
-        icon="material-symbols:refresh"
-        :width="24"
-        v-if="error"
-        @click="onRetry"
-        style="cursor: pointer"
-        color="var(--error, red)"
-      />
-    </CircularProgress>
-  </div>
+  <transition name="md-loader">
+    <div class="md-loader-default" v-if="!ready">
+      <CircularProgress :value :rotate="!ready">
+        <Icon
+          icon="material-symbols:refresh"
+          :width="24"
+          v-if="error"
+          @click="onRetry"
+          :inline="false"
+          style="cursor: pointer"
+          color="var(--error, red)"
+        />
+      </CircularProgress>
+    </div>
+  </transition>
 </template>

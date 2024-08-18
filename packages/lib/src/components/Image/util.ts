@@ -4,15 +4,17 @@ export async function resolveImage(
 ): Promise<Blob> {
   if (typeof source === 'string') {
     progress(Infinity)
+
     const xhr = new XMLHttpRequest()
     xhr.responseType = 'arraybuffer'
     xhr.open('GET', source)
 
     xhr.addEventListener('progress', (event) => {
-      const value = event.total
-        ? Math.floor((event.loaded / event.total) * 100)
-        : Infinity
-      progress(value)
+      progress(
+        event.total
+          ? Math.floor((event.loaded / event.total) * 100)
+          : Infinity
+      )
     })
 
     xhr.send()

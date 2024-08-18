@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import '@/assets/image.scss'
+
   import type { BoxProps } from '@/components/Box/util'
   import type { Component } from 'vue'
 
@@ -87,7 +89,7 @@
     :offset="50"
     v-model="visible"
     v-bind="boxProps"
-    class="md-block-image"
+    class="md-block-image md-image"
     :class="{ loaded: image, 'image-error': error, span }"
   >
     <div class="md-loader">
@@ -95,20 +97,24 @@
         :is="loader"
         :error
         :progress
-        :ready="!image"
+        :ready="!!image"
         @retry="resolve"
       />
     </div>
-    <img v-if="!error" :src="image" :alt :width :height />
+    <img
+      class="md-image-element"
+      v-if="!error"
+      :src="image"
+      :alt
+      :width
+      :height
+    />
   </ViewObserver>
 </template>
 
 <style lang="scss">
   .md-block-image {
-    position: relative;
     overflow: hidden;
-    width: max-content;
-    height: max-content;
     border-radius: var(--sm);
     aspect-ratio: v-bind('props.ratio');
     background: var(--surface-container);
@@ -116,42 +122,9 @@
     img {
       display: block;
       opacity: 0;
-      border-radius: inherit;
       object-fit: v-bind('props.fit');
       object-position: v-bind('props.position');
       transition: opacity 0.2s ease-out;
-    }
-
-    .md-loader {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      transition: opacity 0.2s ease-out;
-    }
-
-    &.span {
-      flex-grow: 1;
-      width: 100% !important;
-      height: auto !important;
-
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    &.loaded {
-      background: none;
-
-      .md-loader {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      img {
-        opacity: 1;
-      }
     }
   }
 </style>

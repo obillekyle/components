@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import '@/assets/image.scss'
+
   import type { Component, HTMLAttributes } from 'vue'
   import type { BoxProps } from '../Box/util'
 
@@ -90,21 +92,20 @@
     apply="visible"
     v-bind="boxProps"
     v-model="visible"
-    class="md-square-image"
+    class="md-square-image md-image"
     :class="{ loaded: image, [frame]: true, error }"
     :title="as<string>($attrs['alt'])"
   >
-    <div class="md-loader">
-      <component
-        :is="loader"
-        :error
-        :progress
-        :ready="!image"
-        @retry="resolve"
-      />
-    </div>
+    <component
+      class="md-loader"
+      :is="loader"
+      :error
+      :progress
+      :ready="!!image"
+      @retry="resolve"
+    />
     <img
-      class="md-image"
+      class="md-image-element"
       v-bind="$attrs"
       :src="image"
       :width="size"
@@ -116,7 +117,7 @@
     <svg
       :width="size"
       :height="size"
-      class="md-image"
+      class="md-image-element"
       viewBox="0 0 48 48"
       v-if="frame !== 'default'"
       xmlns="http://www.w3.org/2000/svg"
@@ -166,21 +167,14 @@
   .md-square-image {
     position: relative;
     display: inline-flex;
-    height: max-content;
-    width: max-content;
     vertical-align: top;
     max-width: 100%;
     aspect-ratio: 1;
-    flex-shrink: 0;
     justify-content: center;
     align-items: center;
 
     &.default {
       background: var(--surface-container);
-    }
-
-    img {
-      border-radius: inherit;
     }
 
     .hidden {
@@ -190,20 +184,7 @@
       position: absolute;
     }
 
-    .md-loader {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      opacity: 1;
-      transition: opacity 0.2s ease-out;
-
-      svg {
-        margin-top: -4px;
-      }
-    }
-
-    svg.md-image {
+    svg.md-image-element {
       width: 100%;
       height: 100%;
       aspect-ratio: 1;
@@ -215,24 +196,6 @@
       transition: opacity 0.2s ease-out;
       width: 100%;
       aspect-ratio: 1;
-    }
-
-    &.error img {
-      pointer-events: none;
-    }
-
-    &.loaded {
-      background: none;
-
-      .md-loader {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      image,
-      img {
-        opacity: 1;
-      }
     }
 
     &.circle.visible .md-image {
