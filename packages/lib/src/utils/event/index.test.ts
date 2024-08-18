@@ -18,10 +18,10 @@ describe('CustomEvent class', () => {
     const event = new MyEvent()
     event.addEventListener('example', callback)
 
-    event.emit('example', ['test'])
+    event.emit('example', 'test')
     expect(event.value).toEqual('test')
 
-    event.dispatchEvent('example', ['test2'])
+    event.dispatchEvent('example', 'test2')
     expect(event.value).toEqual('test2')
   })
 
@@ -31,7 +31,7 @@ describe('CustomEvent class', () => {
 
     event.removeEventListener('example', callback)
 
-    event.emit('example', ['test'])
+    event.emit('example', 'test')
     expect(event.value).toEqual(undefined)
   })
 })

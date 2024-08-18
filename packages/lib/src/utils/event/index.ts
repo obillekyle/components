@@ -9,7 +9,7 @@ export type EventType = {
 export class CustomEventHandler<Events extends EventType = {}> {
   private events: { [key: string]: any[] } = {}
 
-  addEventListener<EK extends keyof Events | String>(
+  addEventListener<EK extends keyof Events | (string & {})>(
     type: EK,
     callback: EK extends keyof Events
       ? CustomEventCallback<Events[EK]>
@@ -22,17 +22,21 @@ export class CustomEventHandler<Events extends EventType = {}> {
     index < 0 && this.events[type]!.push(callback)
   }
 
-  dispatchEvent<EK extends keyof Events | String>(
+  dispatchEvent<EK extends keyof Events | (string & {})>(
     event: EK,
-    args: EK extends keyof Events ? Events[EK] : any[]
+    ...args: EK extends keyof Events
+      ? Events[EK] extends any[]
+        ? Events[EK]
+        : []
+      : any[]
   ): void
-  dispatchEvent(event: string, args: any[] = []): void {
+  dispatchEvent(event: string, ...args: any[]): void {
     for (const callback of this.events[event] ?? []) {
       callback.call(this, ...args)
     }
   }
 
-  removeEventListener<EK extends keyof Events | String>(
+  removeEventListener<EK extends keyof Events | (string & {})>(
     type: EK,
     callback: EK extends keyof Events
       ? CustomEventCallback<Events[EK]>

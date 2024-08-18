@@ -2,18 +2,13 @@
   import type { SizesString } from '@vue-material/core'
   import Box from '@vue-material/core/Box'
 
-  withDefaults(
-    defineProps<{
-      height?: SizesString
-    }>(),
-    {
-      height: 300
-    }
-  )
+  defineProps<{
+    height?: SizesString
+  }>()
 </script>
 
 <template>
-  <Box class="preview-frame" :height>
+  <Box class="preview-frame" :height="height || 300">
     <slot />
   </Box>
 </template>

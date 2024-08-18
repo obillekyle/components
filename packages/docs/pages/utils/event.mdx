@@ -90,7 +90,7 @@ export const meta = {
     ```ts
     class CustomEventHandler<Events extends EventType = {}> {
       addEventListener(type: string, callback: () => any): void
-      dispatchEvent(event: string, arguments_: any[] = []): void
+      dispatchEvent(event: string, ...arguments_: any[]): void
       removeEventListener(type: string, callback: () => any): void
       removeAllEvents(): void
 
@@ -110,7 +110,7 @@ export const meta = {
 - Registers a new event listener
 - Parameters
   - `type`: string
-  - `callback`: () =&gt; void
+  - `callback`: () =>; void
 - Aliases
   - `on`
   - `listen`
@@ -120,7 +120,7 @@ export const meta = {
 - Dispatches an event
 - Parameters
   - `event`: string
-  - `arguments_?`: any[]
+  - `...arguments_?`: any[]
 - Aliases
   - `emit`
 
@@ -128,7 +128,7 @@ export const meta = {
 - Removes an event listener
 - Parameters
   - `type`: string
-  - `callback`: () =&gt; void
+  - `callback`: () =>; void
 - Aliases
   - `detach`
 
