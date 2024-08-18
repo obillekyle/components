@@ -20,6 +20,7 @@ export type PipeFunction = {
   <V, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R>(v: V, f1: (v: V) => A, f2: (v: A) => B, f3: (v: B) => C, f4: (v: C) => D, f5: (v: D) => E, f6: (v: E) => F, f7: (v: F) => G, f8: (v: G) => H, f9: (v: H) => I, f10: (v: I) => J, f11: (v: J) => K, f12: (v: K) => L, f13: (v: L) => M, f14: (v: M) => N, f15: (v: N) => O, f16: (v: O) => P, f17: (v: P) => Q, f18: (v: Q) => R): R;
   <V, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S>(v: V, f1: (v: V) => A, f2: (v: A) => B, f3: (v: B) => C, f4: (v: C) => D, f5: (v: D) => E, f6: (v: E) => F, f7: (v: F) => G, f8: (v: G) => H, f9: (v: H) => I, f10: (v: I) => J, f11: (v: J) => K, f12: (v: K) => L, f13: (v: L) => M, f14: (v: M) => N, f15: (v: N) => O, f16: (v: O) => P, f17: (v: P) => Q, f18: (v: Q) => R, f19: (v: R) => S): S;
   <V, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T>(v: V, f1: (v: V) => A, f2: (v: A) => B, f3: (v: B) => C, f4: (v: C) => D, f5: (v: D) => E, f6: (v: E) => F, f7: (v: F) => G, f8: (v: G) => H, f9: (v: H) => I, f10: (v: I) => J, f11: (v: J) => K, f12: (v: K) => L, f13: (v: L) => M, f14: (v: M) => N, f15: (v: N) => O, f16: (v: O) => P, f17: (v: P) => Q, f18: (v: Q) => R, f19: (v: R) => S, f20: (v: S) => T): T;
+  <V, L>(v: V, ...fns: Function[]): L;
 };
 
 type $P<V> = V | Promise<V>

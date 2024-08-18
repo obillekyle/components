@@ -1,8 +1,8 @@
 type EvaluateFunction = {
-  <O extends any, V = O extends () => any ? ReturnType<O> : O>(
-    this: any,
+  <T, O extends any, V = O extends () => any ? ReturnType<O> : O>(
+    this: T,
     object: O,
-    ...args_: V extends (...args_: infer P) => any ? P : any
+    ...args_: V extends (this: T, ...args_: infer P) => any ? P : any
   ): V
 }
 
