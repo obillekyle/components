@@ -57,14 +57,14 @@
     }
 
     &.filled {
-      background: var(--surface-container-high);
+      background: var(--surface-container-highest);
 
       &:hover {
         box-shadow: var(--shadow-1);
       }
 
       .md-card-actions.separator {
-        background: var(--surface-container-highest);
+        background: var(--surface-container-high);
       }
     }
 

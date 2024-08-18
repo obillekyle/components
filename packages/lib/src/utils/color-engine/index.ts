@@ -62,11 +62,11 @@ export class ColorEngine {
       surfaceDim: neutral.shade(use(94, 6)),
       surfaceBright: neutral.shade(use(98, 8)),
 
-      surfaceContainerLowest: neutral.shade(use(98, 0)),
-      surfaceContainerLow: neutral.shade(use(96, 5)),
-      surfaceContainer: neutral.shade(use(94, 10)),
-      surfaceContainerHigh: neutral.shade(use(92, 15)),
-      surfaceContainerHighest: neutral.shade(use(90, 20)),
+      surfaceContainerLowest: neutral.shade(use(98, 6)),
+      surfaceContainerLow: neutral.shade(use(96, 10)),
+      surfaceContainer: neutral.shade(use(94, 14)),
+      surfaceContainerHigh: neutral.shade(use(92, 18)),
+      surfaceContainerHighest: neutral.shade(use(90, 22)),
 
       onSurface: neutral.shade(use(10, 90)),
       onSurfaceVariant: neutral.shade(use(30, 80)),
@@ -76,7 +76,7 @@ export class ColorEngine {
       inversePrimary: primary.shade(use(80, 40)),
 
       outline: neutral.shade(use(50, 60)),
-      outlineVariant: neutral.shade(use(90, 50)),
+      outlineVariant: neutral.shade(use(90, 30)),
 
       scrim: neutral.shade(0),
       shadow: neutral.shade(0)
