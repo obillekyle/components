@@ -20,13 +20,8 @@ const defaultUtility: UtilityFunction<SnackbarProps> = {
   modify: () => {}
 }
 
-const defaultOptions: SnackbarProps = {
-  message: ''
-}
-
 export const SNACKBAR = {
   ID_STARTS_FROM: 1000,
   DEFAULT_TIMEOUT: 3000,
-  DEFAULT_UTILITY: defaultUtility,
-  DEFAULT_OPTIONS: defaultOptions
+  DEFAULT_UTILITY: defaultUtility
 }

@@ -2,12 +2,12 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { SnackbarProps } from './util'
 
+  import { Icon } from '@iconify/vue'
   import { computed, onMounted, watch } from 'vue'
   import { SNACKBAR } from './util'
 
   import Box from '../Box/box.vue'
   import Button from '../Button/button.vue'
-  import IconButton from '../Button/icon-button.vue'
   import Text from '../Text/text.vue'
 
   interface SnackbarOptions extends SnackbarProps {
@@ -32,8 +32,14 @@
 </script>
 
 <template>
-  <Box class="md-snackbar" :class="{ static: !Number.isFinite(utils.id) }">
-    <Text class="md-snackbar-content" lines="3">
+  <Box
+    class="md-snackbar"
+    :class="{
+      static: !Number.isFinite(utils.id),
+      extended: actions?.length
+    }"
+  >
+    <Text class="md-snackbar-content" lines="3" as="span">
       <template v-if="typeof message == 'string'">{{ message }}</template>
       <component v-else :is="message ?? 'span'" />
       <slot />
@@ -49,41 +55,56 @@
         />
         <component v-else :is="action" />
       </template>
-
-      <IconButton
-        icon="material-symbols:close"
-        v-if="closeable"
-        class="md-snackbar-close"
-        @click="utils.close"
-      />
     </div>
+    <Icon
+      icon="material-symbols:close"
+      v-if="closeable"
+      class="md-snackbar-close"
+      @click="utils.close"
+      :width="24"
+      :inline="false"
+    />
   </Box>
 </template>
 
 <style lang="scss">
   .md-snackbar {
-    position: fixed;
-    z-index: 20;
-    right: var(--md);
-    bottom: var(--sm);
-    width: calc(100% - (var(--md) * 2));
+    gap: var(--sm);
+    width: auto;
     max-width: 600px;
     border-radius: var(--xxs);
     background: var(--on-surface);
     color: var(--surface);
     min-height: var(--component-md);
-    padding-left: var(--md);
+    padding: var(--sm);
     box-shadow: 0 0 0 1px var(--surface-variant);
     display: flex;
     align-items: center;
 
+    &:not(.static) {
+      position: fixed;
+      z-index: 20;
+      right: var(--md);
+      bottom: var(--sm);
+      width: calc(100% - (var(--md) * 2));
+    }
+
     &-content {
       flex: 1 1 auto;
+      font-size: var(--font-sm);
+      padding-inline: var(--xxs);
+      grid-area: content;
     }
 
     &-actions {
       display: flex;
       align-items: center;
+      grid-area: actions;
+
+      * {
+        font-size: var(--font-sm);
+        color: var(--inverse-primary);
+      }
     }
 
     &-enter-active,
@@ -99,8 +120,25 @@
       transform: translateY(var(--xl));
     }
 
-    &-close svg {
-      color: var(--surface) !important;
+    &-close {
+      grid-area: icon;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    &.extended {
+      display: grid;
+      grid-template:
+        'content icon' auto
+        'actions actions' auto / 1fr auto;
+    }
+
+    &.extended &-close {
+      align-self: start;
+    }
+
+    &.extended &-actions {
+      margin-left: auto;
     }
   }
 </style>
