@@ -1,7 +1,7 @@
 import '@/assets/tooltip.scss'
 import { onMounted, onUnmounted, watch, type Ref } from 'vue'
-import { getParent } from '../dom'
-import { debounce } from '../function'
+import { getParent } from '../dom/selector'
+import { debounce } from '../function/perf'
 
 export function useTooltip(
   ref: Ref<HTMLElement | undefined>,
@@ -10,7 +10,7 @@ export function useTooltip(
   let tooltip = ''
   let timeout: any
   let enabled = true
-  let target: HTMLElement | undefined
+  let current: HTMLElement | undefined
   let floater: HTMLElement | undefined
 
   const selector = Array.isArray(attr)
@@ -22,101 +22,119 @@ export function useTooltip(
     return search.map((i) => element.getAttribute(i) ?? '').find(Boolean)
   }
 
-  function onEnter(event: MouseEvent) {
+  function showTooltip(this: HTMLElement) {
+    this.classList.add('show')
+  }
+
+  function onEnter(event: Event) {
+    if (!enabled) return
+
     debounce(
       () => {
-        const newTarget =
-          getParent<HTMLElement>(
-            event.target as HTMLElement,
-            selector,
-            true
-          ) ?? undefined
+        const container = ref.value!
+        const newTarget = getParent(event.target, selector, true)
 
-        if (target === newTarget) return
+        if (newTarget === current) return
+        if (newTarget === undefined) return
         if (newTarget === event.currentTarget) return
-        if (!newTarget) return
 
-        target = newTarget
+        cleanupTooltip.bind(current)()
+        event.preventDefault()
 
-        if (enabled) {
-          tooltip = getAttr(target) ?? ''
-          const rect = target.getBoundingClientRect()
+        current = newTarget
+        tooltip = getAttr(current) ?? ''
 
-          if (attr.includes('title') && target.hasAttribute('title')) {
-            target.setAttribute('title', '')
-          }
-
-          floater = document.createElement('div')
-          floater.textContent = tooltip
-          floater.className = 'md-tooltip'
-          const onBottom = rect.top < rect.height
-          const top = onBottom ? rect.top + rect.height : rect.top
-
-          const left = rect.width / 2 + rect.left
-
-          floater.style.top = `${top}px`
-          floater.style.left = `${left}px`
-          floater.style.maxWidth = rect.width + 'px'
-          floater.classList.toggle('bottom', onBottom)
-
-          ref.value?.append(floater)
-
-          target.addEventListener('mouseleave', cleanup, { once: true })
-          target.addEventListener('dragstart', cleanup, { once: true })
-          timeout && clearTimeout(timeout)
-          timeout = setTimeout(() => {
-            floater?.classList.add('show')
-          }, 800)
+        if (attr.includes('title') && current.hasAttribute('title')) {
+          current.setAttribute('title', '')
         }
+
+        const newFloater = document.createElement('div')
+
+        floater = newFloater
+        floater.textContent = tooltip
+        floater.className = 'md-tooltip'
+
+        container.append(floater)
+
+        const tRect = current.getBoundingClientRect()
+        const fRect = floater.getBoundingClientRect()
+        const cRect = container.getBoundingClientRect()
+
+        const onBottom = tRect.top < fRect.height
+        const top = onBottom ? tRect.top + tRect.height : tRect.top
+        const left = tRect.width / 2 + tRect.left
+        const maxWidth =
+          tRect.left < fRect.width / 2
+            ? tRect.width / 2
+            : cRect.width - (tRect.left + fRect.width / 2)
+
+        floater.classList.toggle('bottom', onBottom)
+
+        floater.style.top = top + 'px'
+        floater.style.left = left + 'px'
+        floater.style.maxWidth = maxWidth + 'px'
+
+        timeout && clearTimeout(timeout)
+        timeout = setTimeout(showTooltip.bind(floater), 800)
+
+        current.style.boxShadow = '0 0 1px var(--outline)'
+        current.addEventListener('mouseleave', cleanupTooltip)
+        current.addEventListener('touchend', cleanupTooltip)
       },
       { key: 'tooltip', wait: 200 }
     )
   }
 
-  function cleanup() {
-    if (floater && target) {
-      if (attr.includes('title') && target.hasAttribute('title')) {
-        target.setAttribute('title', tooltip)
+  function cleanupTooltip(this: HTMLElement | void, event?: Event) {
+    if (event?.type === 'touchend') {
+      event.preventDefault()
+    }
+
+    if (floater && this) {
+      this.removeEventListener('mouseleave', cleanupTooltip)
+      this.removeEventListener('touchend', cleanupTooltip)
+      this.style.removeProperty('box-shadow')
+
+      if (attr.includes('title') && this.hasAttribute('title')) {
+        this.setAttribute('title', tooltip)
       }
 
-      if (floater.classList.contains('show')) {
-        floater.classList.remove('show')
-        floater.addEventListener('transitionend', function () {
-          this.remove()
-        })
-        return
+      if (!floater.classList.contains('show')) {
+        timeout && clearTimeout(timeout)
+        floater.remove()
       }
-      timeout && clearTimeout(timeout)
-      floater.remove()
+
+      floater.classList.remove('show')
+      floater.addEventListener('transitionend', function () {
+        this.remove()
+      })
     }
   }
 
+  function mount(element: HTMLElement) {
+    element.addEventListener('mouseenter', onEnter)
+    element.addEventListener('touchstart', onEnter)
+  }
+
+  function unmount(element: HTMLElement) {
+    element.removeEventListener('mouseenter', onEnter)
+    element.removeEventListener('touchstart', onEnter)
+  }
+
   watch(ref, (newElement, oldElement) => {
-    oldElement && oldElement.removeEventListener('mousemove', onEnter)
-    newElement && newElement.addEventListener('mousemove', onEnter)
+    newElement && mount(newElement)
+    oldElement && unmount(oldElement)
   })
 
-  onMounted(() => {
-    const element = ref.value
-
-    if (element) {
-      element.addEventListener('mousemove', onEnter)
-      element.addEventListener('mouseleave', cleanup)
-    }
-  })
-
-  onUnmounted(() => {
-    const element = ref.value
-
-    if (element) {
-      element.removeEventListener('mouseenter', onEnter)
-      element.removeEventListener('mouseleave', cleanup)
-    }
-  })
+  onMounted(() => ref.value && mount(ref.value))
+  onUnmounted(() => ref.value && unmount(ref.value))
 
   return {
     toggle: () => {
       enabled = !enabled
+    },
+    get target() {
+      return current
     }
   }
 }
