@@ -12,12 +12,10 @@ import { addUnit, getCSSValue } from './sizes'
 
 type ValueGetter = (
   value?: ColorString | SizesString | any[],
-  defs?: string | number,
   unit?: string
 ) => string
 
-export const cssPropValue: ValueGetter = (value, def, unit) => {
-  value ??= def &&= String(def)
+export const cssPropValue: ValueGetter = (value, unit) => {
   if (value === null) return ''
   if (value === undefined) return ''
   if (Array.isArray(value)) return getCSSValue(value, unit)
@@ -30,7 +28,7 @@ export const cssPropValue: ValueGetter = (value, def, unit) => {
   return prop
 }
 
-const keyByPrefix = {
+const keyPrefix: Record<string, string> = {
   p: 'padding',
   px: 'padding-inline',
   py: 'padding-block',
@@ -69,7 +67,7 @@ const unitsByProp: Record<string, string | undefined> = {
 }
 
 type CustomCSSProperties = {
-  [key in keyof typeof keyByPrefix]?: SizesString | SizesString[]
+  [key in keyof typeof keyPrefix]?: SizesString | SizesString[]
 }
 
 type AdditionalCSSProperties = {
@@ -110,15 +108,30 @@ type CreateStyle = (
 function dismount(name: string) {
   if (!name || typeof window === 'undefined') return
 
-  const style = $(`style[for=${name}]`)
+  let style: HTMLElement | null
+  if (!(style = $(`style[for=${name}]`))) return
 
-  if (style) {
-    const count = Number(style.dataset.count || 0) - 1
-    count <= 0 ? style.remove() : (style.dataset.count = String(count))
-  }
+  const count = Number(style.dataset.count || 0) - 1
+  count <= 0 ? style.remove() : (style.dataset.count = String(count))
 }
 
-function mount(name: string, object?: Record<string, any>, resolve = true) {
+function parseStyleObject(name: string, object: any, resolve = true) {
+  let styleProperties: string = ''
+  const parse = resolve ? cssPropValue : addUnit
+
+  for (const key in object) {
+    if (!object[key]) continue
+
+    const property = keyPrefix[key] ?? toKebabCase(key)
+    const cssValue = parse(object[key], unitsByProp[key])
+
+    styleProperties += `${property}: ${cssValue}; `
+  }
+
+  return `.${name} { ${styleProperties} }`
+}
+
+function mount(name: string, object: any, resolve = true) {
   if (!name || typeof window === 'undefined') return
 
   let style = $(`style[for=${name}]`)
@@ -129,59 +142,40 @@ function mount(name: string, object?: Record<string, any>, resolve = true) {
     return
   }
 
-  let value: string = ''
   style = document.createElement('style')
   style.setAttribute('for', name)
   style.dataset.count = '1'
+  style.innerHTML = parseStyleObject(name, object, resolve)
 
-  for (const key in object) {
-    if (object[key]) {
-      const current = object[key]
-      const prop = (keyByPrefix as any)[key] ?? toKebabCase(key)
-      const cssValue = resolve
-        ? cssPropValue(current, undefined, unitsByProp[key])
-        : addUnit(current, unitsByProp[key])
-
-      value += `${prop}: ${cssValue}; `
-    }
-  }
-
-  object = undefined
   document.head.append(style)
-  style.innerHTML = `.${name} { ${value} }`
+}
+
+function getStyles(style: any): Record<string, any> {
+  return Object.assign({}, style, style.styled, {
+    as: undefined,
+    styled: undefined
+  })
 }
 
 // prettier-ignore
 export const createStyle: CreateStyle = 
-  function createStyle(styles: any, { prefix = 'md-css-', resolveVars } = {}) {
-
-    const object = ref(getStyles())
+  function createStyle(styles: any, options) {
+    const prefix = options?.prefix ?? 'md-css-'
+    const resolve = options?.resolveVars
+    const object = ref(getStyles(styles()))
     
     const name = computed(() => {
       const string = JSON.stringify(object.value)
       return string === '{}' ?  "" :  prefix + hashStr(string, 6)
     })
 
-    function getStyles(value?: any): Record<string, any> {
-      const style = value ?? styles();
-      return Object.assign(
-        {},
-        style, 
-        style.styled, 
-        { as: undefined, styled: undefined }
-      )
-    }
-
-    watch(styles, (value) => {
-      object.value = getStyles(value)
-    }, { deep: true })
-
     watch(name, (newName, oldName) => {
-      mount(newName, object.value, resolveVars)
+      mount(newName, object.value, resolve)
       dismount(oldName)
     })
-
-    onBeforeMount(() => mount(name.value, object.value, resolveVars))
+    
+    watch(styles, (value) => {object.value = getStyles(value)}, {deep: true})
+    onBeforeMount(() => mount(name.value, object.value, resolve))
     onUnmounted(() => dismount(name.value))
 
     return name
