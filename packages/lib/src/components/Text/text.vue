@@ -19,14 +19,16 @@
     class="md-text"
     v-bind="boxProps"
     :styled="{
-      color: props.color,
-      textAlign: props.textAlign,
-      lineHeight: props.lineHeight,
-      fontWeight: props.weight,
-      textWrap: props.wrap,
-      fontSize: props.size,
-      fontStyle: props.italic ? 'italic' : undefined,
-      letterSpacing: props.spacing,
+      '--lines': 'raw:' + lines,
+
+      color,
+      textAlign,
+      lineHeight,
+      fontWeight: weight,
+      textWrap: wrap,
+      fontSize: size,
+      fontStyle: italic ? 'italic' : undefined,
+      letterSpacing: spacing,
       ...styled
     }"
   >
@@ -36,8 +38,6 @@
 
 <style lang="scss">
   .md-text {
-    --lines: v-bind('props.lines');
-
     display: -webkit-box;
     line-clamp: var(--lines);
     -webkit-line-clamp: var(--lines);
