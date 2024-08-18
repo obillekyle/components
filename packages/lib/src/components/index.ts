@@ -14,6 +14,7 @@ export * from './Paper'
 export * from './Progress'
 export * from './Select'
 export * from './Slider'
+export * from './Snackbar'
 export * from './Switch'
 export * from './Text'
 

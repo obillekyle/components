@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  import { customRef, useLocalStorage } from '@/utils/ref'
+  import { useTooltip } from '@/utils/ref/use-tooltip'
+  import { ref } from 'vue'
+
   import Headline from '@/components/AppBar/headline.vue'
   import TopAppBar from '@/components/AppBar/top-bar.vue'
   import Button from '@/components/Button/button.vue'
@@ -11,10 +15,9 @@
   import NavContent from '@/components/Navigation/navigation-content.vue'
   import NavEntry from '@/components/Navigation/navigation-entry.vue'
   import NavItem from '@/components/Navigation/navigation-item.vue'
+  import { useSnackbar } from '@/components/Snackbar/snackbar-manager'
+  import SnackbarProvider from '@/components/Snackbar/snackbar-provider.vue'
   import MasterSwitch from '@/components/Switch/master-switch.vue'
-  import { customRef, useLocalStorage } from '@/utils/ref'
-  import { useTooltip } from '@/utils/ref/use-tooltip'
-  import { ref } from 'vue'
   import AppCards from './app-cards.vue'
   import AppComp from './app-comp.vue'
   import ColorShades from './color-shades.vue'
@@ -28,7 +31,32 @@
   const colorInput = ref<HTMLInputElement>()
   const [root, setRoot] = customRef<HTMLElement>()
 
+  const manager = useSnackbar()
+
   useTooltip(root, ['title', 'alt', 'class'])
+
+  function openSnackbar() {
+    manager.open({
+      message:
+        'Hello World! Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, reprehenderit et. Impedit aperiam neque laborum aliquid officia veniam quo voluptatibus quas ratione ex, doloribus facilis omnis quaerat eos ab culpa.',
+      closeable: true,
+      timeout: Infinity,
+      actions: [
+        {
+          label: 'Action 1',
+          action: () => {
+            console.log('Action 1')
+          }
+        },
+        {
+          label: 'Action 2',
+          action: () => {
+            console.log('Action 2')
+          }
+        }
+      ]
+    })
+  }
 </script>
 
 <template>
@@ -87,17 +115,18 @@
       <Fab icon="material-symbols:star-outline">Fab</Fab>
     </template>
 
-    <Headline title="Header Title" />
-    <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
-
-    <AppComp v-if="tab === 0" />
-    <ColorShades v-else-if="tab === 1" />
-    <AppCards v-else-if="tab === 2" />
-    <LayoutInherit v-else-if="tab === 3" />
-    <DominantColor v-else-if="tab === 4" />
-    <Test text="test" v-else-if="tab === 5">
-      <Button>Hover Me</Button>
-    </Test>
+    <SnackbarProvider :manager>
+      <Headline title="Header Title" />
+      <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
+      <AppComp v-if="tab === 0" />
+      <ColorShades v-else-if="tab === 1" />
+      <AppCards v-else-if="tab === 2" />
+      <LayoutInherit v-else-if="tab === 3" />
+      <DominantColor v-else-if="tab === 4" />
+      <Test text="test" v-else-if="tab === 5">
+        <Button @click="openSnackbar">Click me</Button>
+      </Test>
+    </SnackbarProvider>
   </Layout>
 </template>
 
