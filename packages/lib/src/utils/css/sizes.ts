@@ -53,7 +53,7 @@ export const getCSSValue: ValueGetter = (value: any, unit = 'px', type) => {
 
     if (sizes.includes(prefix as any)) {
       if (type in record) {
-        const key = type + '-' + suffix
+        const key = type + '-' + prefix
         const def = record[type][prefix]
         return toVar(key, addUnit(def, unit))
       }
