@@ -3,7 +3,7 @@
   import type { ButtonHTMLAttributes, Component } from 'vue'
   import type { BoxProps } from '../Box/util'
 
-  import { rippleEffect } from '@/utils/dom'
+  import { rippleEffect } from '@/utils/dom/ripple'
   import { getBoxProps } from '../Box/util'
 
   import Box from '../Box/box.vue'
@@ -15,7 +15,7 @@
     leftIcon?: string | Component
     rightIcon?: string | Component
     variant?: 'filled' | 'elevated' | 'tonal' | 'outlined' | 'text'
-    label?: string
+    label?: string | Component
   }
 
   defineOptions({ name: 'MdButton' })
@@ -36,7 +36,10 @@
   >
     <IconOrComponent class="md-button-icon left" :icon="leftIcon" />
     <div class="md-button-label">
-      <slot>{{ label }}</slot>
+      <slot>
+        <template v-if="typeof label == 'string'">{{ label }}</template>
+        <component v-else :is="label ?? 'div'" />
+      </slot>
     </div>
     <IconOrComponent class="md-button-icon right" :icon="rightIcon" />
   </Box>
