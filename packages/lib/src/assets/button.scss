@@ -25,7 +25,6 @@
   align-items: center;
   vertical-align: top;
   text-decoration: none;
-  border-radius: var(--radius, 99px);
   overflow: hidden;
   font: inherit;
   font-weight: 500;
@@ -46,14 +45,11 @@
     background: var(--on-surface);
   }
 
-  &:hover {
-    &::after {
-      opacity: 0.08;
-    }
+  &:hover::after {
+    opacity: 0.08;
   }
 
-  &.elevated,
-  &.subtle {
+  &.elevated {
     box-shadow: var(--shadow-1);
     background: var(--surface-container-low);
     color: var(--primary);
@@ -71,23 +67,20 @@
     color: var(--on-secondary-container);
   }
 
-  &.outlined,
-  &.outline {
+  &.outlined {
     background: none;
     box-shadow: 0 0 0 1px inset var(--outline);
     color: var(--primary);
   }
 
-  &.text,
-  &.transparent {
+  &.text {
     background: none;
     color: var(--primary);
   }
 
   &-label {
-    align-self: center;
-    text-align: center;
     flex-grow: 1;
+    text-align: center;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;

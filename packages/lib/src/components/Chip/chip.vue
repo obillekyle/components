@@ -18,7 +18,9 @@
 
   defineOptions({ name: 'MdChip' })
   const props = defineProps<ChipProps>()
-  const boxProps = getBoxProps(props)
+  const boxProps = getBoxProps(props, {
+    r: '#xs'
+  })
 </script>
 
 <template>
