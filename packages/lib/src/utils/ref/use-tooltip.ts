@@ -26,6 +26,8 @@ export function useTooltip(
     this.classList.add('show')
   }
 
+  console.log('start')
+
   function onEnter(event: Event) {
     if (!enabled) return
 
@@ -77,7 +79,6 @@ export function useTooltip(
         timeout && clearTimeout(timeout)
         timeout = setTimeout(showTooltip.bind(floater), 800)
 
-        current.style.boxShadow = '0 0 1px var(--outline)'
         current.addEventListener('mouseleave', cleanupTooltip)
         current.addEventListener('touchend', cleanupTooltip)
       },
@@ -93,7 +94,6 @@ export function useTooltip(
     if (floater && this) {
       this.removeEventListener('mouseleave', cleanupTooltip)
       this.removeEventListener('touchend', cleanupTooltip)
-      this.style.removeProperty('box-shadow')
 
       if (attr.includes('title') && this.hasAttribute('title')) {
         this.setAttribute('title', tooltip)
@@ -112,12 +112,12 @@ export function useTooltip(
   }
 
   function mount(element: HTMLElement) {
-    element.addEventListener('mouseenter', onEnter)
+    element.addEventListener('mousemove', onEnter)
     element.addEventListener('touchstart', onEnter)
   }
 
   function unmount(element: HTMLElement) {
-    element.removeEventListener('mouseenter', onEnter)
+    element.removeEventListener('mousemove', onEnter)
     element.removeEventListener('touchstart', onEnter)
   }
 
