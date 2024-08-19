@@ -69,7 +69,7 @@ const color = new ColorEngine('#0df')
 
 export const DefaultThemeObject: ThemeObject = {
   theme: 'dark',
-  color: '#primary-99',
+  color: '$on-surface',
   colors: Object.assign({}, color.colors, {
     $vars: color.getColorVariables()
   }),
