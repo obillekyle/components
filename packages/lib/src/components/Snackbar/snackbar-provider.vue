@@ -20,7 +20,6 @@
 
   onMounted(() => {
     manager.on('change', () => (data.value = manager.data))
-    console.log(manager.data)
   })
 </script>
 

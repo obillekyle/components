@@ -21,6 +21,7 @@
   let timeout: any
 
   function startTimeout(time: number = props.timeout ?? Infinity) {
+    console.log(props.utils?.id)
     timeout && clearTimeout(timeout)
     if (Number.isFinite(time)) {
       timeout = setTimeout(() => utils.value.close(), props.timeout)

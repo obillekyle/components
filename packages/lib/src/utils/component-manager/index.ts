@@ -88,7 +88,7 @@ export class ComponentManager<T extends object> extends CustomEventHandler<
 
   utility(key: number): UtilityFunction<T> {
     return {
-      id: key,
+      id: Number(key),
       close: () => this.close(key),
       modify: (component: ModifyParam<T>) => this.modify(key, component)
     }
