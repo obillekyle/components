@@ -2,29 +2,18 @@
   --color: var(--ripple-color, var(--inverse-surface));
 
   position: absolute;
-  border-radius: 999px;
   transform: translate(-50%, -50%);
   pointer-events: none;
   opacity: 0.1;
   scale: 0.1;
   transform-origin: left top;
   background-image: radial-gradient(
-      circle,
-      var(--color) 0%,
-      var(--color) 50%,
-      #0000 60%,
-      #0000 100%
-    ),
-    url('data:image/png;base64,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');
-  mask-image: radial-gradient(
     circle,
-    #000 0%,
-    #000 50%,
+    var(--color) 0%,
+    var(--color) 50%,
     #0000 60%,
     #0000 100%
   );
-  background-size: 100%, 25px;
-  background-position: center, 0;
   animation: rippled 0.75s forwards ease-out;
 
   &.fade {
@@ -42,7 +31,6 @@
   @keyframes rippled {
     to {
       scale: 3;
-      background-size: 100%, 12px;
     }
   }
 }
