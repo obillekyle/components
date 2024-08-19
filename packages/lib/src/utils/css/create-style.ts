@@ -18,9 +18,11 @@ type ValueGetter = (
 export const cssPropValue: ValueGetter = (value, unit) => {
   if (value === null) return ''
   if (value === undefined) return ''
-  if (Array.isArray(value)) return getCSSValue(value, unit)
+  if (Array.isArray(value))
+    return value.map((v) => cssPropValue(v, unit)).join(' ')
 
   const prop = String(value).trim()
+  if (prop.startsWith('raw:')) return prop.slice(4)
   if (prop.startsWith('$')) return getCSSColor(prop)
   if (prop.includes('#')) return getCSSValue(prop, unit)
   if (canBeNumber(prop)) return addUnit(prop, unit)
@@ -158,8 +160,7 @@ function getStyles(style: any): Record<string, any> {
 }
 
 // prettier-ignore
-export const createStyle: CreateStyle = 
-  function createStyle(styles: any, options) {
+export const createStyle: CreateStyle = (styles: any, options) => {
     const prefix = options?.prefix ?? 'md-css-'
     const resolve = options?.resolveVars
     const object = ref(getStyles(styles()))

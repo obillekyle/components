@@ -40,7 +40,6 @@ export const getCSSValue: ValueGetter = (value: any, unit = 'px', type) => {
   const match = value.match(/(var\(--.*?\)|#\S+|\S+)/g)
   if (match && match.length > 1) return map(match).join(' ')
 
-  if (value.startsWith('raw:')) return value.slice(4)
   if (canBeNumber(value)) return addUnit(value, unit)
   if (value.includes('var(')) return value
 
