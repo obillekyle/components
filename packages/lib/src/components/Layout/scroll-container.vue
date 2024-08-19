@@ -99,7 +99,7 @@
         ) {
         .md-master-switch {
           --value: calc((var(--header-size) + var(--sm)) * -1) var(--sm)
-            var(--header-size) var(--background-body);
+            var(--header-size) var(--surface);
 
           box-shadow:
             var(--shadow-2),

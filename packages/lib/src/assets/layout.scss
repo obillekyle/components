@@ -7,14 +7,10 @@
 }
 
 .md-theme-provider {
-  --background-body: var(--surface);
-  --background-secondary: var(--primary-95);
-  --shadow-1: 0px 1px 2px 0px #0004, 0px 1px 3px 1px #0002;
-  --shadow-2: 0px 1px 2px 0px #0004, 0px 2px 6px 2px #0002;
-  --shadow-3: 0px 1px 3px 0px #0004, 0px 3px 8px 3px #0002;
+  --shadow-1: 0px 1px 2px #0004, 0px 1px 3px 1px #0002;
+  --shadow-2: 0px 1px 2px #0004, 0px 2px 6px 2px #0002;
+  --shadow-3: 0px 1px 3px #0004, 0px 3px 8px 3px #0002;
   --timing-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --navbar-size: var(--size-xl);
-  --header-size: var(--size-md);
   --xxs: var(--padding-xxs);
   --xs: var(--padding-xs);
   --sm: var(--padding-sm);
@@ -23,8 +19,8 @@
   --xl: var(--padding-xl);
   --xxl: var(--padding-xxl);
 
-  color: var(--primary-0, currentColor);
-  background: var(--background-body);
+  transform: translate3d(0, 0, 0);
+  background: var(--surface);
   line-height: 1.5;
 
   *:focus-visible {
