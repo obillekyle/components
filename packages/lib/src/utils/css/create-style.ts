@@ -110,7 +110,7 @@ type CreateStyle = (
 function dismount(name: string) {
   if (!name || typeof window === 'undefined') return
 
-  let style: HTMLElement | null
+  let style: HTMLElement | undefined
   if (!(style = $(`style[for=${name}]`))) return
 
   const count = Number(style.dataset.count || 0) - 1
