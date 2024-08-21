@@ -4,7 +4,7 @@
 
   import { evaluate } from '@/utils/function/evaluate'
   import { computed, ref } from 'vue'
-  import IconOrComponent from '../Misc/icon-or-component.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
   import Counter from './counter.vue'
 
   interface InputText
@@ -41,7 +41,7 @@
     @click="inputRef?.focus()"
     :class="{ span, [variant ?? 'filled']: true }"
   >
-    <IconOrComponent class="md-input-icon left" :icon="leftIcon" />
+    <HybridIcon class="md-input-icon left" :icon="leftIcon" />
     <div class="md-input-content" :data-placeholder="placeholder">
       <span v-if="prefix">{{ prefix }}</span>
       <input
@@ -58,6 +58,6 @@
       />
       <span v-if="suffix">{{ suffix }}</span>
     </div>
-    <IconOrComponent class="md-input-icon right" :icon="rightIcon" />
+    <HybridIcon class="md-input-icon right" :icon="rightIcon" />
   </div>
 </template>

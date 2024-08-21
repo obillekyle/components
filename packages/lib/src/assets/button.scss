@@ -2,8 +2,7 @@
   height: var(--component-sm);
   padding-inline: var(--md);
 
-  &.text,
-  &.transparent {
+  &.text {
     padding-inline: var(--sm);
   }
 }
@@ -11,10 +10,6 @@
 .md-chip {
   height: var(--component-xs);
   padding-inline: var(--sm);
-
-  &-label {
-    font-size: var(--font-sm);
-  }
 }
 
 .md-button,
@@ -85,6 +80,7 @@
     text-overflow: ellipsis;
     overflow: hidden;
     padding-inline: var(--xs);
+    font-size: var(--font-sm);
   }
 
   &-icon {

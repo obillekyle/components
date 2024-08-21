@@ -3,12 +3,15 @@
 type QuerySelector = {
   <T extends Element = HTMLElement>(
     selector: string,
-    element?: Element | null
-  ): T | null
+    element?: Element | EventTarget | null
+  ): T | undefined
 }
 
-export const $: QuerySelector = (selector, element) => {
-  return ((element as Element) || document).querySelector(selector)
+export const $: QuerySelector = (selector, element): any => {
+  if (element === null) return
+  return element instanceof Element
+    ? element.querySelector(selector)
+    : document.querySelector(selector)
 }
 
 type GetParent = {
@@ -21,7 +24,7 @@ type GetParent = {
 }
 
 export const getParent: GetParent = (elem, sel, self, deep = 10): any => {
-  if (deep <= 0 || !elem) return null
+  if (deep <= 0 || !elem) return
   if (elem instanceof Element) {
     if (self && elem.matches(sel)) return elem
     return getParent(elem.parentElement, sel, true, deep - 1)

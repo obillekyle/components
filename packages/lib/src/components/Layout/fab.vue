@@ -4,7 +4,7 @@
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
   import { inject, ref } from 'vue'
-  import IconOrComponent from '../Misc/icon-or-component.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
 
   interface FabProperties extends /* @vue-ignore */ ButtonHTMLAttributes {
     icon?: string | Component
@@ -24,7 +24,7 @@
     @pointerdown="rippleEffect"
     @keydown="keyClick"
   >
-    <IconOrComponent class="md-fab-icon" :icon="icon" />
+    <HybridIcon class="md-fab-icon" :icon="icon" />
     <div class="md-fab-label" v-if="$slots.default">
       <slot />
     </div>

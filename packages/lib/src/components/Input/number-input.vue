@@ -5,7 +5,7 @@
 
   import { evaluate } from '@/utils/function/evaluate'
   import { clamp } from '@/utils/number/range'
-  import IconOrComponent from '../Misc/icon-or-component.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
   import NumberArrows from './number-arrows.vue'
 
   interface InputText
@@ -44,7 +44,7 @@
     @click="input?.focus()"
     :class="{ span, [variant ?? 'filled']: true }"
   >
-    <IconOrComponent class="md-input-icon left" :icon="leftIcon" />
+    <HybridIcon class="md-input-icon left" :icon="leftIcon" />
     <div class="md-input-content" :data-placeholder="placeholder">
       <input
         ref="input"

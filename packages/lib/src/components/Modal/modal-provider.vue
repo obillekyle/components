@@ -1,19 +1,19 @@
 <script setup lang="ts">
-  import type { SnackbarProps } from './util'
+  import type { ModalProps } from './util'
 
   import { ComponentManager } from '@/utils/component-manager'
   import { provide, shallowRef } from 'vue'
 
   import { onMounted } from 'vue'
-  import { SnackbarManager } from './snackbar-manager'
+  import { ModalManager } from './modal-manager'
 
-  import Snackbar from './snackbar.vue'
+  import Modal from './modal.vue'
 
   const props = defineProps<{
-    manager?: ComponentManager<SnackbarProps>
+    manager?: ComponentManager<ModalProps>
   }>()
 
-  const manager = props.manager || SnackbarManager
+  const manager = props.manager || ModalManager
   const data = shallowRef(manager.data)
 
   provide('snackbar-manager', manager)
@@ -23,14 +23,14 @@
 
 <template>
   <slot />
-  <div class="md-snackbar-provider">
-    <transition-group name="md-snackbar">
-      <Snackbar
+  <div class="md-modal-provider">
+    <transition-group name="md-modal">
+      <Modal
         :key="key"
-        :id="'md-snackbar-' + key"
+        :id="'md-modal-' + key"
         :utils="manager.utility(key)"
-        v-for="(snackbar, key) in data"
-        v-bind="snackbar"
+        v-for="(modal, key) in data"
+        v-bind="modal"
       />
     </transition-group>
   </div>

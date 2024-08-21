@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { useModal } from '@/components/Modal/modal-manager'
+  import { useSnackbar } from '@/components/Snackbar/snackbar-manager'
   import { customRef, useLocalStorage } from '@/utils/ref'
   import { useTooltip } from '@/utils/ref/use-tooltip'
   import { ref } from 'vue'
@@ -10,12 +12,12 @@
   import SquareImage from '@/components/Image/square-image.vue'
   import Fab from '@/components/Layout/fab.vue'
   import Layout from '@/components/Layout/layout.vue'
+  import ModalProvider from '@/components/Modal/modal-provider.vue'
   import NavBar from '@/components/Navigation/navigation-bar.vue'
   import NavContainer from '@/components/Navigation/navigation-container.vue'
   import NavContent from '@/components/Navigation/navigation-content.vue'
   import NavEntry from '@/components/Navigation/navigation-entry.vue'
   import NavItem from '@/components/Navigation/navigation-item.vue'
-  import { useSnackbar } from '@/components/Snackbar/snackbar-manager'
   import SnackbarProvider from '@/components/Snackbar/snackbar-provider.vue'
   import MasterSwitch from '@/components/Switch/master-switch.vue'
   import AppCards from './app-cards.vue'
@@ -23,7 +25,6 @@
   import ColorShades from './color-shades.vue'
   import DominantColor from './dominant-color.vue'
   import LayoutInherit from './layout-inherit.vue'
-  import Test from './test.vue'
 
   const tab = useLocalStorage('tab', 0)
   const color = useLocalStorage('theme-color', '#386a1f')
@@ -31,12 +32,13 @@
   const colorInput = ref<HTMLInputElement>()
   const [root, setRoot] = customRef<HTMLElement>()
 
-  const manager = useSnackbar()
+  const snackbar = useSnackbar()
+  const modal = useModal()
 
   useTooltip(root, ['title', 'alt', 'class'])
 
   function openSnackbar() {
-    manager.open({
+    snackbar.open({
       message:
         'Hello World! Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, reprehenderit et. Impedit aperiam neque laborum aliquid officia veniam quo voluptatibus quas ratione ex, doloribus facilis omnis quaerat eos ab culpa.',
       closeable: true,
@@ -52,6 +54,30 @@
           label: 'Action 2',
           onClick: () => {
             console.log('Action 2')
+          }
+        }
+      ]
+    })
+  }
+
+  function openModal() {
+    modal.open({
+      icon: 'material-symbols:info-outline',
+      title: 'Modal Title',
+      content: 'Modal Content',
+      actions: [
+        {
+          label: 'Action 1',
+          onClick: ({ close }) => {
+            console.log('Action 1')
+            close()
+          }
+        },
+        {
+          label: 'Action 2',
+          onClick: ({ close }) => {
+            console.log('Action 2')
+            close()
           }
         }
       ]
@@ -115,18 +141,21 @@
       <Fab icon="material-symbols:star-outline">Fab</Fab>
     </template>
 
-    <SnackbarProvider :manager>
-      <Headline title="Header Title" />
-      <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
-      <AppComp v-if="tab === 0" />
-      <ColorShades v-else-if="tab === 1" />
-      <AppCards v-else-if="tab === 2" />
-      <LayoutInherit v-else-if="tab === 3" />
-      <DominantColor v-else-if="tab === 4" />
-      <Test text="test" v-else-if="tab === 5">
-        <Button @click="openSnackbar">Click me</Button>
-      </Test>
-    </SnackbarProvider>
+    <ModalProvider :manager="modal">
+      <SnackbarProvider :manager="snackbar">
+        <Headline title="Header Title" />
+        <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
+        <AppComp v-if="tab === 0" />
+        <ColorShades v-else-if="tab === 1" />
+        <AppCards v-else-if="tab === 2" />
+        <LayoutInherit v-else-if="tab === 3" />
+        <DominantColor v-else-if="tab === 4" />
+        <div v-else-if="tab === 5">
+          <Button @click="openModal">Open Modal</Button>
+          <Button @click="openSnackbar">Open Snackbar</Button>
+        </div>
+      </SnackbarProvider>
+    </ModalProvider>
   </Layout>
 </template>
 

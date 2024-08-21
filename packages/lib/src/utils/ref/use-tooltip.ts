@@ -1,15 +1,16 @@
 import '@/assets/tooltip.scss'
-import { onMounted, onUnmounted, watch, type Ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 import { getParent } from '../dom/selector'
 import { debounce } from '../function/perf'
 
 export function useTooltip(
-  ref: Ref<HTMLElement | undefined>,
-  attr: string | string[] = 'title'
+  elem: Ref<HTMLElement | undefined>,
+  attr: string | string[] = 'title',
+  state = true
 ) {
   let tooltip = ''
   let timeout: any
-  let enabled = true
+  const enabled = ref(state)
   let current: HTMLElement | undefined
   let floater: HTMLElement | undefined
 
@@ -26,14 +27,12 @@ export function useTooltip(
     this.classList.add('show')
   }
 
-  console.log('start')
-
   function onEnter(event: Event) {
-    if (!enabled) return
+    if (!enabled.value) return
 
     debounce(
       () => {
-        const container = ref.value!
+        const container = elem.value!
         const newTarget = getParent(event.target, selector, true)
 
         if (newTarget === current) return
@@ -121,19 +120,17 @@ export function useTooltip(
     element.removeEventListener('touchstart', onEnter)
   }
 
-  watch(ref, (newElement, oldElement) => {
+  watch(elem, (newElement, oldElement) => {
     newElement && mount(newElement)
     oldElement && unmount(oldElement)
   })
 
-  onMounted(() => ref.value && mount(ref.value))
-  onUnmounted(() => ref.value && unmount(ref.value))
+  onMounted(() => elem.value && mount(elem.value))
+  onUnmounted(() => elem.value && unmount(elem.value))
 
   return {
-    toggle: () => {
-      enabled = !enabled
-    },
-    get target() {
+    enabled,
+    get currentTarget() {
       return current
     }
   }
