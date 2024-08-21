@@ -3,7 +3,7 @@
   import type { SnackbarProps } from './util'
 
   import { Icon } from '@iconify/vue'
-  import { computed, onMounted, watch } from 'vue'
+  import { computed, onMounted, provide, watch } from 'vue'
   import { SNACKBAR } from './util'
 
   import Box from '../Box/box.vue'
@@ -29,6 +29,7 @@
   }
 
   onMounted(startTimeout)
+  provide('snackbar-utils', utils)
   watch(() => props.timeout, startTimeout)
 </script>
 
