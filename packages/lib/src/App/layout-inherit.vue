@@ -6,21 +6,33 @@
   import Slider from '@/components/Slider/slider.vue'
   import Switch from '@/components/Switch/switch.vue'
   import Text from '@/components/Text/text.vue'
+  import { customRef } from '@/utils/ref/custom-ref'
+  import { useFocusLock } from '@/utils/ref/use-focus-lock'
   import { useLocalStorage } from '@/utils/ref/use-local-storage'
   import { ref } from 'vue'
 
   const isDark = ref(true)
+  const [root, setRoot] = customRef<HTMLElement>()
   const progress = useLocalStorage('progress', 80)
+  const focusLock = useFocusLock(root)
 </script>
 
 <template>
-  <Box class="layout-wrapper" width="100%" :height="500">
+  <Box class="layout-wrapper" width="100%" :height="500" :ref="setRoot">
     <Layout inherit :options="{ colors: { primary: 'orange' } }">
-      <Button label="Hello" right-icon="mdi:open-in-new" />
+      <Button
+        left-icon="material-symbols:lock-outline"
+        @click="focusLock = !focusLock"
+      >
+        Toggle Focus Lock
+      </Button>
+      <Text> State of focus lock: {{ focusLock }} </Text>
+
       <Switch v-model="isDark" />
       <Text :p="isDark ? '#sm' : '#lg'">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        {{ focusLock }}
       </Text>
       <LinearProgressSvg :value="progress" />
       <Slider v-model="progress" />
