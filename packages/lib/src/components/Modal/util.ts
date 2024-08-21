@@ -14,6 +14,7 @@ export interface ModalProps {
   title?: string
   content: Component | string
   actions?: ModalAction[]
+  subAction?: Component | string
   closeable?: boolean
   focusLock?: boolean
 }
