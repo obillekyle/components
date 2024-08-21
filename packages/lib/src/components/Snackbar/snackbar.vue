@@ -8,6 +8,7 @@
 
   import Box from '../Box/box.vue'
   import Button from '../Button/button.vue'
+  import HybridComponent from '../Misc/hybrid-component.vue'
   import Text from '../Text/text.vue'
 
   interface SnackbarOptions extends SnackbarProps {
@@ -21,7 +22,6 @@
   let timeout: any
 
   function startTimeout(time: number = props.timeout ?? Infinity) {
-    console.log(props.utils?.id)
     timeout && clearTimeout(timeout)
     if (Number.isFinite(time)) {
       timeout = setTimeout(() => utils.value.close(), props.timeout)
@@ -42,9 +42,9 @@
     }"
   >
     <Text class="md-snackbar-content" lines="3" as="span">
-      <template v-if="typeof message == 'string'">{{ message }}</template>
-      <component v-else :is="message ?? 'span'" />
-      <slot />
+      <slot>
+        <HybridComponent :as="message" />
+      </slot>
     </Text>
 
     <div class="md-snackbar-actions" v-if="actions || closeable">
