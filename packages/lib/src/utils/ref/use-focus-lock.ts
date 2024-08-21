@@ -18,10 +18,21 @@ function focusLastLockable() {
   }
 }
 
+function focusDummy() {
+  const focusDummy = document.createElement('div')
+  focusDummy.setAttribute('tabindex', '0')
+  focusDummy.setAttribute(
+    'style',
+    'position: absolute; opacity: 0; pointer-events: none;'
+  )
+  return focusDummy
+}
+
 export function useFocusLock(
   elem: Ref<HTMLElement | undefined>,
   state = true
 ) {
+  const dummy = focusDummy()
   const enabled = ref(state)
 
   function onBlur(event: FocusEvent) {
@@ -35,10 +46,12 @@ export function useFocusLock(
   function mountEvent(element: HTMLElement) {
     element.setAttribute('focus-lock', '')
     element.addEventListener('focusout', onBlur)
+    element.after(dummy)
     focusFirstFocusable(element)
   }
 
   function unmountEvent(element: HTMLElement) {
+    dummy.remove()
     element.removeAttribute('focus-lock')
     element.removeEventListener('focusout', onBlur)
   }
