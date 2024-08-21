@@ -6,12 +6,13 @@ type ModalActionOnClick = (utils: UtilityFunction<ModalProps>) => void
 type ModalAction = {
   label: string
   onClick: ModalActionOnClick
-  variant: 'filled' | 'elevated' | 'tonal' | 'outlined' | 'text'
+  disabled?: boolean
+  variant?: 'filled' | 'elevated' | 'tonal' | 'outlined' | 'text'
 }
 
 export interface ModalProps {
-  icon?: string
-  title?: string
+  icon?: Component | string
+  title?: Component | string
   content: Component | string
   actions?: ModalAction[]
   subAction?: Component | string
