@@ -6,6 +6,7 @@
 
   import { onMounted } from 'vue'
   import { ModalManager } from './modal-manager'
+
   import Modal from './modal.vue'
 
   const props = defineProps<{
@@ -16,11 +17,8 @@
   const data = shallowRef(manager.data)
 
   provide('snackbar-manager', manager)
-  defineOptions({ name: 'MdSnackbarProvider' })
-
-  onMounted(() => {
-    manager.on('change', () => (data.value = manager.data))
-  })
+  defineOptions({ name: 'MdSnackbarProvider', inheritAttrs: false })
+  onMounted(() => manager.on('change', () => (data.value = manager.data)))
 </script>
 
 <template>

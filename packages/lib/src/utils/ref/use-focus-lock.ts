@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { $, getParent } from '../dom/selector'
 
 const focusableSelector =
@@ -51,7 +51,6 @@ export function useFocusLock(
   }
 
   function unmountEvent(element: HTMLElement) {
-    dummy.remove()
     element.removeAttribute('focus-lock')
     element.removeEventListener('focusout', onBlur)
   }
@@ -72,7 +71,8 @@ export function useFocusLock(
     document.addEventListener('focusin', focusOther)
   })
 
-  onBeforeUnmount(() => {
+  onUnmounted(() => {
+    dummy.remove()
     elem.value && unmountEvent(elem.value)
     document.removeEventListener('focusin', focusOther)
 
