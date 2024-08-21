@@ -7,7 +7,8 @@
   import { getBoxProps } from '../Box/util'
 
   import Box from '../Box/box.vue'
-  import IconOrComponent from '../Misc/icon-or-component.vue'
+  import HybridComponent from '../Misc/hybrid-component.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
 
   interface ButtonProps
     extends BoxProps,
@@ -34,13 +35,12 @@
     :class="variant ?? 'filled'"
     @pointerdown="rippleEffect"
   >
-    <IconOrComponent class="md-button-icon left" :icon="leftIcon" />
+    <HybridIcon class="md-button-icon left" :icon="leftIcon" />
     <div class="md-button-label">
       <slot>
-        <template v-if="typeof label == 'string'">{{ label }}</template>
-        <component v-else :is="label ?? 'div'" />
+        <HybridComponent :as="label" />
       </slot>
     </div>
-    <IconOrComponent class="md-button-icon right" :icon="rightIcon" />
+    <HybridIcon class="md-button-icon right" :icon="rightIcon" />
   </Box>
 </template>

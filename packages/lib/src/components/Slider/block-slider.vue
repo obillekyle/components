@@ -7,7 +7,7 @@
   import { useRect } from '@/utils/ref/use-rect'
   import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
-  import IconOrComponent from '../Misc/icon-or-component.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
 
   interface MasterSliderProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
@@ -134,7 +134,7 @@
     :style="{ '--pos': position }"
   >
     <div class="md-block-slider-icon" :data-value="sliderVal">
-      <IconOrComponent :icon="props.icon" />
+      <HybridIcon :icon="props.icon" />
     </div>
     <div class="md-block-slider-content">
       <slot />

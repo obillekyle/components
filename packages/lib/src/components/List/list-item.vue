@@ -6,7 +6,7 @@
   import { evaluate } from '@/utils/function/evaluate'
   import { Icon } from '@iconify/vue'
   import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
-  import IconOrComponent from '../Misc/icon-or-component.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
 
   const props = defineProps<{
     index: number
@@ -206,7 +206,7 @@
       v-if="parentProps.swipe === 'custom'"
     >
       <template :key="key" v-for="(item, key) in parentProps.swipeOptions">
-        <IconOrComponent
+        <HybridIcon
           :class="key"
           v-show="key == 'left' ? value > 0 : value < 0"
           v-if="typeof item == 'object'"

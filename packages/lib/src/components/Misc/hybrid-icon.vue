@@ -8,7 +8,7 @@
   }>()
 
   defineOptions({
-    name: 'IconOrComponent',
+    name: 'HybridIcon',
     inheritAttrs: false
   })
 </script>

@@ -2,17 +2,18 @@
   import '@/assets/button.scss'
   import type { ButtonHTMLAttributes, Component } from 'vue'
 
-  import IconOrComponent from '@/components/Misc/icon-or-component.vue'
+  import HybridIcon from '@/components/Misc/hybrid-icon.vue'
   import { rippleEffect } from '@/utils/dom'
   import Box from '../Box/box.vue'
   import { getBoxProps, type BoxProps } from '../Box/util'
+  import HybridComponent from '../Misc/hybrid-component.vue'
 
   interface ChipProps
     extends BoxProps,
       /* @vue-ignore */ ButtonHTMLAttributes {
     leftIcon?: Component | string
     rightIcon?: Component | string
-    label?: string
+    label?: Component | string
     variant?: 'filled' | 'elevated' | 'tonal' | 'outlined' | 'text'
   }
 
@@ -32,10 +33,12 @@
     :class="variant ?? 'filled'"
     @pointerdown="rippleEffect"
   >
-    <IconOrComponent class="md-chip-icon left" :icon="leftIcon" />
+    <HybridIcon class="md-chip-icon left" :icon="leftIcon" />
     <div class="md-chip-label">
-      <slot>{{ label }}</slot>
+      <slot>
+        <HybridComponent :as="label" />
+      </slot>
     </div>
-    <IconOrComponent class="md-chip-icon right" :icon="rightIcon" />
+    <HybridIcon class="md-chip-icon right" :icon="rightIcon" />
   </Box>
 </template>
