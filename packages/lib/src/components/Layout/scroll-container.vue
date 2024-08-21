@@ -20,7 +20,9 @@
     scrollable: true
   })
 
-  const boxProps = getBoxProps(props)
+  const boxProps = getBoxProps(props, {
+    p: '#md'
+  })
   const element = ref<HTMLElement>()
   const model = defineModel<ScrollPosition>({
     default: { x: 0, y: 0 }
@@ -77,7 +79,6 @@
     }
 
     &-wrapper {
-      padding: var(--md);
       width: 100%;
 
       > .md-scroll {
