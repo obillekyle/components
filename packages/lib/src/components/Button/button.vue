@@ -6,6 +6,8 @@
   import { rippleEffect } from '@/utils/dom/ripple'
   import { getBoxProps } from '../Box/util'
 
+  import { keyClick } from '@/utils/dom/events'
+  import { useAttrs } from 'vue'
   import Box from '../Box/box.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
   import HybridIcon from '../Misc/hybrid-icon.vue'
@@ -19,7 +21,19 @@
     label?: string | Component
   }
 
-  defineOptions({ name: 'MdButton' })
+  const attrs: Record<string, any> = useAttrs()
+
+  function rippleHandler(event: MouseEvent, propKey: string) {
+    rippleEffect(event)
+    typeof attrs[propKey] === 'function' && attrs[propKey](event)
+  }
+
+  function keyHandler(event: KeyboardEvent, propKey: string) {
+    keyClick(event, ['Enter', ' '])
+    typeof attrs[propKey] === 'function' && attrs[propKey](event)
+  }
+
+  defineOptions({ name: 'MdButton', inheritAttrs: false })
   const props = defineProps<ButtonProps>()
   const boxProps = getBoxProps(props, {
     r: '#rounded'
@@ -31,9 +45,11 @@
     as="button"
     type="button"
     class="md-button"
-    v-bind="boxProps"
     :class="variant ?? 'filled'"
-    @pointerdown="rippleEffect"
+    v-bind="{ ...boxProps, ...$attrs }"
+    @keydown="keyHandler($event, 'onKeydown')"
+    @click="rippleHandler($event, 'onClick')"
+    @pointerdown="rippleHandler($event, 'onPointerdown')"
   >
     <HybridIcon class="md-button-icon left" :icon="leftIcon" />
     <div class="md-button-label">

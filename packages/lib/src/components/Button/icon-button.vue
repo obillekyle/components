@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import type { SizesString } from '@/utils/css'
+  import type { SizesString } from '@/utils/css/type'
   import type { ButtonHTMLAttributes } from 'vue'
 
   import { getCSSValue } from '@/utils/css/sizes'
+  import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
   import { Icon } from '@iconify/vue'
+  import { useAttrs } from 'vue'
 
   interface IconButtonProperties
     extends /* @vue-ignore */ ButtonHTMLAttributes {
@@ -14,15 +16,30 @@
     variant?: 'filled' | 'tonal' | 'outlined' | 'standard'
   }
 
+  const attrs: any = useAttrs()
+
+  function rippleHandler(event: MouseEvent, propKey: string) {
+    rippleEffect(event)
+    typeof attrs[propKey] === 'function' && attrs[propKey](event)
+  }
+
+  function keyHandler(event: KeyboardEvent, propKey: string) {
+    keyClick(event, ['Enter', ' '])
+    typeof attrs[propKey] === 'function' && attrs[propKey](event)
+  }
+
   defineProps<IconButtonProperties>()
-  defineOptions({ name: 'MdIconButton' })
+  defineOptions({ name: 'MdIconButton', inheritAttrs: false })
 </script>
 
 <template>
   <button
     type="button"
     class="md-icon-button"
-    @pointerdown="rippleEffect($event, '.md-icon-button-wrapper')"
+    v-bind="$attrs"
+    @keydown="keyHandler($event, 'onKeydown')"
+    @click="rippleHandler($event, 'onClick')"
+    @pointerdown="rippleHandler($event, 'onPointerdown')"
   >
     <div
       class="md-icon-button-wrapper"
@@ -47,7 +64,7 @@
     display: inline-block;
     width: var(--component-md);
     height: var(--component-md);
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: #0000;
 
     &-wrapper {
       display: grid;
@@ -105,6 +122,10 @@
           color: var(--primary);
         }
       }
+    }
+
+    &:focus-visible &-wrapper {
+      outline: 2px dashed var(--primary);
     }
 
     &-wrapper::after {
