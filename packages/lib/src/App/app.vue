@@ -1,13 +1,10 @@
 <script setup lang="ts">
-  import { useModal } from '@/components/Modal/modal-manager'
-  import { useSnackbar } from '@/components/Snackbar/snackbar-manager'
   import { customRef, useLocalStorage } from '@/utils/ref'
   import { useTooltip } from '@/utils/ref/use-tooltip'
   import { ref } from 'vue'
 
   import Headline from '@/components/AppBar/headline.vue'
   import TopAppBar from '@/components/AppBar/top-bar.vue'
-  import Button from '@/components/Button/button.vue'
   import IconButton from '@/components/Button/icon-button.vue'
   import SquareImage from '@/components/Image/square-image.vue'
   import Fab from '@/components/Layout/fab.vue'
@@ -23,6 +20,7 @@
   import AppCards from './app-cards.vue'
   import AppComp from './app-comp.vue'
   import ColorShades from './color-shades.vue'
+  import ComponentManager from './component-state.vue'
   import DominantColor from './dominant-color.vue'
   import LayoutInherit from './layout-inherit.vue'
 
@@ -32,57 +30,7 @@
   const colorInput = ref<HTMLInputElement>()
   const [root, setRoot] = customRef<HTMLElement>()
 
-  const snackbar = useSnackbar()
-  const modal = useModal()
-
   useTooltip(root, ['title', 'alt', 'class'])
-
-  function openSnackbar() {
-    snackbar.open({
-      message:
-        'Hello World! Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, reprehenderit et. Impedit aperiam neque laborum aliquid officia veniam quo voluptatibus quas ratione ex, doloribus facilis omnis quaerat eos ab culpa.',
-      closeable: true,
-      timeout: Infinity,
-      actions: [
-        {
-          label: 'Action 1',
-          onClick: () => {
-            console.log('Action 1')
-          }
-        },
-        {
-          label: 'Action 2',
-          onClick: () => {
-            console.log('Action 2')
-          }
-        }
-      ]
-    })
-  }
-
-  function openModal() {
-    modal.open({
-      icon: 'material-symbols:info-outline',
-      title: 'Modal Title',
-      content: 'Modal Content',
-      actions: [
-        {
-          label: 'Action 1',
-          onClick: ({ close }) => {
-            console.log('Action 1')
-            close()
-          }
-        },
-        {
-          label: 'Action 2',
-          onClick: ({ close }) => {
-            console.log('Action 2')
-            close()
-          }
-        }
-      ]
-    })
-  }
 </script>
 
 <template>
@@ -109,7 +57,7 @@
           <NavItem name="Cards" icon="material-symbols:cards-outline" />
           <NavItem name="Layout" icon="mdi:application-outline" />
           <NavItem name="Extract" icon="mdi:palette-outline" />
-          <NavItem name="Test" icon="mdi:pencil-ruler-outline" />
+          <NavItem name="Manager" icon="mdi:pencil-ruler-outline" />
           <NavEntry name="Settings" icon="mdi:cog-outline" />
         </NavContainer>
       </NavBar>
@@ -141,8 +89,8 @@
       <Fab icon="material-symbols:star-outline">Fab</Fab>
     </template>
 
-    <ModalProvider :manager="modal">
-      <SnackbarProvider :manager="snackbar">
+    <ModalProvider>
+      <SnackbarProvider>
         <Headline title="Header Title" />
         <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
         <AppComp v-if="tab === 0" />
@@ -150,10 +98,7 @@
         <AppCards v-else-if="tab === 2" />
         <LayoutInherit v-else-if="tab === 3" />
         <DominantColor v-else-if="tab === 4" />
-        <div v-else-if="tab === 5">
-          <Button @click="openModal">Open Modal</Button>
-          <Button @click="openSnackbar">Open Snackbar</Button>
-        </div>
+        <ComponentManager v-else-if="tab === 5" />
       </SnackbarProvider>
     </ModalProvider>
   </Layout>
