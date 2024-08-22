@@ -8,6 +8,7 @@
   transition: box-shadow 0.2s;
   min-height: var(--component-lg);
   color: var(--on-surface-variant);
+  margin-block: var(--xs);
 
   &.span,
   &-content,
@@ -17,6 +18,7 @@
 
   &.span {
     min-width: initial;
+    width: 100%;
   }
 
   input {
