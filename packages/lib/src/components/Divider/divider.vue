@@ -32,7 +32,8 @@
   .md-divider {
     place-self: center;
     display: block;
-    background: var(--surface-container-highest);
+    background: var(--outline);
+    opacity: 0.5;
 
     &.x {
       height: 1px;
@@ -69,7 +70,8 @@
       display: block;
       height: 1px;
       grid-area: line;
-      background: var(--surface-container-highest);
+      background: var(--outline);
+      opacity: 0.5;
     }
   }
 </style>
