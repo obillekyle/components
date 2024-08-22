@@ -1,3 +1,5 @@
+import { throttler } from '../function/perf'
+
 type KeyClickFunction = (
   event: KeyboardEvent,
   key?: string | string[]
@@ -8,8 +10,11 @@ export const keyClick: KeyClickFunction = (event, key = ' ') => {
 
   const target = event.currentTarget as HTMLElement
   if (target.matches(':focus-visible') && key.includes(event.key)) {
-    target.click()
     event.preventDefault()
+    throttler(() => target.click(), {
+      wait: 80,
+      key: 'keyClick'
+    })
   }
 }
 
