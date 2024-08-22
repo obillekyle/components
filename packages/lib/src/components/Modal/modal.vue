@@ -2,7 +2,7 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { ModalProps } from './util'
 
-  import { targetsSelf } from '@/utils/dom/events'
+  import { keyClick, targetsSelf } from '@/utils/dom/events'
   import { customRef } from '@/utils/ref/custom-ref'
   import { useFocusLock } from '@/utils/ref/use-focus-lock'
   import { Icon } from '@iconify/vue'
@@ -34,32 +34,31 @@
   <Box
     :ref="setRef"
     class="md-modal"
+    :class="{ 'md-modal-fullscreen': fullScreen }"
     @click="closeable && targetsSelf($event, utils.close)"
   >
     <div class="md-modal-wrapper">
       <HybridIcon class="md-modal-icon" :icon="icon" />
       <div class="md-modal-title" v-if="title || $slots.title">
+        <div
+          tabindex="0"
+          class="md-modal-close"
+          @keypress="keyClick"
+          @click="utils.close"
+          v-if="closeable && fullScreen"
+        >
+          <Icon :inline="false" :width="24" icon="material-symbols:close" />
+        </div>
         <slot name="title">
           <HybridComponent :as="title" />
-          <Icon
-            tabindex="0"
-            v-if="closeable"
-            @keypress="utils.close"
-            class="md-modal-close"
-            :inline="false"
-            :width="24"
-            icon="material-symbols:close"
-          />
         </slot>
       </div>
 
-      <div class="md-modal-content">
-        <ScrollContainer p="0" tabindex="0">
-          <slot>
-            <HybridComponent :as="content" />
-          </slot>
-        </ScrollContainer>
-      </div>
+      <ScrollContainer class="md-modal-content" p="0" tabindex="0">
+        <slot>
+          <HybridComponent :as="content" />
+        </slot>
+      </ScrollContainer>
 
       <div class="md-modal-actions" v-if="actions || subAction">
         <HybridComponent :as="subAction" />
@@ -86,27 +85,41 @@
     inset: 0;
     position: fixed;
     display: grid;
-    overflow: hidden;
+    z-index: 200;
+    max-height: 100%;
     place-items: center;
     background: #0008;
 
     &-wrapper {
       display: grid;
-      gap: var(--sm);
+      overflow: hidden;
+      position: absolute;
+      grid-template:
+        'icon' auto
+        'title' auto
+        'content' 1fr
+        'actions' auto;
       padding: var(--xl);
       background: var(--surface-container-high);
       border-radius: var(--xxl);
-      min-width: min(300px, 100%);
-      max-width: min(768px, 100%);
+      min-width: min(300px, calc(100% - var(--xl)));
+      max-width: min(500px, calc(100% - var(--xl)));
+      max-height: calc(100% - var(--xl));
+    }
+
+    .md-input.outlined .md-input-content::after {
+      background: var(--surface-container-high);
     }
 
     &-icon {
       display: grid;
       place-items: center;
+      padding-bottom: var(--md);
       color: var(--secondary);
     }
 
     &-title {
+      padding-bottom: var(--md);
       font-size: var(--component-xxs);
       text-align: center;
     }
@@ -116,12 +129,69 @@
     }
 
     &-actions {
+      padding-top: var(--xl);
       display: flex;
+    }
+
+    &-close {
+      margin-right: var(--md);
+      cursor: pointer;
+      line-height: 0;
     }
 
     &-actions &-primary-actions {
       display: flex;
       margin-left: auto;
+    }
+
+    &-fullscreen &-wrapper {
+      display: grid;
+      grid-template-rows: var(--component-lg) 1fr;
+      flex-direction: column;
+      max-width: min(540px, 100%);
+      padding: 0;
+      border-radius: var(--xs);
+    }
+
+    &-fullscreen &-icon {
+      display: none;
+    }
+
+    &-fullscreen &-title {
+      font-size: var(--font-xxl);
+      height: var(--component-lg);
+      display: flex;
+      text-align: center;
+      align-items: center;
+      padding-inline: var(--xl);
+      padding-bottom: 0;
+
+      &:has(.md-modal-close) {
+        padding-left: var(--md);
+      }
+    }
+
+    &-fullscreen &-content {
+      padding-inline: var(--xl);
+      padding-bottom: var(--xl);
+    }
+
+    &-fullscreen &-actions {
+      position: absolute;
+      align-items: center;
+      padding-top: 0;
+      height: var(--component-lg);
+      right: var(--sm);
+      top: 0;
+    }
+
+    @media (width <= 600px) {
+      &-fullscreen &-wrapper {
+        max-height: 100%;
+        height: 100%;
+        border-radius: 0;
+        padding: 0;
+      }
     }
 
     &-enter-active,
