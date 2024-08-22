@@ -1,12 +1,13 @@
 <script setup lang="ts">
-  import { type ButtonHTMLAttributes } from 'vue'
+  import type { ButtonHTMLAttributes, Component } from 'vue'
 
-  import { Icon } from '@iconify/vue'
+  import HybridComponent from '../Misc/hybrid-component.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
 
   interface NavigationItemProperties
-    extends /** @vue-ignore */ ButtonHTMLAttributes {
-    name?: string
-    icon: string
+    extends /** @vue-ignore */ Omit<ButtonHTMLAttributes, 'name'> {
+    name?: string | Component
+    icon: string | Component
   }
 
   defineProps<NavigationItemProperties>()
@@ -15,11 +16,11 @@
 
 <template>
   <button ref="element" class="md-navbar-item entry">
-    <div class="md-navbar-item-icon">
-      <Icon :icon="icon" />
-    </div>
+    <HybridIcon class="md-navbar-item-icon" :icon />
     <div class="md-navbar-item-name">
-      <slot>{{ name }}</slot>
+      <slot>
+        <HybridComponent :as="name" />
+      </slot>
     </div>
   </button>
 </template>

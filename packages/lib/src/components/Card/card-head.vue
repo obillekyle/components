@@ -1,7 +1,10 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from 'vue'
+  import type { BoxProps } from '../Box/util'
+
+  import { getBoxProps } from '../Box/util'
+
   import Box from '../Box/box.vue'
-  import { getBoxProps, type BoxProps } from '../Box/util'
 
   interface CardHeadProps
     extends BoxProps,
