@@ -147,7 +147,6 @@
     &-fullscreen &-wrapper {
       display: grid;
       grid-template-rows: var(--component-lg) 1fr;
-      flex-direction: column;
       max-width: min(540px, 100%);
       padding: 0;
       border-radius: var(--xs);
@@ -188,6 +187,7 @@
     @media (width <= 600px) {
       &-fullscreen &-wrapper {
         max-height: 100%;
+        min-width: 100%;
         height: 100%;
         border-radius: 0;
         padding: 0;

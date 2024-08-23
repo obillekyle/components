@@ -1,13 +1,24 @@
 <script setup lang="ts">
   import { useModal } from '@/components/Modal/modal-manager'
   import { MODAL } from '@/components/Modal/util'
+  import { useSheet } from '@/components/Sheet/sheet-manager'
   import { useSnackbar } from '@/components/Snackbar/snackbar-manager'
 
+  import Box from '@/components/Box/box.vue'
   import Button from '@/components/Button/button.vue'
+  import Select from '@/components/Select/select.vue'
+  import { useLocalStorage } from '@/utils'
   import Mock from './mock-content.vue'
 
   const snackbar = useSnackbar()
   const modal = useModal()
+  const sheet = useSheet()
+
+  const options = ['left', 'right', 'bottom', 'top'] as const
+  const position = useLocalStorage<'left' | 'right' | 'bottom' | 'top'>(
+    'position',
+    'right'
+  )
 
   function openSnackbar() {
     snackbar.open({
@@ -26,6 +37,8 @@
         }
       ]
     })
+
+    console.log(snackbar)
   }
 
   function openFullModal() {
@@ -47,10 +60,34 @@
       actions: MODAL.PRESET_ACTION_CLOSE('OK')
     })
   }
+
+  function openSheet() {
+    sheet.open({
+      content: Mock,
+      closeable: true,
+      resizable: true,
+      title: 'Sheet Title',
+      direction: position.value
+    })
+  }
 </script>
 
 <template>
-  <Button @click="openFullModal">Open Full Modal</Button>
-  <Button @click="openModal">Open Simple Modal</Button>
-  <Button @click="openSnackbar">Open Snackbar</Button>
+  <Box>
+    <Button @click="openFullModal">Open Full Modal</Button>
+    <Button @click="openModal">Open Simple Modal</Button>
+  </Box>
+
+  <Box>
+    <Button @click="openSnackbar">Open Snackbar</Button>
+  </Box>
+
+  <Box>
+    <Select
+      :items="[...options]"
+      @change="([v]) => (position = options[v])"
+      :value="[options.indexOf(position) || 0]"
+    />
+    <Button @click="openSheet">Open Sheet</Button>
+  </Box>
 </template>

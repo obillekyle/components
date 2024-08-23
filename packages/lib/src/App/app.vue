@@ -15,6 +15,7 @@
   import NavContent from '@/components/Navigation/navigation-content.vue'
   import NavEntry from '@/components/Navigation/navigation-entry.vue'
   import NavItem from '@/components/Navigation/navigation-item.vue'
+  import SheetProvider from '@/components/Sheet/sheet-provider.vue'
   import SnackbarProvider from '@/components/Snackbar/snackbar-provider.vue'
   import MasterSwitch from '@/components/Switch/master-switch.vue'
   import AppCards from './app-cards.vue'
@@ -91,14 +92,16 @@
 
     <ModalProvider>
       <SnackbarProvider>
-        <Headline title="Header Title" />
-        <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
-        <AppComp v-if="tab === 0" />
-        <ColorShades v-else-if="tab === 1" />
-        <AppCards v-else-if="tab === 2" />
-        <LayoutInherit v-else-if="tab === 3" />
-        <DominantColor v-else-if="tab === 4" />
-        <ComponentManager v-else-if="tab === 5" />
+        <SheetProvider>
+          <Headline title="Header Title" />
+          <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
+          <AppComp v-if="tab === 0" />
+          <ColorShades v-else-if="tab === 1" />
+          <AppCards v-else-if="tab === 2" />
+          <LayoutInherit v-else-if="tab === 3" />
+          <DominantColor v-else-if="tab === 4" />
+          <ComponentManager v-else-if="tab === 5" />
+        </SheetProvider>
       </SnackbarProvider>
     </ModalProvider>
   </Layout>

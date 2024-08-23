@@ -1,0 +1,291 @@
+<script setup lang="ts">
+  import type { UtilityFunction } from '@/utils/component-manager'
+  import type { SheetProps } from './util'
+
+  import { dragPos, keyClick, targetsSelf } from '@/utils/dom/events'
+  import { customRef } from '@/utils/ref/custom-ref'
+  import { useFocusLock } from '@/utils/ref/use-focus-lock'
+  import { Icon } from '@iconify/vue'
+  import { computed, provide, ref } from 'vue'
+  import { SHEET } from './util'
+
+  import { createStyle, useRect } from '@/utils'
+  import ScrollContainer from '../Layout/scroll-container.vue'
+  import HybridComponent from '../Misc/hybrid-component.vue'
+
+  interface SheetOptions extends SheetProps {
+    utils?: UtilityFunction<SheetProps>
+  }
+
+  defineOptions({ name: 'MdModal' })
+  const props = defineProps<SheetOptions>()
+  const utils = computed(() => props.utils ?? SHEET.DEFAULT_UTILITY)
+
+  const [root, setRef] = customRef<HTMLElement>()
+  const rect = useRect(root)
+  const setSize = ref<number>()
+
+  const size = computed({
+    get: () => setSize.value ?? props.size,
+    set: (value) => (setSize.value = value)
+  })
+
+  const property = computed(() =>
+    ['left', 'right'].includes(props.direction || '') ? 'width' : 'height'
+  )
+
+  const className = createStyle(() => ({
+    [property.value]: size.value
+  }))
+
+  const drag = dragPos((pos) => {
+    const box = rect.value
+    if (!box) return
+
+    const { x, y } = pos
+    const { height, width } = box
+
+    switch (props.direction) {
+      case 'left': {
+        setSize.value = x
+        break
+      }
+
+      case 'right': {
+        setSize.value = width - x
+        break
+      }
+
+      case 'bottom': {
+        setSize.value = height - y
+        break
+      }
+
+      case 'top': {
+        setSize.value = y
+        break
+      }
+    }
+  })
+
+  useFocusLock(root)
+
+  provide('modal-utils', utils)
+</script>
+
+<template>
+  <div
+    :ref="setRef"
+    :class="direction"
+    class="md-sheet"
+    @click="closeable && targetsSelf($event, utils.close)"
+  >
+    <div class="md-sheet-wrapper" :class="className">
+      <div class="md-sheet-title" v-if="title || $slots.title">
+        <slot name="title">
+          <HybridComponent :as="title" />
+        </slot>
+        <div
+          class="md-sheet-close"
+          @keypress="keyClick"
+          @click="utils.close"
+          v-if="closeable"
+          tabindex="0"
+        >
+          <Icon :inline="false" :width="24" icon="material-symbols:close" />
+        </div>
+      </div>
+
+      <ScrollContainer class="md-sheet-content" p="0" tabindex="0">
+        <slot>
+          <HybridComponent :as="content" />
+        </slot>
+      </ScrollContainer>
+
+      <div class="md-sheet-handle" v-if="resizable" @pointerdown="drag" />
+    </div>
+  </div>
+</template>
+
+<style lang="scss">
+  /* stylelint-disable no-descending-specificity */
+
+  .md-sheet {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 1000;
+    display: grid;
+    overflow: hidden;
+    background: #0008;
+
+    &-wrapper {
+      display: grid;
+      grid-template:
+        'title' var(--component-lg)
+        'content' auto;
+      position: absolute;
+      overflow: hidden;
+      padding-top: var(--xl);
+      background: var(--surface-container-high);
+      border-radius: var(--xxl);
+      min-width: min(300px, 100%);
+      max-width: min(640px, 100%);
+      max-height: 100%;
+    }
+
+    &-enter-active,
+    &-leave-active {
+      transition: opacity 0.3s var(--timing-standard);
+
+      .md-sheet-wrapper {
+        transition: translate 0.3s var(--timing-standard);
+      }
+    }
+
+    &.right &-wrapper {
+      height: 100%;
+      max-width: 480px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      right: 0;
+
+      &:has(.md-sheet-handle) {
+        padding-left: var(--xs);
+      }
+    }
+
+    &.left &-wrapper {
+      height: 100%;
+      max-width: 480px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      left: 0;
+
+      &:has(.md-sheet-handle) {
+        padding-right: var(--xs);
+      }
+    }
+
+    &.bottom &-wrapper {
+      width: 100%;
+      max-width: 768px;
+      justify-self: center;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      bottom: 0;
+
+      &:has(.md-sheet-handle) {
+        padding-top: var(--xs);
+      }
+    }
+
+    &.top &-wrapper {
+      width: 100%;
+      max-width: 768px;
+      justify-self: center;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      padding-top: var(--sm);
+      top: 0;
+      grid-template:
+        'title' var(--component-lg)
+        'content' auto
+        'other' var(--xl);
+
+      &:has(.md-sheet-handle) {
+        padding-bottom: var(--xs);
+      }
+    }
+
+    &-enter-from,
+    &-leave-to {
+      opacity: 0;
+      pointer-events: none;
+
+      &.left .md-sheet-wrapper {
+        translate: -100% 0;
+      }
+
+      &.right .md-sheet-wrapper {
+        translate: 100% 0;
+      }
+
+      &.bottom .md-sheet-wrapper {
+        translate: 0 100%;
+      }
+
+      &.top .md-sheet-wrapper {
+        translate: 0 -100%;
+      }
+    }
+
+    &-handle {
+      display: grid;
+      position: absolute;
+      place-items: center;
+
+      &::before {
+        content: '';
+        position: absolute;
+        border-radius: 999px;
+        background: var(--on-surface-variant);
+      }
+    }
+
+    &.bottom &-handle,
+    &.top &-handle {
+      width: 100%;
+      height: var(--xl);
+
+      &::before {
+        width: var(--component-xs);
+        height: var(--xxs);
+      }
+    }
+
+    &.left &-handle,
+    &.right &-handle {
+      width: var(--xl);
+      height: 100%;
+
+      &::before {
+        width: var(--xxs);
+        height: var(--component-xs);
+      }
+    }
+
+    &.left &-handle {
+      right: 0;
+    }
+
+    &.top &-handle {
+      bottom: 0;
+    }
+
+    &-icon {
+      display: grid;
+      place-items: center;
+      color: var(--secondary);
+    }
+
+    &-title {
+      display: flex;
+      grid-area: title;
+      padding-inline: var(--xl);
+      font-size: var(--font-xl);
+      align-items: center;
+    }
+
+    &-close {
+      margin-left: auto;
+      cursor: pointer;
+    }
+
+    &-content {
+      padding-inline: var(--xl);
+      color: var(--on-surface-variant);
+    }
+  }
+</style>
