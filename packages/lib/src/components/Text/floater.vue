@@ -1,6 +1,9 @@
 <script setup lang="ts">
-  import { getCSSColor, getCSSValue, type SizesString } from '@/utils/css'
+  import type { SizesString } from '@/utils/css/type'
   import type { Component } from 'vue'
+
+  import Box from '../Box/box.vue'
+  import HybridComponent from '../Misc/hybrid-component.vue'
 
   type Positions =
     | 'top'
@@ -25,25 +28,24 @@
   withDefaults(defineProps<FloaterProperties>(), {
     color: '$error-container',
     offset: 0,
-    size: '#xxs',
+    size: '#font-xxs',
     pos: 'top-right'
   })
 </script>
 
 <template>
   <div class="md-floater">
-    <div
+    <Box
       class="md-floater-text"
       :class="pos"
-      :style="{
-        '--offset': getCSSValue(offset),
-        background: getCSSColor(color),
-        fontSize: getCSSValue(size, 'px', 'font')
+      :styled="{
+        $offset: offset,
+        background: color,
+        fontSize: size
       }"
     >
-      <span v-if="typeof text == 'string'">{{ text }}</span>
-      <component v-else :is="text" />
-    </div>
+      <HybridComponent :as="text" />
+    </Box>
     <slot />
   </div>
 </template>

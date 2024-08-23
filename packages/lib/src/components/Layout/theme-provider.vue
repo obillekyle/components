@@ -6,12 +6,14 @@
 
   import { ColorEngine } from '@/utils/color-engine'
   import { parseColors } from '@/utils/colors/parse-colors'
-  import { createStyle, getCSSColor, getCSSValue } from '@/utils/css'
+  import { getCSSColor } from '@/utils/css/color'
+  import { createStyle } from '@/utils/css/create-style'
+  import { getCSSValue } from '@/utils/css/sizes'
+  import { mergeObject } from '@/utils/object/merge'
   import { toKebabCase } from '@/utils/string/cases'
   import { inject, provide, shallowRef, watch } from 'vue'
   import { DefaultThemeObject as DTO, getSizes } from './util'
 
-  import deepmerge from 'deepmerge'
   import Box from '../Box/box.vue'
 
   interface ThemeProviderProps
@@ -40,7 +42,7 @@
     opts_.other = opts.other
 
     if (props.inherit) {
-      opts_.sizes = deepmerge(defs.sizes, opts_.sizes)
+      opts_.sizes = mergeObject(defs.sizes, opts_.sizes)
       opts_.colors = Object.assign({}, defs.colors, opts_.colors)
       opts_.component = Object.assign({}, defs.component, opts_.component)
       opts_.other = Object.assign({}, defs.other, opts_.other)
@@ -76,7 +78,7 @@
 
       values = Object.fromEntries(
         Object.entries(values).map(([key, value]) => {
-          return ['--' + toKebabCase(key), value]
+          return ['$' + toKebabCase(key), value]
         })
       )
 

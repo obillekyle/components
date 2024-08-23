@@ -28,8 +28,8 @@ export function is<T extends Types>(
   value: unknown,
   type: T
 ): value is TypeFromTypes<T> {
-  if (type === 'array') return Array.isArray(value)
   if (type === 'null') return value === null
+  if (type === 'array') return Array.isArray(value)
   if (type === 'object') return typeof value === 'object' && value !== null
 
   return typeof value === type
@@ -40,3 +40,6 @@ export const as = <T>(v: any): T => v
 export function assert(value: any, message?: string): asserts value {
   if (!value) throw new Error(message)
 }
+
+export const isPureObject = (obj: any): boolean =>
+  typeof obj === 'object' && obj !== null && obj.constructor === Object

@@ -32,9 +32,9 @@ export type ElementSizes = {
 }
 
 export const DefaultElementSizes: ElementSizes = {
-  navbar: '#lg',
-  header: '#sm',
-  fab: '#xs'
+  navbar: '#size-lg',
+  header: '#size-sm',
+  fab: '#size-xs'
 }
 
 export interface LayoutOther {

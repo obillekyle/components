@@ -119,6 +119,7 @@
     &-enter-from,
     &-leave-to {
       opacity: 0;
+      pointer-events: none;
       transform: translateY(var(--xl));
     }
 

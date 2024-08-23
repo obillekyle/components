@@ -1,19 +1,21 @@
 .md-button {
-  height: var(--component-sm);
-  padding-inline: var(--md);
+  height: calc(var(--component-sm) * var(--scale));
+  padding-inline: calc(var(--md) * var(--scale));
 
   &.text {
-    padding-inline: var(--sm);
+    padding-inline: calc(var(--sm) * var(--scale));
   }
 }
 
 .md-chip {
-  height: var(--component-xs);
-  padding-inline: var(--sm);
+  height: calc(var(--component-xs) * var(--scale));
+  padding-inline: calc(var(--sm) * var(--scale));
 }
 
 .md-button,
 .md-chip {
+  --scale: 2;
+
   border: none;
   position: relative;
   display: inline-flex;
@@ -79,13 +81,15 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    padding-inline: var(--xs);
-    font-size: var(--font-sm);
+    padding-inline: calc(var(--xs) * var(--scale));
+    font-size: calc(var(--font-sm) * var(--scale));
   }
 
   &-icon {
     display: grid;
-    width: max-content;
+    min-width: max-content;
+    width: calc(var(--icon-md) * var(--scale));
+    scale: var(--scale);
     place-items: center;
   }
 

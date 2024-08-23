@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import type { SizesString } from '@/utils/css'
+  import type { SizesString } from '@/utils/css/type'
   import type { InputHTMLAttributes } from 'vue'
 
   import { getCSSValue } from '@/utils/css/sizes'
-  import { keyClick } from '@/utils/dom'
+  import { keyClick } from '@/utils/dom/events'
   import { evaluate } from '@/utils/function/evaluate'
   import { computed, ref } from 'vue'
 

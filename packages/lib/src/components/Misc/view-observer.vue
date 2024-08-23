@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import type { Component } from 'vue'
 
-  import { addPX } from '@/utils/css'
+  import { addPX } from '@/utils/css/sizes'
   import { evaluate } from '@/utils/function/evaluate'
-  import { customRef } from '@/utils/ref'
+  import { customRef } from '@/utils/ref/custom-ref'
   import { computed, onBeforeUnmount, onMounted } from 'vue'
 
   type ViewObserverProps = {

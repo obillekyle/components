@@ -16,6 +16,7 @@ export interface ModalProps {
   content: Component | string
   actions?: ModalAction[]
   subAction?: Component | string
+  fullScreen?: boolean
   closeable?: boolean
   focusLock?: boolean
 }
@@ -29,18 +30,19 @@ const defaultUtility: UtilityFunction<ModalProps> = {
 export const MODAL = {
   DEFAULT_UTILITY: defaultUtility,
 
-  PRESET_ACTION_CLOSE: [
-    {
-      label: 'Close',
-      onClick: (utils) => utils.close()
-    }
-  ] as ModalAction[],
+  PRESET_ACTION_CLOSE: function (label = 'Close') {
+    return [
+      {
+        label,
+        onClick: (utils) => utils.close()
+      }
+    ] as ModalAction[]
+  },
 
   PRESET_ACTION_CONFIRM: function (confirmation: ModalActionOnClick) {
     return [
       {
         label: 'Cancel',
-        variant: 'outlined',
         onClick: (utils) => utils.close()
       },
       {

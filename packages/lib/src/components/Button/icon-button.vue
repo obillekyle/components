@@ -1,8 +1,9 @@
 <script setup lang="ts">
-  import type { SizesString } from '@/utils/css'
+  import type { SizesString } from '@/utils/css/type'
   import type { ButtonHTMLAttributes } from 'vue'
 
   import { getCSSValue } from '@/utils/css/sizes'
+  import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
   import { Icon } from '@iconify/vue'
 
@@ -15,14 +16,17 @@
   }
 
   defineProps<IconButtonProperties>()
-  defineOptions({ name: 'MdIconButton' })
+  defineOptions({ name: 'MdIconButton', inheritAttrs: false })
 </script>
 
 <template>
   <button
     type="button"
     class="md-icon-button"
-    @pointerdown="rippleEffect($event, '.md-icon-button-wrapper')"
+    v-bind="$attrs"
+    @click="rippleEffect($event, 'div')"
+    @pointerdown="rippleEffect($event, 'div')"
+    @keydown="keyClick($event, ['Enter', ' '])"
   >
     <div
       class="md-icon-button-wrapper"
@@ -47,7 +51,7 @@
     display: inline-block;
     width: var(--component-md);
     height: var(--component-md);
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: #0000;
 
     &-wrapper {
       display: grid;
@@ -105,6 +109,10 @@
           color: var(--primary);
         }
       }
+    }
+
+    &:focus-visible &-wrapper {
+      outline: 2px dashed var(--primary);
     }
 
     &-wrapper::after {

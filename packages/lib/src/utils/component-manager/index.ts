@@ -2,6 +2,7 @@ import { CustomEventHandler } from '../event'
 import { evaluate } from '../function/evaluate'
 import { getUnique } from '../number/random'
 import { assert } from '../object/is'
+import { mergeObject } from '../object/merge'
 
 type ComponentManagerEvents<T> = {
   open: [key: number, component: T]
@@ -58,7 +59,7 @@ export class ComponentManager<T extends object> extends CustomEventHandler<
     if (this.has(key)) return key
 
     assert(component, 'Component is not defined')
-    const data = { ...this.DEFAULTS, ...component }
+    const data = mergeObject(this.DEFAULTS, component)
 
     this.store[key] = data
     this.emit('open', key, data)

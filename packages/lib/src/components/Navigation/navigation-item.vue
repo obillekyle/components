@@ -1,13 +1,16 @@
 <script setup lang="ts">
-  import type { ButtonHTMLAttributes } from 'vue'
+  import type { ButtonHTMLAttributes, Component } from 'vue'
 
-  import { Icon } from '@iconify/vue'
+  import { keyClick } from '@/utils/dom/events'
   import { computed, inject, ref } from 'vue'
 
+  import HybridComponent from '../Misc/hybrid-component.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
+
   interface NavigationItemProps
-    extends /** @vue-ignore */ ButtonHTMLAttributes {
-    name?: string
-    icon: string
+    extends /** @vue-ignore */ Omit<ButtonHTMLAttributes, 'name'> {
+    name?: string | Component
+    icon: string | Component
     value?: number
   }
 
@@ -38,15 +41,16 @@
 <template>
   <button
     ref="element"
+    @keypress="keyClick"
     class="md-navbar-item special"
     @click="active = value ?? index"
     :class="{ active: (value ?? index) == active }"
   >
-    <div class="md-navbar-item-icon">
-      <Icon :icon="icon" />
-    </div>
+    <HybridIcon class="md-navbar-item-icon" :icon="icon" />
     <div class="md-navbar-item-name">
-      <slot>{{ name }}</slot>
+      <slot>
+        <HybridComponent :as="name" />
+      </slot>
     </div>
   </button>
 </template>

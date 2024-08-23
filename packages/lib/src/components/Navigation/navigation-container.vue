@@ -7,6 +7,7 @@
 
   defineProps<NavigationContainerProperties>()
   defineOptions({ name: 'MdNavigationContainer' })
+
   const root = ref<HTMLDivElement>()
   const parent = inject('parent', ref<HTMLDivElement>())
   const element = computed(() => root.value ?? parent.value)

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-  import Box from '@/components/Box/box.vue'
   import type { BoxProps } from '@/components/Box/util'
+  import type { ColorString } from '@/utils/css/type'
+
   import { getBoxProps } from '@/components/Box/util'
-  import { getCSSColor, type ColorString } from '@/utils/css'
+
+  import Box from '@/components/Box/box.vue'
 
   interface WavyDividerProperties extends BoxProps {
     color?: ColorString
@@ -18,11 +20,7 @@
 </script>
 
 <template>
-  <Box
-    class="md-wavy-divider"
-    v-bind="boxProps"
-    :style="{ color: getCSSColor(color ?? '') }"
-  >
+  <Box class="md-wavy-divider" v-bind="boxProps" :styled="{ color }">
     <svg
       width="100%"
       height="12"

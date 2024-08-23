@@ -2,9 +2,10 @@
   import type { Component, HTMLAttributes } from 'vue'
   import type { SelectItem } from './util'
 
-  import { keyClick, rippleEffect } from '@/utils/dom'
+  import { keyClick } from '@/utils/dom/events'
+  import { rippleEffect } from '@/utils/dom/ripple'
   import { evaluate } from '@/utils/function/evaluate'
-  import { fnRef } from '@/utils/ref'
+  import { fnRef } from '@/utils/ref/fn-ref'
   import { Icon } from '@iconify/vue'
   import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
   import OptionItem from './option-item.vue'
@@ -92,7 +93,7 @@
         v-if="selected.length === 1 && !multiple && items[selected[0]]"
       >
         <div class="md-select-option">
-          <optionComp v-bind="values[selected[0]]" />
+          <component :is="optionComp" v-bind="values[selected[0]]" />
         </div>
       </div>
 
@@ -136,7 +137,7 @@
         @pointerdown="rippleEffect"
         :class="{ active: selected.includes(index) }"
       >
-        <optionComp v-bind="item" />
+        <component :is="optionComp" v-bind="item" />
       </div>
     </div>
   </div>
@@ -153,9 +154,14 @@
       flex-grow: 1;
     }
 
+    > *:has(.md-select-placeholder) {
+      grid-area: placeholder;
+    }
+
     .md-select-wrapper {
       display: grid;
       grid-template-columns: 1fr 48px;
+      grid-template-areas: 'placeholder icon';
       align-items: center;
       height: var(--size);
       position: relative;
@@ -172,6 +178,7 @@
 
       .md-select-icon {
         line-height: 0;
+        grid-area: icon;
         place-self: center;
         transition: transform 0.25s var(--timing-standard);
       }
