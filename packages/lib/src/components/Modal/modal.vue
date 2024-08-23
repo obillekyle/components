@@ -206,6 +206,7 @@
     &-enter-from,
     &-leave-to {
       opacity: 0;
+      pointer-events: none;
 
       .md-modal-wrapper {
         scale: 0.9;
