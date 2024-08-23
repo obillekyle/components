@@ -19,6 +19,7 @@
     rightIcon?: string | Component
     variant?: 'filled' | 'elevated' | 'tonal' | 'outlined' | 'text'
     label?: string | Component
+    scale?: number
   }
 
   defineOptions({ name: 'MdButton' })
@@ -38,6 +39,7 @@
     v-bind="boxProps"
     @pointerdown="rippleEffect"
     @keydown="keyClick($event, ['Enter', ' '])"
+    :styled="{ $scale: 'raw:' + (scale ?? 1), ...styled }"
   >
     <HybridIcon class="md-button-icon left" :icon="leftIcon" />
     <div class="md-button-label">
