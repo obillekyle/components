@@ -1,5 +1,7 @@
 <script setup lang="ts">
-  import { getCSSValue, type SizesString } from '@/utils/css'
+  import type { SizesString } from '@/utils/css/type'
+
+  import { getCSSValue } from '@/utils/css/sizes'
 
   interface DividerProperties {
     label?: string
@@ -28,7 +30,7 @@
   />
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .md-divider {
     place-self: center;
     display: block;

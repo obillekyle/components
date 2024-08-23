@@ -1,6 +1,8 @@
 <script setup lang="ts">
-  import { getCSSColor, type ColorString } from '@/utils/css'
-  import type { BoxProps } from '../Box'
+  import type { ColorString } from '@/utils/css/type'
+  import type { BoxProps } from '../Box/util'
+
+  import { getCSSColor } from '@/utils/css/color'
   import { getBoxProps } from '../Box/util'
 
   import Box from '../Box/box.vue'

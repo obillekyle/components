@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import type { ListProps as ListProperties } from './types'
 
-  import { addPX } from '@/utils/css'
-  import { getClientPos } from '@/utils/dom'
+  import { addPX } from '@/utils/css/sizes'
+  import { getClientPos } from '@/utils/dom/events'
   import { evaluate } from '@/utils/function/evaluate'
   import { Icon } from '@iconify/vue'
   import { inject, onBeforeUnmount, onMounted, ref } from 'vue'

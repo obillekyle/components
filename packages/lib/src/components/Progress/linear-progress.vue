@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { addUnit, getCSSValue } from '@/utils/css'
+  import { addUnit, getCSSValue } from '@/utils/css/sizes'
   import { clamp } from '@/utils/number/range'
-  import { fnRef } from '@/utils/ref'
+  import { fnRef } from '@/utils/ref/fn-ref'
   import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
   import ViewObserver from '../Misc/view-observer.vue'
 

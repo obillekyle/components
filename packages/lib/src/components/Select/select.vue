@@ -2,9 +2,10 @@
   import type { Component, HTMLAttributes } from 'vue'
   import type { SelectItem } from './util'
 
-  import { keyClick, rippleEffect } from '@/utils/dom'
+  import { keyClick } from '@/utils/dom/events'
+  import { rippleEffect } from '@/utils/dom/ripple'
   import { evaluate } from '@/utils/function/evaluate'
-  import { fnRef } from '@/utils/ref'
+  import { fnRef } from '@/utils/ref/fn-ref'
   import { Icon } from '@iconify/vue'
   import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
   import OptionItem from './option-item.vue'

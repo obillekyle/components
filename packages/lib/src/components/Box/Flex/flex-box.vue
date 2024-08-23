@@ -1,9 +1,10 @@
 <script setup lang="ts">
   import type { BoxProps } from '@/components/Box/util'
-  import type { SizesString } from '@/utils/css'
+  import type { SizesString } from '@/utils/css/type'
+
+  import { getBoxProps } from '../util'
 
   import Box from '../box.vue'
-  import { getBoxProps } from '../util'
 
   interface FlexBoxProps extends BoxProps {
     direction?: 'row' | 'column' | 'row-reverse' | 'column-reverse'

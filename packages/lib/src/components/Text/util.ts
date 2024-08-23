@@ -1,4 +1,4 @@
-import type { ColorString, SizesString } from '@/utils/css'
+import type { ColorString, SizesString } from '@/utils/css/type'
 
 export type TextProps = {
   color?: ColorString

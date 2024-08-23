@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import { addPX } from '@/utils/css'
-  import { provide } from 'vue'
-  import ListItem from './list-item.vue'
-  import type { ListProps as ListProperties } from './types'
+  import type { ListProps } from './types'
 
-  const properties = withDefaults(defineProps<ListProperties>(), {
+  import { addPX } from '@/utils/css/sizes'
+  import { provide } from 'vue'
+
+  import ListItem from './list-item.vue'
+
+  const properties = withDefaults(defineProps<ListProps>(), {
     swipe: 'off',
     listComp: 'div',
     items: () => []

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from 'vue'
 
-  import { rippleEffect } from '@/utils/dom'
+  import { rippleEffect } from '@/utils/dom/ripple'
   import { evaluate } from '@/utils/function/evaluate'
   import { computed } from 'vue'
 

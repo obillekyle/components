@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import type { ButtonHTMLAttributes, Component } from 'vue'
 
-  import { keyClick } from '@/utils'
+  import { keyClick } from '@/utils/dom/events'
   import { computed, inject, ref } from 'vue'
 
   import HybridComponent from '../Misc/hybrid-component.vue'
