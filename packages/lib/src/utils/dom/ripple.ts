@@ -25,9 +25,11 @@ export function rippleEffect(
 
   function removeRipple() {
     ripple.classList.add('fade')
-    ripple.addEventListener('animationend', () => ripple.remove(), {
-      once: true
-    })
+    ripple.addEventListener(
+      'animationend',
+      () => setTimeout(ripple.remove.bind(ripple), 400),
+      { once: true }
+    )
   }
 
   if (!event.isTrusted) {
