@@ -171,7 +171,7 @@ export const createStyle: CreateStyle = (styles: any, options) => {
     
     watch(styles, (value) => {object.value = getStyles(value)}, {deep: true})
     onBeforeMount(() => mount(name.value, object.value, resolve))
-    onUnmounted(() => dismount(name.value))
+    onUnmounted(() => setTimeout(() => dismount(name.value), 5000))
 
     return name
   }
