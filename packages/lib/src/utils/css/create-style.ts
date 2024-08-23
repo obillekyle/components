@@ -76,18 +76,12 @@ type AdditionalCSSProperties = {
   color?: ColorString
 }
 
-type DefaultCSSProperties = CSS.Properties<
-  ColorString | SizesString | SizesString[],
-  string | number
->
+type CSSPropertyValue = ColorString | SizesString | SizesString[]
+type DefaultCSSProperties = CSS.Properties<CSSPropertyValue, number>
 
 type CSSVariables = {
-  [key: `--${string}`]:
-    | ColorString
-    | SizesString
-    | SizesString[]
-    | undefined
-}
+  [key: `--${string}`]: CSSPropertyValue | undefined
+} & { [key: `$${string}`]: CSSPropertyValue | undefined }
 
 export type CSSProperties = Omit<
   DefaultCSSProperties,
@@ -127,7 +121,7 @@ function parseStyleObject(name: string, object: any, resolve = true) {
     const property = keyPrefix[key] ?? toKebabCase(key)
     const cssValue = parse(object[key], unitsByProp[key])
 
-    styleProperties += `${property}: ${cssValue}; `
+    styleProperties += `${property.replace('$', '--')}: ${cssValue}; `
   }
 
   return `.${name} { ${styleProperties} }`
