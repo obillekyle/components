@@ -6,7 +6,6 @@
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
   import { Icon } from '@iconify/vue'
-  import { useAttrs } from 'vue'
 
   interface IconButtonProperties
     extends /* @vue-ignore */ ButtonHTMLAttributes {
@@ -14,18 +13,6 @@
     size?: SizesString
     selected?: boolean
     variant?: 'filled' | 'tonal' | 'outlined' | 'standard'
-  }
-
-  const attrs: any = useAttrs()
-
-  function rippleHandler(event: MouseEvent, propKey: string) {
-    rippleEffect(event)
-    typeof attrs[propKey] === 'function' && attrs[propKey](event)
-  }
-
-  function keyHandler(event: KeyboardEvent, propKey: string) {
-    keyClick(event, ['Enter', ' '])
-    typeof attrs[propKey] === 'function' && attrs[propKey](event)
   }
 
   defineProps<IconButtonProperties>()
@@ -37,9 +24,9 @@
     type="button"
     class="md-icon-button"
     v-bind="$attrs"
-    @keydown="keyHandler($event, 'onKeydown')"
-    @click="rippleHandler($event, 'onClick')"
-    @pointerdown="rippleHandler($event, 'onPointerdown')"
+    @click="rippleEffect($event, 'div')"
+    @pointerdown="rippleEffect($event, 'div')"
+    @keydown="keyClick($event, ['Enter', ' '])"
   >
     <div
       class="md-icon-button-wrapper"

@@ -6,7 +6,6 @@
 
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
-  import { useAttrs } from 'vue'
   import { getBoxProps } from '../Box/util'
 
   import Box from '../Box/box.vue'
@@ -22,18 +21,6 @@
     variant?: 'filled' | 'elevated' | 'tonal' | 'outlined' | 'text'
   }
 
-  const attrs: Record<string, any> = useAttrs()
-
-  function rippleHandler(event: MouseEvent, propKey: string) {
-    rippleEffect(event)
-    typeof attrs[propKey] === 'function' && attrs[propKey](event)
-  }
-
-  function keyHandler(event: KeyboardEvent, propKey: string) {
-    keyClick(event, ['Enter', ' '])
-    typeof attrs[propKey] === 'function' && attrs[propKey](event)
-  }
-
   defineOptions({ name: 'MdChip' })
   const props = defineProps<ChipProps>()
   const boxProps = getBoxProps(props, {
@@ -47,11 +34,10 @@
     type="button"
     class="md-chip"
     v-bind="boxProps"
-    :v-bind="$attrs"
     :class="variant ?? 'filled'"
-    @click="rippleHandler($event, 'onClick')"
-    @pointerdown="rippleHandler($event, 'onPointerdown')"
-    @keydown="keyHandler($event, 'onKeydown')"
+    @click="rippleEffect"
+    @pointerdown="rippleEffect"
+    @keydown="keyClick($event, ['Enter', ' '])"
   >
     <HybridIcon class="md-chip-icon left" :icon="leftIcon" />
     <div class="md-chip-label">
