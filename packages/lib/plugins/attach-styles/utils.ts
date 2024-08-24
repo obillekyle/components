@@ -24,8 +24,30 @@ export function isCSS(string_: string) {
   return /\.(scss|sass|css|styl|stylus|less)$/.test(string_)
 }
 
-export function getHelperFileContent(css: string, prefix: string) {
+export function getHelperFileContent(prefix: string, map: string) {
   return `
+    const CSS_DECLARATIONS = /(?<={)([^}]+)(?=})/g
+
+    class Decompressor {
+      constructor(map) {
+        this.map = new Map(Object.entries(JSON.parse(map)))
+      }
+      decompress(css) {
+        return css.replaceAll(CSS_DECLARATIONS, (_, declarations) => {
+          return declarations
+            .split(';')
+            .filter(Boolean)
+            .map((property) => {
+              property = property.trim()
+              const [key, value] = property.split(':')
+              return (this.map.get(key) ?? key) + ':' + value
+            }).join(';')
+        })
+      }
+    }
+
+    const decompressor = new Decompressor(${map});
+
     export default function injectCSS(css, hash) {
       if (typeof window !== 'undefined') {
         const style = 
@@ -33,14 +55,14 @@ export function getHelperFileContent(css: string, prefix: string) {
           ?? document.createElement('style');
         
         style.id = '${prefix}-' + hash;
-        style.textContent = css;
+        style.textContent = decompressor.decompress(css);
 
         const head = document.head;
         const styleTags = head.querySelectorAll('style[id^=${prefix}-]');
 
         if (styleTags.length > 0) {
           const lastStyleTag = styleTags[styleTags.length - 1];
-          lastStyleTag.insertAdjacentElement('afterend', style);
+          lastStyleTag.after(style);
         } else {
           head.prepend(style);
         }

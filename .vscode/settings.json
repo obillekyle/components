@@ -21,7 +21,7 @@
     "textMateRules": []
   },
   "editor.rulers": [76],
-  "explorer.excludeGitIgnore": true,
+  "explorer.excludeGitIgnore": false,
   "autoHide.autoHideRightSideBar": false,
   "files.eol": "\n"
 }
