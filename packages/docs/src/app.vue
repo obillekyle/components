@@ -84,7 +84,7 @@
 <template>
   <Layout
     :options="{
-      color: '#on-surface',
+      color: '$on-surface',
       theme: isDark ? 'dark' : 'light',
       colors: {
         primary: color
