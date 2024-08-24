@@ -4,7 +4,13 @@
   import Box from '../Box/box.vue'
 
   interface PaperProps extends /* @vue-ignore */ BoxProps {
-    variant: 'primary' | 'secondary' | 'tertiary' | 'error' | 'neutral'
+    variant?:
+      | 'primary'
+      | 'secondary'
+      | 'tertiary'
+      | 'error'
+      | 'neutral'
+      | 'outlined'
   }
 
   defineProps<PaperProps>()
@@ -12,7 +18,7 @@
 </script>
 
 <template>
-  <Box class="md-paper" :class="`md-paper-${variant}`">
+  <Box class="md-paper" :class="`md-paper-${variant || 'neutral'}`">
     <slot />
   </Box>
 </template>
@@ -45,6 +51,12 @@
     &-neutral {
       background: var(--surface-container);
       color: var(--on-surface);
+    }
+
+    &-outlined {
+      background: var(--surface-container-low);
+      color: var(--on-surface-variant);
+      outline: 1px solid var(--outline-variant);
     }
   }
 </style>
