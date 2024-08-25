@@ -1,50 +1,41 @@
 <script setup lang="ts">
   import { addUnit, getCSSValue } from '@/utils/css/sizes'
   import { clamp } from '@/utils/number/range'
-  import { fnRef } from '@/utils/ref/fn-ref'
-  import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+  import { customRef } from '@/utils/ref/custom-ref'
+  import { useRect } from '@/utils/ref/use-rect'
+  import { computed, inject } from 'vue'
 
   import ViewObserver from '../Misc/view-observer.vue'
 
-  let observer: ResizeObserver | undefined
-  const width = ref(0)
-  const speed = computed(() => clamp(width.value / 300, 2.5, 6))
+  interface LinearProgressProps {
+    value?: number
+    size?: number
+  }
 
-  const root = ref<HTMLElement>()
-  const props = withDefaults(
-    defineProps<{
-      value?: number
-      size?: number
-    }>(),
-    {
-      value: Infinity,
-      size: 5
-    }
-  )
+  const [root, setRef] = customRef<HTMLElement>()
+  const rect = useRect(root)
+
+  const props = withDefaults(defineProps<LinearProgressProps>(), {
+    value: Infinity,
+    size: 5
+  })
 
   const md3 = inject('md3', false)
-  const noSpace = computed(() => props.value <= 0)
-
-  onMounted(() => {
-    observer = new ResizeObserver(() => {
-      width.value = root.value!.offsetWidth
-    })
-    observer.observe(root.value!)
-  })
-
-  onBeforeUnmount(() => {
-    observer?.disconnect?.()
-    observer = undefined
-  })
-
-  const setRef = fnRef(root)
   defineOptions({ name: 'MdLinearProgress' })
 
-  const length = computed(() => (props.value / 100) * width.value)
+  const noSpace = computed(() => props.value <= 0)
+  const width = computed(() => rect.value?.width || 0)
+  const speed = computed(() => clamp(width.value / 300, 2.5, 6))
 
-  const dashArray = computed(() => `${length.value} ${width.value}`)
-  const dash2Array = computed(() => `${width.value}`)
-  const dash2Offset = computed(() => `-${length.value + props.size * 2}`)
+  const length = computed(() => {
+    const length = (props.value / 100) * width.value
+    return {
+      percent: length,
+      dash2Array: width.value,
+      dash2Offset: length + props.size * 2,
+      dashArray: `${length} ${width.value}`
+    }
+  })
 </script>
 
 <template>
@@ -90,14 +81,14 @@
         class="md-progress-2-bar-bg"
         :d="`M 0 ${size / 2} L ${width} ${size / 2}`"
         :stroke-width="size"
-        :stroke-dasharray="dash2Array"
-        :stroke-dashoffset="dash2Offset"
+        :stroke-dasharray="length.dash2Array"
+        :stroke-dashoffset="length.dash2Offset"
       />
       <path
         class="md-progress-2-bar-draw"
         :d="`M 0 ${size / 2} L ${width} ${size / 2}`"
         :stroke-width="size"
-        :stroke-dasharray="dashArray"
+        :stroke-dasharray="length.dashArray"
         :stroke-dashoffset="0"
       />
     </svg>

@@ -1,46 +1,32 @@
 <script setup lang="ts">
+  import type { SizesString } from '@/utils/css/type'
+
   import { addUnit, getCSSValue } from '@/utils/css/sizes'
   import { clamp } from '@/utils/number/range'
-  import { fnRef } from '@/utils/ref/fn-ref'
-  import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+  import { customRef } from '@/utils/ref/custom-ref'
+  import { useRect } from '@/utils/ref/use-rect'
+  import { computed, inject } from 'vue'
+
   import ViewObserver from '../Misc/view-observer.vue'
 
-  // TODO: use svg instead of html elements for animation
-
-  let observer: ResizeObserver | undefined
-  const speed = ref(2)
-  const root = ref<HTMLElement>()
-  const properties = withDefaults(
-    defineProps<{
-      value?: number
-      size?: number | string
-    }>(),
-    {
-      value: Infinity,
-      size: 4
-    }
-  )
-  const md3 = inject('md3', false)
-  const noSpace = computed(() => properties.value <= 0)
-
-  function setSpeed() {
-    const rect = root.value!.getBoundingClientRect()
-    const value = rect.width / 400
-    speed.value = clamp(value, 2, 10)
+  interface LinearProgressProps {
+    value?: number
+    size?: SizesString
   }
 
-  onMounted(() => {
-    setSpeed()
-    observer = new ResizeObserver(setSpeed)
-    observer.observe(root.value!)
+  const [root, setRef] = customRef<HTMLElement>()
+  const rect = useRect(root)
+
+  const properties = withDefaults(defineProps<LinearProgressProps>(), {
+    value: Infinity,
+    size: 4
   })
 
-  onBeforeUnmount(() => {
-    observer?.disconnect?.()
-    observer = undefined
-  })
+  const md3 = inject('md3', false)
+  const width = computed(() => rect.value?.width || 0)
+  const speed = computed(() => clamp(width.value / 300, 2.5, 6))
+  const noSpace = computed(() => properties.value <= 0)
 
-  const setRef = fnRef(root)
   defineOptions({ name: 'MdLinearProgress' })
 </script>
 

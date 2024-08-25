@@ -2,14 +2,16 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { SheetProps } from './util'
 
-  import { dragPos, keyClick, targetsSelf } from '@/utils/dom/events'
+  import { createStyle } from '@/utils/css/create-style'
+  import { keyClick, targetsSelf } from '@/utils/dom/events'
   import { customRef } from '@/utils/ref/custom-ref'
+  import { useDrag } from '@/utils/ref/use-drag'
   import { useFocusLock } from '@/utils/ref/use-focus-lock'
+  import { useRect } from '@/utils/ref/use-rect'
   import { Icon } from '@iconify/vue'
   import { computed, provide, ref } from 'vue'
   import { SHEET } from './util'
 
-  import { createStyle, useRect } from '@/utils'
   import ScrollContainer from '../Layout/scroll-container.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
 
@@ -38,34 +40,19 @@
     [property.value]: size.value
   }))
 
-  const drag = dragPos((pos) => {
-    const box = rect.value
-    if (!box) return
+  type PosFn = (pos: DOMRect) => void
+  const positions: Record<string, PosFn> = {
+    top: ({ y }) => (setSize.value = y),
+    left: ({ x }) => (setSize.value = x),
+    right: ({ x, width }) => (setSize.value = width - x),
+    bottom: ({ y, height }) => (setSize.value = height - y)
+  }
 
-    const { x, y } = pos
-    const { height, width } = box
-
-    switch (props.direction) {
-      case 'left': {
-        setSize.value = x
-        break
-      }
-
-      case 'right': {
-        setSize.value = width - x
-        break
-      }
-
-      case 'bottom': {
-        setSize.value = height - y
-        break
-      }
-
-      case 'top': {
-        setSize.value = y
-        break
-      }
-    }
+  const [dragging, dragHandler] = useDrag((position) => {
+    if (!rect.value) return
+    const { x, y } = position
+    const { height, width } = rect.value
+    positions[props.direction!]({ x, y, width, height } as DOMRect)
   })
 
   useFocusLock(root)
@@ -76,8 +63,11 @@
 <template>
   <div
     :ref="setRef"
-    :class="direction"
     class="md-sheet"
+    :class="{
+      [direction ?? 'left']: true,
+      static: Number.isNaN(utils.id)
+    }"
     @click="closeable && targetsSelf($event, utils.close)"
   >
     <div class="md-sheet-wrapper" :class="className">
@@ -102,7 +92,12 @@
         </slot>
       </ScrollContainer>
 
-      <div class="md-sheet-handle" v-if="resizable" @pointerdown="drag" />
+      <div
+        v-if="resizable"
+        :class="dragging && 'dragging'"
+        class="md-sheet-handle"
+        @pointerdown="dragHandler"
+      />
     </div>
   </div>
 </template>
@@ -117,7 +112,6 @@
     position: fixed;
     z-index: 1000;
     display: grid;
-    overflow: hidden;
     background: #0008;
 
     &-wrapper {
@@ -140,6 +134,7 @@
       transition: opacity 0.3s var(--timing-standard);
 
       .md-sheet-wrapper {
+        transform-origin: center;
         transition: translate 0.3s var(--timing-standard);
       }
     }
@@ -225,6 +220,10 @@
       display: grid;
       position: absolute;
       place-items: center;
+
+      &.dragging::before {
+        background: var(--outline);
+      }
 
       &::before {
         content: '';
