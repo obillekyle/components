@@ -18,6 +18,7 @@
   import SheetProvider from '@/components/Sheet/sheet-provider.vue'
   import SnackbarProvider from '@/components/Snackbar/snackbar-provider.vue'
   import MasterSwitch from '@/components/Switch/master-switch.vue'
+  import ToastProvider from '@/components/Toast/toast-provider.vue'
   import AppCards from './app-cards.vue'
   import AppComp from './app-comp.vue'
   import ColorShades from './color-shades.vue'
@@ -90,20 +91,22 @@
       <Fab icon="material-symbols:star-outline">Fab</Fab>
     </template>
 
-    <ModalProvider>
-      <SnackbarProvider>
-        <SheetProvider>
-          <Headline title="Header Title" />
-          <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
-          <AppComp v-if="tab === 0" />
-          <ColorShades v-else-if="tab === 1" />
-          <AppCards v-else-if="tab === 2" />
-          <LayoutInherit v-else-if="tab === 3" />
-          <DominantColor v-else-if="tab === 4" />
-          <ComponentManager v-else-if="tab === 5" />
-        </SheetProvider>
-      </SnackbarProvider>
-    </ModalProvider>
+    <ToastProvider>
+      <ModalProvider>
+        <SnackbarProvider>
+          <SheetProvider>
+            <Headline title="Header Title" />
+            <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
+            <AppComp v-if="tab === 0" />
+            <ColorShades v-else-if="tab === 1" />
+            <AppCards v-else-if="tab === 2" />
+            <LayoutInherit v-else-if="tab === 3" />
+            <DominantColor v-else-if="tab === 4" />
+            <ComponentManager v-else-if="tab === 5" />
+          </SheetProvider>
+        </SnackbarProvider>
+      </ModalProvider>
+    </ToastProvider>
   </Layout>
 </template>
 
