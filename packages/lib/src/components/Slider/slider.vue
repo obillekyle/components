@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { getClientPos } from '@/utils/dom/events'
-  import { evaluate } from '@/utils/function/evaluate'
   import {
     clamp,
     findNearestNumber,
@@ -18,11 +17,15 @@
     max?: number
     step?: number
     decimal?: number
-    onChange?: (value: number) => void
     showValue?: boolean
     showLabel?: boolean
   }
 
+  type SliderEmits = {
+    (e: 'change', value: number): void
+  }
+
+  const emit = defineEmits<SliderEmits>()
   const props = withDefaults(defineProps<SliderProperties>(), {
     min: 0,
     max: 100,
@@ -62,7 +65,7 @@
       Math.max(props.defaultValue ?? minVal.value, minVal.value),
     set: (value) => {
       model.value = value
-      evaluate(props.onChange, value)
+      emit('change', value)
     }
   })
 

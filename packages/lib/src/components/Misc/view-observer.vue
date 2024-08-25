@@ -2,7 +2,6 @@
   import type { Component } from 'vue'
 
   import { addPX } from '@/utils/css/sizes'
-  import { evaluate } from '@/utils/function/evaluate'
   import { customRef } from '@/utils/ref/custom-ref'
   import { computed, onBeforeUnmount, onMounted } from 'vue'
 
@@ -12,9 +11,13 @@
     offset?: number
     threshold?: number
     parent?: HTMLElement
-    onViewChange?: (visible: boolean) => void
   }
 
+  type ViewObserverEmits = {
+    (event: 'viewchange', visible: boolean): void
+  }
+
+  const emit = defineEmits<ViewObserverEmits>()
   const props = defineProps<ViewObserverProps>()
   const visible = defineModel<boolean>({
     default: false
@@ -33,10 +36,10 @@
     for (const entry of entries) {
       if (entry.isIntersecting) {
         visible.value = true
-        evaluate(props.onViewChange, true)
+        emit('viewchange', true)
       } else {
         visible.value = false
-        evaluate(props.onViewChange, false)
+        emit('viewchange', false)
       }
     }
   }

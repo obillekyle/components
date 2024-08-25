@@ -4,7 +4,6 @@
 
   import { getCSSValue } from '@/utils/css/sizes'
   import { keyClick } from '@/utils/dom/events'
-  import { evaluate } from '@/utils/function/evaluate'
   import { computed, ref } from 'vue'
 
   interface SwitchProps
@@ -14,15 +13,18 @@
     > {
     size?: SizesString
     value?: boolean
-    onChange?: (v: boolean) => any
     defaultChecked?: boolean
     variant?: 'outline' | 'filled'
     length?: number
   }
 
+  type SwitchEmits = {
+    (event: 'change', value: boolean): void
+  }
+
   const inputRef = ref<HTMLInputElement>()
   const model = defineModel<boolean>()
-
+  const emit = defineEmits<SwitchEmits>()
   const props = withDefaults(defineProps<SwitchProps>(), {
     size: '#xs',
     value: undefined,
@@ -35,7 +37,7 @@
     get: () => props.value ?? model.value ?? props.defaultChecked ?? false,
     set: (value) => {
       model.value = value
-      evaluate(props.onChange, model.value)
+      emit('change', value)
     }
   })
 

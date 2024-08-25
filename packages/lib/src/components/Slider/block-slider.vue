@@ -2,14 +2,13 @@
   import type { Component, HTMLAttributes } from 'vue'
 
   import { getClientPos } from '@/utils/dom/events'
-  import { evaluate } from '@/utils/function/evaluate'
   import { clamp, mapNumberToRange } from '@/utils/number/range'
   import { useRect } from '@/utils/ref/use-rect'
   import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
 
-  interface MasterSliderProps
+  interface BlockSliderProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
     value?: number
     defaultValue?: number
@@ -18,11 +17,15 @@
     step?: number
     decimal?: number
     icon?: string | Component
-    onChange?: (value: number) => void
+  }
+
+  type BlockSliderEmits = {
+    (e: 'change', value: number): void
   }
 
   defineOptions({ name: 'MdBlockSlider' })
-  const props = withDefaults(defineProps<MasterSliderProps>(), {
+  const emit = defineEmits<BlockSliderEmits>()
+  const props = withDefaults(defineProps<BlockSliderProps>(), {
     min: 0,
     max: 100,
     step: 1,
@@ -43,8 +46,9 @@
       props.min ??
       props.max / 2,
     set(value) {
-      model.value = clamp(value, props.min, props.max)
-      evaluate(props.onChange, model.value)
+      value = clamp(value, props.min, props.max)
+      model.value = value
+      emit('change', value)
     }
   })
 

@@ -3,12 +3,11 @@
   import type { Component, InputHTMLAttributes } from 'vue'
   import { computed, ref, useAttrs } from 'vue'
 
-  import { evaluate } from '@/utils/function/evaluate'
   import { clamp } from '@/utils/number/range'
   import HybridIcon from '../Misc/hybrid-icon.vue'
   import NumberArrows from './number-arrows.vue'
 
-  interface InputText
+  interface InputNumber
     extends /** @vue-ignore */ Omit<InputHTMLAttributes, 'onChange'> {
     span?: boolean
     value?: number
@@ -16,11 +15,15 @@
     placeholder?: string
     variant?: 'filled' | 'outlined'
     leftIcon?: string | Component
-    onChange?: (value: number) => any
+  }
+
+  type InputNumberEmits = {
+    (e: 'change', value: number): void
   }
 
   const input = ref<HTMLInputElement>()
-  const props = defineProps<InputText>()
+  const props = defineProps<InputNumber>()
+  const emit = defineEmits<InputNumberEmits>()
   const model = defineModel<number>()
 
   const attributes = useAttrs()
@@ -33,7 +36,7 @@
       value = clamp(value, min, max)
 
       model.value = value
-      evaluate(props.onChange, value)
+      emit('change', value)
     }
   })
 </script>

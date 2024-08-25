@@ -2,7 +2,6 @@
   import '@/assets/input.scss'
   import type { Component, InputHTMLAttributes } from 'vue'
 
-  import { evaluate } from '@/utils/function/evaluate'
   import { computed, ref } from 'vue'
   import HybridIcon from '../Misc/hybrid-icon.vue'
   import Counter from './counter.vue'
@@ -14,7 +13,6 @@
     placeholder?: string
     value?: string
     defaultValue?: string
-    onChange?: (v: string) => any
     prefix?: string
     suffix?: string
     variant?: 'filled' | 'outlined'
@@ -22,15 +20,20 @@
     span?: boolean
   }
 
+  type InputTextEmits = {
+    (e: 'change', value: string): void
+  }
+
   const inputRef = ref<HTMLInputElement>()
   const props = defineProps<InputText>()
   const model = defineModel<string>()
+  const emit = defineEmits<InputTextEmits>()
 
   const inputValue = computed({
     get: () => props.value ?? model.value ?? props.defaultValue ?? '',
     set: (value) => {
       model.value = value
-      evaluate(props.onChange, value)
+      emit('change', value)
     }
   })
 </script>
