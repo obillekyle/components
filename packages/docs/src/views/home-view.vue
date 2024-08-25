@@ -1,12 +1,14 @@
 <script setup lang="ts">
   import GlobalFooter from '@/components/global-footer.vue'
-  import Flex from '@vue-material/core/Box/Flex/flex-box.vue'
-  import Button from '@vue-material/core/Button'
-  import SquareImage from '@vue-material/core/Image/square-image.vue'
-  import HybridIcon from '@vue-material/core/Misc/hybrid-icon.vue'
-  import Paper from '@vue-material/core/Paper/paper.vue'
-  import Scroller from '@vue-material/core/Text/scroller.vue'
-  import Text from '@vue-material/core/Text/text.vue'
+  import {
+    Button,
+    Flex,
+    HybridIcon,
+    Paper,
+    Scroller,
+    SquareImage,
+    Text
+  } from '@vue-material/core'
   import { useRouter } from 'vue-router'
 
   const router = useRouter()
