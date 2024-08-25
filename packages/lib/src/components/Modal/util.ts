@@ -21,15 +21,7 @@ export interface ModalProps {
   focusLock?: boolean
 }
 
-const defaultUtility: UtilityFunction<ModalProps> = {
-  id: Number.NaN,
-  close: () => {},
-  modify: () => {}
-}
-
 export const MODAL = {
-  DEFAULT_UTILITY: defaultUtility,
-
   PRESET_ACTION_CLOSE: function (label = 'Close') {
     return [
       {

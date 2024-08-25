@@ -14,14 +14,7 @@ export interface SnackbarProps {
   closeable?: boolean
 }
 
-const defaultUtility: UtilityFunction<SnackbarProps> = {
-  id: Number.NaN,
-  close: () => {},
-  modify: () => {}
-}
-
 export const SNACKBAR = {
   ID_STARTS_FROM: 1000,
-  DEFAULT_TIMEOUT: 3000,
-  DEFAULT_UTILITY: defaultUtility
+  DEFAULT_TIMEOUT: 3000
 }
