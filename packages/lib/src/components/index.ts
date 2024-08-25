@@ -19,6 +19,7 @@ export * from './Slider'
 export * from './Snackbar'
 export * from './Switch'
 export * from './Text'
+export * from './Toast'
 
 export { default as Box } from './Box'
 export { default as Button } from './Button'

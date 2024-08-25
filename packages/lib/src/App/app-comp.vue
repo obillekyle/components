@@ -41,6 +41,7 @@
         placeholder="Input"
         left-icon="material-symbols:search"
         span
+        @change="(e) => console.log(e)"
         prefix="Hello"
       />
       <NumberInput

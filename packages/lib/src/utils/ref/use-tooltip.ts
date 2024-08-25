@@ -40,7 +40,10 @@ export function useTooltip(
         if (newTarget === event.currentTarget) return
 
         cleanupTooltip.bind(current)()
-        event.preventDefault()
+
+        if (event.type !== 'touchstart') {
+          event.preventDefault()
+        }
 
         current = newTarget
         tooltip = getAttr(current) ?? ''
@@ -86,7 +89,7 @@ export function useTooltip(
   }
 
   function cleanupTooltip(this: HTMLElement | void, event?: Event) {
-    if (event?.type === 'touchend') {
+    if (event && event.type !== 'touchend') {
       event.preventDefault()
     }
 

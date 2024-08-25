@@ -1,11 +1,13 @@
 <script setup lang="ts">
-  import { evaluate } from '@/utils/function/evaluate'
-  import { computed, provide, ref, watch, type HTMLAttributes } from 'vue'
+  import { computed, provide, ref } from 'vue'
   import type { NavigationBarProps } from './type'
 
-  const props = defineProps<
-    NavigationBarProps & /* @vue-ignore */ HTMLAttributes
-  >()
+  type NavigationEmits = {
+    (e: 'change', value: number): void
+  }
+
+  const props = defineProps<NavigationBarProps>()
+  const emit = defineEmits<NavigationEmits>()
   defineOptions({ name: 'MdNavigationBar' })
 
   const parent = ref<HTMLElement>()
@@ -13,11 +15,10 @@
 
   const active = computed({
     get: () => props.active ?? model.value,
-    set: (value) => (model.value = value)
-  })
-
-  watch(model, (value) => {
-    evaluate(props.onChange, value)
+    set: (value) => {
+      model.value = value
+      emit('change', value)
+    }
   })
 
   provide('active', active)

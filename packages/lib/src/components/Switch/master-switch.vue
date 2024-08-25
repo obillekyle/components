@@ -2,7 +2,6 @@
   import type { HTMLAttributes } from 'vue'
 
   import { rippleEffect } from '@/utils/dom/ripple'
-  import { evaluate } from '@/utils/function/evaluate'
   import { computed } from 'vue'
 
   import Switch from './switch.vue'
@@ -12,10 +11,14 @@
     name?: string
     value?: boolean
     defaultChecked?: boolean
-    onChange?: (value: boolean) => void
+  }
+
+  type MasterSwitchEmits = {
+    (e: 'change', value: boolean): void
   }
 
   defineOptions({ name: 'MasterSwitch' })
+  const emits = defineEmits<MasterSwitchEmits>()
   const props = withDefaults(defineProps<MasterSwitchProps>(), {
     value: undefined,
     defaultChecked: undefined
@@ -26,7 +29,7 @@
     get: () => props.value ?? model.value ?? props.defaultChecked ?? false,
     set: (value) => {
       model.value = value
-      evaluate(props.onChange, value)
+      emits('change', value)
     }
   })
 </script>

@@ -2,9 +2,9 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { SnackbarProps } from './util'
 
+  import { ComponentManager } from '@/utils/component-manager'
   import { Icon } from '@iconify/vue'
   import { computed, onMounted, provide, watch } from 'vue'
-  import { SNACKBAR } from './util'
 
   import Box from '../Box/box.vue'
   import Button from '../Button/button.vue'
@@ -17,7 +17,9 @@
 
   defineOptions({ name: 'MdSnackbar' })
   const props = defineProps<SnackbarOptions>()
-  const utils = computed(() => props.utils ?? SNACKBAR.DEFAULT_UTILITY)
+  const utils = computed(
+    () => props.utils ?? ComponentManager.DEFAULT_UTILITY
+  )
 
   let timeout: any
 
@@ -37,8 +39,8 @@
   <Box
     class="md-snackbar"
     :class="{
-      static: !Number.isFinite(utils.id),
-      extended: actions?.length
+      static: Number.isNaN(utils.id),
+      extended: actions && actions.length > 1
     }"
   >
     <Text class="md-snackbar-content" lines="3" as="span">

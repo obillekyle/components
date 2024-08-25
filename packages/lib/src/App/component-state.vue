@@ -3,16 +3,18 @@
   import { MODAL } from '@/components/Modal/util'
   import { useSheet } from '@/components/Sheet/sheet-manager'
   import { useSnackbar } from '@/components/Snackbar/snackbar-manager'
+  import { useToast } from '@/components/Toast/toast-manager'
+  import { useLocalStorage } from '@/utils/ref/use-local-storage'
 
   import Box from '@/components/Box/box.vue'
   import Button from '@/components/Button/button.vue'
   import Select from '@/components/Select/select.vue'
-  import { useLocalStorage } from '@/utils'
   import Mock from './mock-content.vue'
 
   const snackbar = useSnackbar()
   const modal = useModal()
   const sheet = useSheet()
+  const toast = useToast()
 
   const options = ['left', 'right', 'bottom', 'top'] as const
   const position = useLocalStorage<'left' | 'right' | 'bottom' | 'top'>(
@@ -22,8 +24,10 @@
 
   function openSnackbar() {
     snackbar.open({
-      message:
-        'Hello World! Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, reprehenderit et. Impedit aperiam neque laborum aliquid officia veniam quo voluptatibus quas ratione ex, doloribus facilis omnis quaerat eos ab culpa.',
+      message: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed, 
+        voluptatibus! Modi maxime perspiciatis id ab neque! Ab, ea eius! 
+        Alias expedita aspernatur enim debitis reiciendis similique ipsa 
+        saepe suscipit voluptates.`,
       closeable: true,
       timeout: Infinity,
       actions: [
@@ -70,24 +74,52 @@
       direction: position.value
     })
   }
+
+  function openToast() {
+    toast.open({
+      message: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed, 
+        voluptatibus! Modi maxime perspiciatis id ab neque! Ab, ea eius! 
+        Alias expedita aspernatur enim debitis reiciendis similique ipsa 
+        saepe suscipit voluptates.`
+    })
+  }
+
+  function openExtendedToast() {
+    toast.open({
+      variant: 'expanded',
+      message: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed, 
+        voluptatibus! Modi maxime perspiciatis id ab neque! Ab, ea eius! 
+        Alias expedita aspernatur enim debitis reiciendis similique ipsa 
+        saepe suscipit voluptates.`
+    })
+  }
 </script>
 
 <template>
   <Box>
+    <p>Modals</p>
     <Button @click="openFullModal">Open Full Modal</Button>
     <Button @click="openModal">Open Simple Modal</Button>
   </Box>
 
   <Box>
+    <p>Snackbars</p>
     <Button @click="openSnackbar">Open Snackbar</Button>
   </Box>
 
   <Box>
+    <p>Sheets</p>
     <Select
       :items="[...options]"
       @change="([v]) => (position = options[v])"
       :value="[options.indexOf(position) || 0]"
     />
     <Button @click="openSheet">Open Sheet</Button>
+  </Box>
+
+  <Box>
+    <p>Toasts</p>
+    <Button @click="openToast">Open Toast</Button>
+    <Button @click="openExtendedToast">Open Extended Toast</Button>
   </Box>
 </template>

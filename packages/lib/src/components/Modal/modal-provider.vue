@@ -1,7 +1,7 @@
 <script setup lang="ts">
+  import type { ComponentManager } from '@/utils/component-manager'
   import type { ModalProps } from './util'
 
-  import { ComponentManager } from '@/utils/component-manager'
   import { provide, shallowRef } from 'vue'
 
   import { onMounted } from 'vue'

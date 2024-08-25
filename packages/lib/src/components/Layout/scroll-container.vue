@@ -3,7 +3,6 @@
 
   import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
-  import { evaluate } from '@/utils/function/evaluate'
   import { onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 
   interface ScrollPosition {
@@ -13,9 +12,14 @@
 
   interface ScrollContainerProps extends BoxProps {
     scrollable?: boolean
-    onChange?: (value: ScrollPosition) => void
   }
 
+  type ScrollContainerEmits = {
+    (e: 'change', value: ScrollPosition): void
+    (e: 'scroll', value: ScrollPosition): void
+  }
+
+  const emit = defineEmits<ScrollContainerEmits>()
   const props = withDefaults(defineProps<ScrollContainerProps>(), {
     scrollable: true
   })
@@ -35,7 +39,8 @@
       const x = element.value.scrollLeft
       const y = element.value.scrollTop
       model.value = { x, y }
-      evaluate(props.onChange, model.value)
+      emit('scroll', { x, y })
+      emit('change', { x, y })
     }
   }
 

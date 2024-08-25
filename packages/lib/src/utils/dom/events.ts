@@ -21,7 +21,7 @@ export const keyClick: KeyClickFunction = (event, key = ' ') => {
 /**  @deprecated Use `keyClick` instead */
 export const keyboardClick = keyClick
 
-type Position = { x: number; y: number }
+export type Position = { x: number; y: number }
 
 export function getClientPos(event: TouchEvent | MouseEvent): Position {
   return event instanceof MouseEvent
@@ -43,48 +43,3 @@ export const targetsSelf: TargetsSelfFn = (event, handler) => {
 
 /**  @deprecated Use `targetsSelf` instead */
 export const onSelfEvent = targetsSelf
-
-function dummyElement() {
-  const element = document.createElement('div')
-  element.style.position = 'fixed'
-  element.style.inset = '0'
-
-  return element
-}
-
-export function dragPos(
-  callback: (pos: Position) => void
-): (event: TouchEvent | MouseEvent) => void {
-  let dragging = false
-  const element = dummyElement()
-
-  function dragMove(event: TouchEvent | MouseEvent) {
-    dragging && callback(getClientPos(event))
-  }
-
-  function dragEnd() {
-    removeEventListener('mousemove', dragMove)
-    removeEventListener('mouseup', dragEnd)
-
-    removeEventListener('touchmove', dragMove)
-    removeEventListener('touchcancel', dragEnd)
-    removeEventListener('touchend', dragEnd)
-
-    element.remove()
-    document.body.style.removeProperty('cursor')
-    dragging = false
-  }
-
-  return () => {
-    document.body.append(element)
-    document.body.style.cursor = 'grabbing'
-
-    addEventListener('mousemove', dragMove)
-    addEventListener('mouseup', dragEnd)
-
-    addEventListener('touchmove', dragMove)
-    addEventListener('touchcancel', dragEnd)
-    addEventListener('touchend', dragEnd)
-    dragging = true
-  }
-}

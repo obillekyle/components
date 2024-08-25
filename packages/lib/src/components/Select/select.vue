@@ -4,14 +4,14 @@
 
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
-  import { evaluate } from '@/utils/function/evaluate'
   import { fnRef } from '@/utils/ref/fn-ref'
   import { Icon } from '@iconify/vue'
   import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-  import OptionItem from './option-item.vue'
   import { filterByName, toSelectItems, toggleItem } from './util'
 
-  interface SelectProperties
+  import OptionItem from './option-item.vue'
+
+  interface SelectProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
     value?: number[]
     defaultValue?: number[]
@@ -21,7 +21,10 @@
     multiple?: boolean
     required?: boolean
     placeholder?: string
-    onChange?: (value: number[]) => any
+  }
+
+  type SelectEmits = {
+    (e: 'change', value: number[]): void
   }
 
   const show = ref(false)
@@ -29,7 +32,9 @@
   const options = ref<HTMLElement[]>([])
   const setOptions = fnRef(options)
   const select = ref<HTMLElement>()
-  const props = withDefaults(defineProps<SelectProperties>(), {
+
+  const emit = defineEmits<SelectEmits>()
+  const props = withDefaults(defineProps<SelectProps>(), {
     optionComp: OptionItem,
     multiple: false,
     required: false,
@@ -42,7 +47,7 @@
     get: () => props.value ?? model.value ?? props.defaultValue ?? [],
     set: (value) => {
       model.value = value
-      evaluate(props.onChange, value)
+      emit('change', value)
     }
   })
 

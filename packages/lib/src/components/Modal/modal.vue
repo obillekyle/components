@@ -2,12 +2,12 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { ModalProps } from './util'
 
+  import { ComponentManager } from '@/utils/component-manager'
   import { keyClick, targetsSelf } from '@/utils/dom/events'
   import { customRef } from '@/utils/ref/custom-ref'
   import { useFocusLock } from '@/utils/ref/use-focus-lock'
   import { Icon } from '@iconify/vue'
   import { computed, provide } from 'vue'
-  import { MODAL } from './util'
 
   import Box from '../Box/box.vue'
   import Button from '../Button/button.vue'
@@ -21,7 +21,9 @@
 
   defineOptions({ name: 'MdModal' })
   const props = defineProps<ModalOptions>()
-  const utils = computed(() => props.utils ?? MODAL.DEFAULT_UTILITY)
+  const utils = computed(
+    () => props.utils ?? ComponentManager.DEFAULT_UTILITY
+  )
 
   const [root, setRef] = customRef<HTMLElement>()
 
