@@ -14,9 +14,7 @@ export function useRect(
       rect.value = entry.target.getBoundingClientRect()
     })
 
-    if (elem.value) {
-      observer.observe(elem.value)
-    }
+    elem.value && observer.observe(elem.value)
   })
 
   watch(elem, (newElement, oldElement) => {
@@ -24,9 +22,6 @@ export function useRect(
     newElement && observer.observe(newElement)
   })
 
-  onBeforeUnmount(() => {
-    observer.disconnect()
-  })
-
+  onBeforeUnmount(() => observer.disconnect())
   return rect
 }

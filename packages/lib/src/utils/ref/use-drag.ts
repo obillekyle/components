@@ -23,7 +23,10 @@ export function useDrag(
   const element = dummyElement()
 
   function dragMove(event: TouchEvent | MouseEvent) {
-    dragging.value && callback(getClientPos(event))
+    if (dragging.value) {
+      event.preventDefault()
+      callback(getClientPos(event))
+    }
   }
 
   function dragEnd() {
@@ -41,7 +44,7 @@ export function useDrag(
 
   return [
     readonly(dragging),
-    () => {
+    (event) => {
       if (dragging.value) return
       document.body.append(element)
       document.body.style.cursor = 'grabbing'
@@ -49,10 +52,13 @@ export function useDrag(
       addEventListener('mousemove', dragMove)
       addEventListener('mouseup', dragEnd)
 
-      addEventListener('touchmove', dragMove)
+      addEventListener('touchmove', dragMove, { passive: false })
       addEventListener('touchcancel', dragEnd)
       addEventListener('touchend', dragEnd)
+
       dragging.value = true
+
+      dragMove(event)
     }
   ]
 }
