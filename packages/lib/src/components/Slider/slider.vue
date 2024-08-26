@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import { getClientPos } from '@/utils/dom/events'
   import {
     clamp,
     findNearestNumber,
     offsetRange
   } from '@/utils/number/range'
   import { is } from '@/utils/object/is'
+  import { useDrag } from '@/utils/ref/use-drag'
   import { useRect } from '@/utils/ref/use-rect'
-  import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+  import { computed, inject, ref } from 'vue'
 
   interface SliderProperties {
     value?: number
@@ -32,47 +32,39 @@
     decimal: 0
   })
 
-  const dragging = ref(false)
   const wrapper = ref<HTMLElement>()
   const model = defineModel<number>()
   const useMD3 = inject('md3', false)
   const wrapperRect = useRect(wrapper)
 
-  // TODO: Organize this mess
+  const values = computed(() =>
+    props.values
+      ? props.values
+          .map((v) => (is(v, 'object') ? v.value : v))
+          .sort((a, b) => a - b)
+      : []
+  )
 
-  const values = computed(() => {
-    if (props.values) {
-      return props.values
-        .map((v) => (is(v, 'object') ? v.value : v))
-        .sort((a, b) => a - b)
+  const limit = computed(() => {
+    const hasValues = values.value.length > 0
+
+    return {
+      min: hasValues ? Math.min(...values.value) : props.min,
+      max: hasValues ? Math.max(...values.value) : props.max,
+      step: props.step ?? 1 / 10 ** props.decimal
     }
-
-    return []
   })
-
-  const minVal = computed(() =>
-    values.value.length > 0 ? Math.min(...values.value) : props.min
-  )
-
-  const maxVal = computed(() =>
-    values.value.length > 0 ? Math.max(...values.value) : props.max
-  )
 
   const sliderVal = computed({
     get: () =>
       props.value ??
       model.value ??
-      Math.max(props.defaultValue ?? minVal.value, minVal.value),
+      clamp(props.defaultValue ?? props.min, props.min, props.max),
     set: (value) => {
       model.value = value
       emit('change', value)
     }
   })
-
-  function dragDown(e: MouseEvent | TouchEvent) {
-    dragging.value = true
-    dragMove(e)
-  }
 
   function getLabel(value: number) {
     if (!props.values) return value
@@ -82,19 +74,16 @@
     return is(item, 'number') ? item : item?.label || value
   }
 
-  function dragMove(e: MouseEvent | TouchEvent) {
+  const [dragging, dragEvent] = useDrag((position) => {
     const rect = wrapperRect.value!
 
     if (!rect) return
-    if (!dragging.value) return
-    const min = minVal.value
-    const max = maxVal.value
 
-    e.preventDefault()
+    const { min, max, step } = limit.value
 
     const offset = rect.height / 2
     const length = rect.width
-    const clientX = getClientPos(e).x - rect.left
+    const clientX = position.x - rect.left
     const pos = offsetRange(length, clientX, offset * -1)
 
     const maxOffset = max - min
@@ -106,38 +95,28 @@
       return
     }
 
-    if (props.step) {
-      const step = props.step
-      const rounded = Math.round(value / step) * step
-      sliderVal.value = Math.max(rounded, min)
-      return
-    }
-
-    const decimal = Math.pow(10, props.decimal)
-    const rounded = Math.round(value * decimal) / decimal
+    const rounded = Math.round(value / step) * step
     sliderVal.value = Math.max(rounded, min)
-  }
-
-  function dragUp() {
-    dragging.value = false
-  }
+  })
 
   function getPosition(value: number) {
     if (!wrapperRect.value) return 0
-    const rect = wrapperRect.value!
-    const maxOffset = maxVal.value - minVal.value
-    const number = (value - minVal.value) / maxOffset
+
+    const { min, max } = limit.value
+
+    const rect = wrapperRect.value
+    const maxOffset = max - min
+    const percent = (value - min) / maxOffset
     const offset = useMD3 ? rect.height / 2 : 0
 
-    return offsetRange(rect.width, number * rect.width, offset)
+    return offsetRange(rect.width, percent * rect.width, offset)
   }
 
   const thumbPos = computed(() => getPosition(sliderVal.value))
 
   function handleKeydown(e: KeyboardEvent) {
-    const step = props.step ?? 1 / 10 ** props.decimal
-    const min = minVal.value
-    const max = maxVal.value
+    const { min, max, step } = limit.value
+
     const vals = values.value
     const value = sliderVal.value
 
@@ -168,22 +147,6 @@
   }
 
   defineOptions({ name: 'MdSlider' })
-
-  onMounted(() => {
-    document.addEventListener('mousemove', dragMove)
-    document.addEventListener('mouseup', dragUp)
-
-    document.addEventListener('touchmove', dragMove, { passive: false })
-    document.addEventListener('touchend', dragUp, { passive: false })
-  })
-
-  onBeforeUnmount(() => {
-    document.removeEventListener('mousemove', dragMove)
-    document.removeEventListener('mouseup', dragUp)
-
-    document.removeEventListener('touchmove', dragMove)
-    document.removeEventListener('touchend', dragUp)
-  })
 </script>
 
 <template>
@@ -192,8 +155,8 @@
     class="md-slider"
     :class="{ md3: useMD3 }"
     @keydown="handleKeydown"
-    @mousedown="dragDown"
-    @dblclick="dragMove"
+    @mousedown="dragEvent"
+    @dblclick="dragEvent"
   >
     <div class="md-slider-value" v-if="props.showValue">
       {{ sliderVal }}
@@ -203,9 +166,14 @@
         class="md-slider-thumb"
         :dragging
         :data-value="getLabel(sliderVal)"
-        @touchstart="dragDown"
+        @touchstart="dragEvent"
       />
-      <input type="range" :min="minVal" :max="maxVal" v-model="sliderVal" />
+      <input
+        type="range"
+        :min="limit.min"
+        :max="limit.max"
+        v-model="sliderVal"
+      />
       <div class="md-slider-track" ref="wrapper" />
       <div class="md-slider-labels" v-if="props.values">
         <template v-if="props.showLabel">

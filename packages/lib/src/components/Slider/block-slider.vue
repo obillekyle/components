@@ -1,15 +1,14 @@
 <script setup lang="ts">
-  import type { Component, HTMLAttributes } from 'vue'
+  import type { Component } from 'vue'
 
-  import { getClientPos } from '@/utils/dom/events'
   import { clamp, mapNumberToRange } from '@/utils/number/range'
+  import { useDrag } from '@/utils/ref/use-drag'
   import { useRect } from '@/utils/ref/use-rect'
-  import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+  import { computed, ref } from 'vue'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
 
-  interface BlockSliderProps
-    extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
+  interface BlockSliderProps {
     value?: number
     defaultValue?: number
     min?: number
@@ -33,7 +32,7 @@
   })
 
   let timeout: any
-  const dragging = ref(false)
+
   const model = defineModel<number>()
   const wrapper = ref<HTMLElement>()
   const rect = useRect(wrapper)
@@ -42,9 +41,7 @@
     get: () =>
       props.value ??
       model.value ??
-      props.defaultValue ??
-      props.min ??
-      props.max / 2,
+      clamp(props.defaultValue ?? props.min, props.min, props.max),
     set(value) {
       value = clamp(value, props.min, props.max)
       model.value = value
@@ -52,7 +49,24 @@
     }
   })
 
-  const steps = computed(() => props.step ?? 1 / 10 ** props.decimal)
+  const step = computed(() => props.step ?? 1 / 10 ** props.decimal)
+  const [dragging, dragEvent] = useDrag((position) => {
+    if (!rect.value) return
+
+    const { width, height, left } = rect.value
+
+    const pos = position.x - left
+    const maxOffset = props.max - props.min
+
+    const cursorPos = clamp(pos - height, 0, width)
+    const pad = (cursorPos / width) * height
+
+    const offset = clamp(cursorPos + pad, 0, width)
+    const value = (offset / width) * maxOffset
+
+    sliderVal.value = Math.round(value / step.value) * step.value
+  })
+
   const position = computed(() => {
     if (!rect.value) return 0
     const newMin = rect.value.height / rect.value.width
@@ -60,43 +74,9 @@
     return mapNumberToRange(oldMin * 100, 0, 100, newMin * 100, 100)
   })
 
-  function dragDown(e: MouseEvent | TouchEvent) {
-    timeout && clearTimeout(timeout)
-    dragging.value = true
-    dragMove(e)
-  }
-
-  function dragMove(e: MouseEvent | TouchEvent) {
-    if (!dragging.value) return
-    if (!wrapper.value) return
-
-    const element = wrapper.value
-    const rect = element.getBoundingClientRect()
-
-    e.preventDefault()
-
-    const clientX = getClientPos(e).x
-    const pos = clientX - rect.left
-    const maxOffset = props.max - props.min
-
-    const cursorPos = clamp(pos - rect.height, 0, rect.width)
-    const pad = (cursorPos / rect.width) * rect.height
-
-    const offset = clamp(cursorPos + pad, 0, rect.width)
-    const value = (offset / rect.width) * maxOffset
-
-    sliderVal.value = props.step
-      ? Math.round(value / props.step) * props.step
-      : Math.round(value * 10 ** props.decimal) / 10 ** props.decimal
-  }
-
-  function dragUp() {
-    dragging.value = false
-  }
-
   const keyHandlers: Record<string, (e: KeyboardEvent) => any> = {
-    ArrowLeft: () => (sliderVal.value -= steps.value),
-    ArrowRight: () => (sliderVal.value += steps.value)
+    ArrowLeft: () => (sliderVal.value -= step.value),
+    ArrowRight: () => (sliderVal.value += step.value)
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -110,20 +90,6 @@
       timeout = setTimeout(() => root.classList.remove('dragging'), 500)
     }
   }
-
-  onMounted(() => {
-    document.addEventListener('mousemove', dragMove)
-    document.addEventListener('mouseup', dragUp)
-    document.addEventListener('touchmove', dragMove, { passive: false })
-    document.addEventListener('touchend', dragUp, { passive: false })
-  })
-
-  onBeforeUnmount(() => {
-    document.removeEventListener('mousemove', dragMove)
-    document.removeEventListener('mouseup', dragUp)
-    document.removeEventListener('touchmove', dragMove)
-    document.removeEventListener('touchend', dragUp)
-  })
 </script>
 
 <template>
@@ -132,13 +98,12 @@
     ref="wrapper"
     class="md-block-slider"
     :class="{ dragging }"
-    @mousedown="dragDown"
-    @touchstart="dragDown"
+    @pointerdown="dragEvent"
     @keydown="handleKeydown"
     :style="{ '--pos': position }"
   >
     <div class="md-block-slider-icon" :data-value="sliderVal">
-      <HybridIcon :icon="props.icon" />
+      <HybridIcon :icon="icon" />
     </div>
     <div class="md-block-slider-content">
       <slot />
