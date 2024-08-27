@@ -1,4 +1,4 @@
-import type { Plugin, ResolvedConfig } from 'vite'
+import { type Plugin, type ResolvedConfig } from 'vite'
 
 import { transform } from 'esbuild'
 import { gzipSync } from 'node:zlib'
@@ -9,18 +9,20 @@ import {
   hash,
   isCSS,
   normalize,
-  relativeFromSrc
+  padLength,
+  relativeFromSrc,
+  toKB
 } from './utils'
 
 import fs from 'node:fs'
 import path from 'node:path'
 import Logger from '../logger'
+import { getSizeTotal } from './build'
 import { Compressor } from './compress'
 
 let packSize = 0,
-  fileSize = 0,
-  moduleSize = 0,
-  moduleSizeGzip = 0,
+  saveSize = 0,
+  contents = '',
   logger = new Logger('attach-styles')
 
 const css: Record<string, string> = {}
@@ -48,7 +50,7 @@ async function deleteCSSFiles(
       if (stats.isDirectory()) {
         await deleteCSSFiles(filePath, out, ignore)
       } else if (file.endsWith('.css')) {
-        fileSize += stats.size
+        saveSize += stats.size
         await fs.promises.unlink(filePath)
       } else {
         packSize += stats.size
@@ -59,9 +61,8 @@ async function deleteCSSFiles(
             ''
           )
           await fs.promises.writeFile(filePath, newContent)
-          moduleSizeGzip += gzipSync(newContent).length
-          moduleSize += new Blob([newContent]).size
-          fileSize += content.length - newContent.length
+          contents += newContent
+          saveSize += content.length - newContent.length
         }
       }
     }
@@ -208,24 +209,39 @@ export function attachStyles({
         await deleteCSSFiles(outDir, outDir, cleanIgnore)
         const end = Date.now()
         const elapsed = end - start
-        const size = (fileSize / 1024).toFixed(2)
-        const pack = (packSize / 1024).toFixed(2)
-        const module_ = (moduleSize / 1024).toFixed(2)
-        const moduleGzip = (moduleSizeGzip / 1024).toFixed(2)
-        const packPad = Math.max(pack.length, module_.length)
-        const sizePad = Math.max(size.length, moduleGzip.length)
 
         logger.log(`Clean CSS files...`)
-        logger.log(`Cleaned CSS files in ${elapsed}ms.`)
-        logger.log(
-          `$cyan;Unpacked: $gray;$B;${pack.padStart(packPad, ' ')} kB`,
-          `$R;$gray;│ save: ${size.padStart(sizePad, ' ')} kB$R;`
-        )
-        logger.log(
-          `$cyan;Packaged: $gray;$B;${module_.padStart(packPad, ' ')} kB`,
-          `$R;$gray;│ gzip: ${moduleGzip.padStart(sizePad, ' ')} kB$R;\n`
-        )
+        logger.log(`Cleaned CSS files in ${elapsed}ms.\n`)
       }
+
+      logger.log(`Calculating size...`)
+
+      const prod = await getSizeTotal('dist/index.js')
+      const saved = toKB(saveSize)
+      const packed = toKB(packSize)
+      const module = toKB(contents.length)
+      const modGzip = toKB(gzipSync(contents).length)
+      const minSize = toKB(prod.size)
+      const minGzip = toKB(prod.gzip)
+
+      const packPad = padLength(packed, module, minSize)
+      const sizePad = padLength(saved, modGzip, minGzip)
+
+      cleanCSS &&
+        logger.log(
+          `$cyan;Unpacked: $gray;$B;${packed.padStart(packPad, ' ')} kB`,
+          `$R;$gray;│ save: ${saved.padStart(sizePad, ' ')} kB$R;`
+        )
+
+      logger.log(
+        `$cyan;Packaged: $gray;$B;${module.padStart(packPad, ' ')} kB`,
+        `$R;$gray;│ gzip: ${modGzip.padStart(sizePad, ' ')} kB$R;`
+      )
+
+      logger.log(
+        `$cyan;Minified: $gray;$B;${minSize.padStart(packPad, ' ')} kB`,
+        `$R;$gray;│ gzip: ${minGzip.padStart(sizePad, ' ')} kB$R;\n`
+      )
     }
   }
 }
