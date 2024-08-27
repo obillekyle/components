@@ -21,9 +21,7 @@
       ThemeProps {}
 
   defineOptions({ name: 'MdLayoutStyles' })
-  const props = withDefaults(defineProps<ThemeProviderProps>(), {
-    md3: true
-  })
+  const props = defineProps<ThemeProviderProps>()
 
   const parentOptions = inject('options', shallowRef(DTO))
   const themeOptions = shallowRef<ThemeObject>(getThemeObject())
@@ -98,12 +96,8 @@
   }
 
   watch(props, updateThemeObject)
-  watch(parentOptions, () => {
-    props.inherit && updateThemeObject()
-  })
-
+  watch(parentOptions, () => props.inherit && updateThemeObject())
   provide('options', themeOptions)
-  provide('md3', props.md3)
 </script>
 
 <template>

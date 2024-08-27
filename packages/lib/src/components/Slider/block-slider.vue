@@ -98,7 +98,8 @@
     ref="wrapper"
     class="md-block-slider"
     :class="{ dragging }"
-    @pointerdown="dragEvent"
+    @mousedown="dragEvent"
+    @touchstart="dragEvent"
     @keydown="handleKeydown"
     :style="{ '--pos': position }"
   >

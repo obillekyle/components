@@ -7,7 +7,7 @@
   import { is } from '@/utils/object/is'
   import { useDrag } from '@/utils/ref/use-drag'
   import { useRect } from '@/utils/ref/use-rect'
-  import { computed, inject, ref } from 'vue'
+  import { computed, ref } from 'vue'
 
   interface SliderProperties {
     value?: number
@@ -34,7 +34,6 @@
 
   const wrapper = ref<HTMLElement>()
   const model = defineModel<number>()
-  const useMD3 = inject('md3', false)
   const wrapperRect = useRect(wrapper)
 
   const values = computed(() =>
@@ -61,6 +60,7 @@
       model.value ??
       clamp(props.defaultValue ?? props.min, props.min, props.max),
     set: (value) => {
+      value = clamp(value, props.min, props.max)
       model.value = value
       emit('change', value)
     }
@@ -84,7 +84,7 @@
     const offset = rect.height / 2
     const length = rect.width
     const clientX = position.x - rect.left
-    const pos = offsetRange(length, clientX, offset * -1)
+    const pos = offsetRange(length, clientX, -offset)
 
     const maxOffset = max - min
     const percent = pos / length
@@ -95,27 +95,25 @@
       return
     }
 
-    const rounded = Math.round(value / step) * step
-    sliderVal.value = Math.max(rounded, min)
+    sliderVal.value = Math.round(value / step) * step
   })
 
   function getPosition(value: number) {
     if (!wrapperRect.value) return 0
 
     const { min, max } = limit.value
+    const { width, height } = wrapperRect.value
 
-    const rect = wrapperRect.value
     const maxOffset = max - min
     const percent = (value - min) / maxOffset
-    const offset = useMD3 ? rect.height / 2 : 0
 
-    return offsetRange(rect.width, percent * rect.width, offset)
+    return offsetRange(width, percent * width, height / 2)
   }
 
   const thumbPos = computed(() => getPosition(sliderVal.value))
 
   function handleKeydown(e: KeyboardEvent) {
-    const { min, max, step } = limit.value
+    const { step } = limit.value
 
     const vals = values.value
     const value = sliderVal.value
@@ -128,8 +126,7 @@
         return
       }
 
-      const newValue = value - step
-      sliderVal.value = Math.max(newValue, min)
+      sliderVal.value = value - step
       return
     }
 
@@ -141,8 +138,7 @@
         return
       }
 
-      const newValue = value + step
-      sliderVal.value = Math.min(newValue, max)
+      sliderVal.value = value + step
     }
   }
 
@@ -153,12 +149,11 @@
   <div
     tabindex="0"
     class="md-slider"
-    :class="{ md3: useMD3 }"
     @keydown="handleKeydown"
     @mousedown="dragEvent"
     @dblclick="dragEvent"
   >
-    <div class="md-slider-value" v-if="props.showValue">
+    <div class="md-slider-value" v-if="showValue">
       {{ sliderVal }}
     </div>
     <div class="md-slider-wrapper" :style="{ '--thumb-offset': thumbPos }">
@@ -175,8 +170,8 @@
         v-model="sliderVal"
       />
       <div class="md-slider-track" ref="wrapper" />
-      <div class="md-slider-labels" v-if="props.values">
-        <template v-if="props.showLabel">
+      <div class="md-slider-labels" v-if="values">
+        <template v-if="showLabel">
           <div
             :key="value"
             class="md-slider-label"
@@ -187,7 +182,7 @@
           </div>
         </template>
       </div>
-      <div class="md-slider-indicators" v-if="props.values">
+      <div class="md-slider-indicators" v-if="values">
         <div
           class="md-slider-indicator"
           :key="value"
@@ -202,14 +197,14 @@
 
 <style lang="scss">
   .md-slider {
-    --thumb-width: var(--lg);
-    --thumb-height: var(--lg);
-    --track-height: var(--xs);
+    --thumb-width: var(--xxs);
+    --thumb-height: var(--component-md);
+    --track-height: var(--md);
 
     display: grid;
     user-select: none;
     align-items: center;
-    height: calc(var(--thumb-height) * 2);
+    height: var(--thumb-height);
     min-width: calc(var(--thumb-height) * 2);
     width: 100%;
 
@@ -232,29 +227,40 @@
     }
 
     &-wrapper {
-      position: relative;
       display: flex;
       height: 100%;
+      position: relative;
       align-items: center;
     }
 
     &-track {
       position: absolute;
       align-self: center;
-      left: 0;
       overflow: hidden;
-      right: 0;
+      width: 100%;
       height: var(--track-height);
-      background: var(--primary-container);
       border-radius: 999px;
+
+      &::before,
+      &::after {
+        border-radius: 2px;
+        height: 100%;
+        position: absolute;
+        content: '';
+      }
 
       &::before {
         left: 0;
-        position: absolute;
-        content: '';
-        height: 100%;
-        right: calc((var(--thumb-offset) - 100) * -1px);
+        width: calc((var(--thumb-offset) * 1px) - (var(--thumb-width) * 2));
         background: var(--primary);
+      }
+
+      &::after {
+        right: 0;
+        background: var(--primary-container);
+        left: calc(
+          ((var(--thumb-offset) * 1px) + (var(--thumb-width) * 2))
+        );
       }
     }
 
@@ -265,16 +271,14 @@
       width: var(--thumb-width);
       height: var(--thumb-height);
       border-radius: 999px;
-      align-self: center;
-      transform: translateX(-50%);
+      translate: -50% 0;
       background: var(--primary);
 
       &::before {
+        width: 500%;
         content: '';
         position: absolute;
-        width: 500%;
-        height: 100%;
-        transform: translateX(-40%);
+        translate: -40% 0;
       }
 
       &::after {
@@ -282,118 +286,67 @@
         position: absolute;
         top: 0;
         left: 50%;
-        padding: var(--xs) var(--sm);
-        transform: translate(-50%, -100%);
+        opacity: 0;
         font-size: var(--font-sm);
+        padding: var(--xs) var(--sm);
         color: var(--inverse-on-surface);
         background: var(--inverse-surface);
         border-radius: 99px;
         transition: all 0.2s;
         box-shadow: 0 2px 5px #0005;
-        opacity: 0;
+        translate: -50% -100%;
       }
 
       &[dragging='true'] {
-        background: var(--primary);
-        width: calc(var(--thumb-width) * 0.8);
-        margin-left: calc(var(--thumb-width) * -0.2);
+        opacity: 0.8;
+        width: calc(var(--thumb-width) * 0.75);
+        margin-left: calc(var(--thumb-width) * -0.25);
 
         &::after {
-          transform: translate(-50%, -125%);
+          translate: -50% -125%;
           opacity: 1;
         }
       }
     }
 
+    &-labels,
     &-indicators {
-      position: absolute;
-      left: 0;
-      right: 0;
-      width: 100%;
       display: flex;
+      position: absolute;
+      height: 100%;
+      width: 100%;
       align-items: center;
-      height: calc(var(--xs) * 2);
+      pointer-events: none;
+    }
+
+    &-indicator {
+      position: absolute;
+      background: var(--primary);
+      left: calc(var(--offset) * 1px);
+      translate: -50% 0;
+      width: var(--xxs);
+      height: var(--xxs);
       border-radius: 999px;
 
-      .md-slider-indicator {
-        left: calc(var(--offset) * 1px);
-        transform: translateX(-50%);
-        position: absolute;
-        width: var(--xxs);
-        height: var(--xxs);
-        border-radius: 999px;
-        background: var(--primary);
+      &:last-child {
+        scale: 1.5;
+        transform-origin: right;
+      }
 
-        &.covered {
-          background: var(--on-primary);
-        }
+      &.covered {
+        background: var(--on-primary);
       }
     }
 
-    &-labels {
+    &-label {
       position: absolute;
-      align-self: center;
-      width: 100%;
-      height: var(--xs);
-      margin-inline: auto;
-      pointer-events: none;
-
-      .md-slider-label {
-        position: absolute;
-        left: calc(var(--offset) * 1px);
-        transform: translateX(-50%);
-        font-size: var(--font-xxs);
-        color: var(--mono-50);
-        padding-top: var(--md);
-        width: max-content;
-        text-align: center;
-      }
-    }
-
-    &.md3 {
-      --thumb-width: var(--xxs);
-      --thumb-height: var(--component-md);
-      --track-height: var(--md);
-
-      height: var(--thumb-height);
-
-      .md-slider-indicators {
-        > :last-child {
-          scale: 1.5;
-          transform-origin: left;
-        }
-
-        .md-slider-indicator {
-          background: var(--primary);
-
-          &.covered {
-            background: var(--on-primary);
-          }
-        }
-      }
-
-      .md-slider-track {
-        background: none;
-
-        &::before {
-          width: calc(
-            (var(--thumb-offset) * 1px) - (var(--thumb-width) * 2)
-          );
-          border-radius: 2px;
-        }
-
-        &::after {
-          content: '';
-          right: 0;
-          background: var(--primary-container);
-          height: 100%;
-          position: absolute;
-          left: calc(
-            ((var(--thumb-offset) * 1px) + (var(--thumb-width) * 2))
-          );
-          border-radius: 2px;
-        }
-      }
+      left: calc(var(--offset) * 1px);
+      transform: translateX(-50%);
+      font-size: var(--font-xxs);
+      color: var(--mono-50);
+      padding-top: var(--md);
+      width: max-content;
+      text-align: center;
     }
   }
 </style>
