@@ -1,6 +1,8 @@
-import BezierEasing from 'bezier-easing'
-import { hsla, parseToHsla, parseToRgba, toHex } from 'color2k'
 import type { Curve } from './type'
+
+import { hsla, parseToHsla, parseToRgba, toHex } from 'color2k'
+
+import BezierEasing from 'bezier-easing'
 
 export class Colors {
   private main = parseToHsla('white')

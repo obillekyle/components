@@ -1,5 +1,7 @@
 import { pipe } from '../function/pipe'
 
+// TODO: refactor
+
 export function normalizeNewLines(string_: string) {
   if (string_ === '' || string_ === '\n') return ''
   let text = ''
@@ -35,9 +37,6 @@ export function normalizeNewLines(string_: string) {
 
   return text
 }
-
-/** @deprecated use ```normalizeNewLines``` instead */
-export const fixLineBreaks = normalizeNewLines
 
 export function escapeHtml(unsafeText: string): string {
   const map: Record<string, string> = {

@@ -35,7 +35,7 @@
         {{ focusLock }}
       </Text>
       <LinearProgressSvg :value="progress" />
-      <Slider v-model="progress" />
+      <Slider v-model="progress" :decimal="2" />
     </Layout>
   </Box>
 </template>

@@ -1,20 +1,12 @@
-export function toVar(
-  key: string | String,
-  value?: String | string | number
-): `var(--${string})` {
-  const value_ = value ? ', ' + value : ''
-  return `var(--${key}${value_})`
+export function toVar(key: string, value?: string | number): string {
+  value = value ? ', ' + value : ''
+  return `var(--${key + value})`
 }
 
-type CanBeNumberFN = {
-  (value: number): true
-  (value: string | number | String): boolean
+export function canBeNumber(value: any): value is number | `${number}`
+export function canBeNumber(value: any) {
+  return /^-?\d+(\.\d+)?$/.test(String(value).trim())
 }
 
-export const canBeNumber: CanBeNumberFN = function canBeNumber(value): any {
-  if (typeof value === 'number') return true
-  return /^-?\d+(\.\d+)?$/.test(String(value))
-}
-
-/** @deprecated use `canBeNumber` instead */
-export const isNumberString = canBeNumber
+export const isVar = (v: string) => /^var\(--.+\)$/.test(v)
+export const isNum = canBeNumber

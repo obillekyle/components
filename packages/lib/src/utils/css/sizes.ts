@@ -1,8 +1,14 @@
-import type { SizePrefixes, SizeType, SizeUnits, SizesString } from './type'
+import type {
+  SizePrefixes,
+  SizeType,
+  SizeUnits,
+  Sizes,
+  SizesString
+} from './type'
 
 import { is } from '../object/is'
 import { DefaultSizes } from './defaults'
-import { canBeNumber, toVar } from './main'
+import { isNum, isVar, toVar } from './main'
 import { sizes } from './vars'
 
 export function addUnit(
@@ -14,57 +20,65 @@ export function addUnit(
   }
 
   const size = String(value).trim()
-  return canBeNumber(size) ? size + unit : size
+  return isNum(size) ? size + unit : size
 }
 
 export const addPX = (value: SizeType) => addUnit(value)
+type SizesValue = SizesString | SizesString[]
 
 // prettier-ignore
 type ValueGetter = {
-  (value: SizesString | SizesString[], unit?: SizeUnits | (string & {}), type?: SizePrefixes | (string & {})): string
-  (value?: SizesString | SizesString[], unit?: SizeUnits | (string & {}), type?: SizePrefixes | (string & {})): string | undefined
-  (value?: undefined, unit?: SizeUnits | (string & {}), type?: SizePrefixes | (string & {})): undefined
+  (value: SizesValue, unit?: SizeUnits, type?: SizePrefixes | (string & {})): string
+  (value?: SizesValue, unit?: SizeUnits, type?: SizePrefixes | (string & {})): string | undefined
+  (value?: undefined, unit?: SizeUnits, type?: SizePrefixes | (string & {})): undefined
 }
 
-export const getCSSValue: ValueGetter = (value: any, unit = 'px', type) => {
-  if (!value) return value
+const SIZES_VAR = /#(\w+)(?:-(\w+))?/
+const MULTI_VALUE = /(var\(--.*?\)|#\S+|\S+){2,}/g
+function processMultiValue(
+  value: SizesValue,
+  unit: string,
+  type: string = 'padding'
+): string {
+  value = is(value, 'array') ? value : String(value).trim()
+  value = is(value, 'array') ? value : value.match(MULTI_VALUE) || []
 
-  function map(a: any[]) {
-    return a.map((v) => getCSSValue(v, unit, type))
-  }
-  if (is(value, 'array')) return map(value).join(' ')
+  return value.map((value) => getCSSValue(value, unit, type)).join(' ')
+}
+
+const isMultiValue = function (value: any) {
+  return is(value, 'array') || String(value).match(MULTI_VALUE)?.length! > 1
+}
+
+export const getCSSValue: ValueGetter = function (
+  value: any,
+  unit = 'px',
+  type = 'padding'
+) {
+  if (!value) return
+  if (isMultiValue(value)) return processMultiValue(value, unit, type)
 
   value = String(value).trim()
-  type = String(type || '').trim()
+  type = String(type).trim()
 
-  const match = value.match(/(var\(--.*?\)|#\S+|\S+)/g)
-  if (match && match.length > 1) return map(match).join(' ')
+  if (isVar(value)) return value
+  if (isNum(value)) return addUnit(value, unit)
+  if (value === '#rounded') return toVar('rounded', addPX(999))
 
-  if (canBeNumber(value)) return addUnit(value, unit)
-  if (value.includes('var(')) return value
+  const match: [string, string, Sizes] = value.match(SIZES_VAR)
 
-  if (value.startsWith('#')) {
-    const record = DefaultSizes as Record<string, Record<string, number>>
-    const [, prefix, suffix] = value.match(/#(\w+)(?:-(\w+))?/) || []
+  if (match) {
+    let prefix = match[1]
+    let suffix = match[2]
 
-    if (prefix === 'rounded') {
-      return toVar(prefix, addPX(999))
+    if (!suffix) {
+      suffix = prefix as any
+      prefix = type
     }
 
-    if (sizes.includes(prefix as any)) {
-      if (type in record) {
-        const key = type + '-' + prefix
-        const def = record[type][prefix]
-        return toVar(key, addUnit(def, unit))
-      }
-
-      const def = record.padding[suffix]
-      return toVar(prefix, addUnit(def, unit))
-    }
-
-    if (prefix in record && suffix in record[prefix]) {
-      const key = prefix + '-' + suffix
-      const def = record[prefix][suffix]
+    if (sizes.includes(suffix) && prefix in DefaultSizes) {
+      const key = type + '-' + prefix
+      const def = DefaultSizes[prefix][suffix]
       return toVar(key, addUnit(def, unit))
     }
   }

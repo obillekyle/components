@@ -57,4 +57,5 @@ export type ColorEngineVars = {
 
   scrim: string
   shadow: string
+  [key: string]: string
 }

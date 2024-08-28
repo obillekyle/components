@@ -18,9 +18,6 @@ export const keyClick: KeyClickFunction = (event, key = ' ') => {
   }
 }
 
-/**  @deprecated Use `keyClick` instead */
-export const keyboardClick = keyClick
-
 export type Position = { x: number; y: number }
 
 export function getClientPos(event: TouchEvent | MouseEvent): Position {
@@ -40,6 +37,3 @@ export const targetsSelf: TargetsSelfFn = (event, handler) => {
   const { currentTarget, target } = event
   if (target === currentTarget) handler(event)
 }
-
-/**  @deprecated Use `targetsSelf` instead */
-export const onSelfEvent = targetsSelf

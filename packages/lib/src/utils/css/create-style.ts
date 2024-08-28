@@ -104,43 +104,42 @@ type CreateStyle = (
 function dismount(name: string) {
   if (!name || typeof window === 'undefined') return
 
-  let style: HTMLElement | undefined
-  if (!(style = $(`style[for=${name}]`))) return
+  const style = $(`style[for=${name}]`)
+  const count = Number(style?.dataset.count || 0) - 1
 
-  const count = Number(style.dataset.count || 0) - 1
-  count <= 0 ? style.remove() : (style.dataset.count = String(count))
+  count > 0 ? (style!.dataset.count = String(count)) : style?.remove()
 }
 
 function parseStyleObject(name: string, object: any, resolve = true) {
-  let styleProperties: string = ''
-  const parse = resolve ? cssPropValue : addUnit
+  let declarations: string = ''
+  const parser = resolve ? cssPropValue : addUnit
 
   for (const key in object) {
     if (!object[key]) continue
 
     const property = keyPrefix[key] ?? toKebabCase(key)
-    const cssValue = parse(object[key], unitsByProp[key])
+    const cssValue = parser(object[key], unitsByProp[key])
 
-    styleProperties += `${property.replace('$', '--')}: ${cssValue}; `
+    declarations += `${property.replace('$', '--')}: ${cssValue}; `
   }
 
-  return `.${name} { ${styleProperties} }`
+  return `.${name} { ${declarations} }`
 }
 
 function mount(name: string, object: any, resolve = true) {
   if (!name || typeof window === 'undefined') return
 
-  let style = $(`style[for=${name}]`)
+  const style = $(`style[for=${name}]`) ?? document.createElement('style')
+  const count = Number(style.dataset.count || 0) + 1
 
-  if (style) {
-    const count = Number(style.dataset.count || 0) + 1
+  if (count > 1) {
     style.dataset.count = String(count)
     return
   }
 
-  style = document.createElement('style')
+  style.dataset.count = String(count)
   style.setAttribute('for', name)
-  style.dataset.count = '1'
+  style.dataset.count = String(count)
   style.innerHTML = parseStyleObject(name, object, resolve)
 
   document.head.append(style)
