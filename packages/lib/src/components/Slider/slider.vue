@@ -55,19 +55,25 @@
   })
 
   const sliderVal = computed({
-    get: () =>
-      props.value ??
-      model.value ??
-      clamp(props.defaultValue ?? props.min, props.min, props.max),
+    get: () => {
+      const { min, max } = limit.value
+      return (
+        props.value ??
+        model.value ??
+        clamp(props.defaultValue ?? min, min, max)
+      )
+    },
     set: (value) => {
-      value = clamp(value, props.min, props.max)
+      const { min, max } = limit.value
+      value = clamp(value, min, max)
       model.value = value
       emit('change', value)
     }
   })
 
   function getLabel(value: number) {
-    if (!props.values) return value
+    if (!props.values)
+      return value.toFixed(props.decimal).replace(/\.?0+$/, '')
 
     const vals = props.values
     const item = vals.find((v) => is(v, 'object') && v.value === value)
@@ -231,6 +237,7 @@
       height: 100%;
       position: relative;
       align-items: center;
+      contain: layout;
     }
 
     &-track {
