@@ -282,7 +282,8 @@
       background: var(--primary);
 
       &::before {
-        width: 500%;
+        height: 100%;
+        aspect-ratio: 1;
         content: '';
         position: absolute;
         translate: -40% 0;
