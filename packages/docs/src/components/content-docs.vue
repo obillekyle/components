@@ -1,11 +1,7 @@
 <script setup lang="ts">
   import pages from '@/router/pages'
   import { Icon } from '@iconify/vue'
-  import {
-    IconButton,
-    keyboardClick,
-    toKebabCase
-  } from '@vue-material/core'
+  import { IconButton, keyClick, toKebabCase } from '@vue-material/core'
   import Flex from '@vue-material/core/Box/Flex'
   import ScrollContainer from '@vue-material/core/Layout/scroll-container.vue'
   import { computed, inject, ref } from 'vue'
@@ -45,7 +41,7 @@
     <template v-if="pages[currentPage]">
       <Flex
         tabindex="0"
-        @keypress="keyboardClick"
+        @keypress="keyClick"
         v-for="(element, key) in pages[currentPage].pages || {}"
         gap="#sm"
         :key="key"
