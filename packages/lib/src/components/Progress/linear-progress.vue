@@ -188,6 +188,7 @@
 
       &::before,
       &::after {
+        top: 0;
         content: '';
         position: absolute;
         border-radius: inherit;
@@ -195,7 +196,7 @@
       }
 
       &::before {
-        will-change: left;
+        right: 0;
         transition: left 0.25s var(--timing-standard);
         background: var(--secondary-container);
         left: calc(var(--value) * 1% + var(--xxs));
@@ -243,6 +244,7 @@
 
       &::before,
       &::after {
+        top: 0;
         position: absolute;
         content: '';
         height: inherit;
