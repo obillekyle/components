@@ -1,4 +1,4 @@
-import { readonly, ref, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { getClientPos, type Position } from '../dom/events'
 
 type DragEventHandler = (e: TouchEvent | MouseEvent | PointerEvent) => void
@@ -22,9 +22,9 @@ export function useDrag(
   const dragging = ref(false)
   const element = dummyElement()
 
-  function dragMove(event: TouchEvent | MouseEvent) {
+  function dragMove(event: TouchEvent | MouseEvent, block = true) {
     if (dragging.value) {
-      event.preventDefault()
+      block && event.preventDefault()
       callback(getClientPos(event))
     }
   }
@@ -39,15 +39,17 @@ export function useDrag(
 
     element.remove()
     document.body.style.removeProperty('cursor')
+    document.body.style.removeProperty('overscroll-behavior')
     dragging.value = false
   }
 
   return [
-    readonly(dragging),
+    dragging,
     (event) => {
       if (dragging.value) return
       document.body.append(element)
       document.body.style.cursor = 'grabbing'
+      document.body.style.overscrollBehavior = 'none'
 
       addEventListener('mousemove', dragMove)
       addEventListener('mouseup', dragEnd)
@@ -58,7 +60,7 @@ export function useDrag(
 
       dragging.value = true
 
-      dragMove(event)
+      event && dragMove(event, event instanceof TouchEvent)
     }
   ]
 }
