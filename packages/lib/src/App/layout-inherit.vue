@@ -3,6 +3,7 @@
   import Button from '@/components/Button/button.vue'
   import Layout from '@/components/Layout/layout.vue'
   import LinearProgressSvg from '@/components/Progress/linear-progress-svg.vue'
+  import Skeleton from '@/components/Skeleton/skeleton.vue'
   import Slider from '@/components/Slider/slider.vue'
   import Switch from '@/components/Switch/switch.vue'
   import Text from '@/components/Text/text.vue'
@@ -36,6 +37,13 @@
       </Text>
       <LinearProgressSvg :value="progress" />
       <Slider v-model="progress" :decimal="2" />
+
+      <Skeleton
+        >Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        Exercitationem explicabo officia harum tempora rerum optio culpa
+        consequuntur aspernatur doloribus inventore. Totam, dignissimos in.
+        Distinctio nemo amet veritatis doloremque sed molestiae.
+      </Skeleton>
     </Layout>
   </Box>
 </template>
