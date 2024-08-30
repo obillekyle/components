@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import { getClientPos } from '@/utils/dom/events'
   import {
     clamp,
     findNearestNumber,
     offsetRange
   } from '@/utils/number/range'
   import { is } from '@/utils/object/is'
+  import { useDrag } from '@/utils/ref/use-drag'
   import { useRect } from '@/utils/ref/use-rect'
-  import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+  import { computed, ref } from 'vue'
 
   interface SliderProperties {
     value?: number
@@ -32,70 +32,65 @@
     decimal: 0
   })
 
-  const dragging = ref(false)
   const wrapper = ref<HTMLElement>()
   const model = defineModel<number>()
-  const useMD3 = inject('md3', false)
   const wrapperRect = useRect(wrapper)
 
-  // TODO: Organize this mess
+  const values = computed(() =>
+    props.values
+      ? props.values
+          .map((v) => (is(v, 'object') ? v.value : v))
+          .sort((a, b) => a - b)
+      : []
+  )
 
-  const values = computed(() => {
-    if (props.values) {
-      return props.values
-        .map((v) => (is(v, 'object') ? v.value : v))
-        .sort((a, b) => a - b)
+  const limit = computed(() => {
+    const hasValues = values.value.length > 0
+
+    return {
+      min: hasValues ? Math.min(...values.value) : props.min,
+      max: hasValues ? Math.max(...values.value) : props.max,
+      step: props.step ?? 1 / 10 ** props.decimal
     }
-
-    return []
   })
 
-  const minVal = computed(() =>
-    values.value.length > 0 ? Math.min(...values.value) : props.min
-  )
-
-  const maxVal = computed(() =>
-    values.value.length > 0 ? Math.max(...values.value) : props.max
-  )
-
   const sliderVal = computed({
-    get: () =>
-      props.value ??
-      model.value ??
-      Math.max(props.defaultValue ?? minVal.value, minVal.value),
+    get: () => {
+      const { min, max } = limit.value
+      return (
+        props.value ??
+        model.value ??
+        clamp(props.defaultValue ?? min, min, max)
+      )
+    },
     set: (value) => {
+      const { min, max } = limit.value
+      value = clamp(value, min, max)
       model.value = value
       emit('change', value)
     }
   })
 
-  function dragDown(e: MouseEvent | TouchEvent) {
-    dragging.value = true
-    dragMove(e)
-  }
-
   function getLabel(value: number) {
-    if (!props.values) return value
+    if (!props.values)
+      return value.toFixed(props.decimal).replace(/\.?0+$/, '')
 
     const vals = props.values
     const item = vals.find((v) => is(v, 'object') && v.value === value)
     return is(item, 'number') ? item : item?.label || value
   }
 
-  function dragMove(e: MouseEvent | TouchEvent) {
+  const [dragging, dragEvent] = useDrag((position) => {
     const rect = wrapperRect.value!
 
     if (!rect) return
-    if (!dragging.value) return
-    const min = minVal.value
-    const max = maxVal.value
 
-    e.preventDefault()
+    const { min, max, step } = limit.value
 
     const offset = rect.height / 2
     const length = rect.width
-    const clientX = getClientPos(e).x - rect.left
-    const pos = offsetRange(length, clientX, offset * -1)
+    const clientX = position.x - rect.left
+    const pos = offsetRange(length, clientX, -offset)
 
     const maxOffset = max - min
     const percent = pos / length
@@ -106,38 +101,26 @@
       return
     }
 
-    if (props.step) {
-      const step = props.step
-      const rounded = Math.round(value / step) * step
-      sliderVal.value = Math.max(rounded, min)
-      return
-    }
-
-    const decimal = Math.pow(10, props.decimal)
-    const rounded = Math.round(value * decimal) / decimal
-    sliderVal.value = Math.max(rounded, min)
-  }
-
-  function dragUp() {
-    dragging.value = false
-  }
+    sliderVal.value = Math.round(value / step) * step
+  })
 
   function getPosition(value: number) {
     if (!wrapperRect.value) return 0
-    const rect = wrapperRect.value!
-    const maxOffset = maxVal.value - minVal.value
-    const number = (value - minVal.value) / maxOffset
-    const offset = useMD3 ? rect.height / 2 : 0
 
-    return offsetRange(rect.width, number * rect.width, offset)
+    const { min, max } = limit.value
+    const { width, height } = wrapperRect.value
+
+    const maxOffset = max - min
+    const percent = (value - min) / maxOffset
+
+    return offsetRange(width, percent * width, height / 2)
   }
 
   const thumbPos = computed(() => getPosition(sliderVal.value))
 
   function handleKeydown(e: KeyboardEvent) {
-    const step = props.step ?? 1 / 10 ** props.decimal
-    const min = minVal.value
-    const max = maxVal.value
+    const { step } = limit.value
+
     const vals = values.value
     const value = sliderVal.value
 
@@ -149,8 +132,7 @@
         return
       }
 
-      const newValue = value - step
-      sliderVal.value = Math.max(newValue, min)
+      sliderVal.value = value - step
       return
     }
 
@@ -162,40 +144,22 @@
         return
       }
 
-      const newValue = value + step
-      sliderVal.value = Math.min(newValue, max)
+      sliderVal.value = value + step
     }
   }
 
   defineOptions({ name: 'MdSlider' })
-
-  onMounted(() => {
-    document.addEventListener('mousemove', dragMove)
-    document.addEventListener('mouseup', dragUp)
-
-    document.addEventListener('touchmove', dragMove, { passive: false })
-    document.addEventListener('touchend', dragUp, { passive: false })
-  })
-
-  onBeforeUnmount(() => {
-    document.removeEventListener('mousemove', dragMove)
-    document.removeEventListener('mouseup', dragUp)
-
-    document.removeEventListener('touchmove', dragMove)
-    document.removeEventListener('touchend', dragUp)
-  })
 </script>
 
 <template>
   <div
     tabindex="0"
     class="md-slider"
-    :class="{ md3: useMD3 }"
     @keydown="handleKeydown"
-    @mousedown="dragDown"
-    @dblclick="dragMove"
+    @mousedown="dragEvent"
+    @dblclick="dragEvent"
   >
-    <div class="md-slider-value" v-if="props.showValue">
+    <div class="md-slider-value" v-if="showValue">
       {{ sliderVal }}
     </div>
     <div class="md-slider-wrapper" :style="{ '--thumb-offset': thumbPos }">
@@ -203,12 +167,17 @@
         class="md-slider-thumb"
         :dragging
         :data-value="getLabel(sliderVal)"
-        @touchstart="dragDown"
+        @touchstart="dragEvent"
       />
-      <input type="range" :min="minVal" :max="maxVal" v-model="sliderVal" />
+      <input
+        type="range"
+        :min="limit.min"
+        :max="limit.max"
+        v-model="sliderVal"
+      />
       <div class="md-slider-track" ref="wrapper" />
-      <div class="md-slider-labels" v-if="props.values">
-        <template v-if="props.showLabel">
+      <div class="md-slider-labels" v-if="values">
+        <template v-if="showLabel">
           <div
             :key="value"
             class="md-slider-label"
@@ -219,7 +188,7 @@
           </div>
         </template>
       </div>
-      <div class="md-slider-indicators" v-if="props.values">
+      <div class="md-slider-indicators" v-if="values">
         <div
           class="md-slider-indicator"
           :key="value"
@@ -234,14 +203,14 @@
 
 <style lang="scss">
   .md-slider {
-    --thumb-width: var(--lg);
-    --thumb-height: var(--lg);
-    --track-height: var(--xs);
+    --thumb-width: var(--xxs);
+    --thumb-height: var(--component-md);
+    --track-height: var(--md);
 
     display: grid;
     user-select: none;
     align-items: center;
-    height: calc(var(--thumb-height) * 2);
+    height: var(--thumb-height);
     min-width: calc(var(--thumb-height) * 2);
     width: 100%;
 
@@ -264,29 +233,41 @@
     }
 
     &-wrapper {
-      position: relative;
       display: flex;
       height: 100%;
+      position: relative;
       align-items: center;
+      contain: layout;
     }
 
     &-track {
       position: absolute;
       align-self: center;
-      left: 0;
       overflow: hidden;
-      right: 0;
+      width: 100%;
       height: var(--track-height);
-      background: var(--primary-container);
       border-radius: 999px;
+
+      &::before,
+      &::after {
+        border-radius: 2px;
+        height: 100%;
+        position: absolute;
+        content: '';
+      }
 
       &::before {
         left: 0;
-        position: absolute;
-        content: '';
-        height: 100%;
-        right: calc((var(--thumb-offset) - 100) * -1px);
+        width: calc((var(--thumb-offset) * 1px) - (var(--thumb-width) * 2));
         background: var(--primary);
+      }
+
+      &::after {
+        right: 0;
+        background: var(--primary-container);
+        left: calc(
+          ((var(--thumb-offset) * 1px) + (var(--thumb-width) * 2))
+        );
       }
     }
 
@@ -297,16 +278,15 @@
       width: var(--thumb-width);
       height: var(--thumb-height);
       border-radius: 999px;
-      align-self: center;
-      transform: translateX(-50%);
+      translate: -50% 0;
       background: var(--primary);
 
       &::before {
+        height: 100%;
+        aspect-ratio: 1;
         content: '';
         position: absolute;
-        width: 500%;
-        height: 100%;
-        transform: translateX(-40%);
+        translate: -40% 0;
       }
 
       &::after {
@@ -314,118 +294,67 @@
         position: absolute;
         top: 0;
         left: 50%;
-        padding: var(--xs) var(--sm);
-        transform: translate(-50%, -100%);
+        opacity: 0;
         font-size: var(--font-sm);
+        padding: var(--xs) var(--sm);
         color: var(--inverse-on-surface);
         background: var(--inverse-surface);
         border-radius: 99px;
         transition: all 0.2s;
         box-shadow: 0 2px 5px #0005;
-        opacity: 0;
+        translate: -50% -100%;
       }
 
       &[dragging='true'] {
-        background: var(--primary);
-        width: calc(var(--thumb-width) * 0.8);
-        margin-left: calc(var(--thumb-width) * -0.2);
+        opacity: 0.8;
+        width: calc(var(--thumb-width) * 0.75);
+        margin-left: calc(var(--thumb-width) * -0.25);
 
         &::after {
-          transform: translate(-50%, -125%);
+          translate: -50% -125%;
           opacity: 1;
         }
       }
     }
 
+    &-labels,
     &-indicators {
-      position: absolute;
-      left: 0;
-      right: 0;
-      width: 100%;
       display: flex;
+      position: absolute;
+      height: 100%;
+      width: 100%;
       align-items: center;
-      height: calc(var(--xs) * 2);
+      pointer-events: none;
+    }
+
+    &-indicator {
+      position: absolute;
+      background: var(--primary);
+      left: calc(var(--offset) * 1px);
+      translate: -50% 0;
+      width: var(--xxs);
+      height: var(--xxs);
       border-radius: 999px;
 
-      .md-slider-indicator {
-        left: calc(var(--offset) * 1px);
-        transform: translateX(-50%);
-        position: absolute;
-        width: var(--xxs);
-        height: var(--xxs);
-        border-radius: 999px;
-        background: var(--primary);
+      &:last-child {
+        scale: 1.5;
+        transform-origin: right;
+      }
 
-        &.covered {
-          background: var(--on-primary);
-        }
+      &.covered {
+        background: var(--on-primary);
       }
     }
 
-    &-labels {
+    &-label {
       position: absolute;
-      align-self: center;
-      width: 100%;
-      height: var(--xs);
-      margin-inline: auto;
-      pointer-events: none;
-
-      .md-slider-label {
-        position: absolute;
-        left: calc(var(--offset) * 1px);
-        transform: translateX(-50%);
-        font-size: var(--font-xxs);
-        color: var(--mono-50);
-        padding-top: var(--md);
-        width: max-content;
-        text-align: center;
-      }
-    }
-
-    &.md3 {
-      --thumb-width: var(--xxs);
-      --thumb-height: var(--component-md);
-      --track-height: var(--md);
-
-      height: var(--thumb-height);
-
-      .md-slider-indicators {
-        > :last-child {
-          scale: 1.5;
-          transform-origin: left;
-        }
-
-        .md-slider-indicator {
-          background: var(--primary);
-
-          &.covered {
-            background: var(--on-primary);
-          }
-        }
-      }
-
-      .md-slider-track {
-        background: none;
-
-        &::before {
-          width: calc(
-            (var(--thumb-offset) * 1px) - (var(--thumb-width) * 2)
-          );
-          border-radius: 2px;
-        }
-
-        &::after {
-          content: '';
-          right: 0;
-          background: var(--primary-container);
-          height: 100%;
-          position: absolute;
-          left: calc(
-            ((var(--thumb-offset) * 1px) + (var(--thumb-width) * 2))
-          );
-          border-radius: 2px;
-        }
-      }
+      left: calc(var(--offset) * 1px);
+      transform: translateX(-50%);
+      font-size: var(--font-xxs);
+      color: var(--mono-50);
+      padding-top: var(--md);
+      width: max-content;
+      text-align: center;
     }
   }
 </style>

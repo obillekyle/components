@@ -5,7 +5,7 @@
   import { clamp } from '@/utils/number/range'
   import { customRef } from '@/utils/ref/custom-ref'
   import { useRect } from '@/utils/ref/use-rect'
-  import { computed, inject } from 'vue'
+  import { computed } from 'vue'
 
   import ViewObserver from '../Misc/view-observer.vue'
 
@@ -22,7 +22,6 @@
     size: 4
   })
 
-  const md3 = inject('md3', false)
   const width = computed(() => rect.value?.width || 0)
   const speed = computed(() => clamp(width.value / 300, 2.5, 6))
   const noSpace = computed(() => properties.value <= 0)
@@ -35,14 +34,14 @@
     :ref="setRef"
     apply="animate"
     class="md-progress"
-    :class="{ md3, noSpace }"
+    :class="{ noSpace }"
     :style="{
       height: getCSSValue(size),
       '--speed': addUnit(speed, 's')
     }"
   >
     <div class="md-progress-infinite" v-if="value === Infinity">
-      <div class="md-progress-infinite-bar" v-if="md3" />
+      <div class="md-progress-infinite-bar" />
     </div>
     <div class="md-progress-bar" v-else :style="`--value: ${value}`" />
   </ViewObserver>
@@ -165,9 +164,10 @@
 
   .md-progress {
     position: relative;
-    background: var(--surface-container);
     overflow: hidden;
     width: 100%;
+    background: transparent;
+    border-radius: var(--md);
 
     &:not(.animate) {
       *,
@@ -184,11 +184,33 @@
       width: calc(var(--value) * 1%);
       transition: width 0.25s var(--timing-standard);
       will-change: width;
+      border-radius: inherit;
+
+      &::before,
+      &::after {
+        top: 0;
+        content: '';
+        position: absolute;
+        border-radius: inherit;
+        height: inherit;
+      }
 
       &::before {
+        right: 0;
         transition: left 0.25s var(--timing-standard);
-        will-change: left;
+        background: var(--secondary-container);
+        left: calc(var(--value) * 1% + var(--xxs));
       }
+
+      &::after {
+        aspect-ratio: 1;
+        max-height: var(--xxs);
+        background: var(--primary);
+      }
+    }
+
+    &.no-space &-bar::before {
+      left: 0;
     }
 
     &-infinite {
@@ -206,11 +228,8 @@
         &::after {
           position: absolute;
           content: '';
-          top: 0;
-          bottom: 0;
           height: inherit;
           background: var(--secondary-container);
-          will-change: left, right;
           border-radius: inherit;
         }
 
@@ -225,13 +244,11 @@
 
       &::before,
       &::after {
+        top: 0;
         position: absolute;
         content: '';
-        top: 0;
-        bottom: 0;
         height: inherit;
         background: var(--primary);
-        will-change: left, right;
       }
 
       &::before {
@@ -240,49 +257,6 @@
 
       &::after {
         animation: infinite-load-2 infinite var(--speed) linear;
-      }
-    }
-
-    &.md3 {
-      background-color: transparent;
-      border-radius: var(--md);
-
-      .md-progress-bar {
-        border-radius: inherit;
-
-        &::before,
-        &::after {
-          position: absolute;
-          border-radius: inherit;
-          content: '';
-          top: 0;
-          right: 0;
-          height: inherit;
-        }
-
-        &::before {
-          background: var(--secondary-container);
-          left: calc(var(--value) * 1% + var(--xxs));
-        }
-
-        &::after {
-          aspect-ratio: 1;
-          max-height: var(--xxs);
-          background: var(--primary);
-        }
-      }
-
-      &.no-space .md-progress-bar::before {
-        left: 0;
-      }
-
-      .md-progress-infinite {
-        border-radius: inherit;
-
-        &::before,
-        &::after {
-          border-radius: inherit;
-        }
       }
     }
   }

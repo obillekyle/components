@@ -3,7 +3,7 @@
   import { clamp } from '@/utils/number/range'
   import { customRef } from '@/utils/ref/custom-ref'
   import { useRect } from '@/utils/ref/use-rect'
-  import { computed, inject } from 'vue'
+  import { computed } from 'vue'
 
   import ViewObserver from '../Misc/view-observer.vue'
 
@@ -20,7 +20,6 @@
     size: 5
   })
 
-  const md3 = inject('md3', false)
   defineOptions({ name: 'MdLinearProgress' })
 
   const noSpace = computed(() => props.value <= 0)
@@ -32,7 +31,7 @@
     return {
       percent: length,
       dash2Array: width.value,
-      dash2Offset: length + props.size * 2,
+      dash2Offset: -(length + props.size * 2),
       dashArray: `${length} ${width.value}`
     }
   })
@@ -43,7 +42,7 @@
     :ref="setRef"
     apply="animate"
     class="md-progress-2"
-    :class="{ md3, noSpace }"
+    :class="{ noSpace }"
     :style="{
       '--width': getCSSValue(width),
       '--height': getCSSValue(size),
@@ -54,9 +53,9 @@
       class="md-progress-2-infinite"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="`0 0 ${width} ${size}`"
+      v-if="!Number.isFinite(value)"
     >
       <path
-        v-if="md3"
         class="md-progress-2-infinite-2"
         :d="`M 0 ${size / 2} L ${width} ${size / 2}`"
         :stroke-width="size"
@@ -69,6 +68,7 @@
     </svg>
 
     <svg
+      v-else
       class="md-progress-2-bar"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="`0 0 ${width} ${size}`"
@@ -77,7 +77,6 @@
       }"
     >
       <path
-        v-if="md3"
         class="md-progress-2-bar-bg"
         :d="`M 0 ${size / 2} L ${width} ${size / 2}`"
         :stroke-width="size"
@@ -97,12 +96,15 @@
 
 <style lang="scss">
   .md-progress-2 {
+    --spacing: var(--xxs);
+
     position: relative;
-    background: var(--surface-container);
     overflow: hidden;
     line-height: 0;
     width: 100%;
     height: var(--height);
+    background: transparent;
+    border-radius: var(--md);
 
     &-bar {
       width: 100%;
@@ -110,7 +112,7 @@
 
       &-draw,
       &-bg {
-        stroke-linecap: butt;
+        stroke-linecap: round;
         stroke-width: var(--height);
         fill: none;
       }
@@ -175,46 +177,37 @@
     @keyframes md-progress-linear-2 {
       0% {
         stroke-dasharray: var(--width) var(--width);
-        stroke-dashoffset: calc(var(--height) * -2);
+        stroke-dashoffset: calc(var(--spacing) * -2);
       }
 
       25% {
         stroke-dasharray: var(--width)
-          calc((var(--width) * 0.7) + var(--height) * 4);
+          calc((var(--width) * 0.7) + var(--spacing) * 4);
         stroke-dashoffset: calc(
-          (var(--width) * -0.7) - (var(--height) * 2)
+          (var(--width) * -0.7) - (var(--spacing) * 2)
         );
       }
 
       50% {
-        stroke-dasharray: calc(var(--width) - (var(--height) * 4))
-          calc((var(--width) * 0.3) + var(--height) * 4);
+        stroke-dasharray: calc(var(--width) - (var(--spacing) * 4))
+          calc((var(--width) * 0.3) + var(--spacing) * 4);
         stroke-dashoffset: calc(
-          (var(--width) * -1.3) - (var(--height) * 2)
+          (var(--width) * -1.3) - (var(--spacing) * 2)
         );
       }
 
       75% {
-        stroke-dasharray: calc(var(--width) - (var(--height) * 4))
-          calc((var(--width) * 0.7) + (var(--height) * 4));
+        stroke-dasharray: calc(var(--width) - (var(--spacing) * 4))
+          calc((var(--width) * 0.7) + (var(--spacing) * 4));
         stroke-dashoffset: calc(
-          (var(--width) * -2.7) - (var(--height) * 2)
+          (var(--width) * -2.7) - (var(--spacing) * 2)
         );
       }
 
       100% {
-        stroke-dasharray: calc(var(--width))
-          calc(var(--width) + (var(--height) * 2));
-        stroke-dashoffset: calc((var(--width) * -4) - (var(--height) * 2));
-      }
-    }
-
-    &.md3 {
-      background-color: transparent;
-      border-radius: var(--md);
-
-      svg path {
-        stroke-linecap: round !important;
+        stroke-dasharray: var(--width)
+          calc(var(--width) + (var(--spacing) * 2));
+        stroke-dashoffset: calc((var(--width) * -4) - (var(--spacing) * 2));
       }
     }
   }

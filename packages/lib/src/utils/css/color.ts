@@ -1,27 +1,28 @@
 import type { ColorString } from './type'
 
-import { ColorEngine } from '../color-engine'
 import { toCamelCase } from '../string/cases'
 import { toVar } from './main'
 
-const engine = new ColorEngine('#0df')
-const engineShades: Record<string, string> = engine.getShades()
-const engineColors: Record<string, string> = engine.getColorVariables()
+import ColorEngine from '../color-engine'
+
+export const engine = new ColorEngine('#0df')
+const engineShades = engine.getShades()
+const engineColors = engine.getColorVariables()
 
 export const c = getCSSColor
 export function getCSSColor(value: ColorString): string {
   value = value.trim()
 
   if (value.startsWith('$')) {
-    const key = value.slice(1).trim()
-    const objKey = toCamelCase(key)
+    const colorKey = value.slice(1)
+    const objectId = toCamelCase(colorKey)
 
-    if (objKey in engineColors) {
-      return toVar(key, engineColors[objKey])
+    if (objectId in engineColors) {
+      return toVar(colorKey, engineColors[objectId])
     }
 
-    if (key in engineShades) {
-      return toVar(key, engineShades[key])
+    if (colorKey in engineShades) {
+      return toVar(colorKey, engineShades[colorKey])
     }
   }
 

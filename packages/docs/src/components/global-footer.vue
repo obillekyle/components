@@ -108,6 +108,12 @@
           />
         </a>
       </div>
+
+      <p class="global-footer-disclaimer">
+        Material Design is a trademark of Google LLC. @vue-material/core is
+        an independent project and is not affiliated with, endorsed, or
+        sponsored by Google.
+      </p>
     </div>
   </div>
 </template>

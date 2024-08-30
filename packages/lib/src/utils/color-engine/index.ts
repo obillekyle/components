@@ -1,10 +1,8 @@
-import type { ColorOptions } from '../colors'
+import type { ColorOptions, ColorParam } from '../colors'
 import type { ColorEngineVars } from './types'
 
 import { darken, saturate } from 'color2k'
-import { Colors } from '../colors/class'
-import { parseColors } from '../colors/parse-colors'
-import { AppShades } from '../colors/vars'
+import { Colors, parseColors, shades } from '../colors'
 
 function dim(color: string, amount: number) {
   return saturate(darken(color, amount), -0.2)
@@ -13,83 +11,83 @@ function dim(color: string, amount: number) {
 export class ColorEngine {
   colors: ColorOptions<Colors>
 
-  constructor(color?: string | Partial<ColorOptions<string | Colors>>) {
+  constructor(color?: ColorParam) {
     this.colors = parseColors(color ?? '#fff')
   }
 
   getColorVariables(theme: 'light' | 'dark' = 'light'): ColorEngineVars {
-    const use = (l: number, d: number) => (theme === 'light' ? l : d)
-    const { primary, secondary, tertiary, error, neutral } = this.colors
+    const isLight = theme === 'light'
+    const colors = ['primary', 'secondary', 'tertiary', 'error', 'neutral']
+    const getColor = (key: number, light: number, dark?: number) =>
+      this.colors[colors[key]].shade(isLight ? light : (dark ?? light))
 
     return {
-      primary: primary.shade(use(40, 80)),
-      secondary: secondary.shade(use(40, 80)),
-      tertiary: tertiary.shade(use(40, 80)),
-      error: error.shade(use(40, 80)),
+      primary: getColor(0, 40, 80),
+      secondary: getColor(1, 40, 80),
+      tertiary: getColor(3, 40, 80),
+      error: getColor(3, 40, 80),
 
-      onPrimary: primary.shade(use(100, 20)),
-      onSecondary: secondary.shade(use(100, 20)),
-      onTertiary: tertiary.shade(use(100, 20)),
-      onError: error.shade(use(100, 20)),
+      onPrimary: getColor(0, 100, 20),
+      onSecondary: getColor(1, 100, 20),
+      onTertiary: getColor(3, 100, 20),
+      onError: getColor(3, 100, 20),
 
-      primaryContainer: primary.shade(use(90, 30)),
-      secondaryContainer: secondary.shade(use(90, 30)),
-      tertiaryContainer: tertiary.shade(use(90, 30)),
-      errorContainer: error.shade(use(90, 30)),
+      primaryContainer: getColor(0, 90, 30),
+      secondaryContainer: getColor(1, 90, 30),
+      tertiaryContainer: getColor(3, 90, 30),
+      errorContainer: getColor(3, 90, 30),
 
-      onPrimaryContainer: primary.shade(use(30, 90)),
-      onSecondaryContainer: secondary.shade(use(30, 90)),
-      onTertiaryContainer: tertiary.shade(use(30, 90)),
-      onErrorContainer: error.shade(use(30, 90)),
+      onPrimaryContainer: getColor(0, 30, 90),
+      onSecondaryContainer: getColor(1, 30, 90),
+      onTertiaryContainer: getColor(3, 30, 90),
+      onErrorContainer: getColor(3, 30, 90),
 
-      primaryFixed: primary.shade(95),
-      secondaryFixed: secondary.shade(95),
-      tertiaryFixed: tertiary.shade(95),
+      primaryFixed: getColor(0, 95),
+      secondaryFixed: getColor(1, 95),
+      tertiaryFixed: getColor(3, 95),
 
-      primaryFixedDim: dim(primary.shade(95), 0.1),
-      secondaryFixedDim: dim(secondary.shade(95), 0.1),
-      tertiaryFixedDim: dim(tertiary.shade(95), 0.1),
+      primaryFixedDim: dim(getColor(0, 95), 0.1),
+      secondaryFixedDim: dim(getColor(1, 95), 0.1),
+      tertiaryFixedDim: dim(getColor(3, 95), 0.1),
 
-      onPrimaryFixed: primary.shade(15),
-      onSecondaryFixed: secondary.shade(15),
-      onTertiaryFixed: tertiary.shade(15),
+      onPrimaryFixed: getColor(0, 15),
+      onSecondaryFixed: getColor(1, 15),
+      onTertiaryFixed: getColor(3, 15),
 
-      onPrimaryFixedVariant: primary.shade(30),
-      onSecondaryFixedVariant: secondary.shade(30),
-      onTertiaryFixedVariant: tertiary.shade(30),
+      onPrimaryFixedVariant: getColor(0, 30),
+      onSecondaryFixedVariant: getColor(1, 30),
+      onTertiaryFixedVariant: getColor(3, 30),
 
-      surface: neutral.shade(use(98, 6)),
-      surfaceDim: neutral.shade(use(94, 6)),
-      surfaceBright: neutral.shade(use(98, 8)),
+      surface: getColor(4, 98, 6),
+      surfaceDim: getColor(4, 94, 6),
+      surfaceBright: getColor(4, 98, 8),
 
-      surfaceContainerLowest: neutral.shade(use(98, 6)),
-      surfaceContainerLow: neutral.shade(use(96, 10)),
-      surfaceContainer: neutral.shade(use(94, 14)),
-      surfaceContainerHigh: neutral.shade(use(92, 18)),
-      surfaceContainerHighest: neutral.shade(use(90, 22)),
+      surfaceContainerLowest: getColor(4, 98, 6),
+      surfaceContainerLow: getColor(4, 96, 10),
+      surfaceContainer: getColor(4, 94, 14),
+      surfaceContainerHigh: getColor(4, 92, 18),
+      surfaceContainerHighest: getColor(4, 90, 22),
 
-      onSurface: neutral.shade(use(10, 90)),
-      onSurfaceVariant: neutral.shade(use(30, 80)),
+      onSurface: getColor(4, 10, 90),
+      onSurfaceVariant: getColor(4, 30, 80),
 
-      inverseSurface: neutral.shade(use(20, 90)),
-      inverseOnSurface: neutral.shade(use(90, 20)),
-      inversePrimary: primary.shade(use(80, 40)),
+      inverseSurface: getColor(4, 20, 90),
+      inverseOnSurface: getColor(4, 90, 20),
+      inversePrimary: getColor(0, 80, 40),
 
-      outline: neutral.shade(use(50, 60)),
-      outlineVariant: neutral.shade(use(90, 30)),
+      outline: getColor(4, 50, 60),
+      outlineVariant: getColor(4, 90, 30),
 
-      scrim: neutral.shade(0),
-      shadow: neutral.shade(0)
+      scrim: getColor(4, 0),
+      shadow: getColor(4, 0)
     }
   }
 
   getShades(theme: 'light' | 'dark' = 'light') {
     const values: Record<string, string> = {}
     const light = theme === 'light'
-    for (const prefix in this.colors) {
-      const colors = this.colors[prefix]
-
-      for (const shade of AppShades) {
+    for (const [prefix, colors] of Object.entries(this.colors)) {
+      for (const shade of shades) {
         const key = prefix + '-' + shade
         const value = light ? shade : 100 - shade
         values[key] = colors.shade(value)

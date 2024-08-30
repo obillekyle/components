@@ -62,7 +62,6 @@ export type ThemeProps = {
   global?: boolean
   options?: Partial<ThemeOptions>
   inherit?: boolean
-  md3?: boolean
 }
 
 const color = new ColorEngine('#0df')

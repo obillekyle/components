@@ -6,20 +6,33 @@ export type EventType = {
   [key: string]: any[] | undefined
 }
 
+export type EventStore = {
+  [key: string]: Map<(...args: any) => any, AddEventOptions>
+}
+
+export type AddEventOptions = {
+  once?: boolean
+}
+
 export class CustomEventHandler<Events extends EventType = {}> {
-  private events: { [key: string]: any[] } = {}
+  private events: EventStore = {}
 
   addEventListener<EK extends keyof Events | (string & {})>(
     type: EK,
     callback: EK extends keyof Events
       ? CustomEventCallback<Events[EK]>
-      : () => any
+      : () => any,
+    options?: AddEventOptions
   ): void
-  addEventListener(type: string, callback: () => any): void {
-    this.events[type.toString()] = this.events[type] ?? []
+  addEventListener(
+    type: string,
+    callback: () => any,
+    options?: AddEventOptions
+  ): void {
+    this.events[type] ??= new Map()
 
-    const index = this.events[type]!.indexOf(callback)
-    index < 0 && this.events[type]!.push(callback)
+    this.events[type].has(callback) ||
+      this.events[type].set(callback, options || {})
   }
 
   dispatchEvent<EK extends keyof Events | (string & {})>(
@@ -30,8 +43,13 @@ export class CustomEventHandler<Events extends EventType = {}> {
         : []
       : any[]
   ): void
-  dispatchEvent(event: string, ...args: any[]): void {
-    for (const callback of this.events[event] ?? []) {
+  dispatchEvent(type: string, ...args: any[]): void {
+    const events = this.events[type]
+
+    if (!events) return
+
+    for (const [callback, options] of events) {
+      if (options.once) events.delete(callback)
       callback.call(this, ...args)
     }
   }
@@ -41,12 +59,10 @@ export class CustomEventHandler<Events extends EventType = {}> {
     callback: EK extends keyof Events
       ? CustomEventCallback<Events[EK]>
       : () => any
-  ): void
-  removeEventListener(type: string, callback: () => any): void {
-    if (!this.events[type]) return
-
-    const index = this.events[type]!.indexOf(callback)
-    index >= 0 && this.events[type]!.splice(index, 1)
+  ): boolean
+  removeEventListener(type: string, callback: () => any) {
+    const events = this.events[type]
+    return events && events.delete(callback)
   }
 
   emit = this.dispatchEvent

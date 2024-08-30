@@ -11,6 +11,3 @@ export function hasFormFocused(): boolean {
     document.activeElement instanceof HTMLSelectElement
   )
 }
-
-/** @deprecated use `hasFormFocused` instead */
-export const isInputFocused = hasFormFocused

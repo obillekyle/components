@@ -11,16 +11,11 @@ export function rippleEffect(
   const element = to ? $(to, target) || target : target
 
   if ('disabled' in element && element.disabled) return
-
-  if (
-    'pointerType' in event &&
-    event.pointerType === 'mouse' &&
-    event.button === 2
-  )
-    return
+  if ('button' in event && event.button !== 0) return
 
   const rect = element.getBoundingClientRect()
   const ripple = document.createElement('span')
+  const { top, left, width, height } = rect
   let { x, y } = getClientPos(event)
 
   function removeRipple() {
@@ -33,18 +28,17 @@ export function rippleEffect(
   }
 
   if (!event.isTrusted) {
-    x = rect.left + rect.width / 2
-    y = rect.top + rect.height / 2
+    x = left + width / 2
+    y = top + height / 2
     setTimeout(removeRipple, 100)
   }
 
   if (event.type === 'click' && event.isTrusted) return
 
   ripple.className = 'md-ripple'
-  ripple.style.top = y - rect.top + 'px'
-  ripple.style.left = x - rect.left + 'px'
-  ripple.style.width =
-    (rect.height > rect.width ? rect.height : rect.width) + 'px'
+  ripple.style.top = y - top + 'px'
+  ripple.style.left = x - left + 'px'
+  ripple.style.width = (height > width ? height : width) + 'px'
   ripple.style.height = ripple.style.width
 
   document.addEventListener('pointerup', removeRipple, { once: true })

@@ -114,15 +114,15 @@ export function useTooltip(
   }
 
   function mount(element: HTMLElement) {
-    element.addEventListener('mousemove', onEnter)
-    element.addEventListener('touchstart', onEnter)
     element.addEventListener('focusin', onEnter)
+    element.addEventListener('mousemove', onEnter)
+    element.addEventListener('touchstart', onEnter, { passive: true })
   }
 
   function unmount(element: HTMLElement) {
+    element.removeEventListener('focusin', onEnter)
     element.removeEventListener('mousemove', onEnter)
     element.removeEventListener('touchstart', onEnter)
-    element.removeEventListener('focusin', onEnter)
   }
 
   watch(elem, (newElement, oldElement) => {

@@ -9,7 +9,7 @@
   import { useFocusLock } from '@/utils/ref/use-focus-lock'
   import { useRect } from '@/utils/ref/use-rect'
   import { Icon } from '@iconify/vue'
-  import { computed, provide, ref } from 'vue'
+  import { computed, provide, ref, watch } from 'vue'
   import { SHEET } from './util'
 
   import ScrollContainer from '../Layout/scroll-container.vue'
@@ -28,7 +28,7 @@
   const setSize = ref<number>()
 
   const size = computed({
-    get: () => setSize.value ?? props.size,
+    get: () => Math.max(0, setSize.value ?? (props.size || 0)),
     set: (value) => (setSize.value = value)
   })
 
@@ -48,6 +48,7 @@
     bottom: ({ y, height }) => (setSize.value = height - y)
   }
 
+  useFocusLock(root)
   const [dragging, dragHandler] = useDrag((position) => {
     if (!rect.value) return
     const { x, y } = position
@@ -55,7 +56,11 @@
     positions[props.direction!]({ x, y, width, height } as DOMRect)
   })
 
-  useFocusLock(root)
+  watch(dragging, (value) => {
+    if (value === false && (size.value || 0) < 250) {
+      props.closeable ? utils.value.close() : (setSize.value = undefined)
+    }
+  })
 
   provide('modal-utils', utils)
 </script>
@@ -94,7 +99,7 @@
 
       <div
         v-if="resizable"
-        :class="dragging && 'dragging'"
+        :class="{ dragging }"
         class="md-sheet-handle"
         @pointerdown="dragHandler"
       />
@@ -137,6 +142,12 @@
         transform-origin: center;
         transition: translate 0.3s var(--timing-standard);
       }
+    }
+
+    &:not(:has(.md-sheet-handle.dragging)) {
+      transition:
+        width 0.3s var(--timing-standard),
+        height 0.3s var(--timing-standard);
     }
 
     &.right &-wrapper {

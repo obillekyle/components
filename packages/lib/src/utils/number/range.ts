@@ -42,9 +42,6 @@ export function clamp(number: number, min: number, max: number) {
   return Math.max(min, Math.min(max, number))
 }
 
-/** @deprecated use `clamp` instead*/
-export const minMax = clamp
-
 export function offsetRange(
   length: number,
   pos: number,

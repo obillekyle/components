@@ -1,9 +1,10 @@
 <script setup lang="ts">
   import type { BoxProps } from '@/components/Box/util'
 
-  import Box from '@/components/Box/box.vue'
   import { getBoxProps } from '@/components/Box/util'
   import { onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
+
+  import Box from '@/components/Box/box.vue'
 
   interface ScrollPosition {
     x: number

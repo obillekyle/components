@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import '@/assets/layout.scss'
 
+  import type { BoxProps } from '../Box/util'
   import type { ThemeProps } from './util'
 
   import { provide, ref } from 'vue'
@@ -8,16 +9,11 @@
   import ScrollContainer from './scroll-container.vue'
   import ThemeProvider from './theme-provider.vue'
 
-  withDefaults(defineProps<ThemeProps>(), {
-    md3: true
-  })
+  defineProps<ThemeProps & /** @vue-ignore */ BoxProps>()
+  defineOptions({ name: 'MdLayout' })
 
   const contentScrollTop = ref(0)
   const headerTitle = ref('')
-
-  defineOptions({
-    name: 'MdLayout'
-  })
 
   provide('content-scroll-top', contentScrollTop)
   provide('header-title', headerTitle)

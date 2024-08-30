@@ -71,6 +71,8 @@ export function getHelperFileContent(prefix: string, map: string) {
   `
 }
 
+export const toKB = (b: number) => (b / 1024).toFixed(2)
+
 export function normalize(string_: string) {
   return normalizePath(string_).replaceAll('\\', '/')
 }
@@ -127,4 +129,8 @@ export function getImportedStyles(
 
     return normalize(path.relative(sourceRoot, imported))
   })
+}
+
+export const padLength = (...strings: string[]) => {
+  return Math.max(...strings.map((string) => string.length))
 }
