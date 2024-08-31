@@ -115,10 +115,11 @@ function parseStyleObject(name: string, object: any, resolve = true) {
   const parser = resolve ? cssPropValue : addUnit
 
   for (const key in object) {
-    if (!object[key]) continue
+    const value = object[key]
+    if (value === undefined || value === null) continue
 
     const property = keyPrefix[key] ?? toKebabCase(key)
-    const cssValue = parser(object[key], unitsByProp[key])
+    const cssValue = parser(value, unitsByProp[key])
 
     declarations += `${property.replace('$', '--')}: ${cssValue}; `
   }
