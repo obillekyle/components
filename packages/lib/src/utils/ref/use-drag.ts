@@ -16,17 +16,23 @@ function dummyElement() {
   return element
 }
 
+function isTouch(event: Event) {
+  return (
+    event instanceof TouchEvent ||
+    (event as PointerEvent).pointerType === 'touch'
+  )
+}
+
 export function useDrag(
-  callback: (pos: Position) => void
+  callback: (pos: Position, event: TouchEvent | MouseEvent) => void,
+  prevent = true
 ): DragHandlerTuple {
   const dragging = ref(false)
   const element = dummyElement()
 
-  function dragMove(event: TouchEvent | MouseEvent, block = true) {
-    if (dragging.value) {
-      block && event.preventDefault()
-      callback(getClientPos(event))
-    }
+  function dragMove(event: TouchEvent | MouseEvent, block?: boolean) {
+    ;(block ?? prevent) && event.preventDefault()
+    callback(getClientPos(event), event)
   }
 
   function dragEnd() {
@@ -39,6 +45,7 @@ export function useDrag(
 
     element.remove()
     document.body.style.removeProperty('cursor')
+    document.body.style.removeProperty('user-select')
     document.body.style.removeProperty('overscroll-behavior')
     dragging.value = false
   }
@@ -47,8 +54,8 @@ export function useDrag(
     dragging,
     (event) => {
       if (dragging.value) return
-      document.body.append(element)
       document.body.style.cursor = 'grabbing'
+      document.body.style.userSelect = 'none'
       document.body.style.overscrollBehavior = 'none'
 
       addEventListener('mousemove', dragMove)
@@ -59,8 +66,10 @@ export function useDrag(
       addEventListener('touchend', dragEnd)
 
       dragging.value = true
+      const touch = isTouch(event)
+      touch || document.body.append(element)
 
-      event && dragMove(event, event instanceof TouchEvent)
+      dragMove(event, touch)
     }
   ]
 }
