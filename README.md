@@ -25,7 +25,12 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ## Screenshots
 
-![Preview](https://raw.githubusercontent.com/obillekyle/components/main/assets/preview.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/obillekyle/components/1.0.0-alpha.20/assets/preview-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/obillekyle/components/1.0.0-alpha.20/assets/preview.png">
+  <img alt="Preview" src="https://raw.githubusercontent.com/obillekyle/components/1.0.0-alpha.20/assets/preview.png">
+</picture>
+
 
 ## Docs
 
