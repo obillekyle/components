@@ -2,10 +2,10 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { SnackbarProps } from './util'
 
-  import { ComponentManager } from '@/utils/component-manager'
   import { Icon } from '@iconify/vue'
   import { computed, onMounted, provide, watch } from 'vue'
 
+  import CM from '@/utils/component-manager'
   import Box from '../Box/box.vue'
   import Button from '../Button/button.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
@@ -17,9 +17,7 @@
 
   defineOptions({ name: 'MdSnackbar' })
   const props = defineProps<SnackbarOptions>()
-  const utils = computed(
-    () => props.utils ?? ComponentManager.DEFAULT_UTILITY
-  )
+  const utils = computed(() => props.utils ?? CM.DEFAULT_UTILITY)
 
   let timeout: any
 

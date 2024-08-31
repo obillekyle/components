@@ -13,8 +13,3 @@ export interface SnackbarProps {
   actions?: (Component | SnackbarAction)[]
   closeable?: boolean
 }
-
-export const SNACKBAR = {
-  ID_STARTS_FROM: 1000,
-  DEFAULT_TIMEOUT: 3000
-}

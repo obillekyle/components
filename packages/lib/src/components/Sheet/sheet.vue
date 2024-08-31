@@ -4,14 +4,13 @@
 
   import { createStyle } from '@/utils/css/create-style'
   import { keyClick, targetsSelf } from '@/utils/dom/events'
-  import { customRef } from '@/utils/ref/custom-ref'
   import { useDrag } from '@/utils/ref/use-drag'
   import { useFocusLock } from '@/utils/ref/use-focus-lock'
   import { useRect } from '@/utils/ref/use-rect'
   import { Icon } from '@iconify/vue'
   import { computed, provide, ref, watch } from 'vue'
-  import { SHEET } from './util'
 
+  import CM from '@/utils/component-manager'
   import ScrollContainer from '../Layout/scroll-container.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
 
@@ -21,14 +20,14 @@
 
   defineOptions({ name: 'MdModal' })
   const props = defineProps<SheetOptions>()
-  const utils = computed(() => props.utils ?? SHEET.DEFAULT_UTILITY)
+  const utils = computed(() => props.utils ?? CM.DEFAULT_UTILITY)
 
-  const [root, setRef] = customRef<HTMLElement>()
-  const rect = useRect(root)
+  const root = ref<HTMLElement>()
   const setSize = ref<number>()
+  const rect = useRect(root)
 
   const size = computed({
-    get: () => Math.max(0, setSize.value ?? (props.size || 0)),
+    get: () => setSize.value ?? props.size,
     set: (value) => (setSize.value = value)
   })
 
@@ -37,7 +36,7 @@
   )
 
   const className = createStyle(() => ({
-    [property.value]: size.value
+    [property.value]: size.value && Math.max(0, size.value)
   }))
 
   type PosFn = (pos: DOMRect) => void
@@ -49,6 +48,7 @@
   }
 
   useFocusLock(root)
+
   const [dragging, dragHandler] = useDrag((position) => {
     if (!rect.value) return
     const { x, y } = position
@@ -57,17 +57,17 @@
   })
 
   watch(dragging, (value) => {
-    if (value === false && (size.value || 0) < 250) {
+    if (value === false && (size.value ?? 0) < 250) {
       props.closeable ? utils.value.close() : (setSize.value = undefined)
     }
   })
 
-  provide('modal-utils', utils)
+  provide('sheet-utils', utils)
 </script>
 
 <template>
   <div
-    :ref="setRef"
+    ref="root"
     class="md-sheet"
     :class="{
       [direction ?? 'left']: true,
@@ -132,6 +132,12 @@
       min-width: min(300px, 100%);
       max-width: min(640px, 100%);
       max-height: 100%;
+
+      &:not(:has(.md-sheet-handle.dragging)) {
+        transition:
+          width 0.3s var(--timing-standard),
+          height 0.3s var(--timing-standard);
+      }
     }
 
     &-enter-active,
@@ -140,14 +146,8 @@
 
       .md-sheet-wrapper {
         transform-origin: center;
-        transition: translate 0.3s var(--timing-standard);
+        transition: translate 0.3s var(--timing-standard) !important;
       }
-    }
-
-    &:not(:has(.md-sheet-handle.dragging)) {
-      transition:
-        width 0.3s var(--timing-standard),
-        height 0.3s var(--timing-standard);
     }
 
     &.right &-wrapper {

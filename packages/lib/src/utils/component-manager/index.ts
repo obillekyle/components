@@ -116,3 +116,5 @@ export class ComponentManager<T extends object> extends CustomEventHandler<
     return Object.fromEntries(this.store.entries())
   }
 }
+
+export default ComponentManager
