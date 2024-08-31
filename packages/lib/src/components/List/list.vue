@@ -1,31 +1,62 @@
 <script setup lang="ts">
-  import type { ListProps } from './types'
+  import type { ListEmits, ListItemType, ListProps, UseList } from './types'
 
   import { addPX } from '@/utils/css/sizes'
-  import { provide } from 'vue'
+  import { computed, provide, ref } from 'vue'
 
   import ListItem from './list-item.vue'
 
-  const properties = withDefaults(defineProps<ListProps>(), {
+  const props = withDefaults(defineProps<ListProps>(), {
+    size: 56,
     swipe: 'off',
-    listComp: 'div',
-    items: () => []
+    swipeDistance: 200,
+    listComp: 'div'
   })
 
-  provide('items', properties.items)
-  provide('parentProps', properties)
+  const listItems = computed(() =>
+    props.items?.map((item) => {
+      if (typeof item === 'object') return item
+      return { value: item, label: item }
+    })
+  )
+
+  const root = ref<HTMLElement>()
+  const model = defineModel<ListItemType[]>({
+    default: []
+  })
+
+  const emit = defineEmits<ListEmits>()
+
+  const items = computed({
+    get: () => listItems.value ?? model.value,
+    set: (value) => (model.value = value)
+  })
+
+  const listProvide = computed<UseList>(() => ({
+    items: items,
+    root: root.value,
+    swipe: props.swipe,
+    sortable: props.sortable,
+    swipeOptions: props.swipeOptions ?? {},
+    swipeDistance: props.swipeDistance,
+    component: props.listComp,
+    size: props.size,
+    emit
+  }))
+
+  provide('list-provide', listProvide)
 
   defineOptions({ name: 'MdList' })
-  const height = addPX((properties.items.length + 1) * 60)
+  const height = addPX((items.value.length + 1) * props.size)
 </script>
 
 <template>
-  <div class="md-list" :style="{ height }">
+  <div class="md-list" :style="{ height }" ref="root">
     <ListItem
       v-for="(item, index) in items"
-      :key="item.id"
+      :key="item.value"
       :index="index"
-      :props="item.props"
+      v-bind="item"
     />
   </div>
 </template>
@@ -34,6 +65,7 @@
   .md-list {
     position: relative;
     display: block;
+    contain: strict;
     width: 100%;
     overflow: hidden;
 
@@ -45,20 +77,22 @@
       user-select: none;
       height: 56px;
 
-      &.dragged {
+      &.sorting {
         z-index: 10;
         transition: none;
         box-shadow: var(--shadow-3);
       }
     }
 
-    &-content {
+    &-item-wrapper {
       position: absolute;
       width: 100%;
       display: flex;
       height: inherit;
+      align-items: center;
       background: var(--surface-container-low);
-      transition: left 0.1s;
+      transition: left 0.2s;
+      left: 0;
       z-index: 2;
 
       .draggable {
@@ -74,6 +108,10 @@
           pointer-events: none;
         }
       }
+    }
+
+    &-item-content {
+      padding-left: var(--md);
     }
 
     &-swipe-indicator {
