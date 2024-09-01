@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import type { Component } from 'vue'
 
+  import { useDrag } from '@/ref/use-drag'
+  import { useRect } from '@/ref/use-rect'
   import { clamp, mapNumberToRange } from '@/utils/number/range'
-  import { useDrag } from '@/utils/ref/use-drag'
-  import { useRect } from '@/utils/ref/use-rect'
   import { computed, ref } from 'vue'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'

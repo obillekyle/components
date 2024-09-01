@@ -48,7 +48,7 @@
 
     <Scroller
       class="md-toast-content"
-      v-if="variant === 'short'"
+      v-if="variant !== 'expanded'"
       as="span"
       continuous
     >
@@ -77,6 +77,15 @@
     max-width: min(300px, calc(100% - var(--xl)));
     pointer-events: none;
     bottom: var(--component-xl);
+
+    &.static {
+      position: revert;
+      max-width: 100%;
+      margin-inline: auto;
+      pointer-events: auto;
+      z-index: revert;
+      translate: 0;
+    }
 
     &.expanded {
       height: auto;

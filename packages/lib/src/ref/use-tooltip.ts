@@ -1,7 +1,7 @@
 import '@/assets/tooltip.scss'
 import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
-import { getParent } from '../dom/selector'
-import { debounce } from '../function/perf'
+import { getParent } from '../utils/dom/selector'
+import { debounce } from '../utils/function/perf'
 
 export function useTooltip(
   elem: Ref<HTMLElement | undefined>,

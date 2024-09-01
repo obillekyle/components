@@ -9,9 +9,9 @@
   import Switch from '@/components/Switch/switch.vue'
   import Text from '@/components/Text/text.vue'
 
-  import { customRef } from '@/utils/ref/custom-ref'
-  import { useFocusLock } from '@/utils/ref/use-focus-lock'
-  import { useLocalStorage } from '@/utils/ref/use-local-storage'
+  import { customRef } from '@/ref/custom-ref'
+  import { useFocusLock } from '@/ref/use-focus-lock'
+  import { useLocalStorage } from '@/ref/use-local-storage'
   import { ref } from 'vue'
 
   const isDark = ref(true)

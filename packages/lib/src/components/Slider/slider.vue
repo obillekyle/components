@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { useDrag } from '@/ref/use-drag'
+  import { useRect } from '@/ref/use-rect'
   import { removeExtraZeros } from '@/utils/number/format'
   import {
     clamp,
@@ -6,8 +8,6 @@
     offsetRange
   } from '@/utils/number/range'
   import { is } from '@/utils/object/is'
-  import { useDrag } from '@/utils/ref/use-drag'
-  import { useRect } from '@/utils/ref/use-rect'
   import { computed, ref } from 'vue'
 
   interface SliderProperties {

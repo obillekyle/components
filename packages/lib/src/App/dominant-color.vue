@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import Button from '@/components/Button/button.vue'
   import ColorBlock from '@/components/Misc/color-block.vue'
+  import { useLocalStorage } from '@/ref/use-local-storage'
   import { openFilePickerAsync } from '@/utils/dom/file-picker'
   import { fastAvgColor, getDominantColor } from '@/utils/other'
-  import { useLocalStorage } from '@/utils/ref/use-local-storage'
 
   const color = useLocalStorage('dominant-color', '#ffffff')
   const avg = useLocalStorage('average-color', '#ffffff')

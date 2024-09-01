@@ -1,8 +1,8 @@
 <script setup lang="ts">
+  import { customRef } from '@/ref/custom-ref'
+  import { useRect } from '@/ref/use-rect'
   import { addUnit, getCSSValue } from '@/utils/css/sizes'
   import { clamp } from '@/utils/number/range'
-  import { customRef } from '@/utils/ref/custom-ref'
-  import { useRect } from '@/utils/ref/use-rect'
   import { computed } from 'vue'
 
   import ViewObserver from '../Misc/view-observer.vue'

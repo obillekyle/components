@@ -2,9 +2,9 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { ModalProps } from './util'
 
+  import { customRef } from '@/ref/custom-ref'
+  import { useFocusLock } from '@/ref/use-focus-lock'
   import { keyClick, targetsSelf } from '@/utils/dom/events'
-  import { customRef } from '@/utils/ref/custom-ref'
-  import { useFocusLock } from '@/utils/ref/use-focus-lock'
   import { Icon } from '@iconify/vue'
   import { computed, provide } from 'vue'
 

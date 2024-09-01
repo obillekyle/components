@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { $, getParent } from '../dom/selector'
+import { $, getParent } from '../utils/dom/selector'
 
 const focusableSelector =
   'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
@@ -37,6 +37,8 @@ export function useFocusLock(
   let ignore = false
 
   function onClick(event: MouseEvent) {
+    if (!enabled.value) return
+
     const root = elem.value
     const target = event.target as HTMLElement
 
@@ -47,6 +49,8 @@ export function useFocusLock(
   }
 
   function onBlur(event: FocusEvent) {
+    if (!enabled.value) return
+
     const root = event.currentTarget as HTMLElement
     const target = event.relatedTarget as HTMLElement
 
@@ -55,7 +59,6 @@ export function useFocusLock(
       return
     }
 
-    if (!enabled.value) return
     if (root.contains(target)) return
     if (getParent(target, '[focus-lock]')) return
 
