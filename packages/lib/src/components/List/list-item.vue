@@ -140,6 +140,8 @@
       newArray.splice(props.index, 1)
       newArray.splice(newIndex, 0, element)
 
+      list.items.value = newArray
+
       list.emit('reorder', {
         from: props.index,
         to: newIndex,
