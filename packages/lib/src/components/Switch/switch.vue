@@ -23,7 +23,10 @@
   }
 
   const inputRef = ref<HTMLInputElement>()
-  const model = defineModel<boolean>()
+  const model = defineModel<boolean>({
+    default: undefined
+  })
+
   const emit = defineEmits<SwitchEmits>()
   const props = withDefaults(defineProps<SwitchProps>(), {
     size: '#xs',
