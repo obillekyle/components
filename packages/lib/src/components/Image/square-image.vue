@@ -42,7 +42,7 @@
   const error = ref(false)
   const visible = ref(false)
   const id = computed(
-    () => 'img-' + hashStr(String(props.src) + props.frame, 6)
+    () => 'img-' + hashStr(String(props.src) + image.value, 6)
   )
 
   async function resolve() {
