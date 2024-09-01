@@ -26,6 +26,24 @@
   *:focus-visible {
     animation: focus 0.25s forwards;
   }
+
+  a[href] {
+    color: var(--primary);
+    font-weight: 500;
+  }
+
+  a[href^='http']::after {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M5 17.59L15.59 7H9V5h10v10h-2V8.41L6.41 19z'/%3E%3C/svg%3E");
+
+    content: '';
+    display: inline-block;
+    width: 1.1em;
+    height: 1.1em;
+    vertical-align: text-bottom;
+    background: currentcolor;
+    mask-image: var(--svg);
+    mask-repeat: no-repeat;
+  }
 }
 
 .md-layout {
