@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { removeExtraZeros } from '@/utils/number/format'
   import {
     clamp,
     findNearestNumber,
@@ -72,8 +73,7 @@
   })
 
   function getLabel(value: number) {
-    if (!props.values)
-      return value.toFixed(props.decimal).replace(/\.?0+$/, '')
+    if (!props.values) return removeExtraZeros(value.toFixed(props.decimal))
 
     const vals = props.values
     const item = vals.find((v) => is(v, 'object') && v.value === value)
@@ -182,6 +182,7 @@
             :key="value"
             class="md-slider-label"
             v-for="value in values"
+            :class="{ covered: value === sliderVal }"
             :style="{ '--offset': getPosition(value) }"
           >
             {{ getLabel(value) }}
@@ -295,6 +296,7 @@
         top: 0;
         left: 50%;
         opacity: 0;
+        pointer-events: none;
         font-size: var(--font-sm);
         padding: var(--xs) var(--sm);
         color: var(--inverse-on-surface);
@@ -306,7 +308,7 @@
       }
 
       &[dragging='true'] {
-        opacity: 0.8;
+        opacity: 1;
         width: calc(var(--thumb-width) * 0.75);
         margin-left: calc(var(--thumb-width) * -0.25);
 
@@ -349,12 +351,15 @@
     &-label {
       position: absolute;
       left: calc(var(--offset) * 1px);
-      transform: translateX(-50%);
-      font-size: var(--font-xxs);
+      translate: -50% 100%;
+      font-size: var(--font-xs);
       color: var(--mono-50);
-      padding-top: var(--md);
       width: max-content;
       text-align: center;
+
+      &.covered {
+        opacity: 0;
+      }
     }
   }
 </style>

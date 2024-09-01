@@ -114,7 +114,7 @@
 
 <style lang="scss">
   .md-block-slider {
-    --height: var(--component-xxl);
+    --height: var(--component-xl);
 
     user-select: none;
     position: relative;
@@ -125,8 +125,9 @@
     grid-template-columns: var(--height) 1fr;
     min-height: var(--height);
     background: var(--secondary-container);
-    border-radius: calc(var(--height) / 2.25);
-    font-size: var(--font-lg);
+    border-radius: 999px;
+    font-size: var(--font-md);
+    font-weight: 500;
 
     &-icon {
       width: var(--height);
