@@ -28,55 +28,34 @@ export const meta = {
       import { ref } from 'vue'
 
       type Item = {
-        id: number
-        props: Record<string, any>
+        value: number
+        label: string
       }
 
-      const items = ref<Item[]>([
+      const defaultItems: Item[] = [
         {
-          id: 1,
-          props: {
-            name: 'Item 1'
-          }
+          value: 1,
+          label: 'Item 1'
         },
         {
-          id: 2,
-          props: {
-            name: 'Item 2'
-          }
+          value: 2,
+          label: 'Item 2'
         },
         {
-          id: 3,
-          props: {
-            name: 'Item 3'
-          }
+          value: 3,
+          label: 'Item 3'
         }
-      ])
+      ]
 
-      function dismiss(id: number) {
-        items.value = items.value.filter((item) => item.id !== id)
-      }
-
-      function reorder(from: number, to: number) {
-        const item = items.value[from]
-        items.value.splice(from, 1)
-        items.value.splice(to, 0, item)
-      }
+      const items = ref(defaultItems)
     </script>
 
     <template>
-      <Box p="#md" width="100%">
-        <List
-          :items
-          sortable
-          swipe="dismiss"
-          @reorder="reorder"
-          @dismiss="dismiss"
-        />
-      </Box>
+      <Flex direction="column" align="center" p="#md" width="100%">
+        <List v-model="items" sortable swipe="dismiss" />
+        <Button @click="items = defaultItems" label="Reset" />
+      </Flex>
     </template>
-
     ```
-
   </CodeHighlight>
 </Preview>

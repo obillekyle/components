@@ -3,9 +3,10 @@
 
   import { Icon } from '@iconify/vue'
   import { Text } from '@vue-material/core'
+  import { inject, ref } from 'vue'
+
   import WavyDivider from '@vue-material/core/Divider/wavy-divider.vue'
   import Scroller from '@vue-material/core/Text/scroller.vue'
-  import { inject, ref } from 'vue'
 
   type Link = {
     name: string

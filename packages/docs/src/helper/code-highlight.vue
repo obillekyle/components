@@ -2,8 +2,8 @@
   import { Icon } from '@iconify/vue'
   import { keyClick } from '@vue-material/core'
   import Box from '@vue-material/core/Box'
+  import { customRef } from '@vue-material/core/ref'
   import { $ } from '@vue-material/core/utils/dom'
-  import { customRef } from '@vue-material/core/utils/ref'
   import { codeToHtml } from 'shiki/bundle/web'
   import { computed, inject, onMounted, ref, watch } from 'vue'
 

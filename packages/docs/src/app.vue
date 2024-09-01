@@ -2,11 +2,9 @@
   import pages from '@/router/pages'
   import IconButton from '@vue-material/core/Button/icon-button.vue'
   import Layout from '@vue-material/core/Layout/layout.vue'
-  import { useLocalStorage } from '@vue-material/core/utils/ref'
-
   import Navigation from '@vue-material/core/Navigation'
 
-  import { LinearProgress } from '@vue-material/core'
+  import { LinearProgress, useLocalStorage } from '@vue-material/core'
   import { computed, onMounted, provide, ref } from 'vue'
   import { RouterView, useRoute, useRouter } from 'vue-router'
 
