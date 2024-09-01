@@ -17,14 +17,14 @@
   const [root, setRef] = customRef<HTMLElement>()
   const rect = useRect(root)
 
-  const properties = withDefaults(defineProps<LinearProgressProps>(), {
+  const props = withDefaults(defineProps<LinearProgressProps>(), {
     value: Infinity,
     size: 4
   })
 
   const width = computed(() => rect.value?.width || 0)
   const speed = computed(() => clamp(width.value / 300, 2.5, 6))
-  const noSpace = computed(() => properties.value <= 0)
+  const noSpace = computed(() => props.value <= 0)
 
   defineOptions({ name: 'MdLinearProgress' })
 </script>
@@ -248,6 +248,7 @@
         position: absolute;
         content: '';
         height: inherit;
+        border-radius: inherit;
         background: var(--primary);
       }
 

@@ -131,7 +131,7 @@
 
       &-1,
       &-2 {
-        stroke-linecap: butt;
+        stroke-linecap: round;
         stroke-width: var(--height);
         fill: none;
       }
