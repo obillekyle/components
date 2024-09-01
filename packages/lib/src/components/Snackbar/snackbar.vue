@@ -78,8 +78,8 @@
     background: var(--on-surface);
     color: var(--surface);
     min-height: var(--component-md);
-    padding: var(--sm);
-    box-shadow: 0 0 0 1px var(--surface-variant);
+    padding-inline: var(--sm);
+    box-shadow: var(--shadow-1);
     display: flex;
     align-items: center;
 
@@ -131,6 +131,7 @@
 
     &.extended {
       display: grid;
+      padding: var(--sm);
       grid-template:
         'content icon' auto
         'actions actions' auto / 1fr auto;
