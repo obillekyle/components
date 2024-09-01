@@ -214,6 +214,23 @@
       </div>
     </div>
 
+    <!-- Frames -->
+    <div class="showcase-entry">
+      <div class="showcase-entry-title">Frames</div>
+      <div class="flex">
+        <Frame> Hello </Frame>
+        <Frame frame="flower"> Hello </Frame>
+        <Frame frame="flower" theme="primary"> Hello </Frame>
+        <Frame frame="hexagon"> Hello </Frame>
+        <Frame frame="hexagon" theme="tertiary">
+          <HybridIcon
+            icon="material-symbols:play-arrow-outline"
+            :size="48"
+          />
+        </Frame>
+      </div>
+    </div>
+
     <!-- Component Manager -->
     <div class="showcase-entry">
       <div class="showcase-entry-title">Components</div>
@@ -289,12 +306,14 @@
   import Chip from '@/components/Chip/chip.vue'
   import Divider from '@/components/Divider/divider.vue'
   import WavyDivider from '@/components/Divider/wavy-divider.vue'
+  import Frame from '@/components/Frame/frame.vue'
   import BlockImage from '@/components/Image/block-image.vue'
   import SquareImage from '@/components/Image/square-image.vue'
   import NumberInput from '@/components/Input/number-input.vue'
   import TextInput from '@/components/Input/text-input.vue'
   import List from '@/components/List/list.vue'
   import ColorBlock from '@/components/Misc/color-block.vue'
+  import HybridIcon from '@/components/Misc/hybrid-icon.vue'
   import Paper from '@/components/Paper/paper.vue'
   import CircularProgress from '@/components/Progress/circular-progress.vue'
   import LinearProgressSvg from '@/components/Progress/linear-progress-svg.vue'
