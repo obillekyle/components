@@ -59,10 +59,10 @@
     const maxOffset = props.max - props.min
 
     const cursorPos = clamp(pos - height, 0, width)
-    const pad = (cursorPos / width) * height
+    const boxWidth = width - height
 
-    const offset = clamp(cursorPos + pad, 0, width)
-    const value = (offset / width) * maxOffset
+    const offset = clamp(cursorPos, 0, width)
+    const value = (offset / boxWidth) * maxOffset
 
     sliderVal.value = Math.round(value / step.value) * step.value
   })
