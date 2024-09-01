@@ -30,7 +30,7 @@ export class Colors {
   shade(shade: number, alpha = 1) {
     const [h, s] = this.main
 
-    const val = (h + (shade / 100) * 15) % 360
+    const val = (h + (shade / 100) * 10) % 360
     const hue = val < 0 ? val + 360 : val
     const lightness = this.curve(shade / 100)
     const satMultiplier = 1 + Math.abs(lightness - 0.5)
