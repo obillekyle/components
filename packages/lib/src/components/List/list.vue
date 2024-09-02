@@ -65,23 +65,15 @@
   .md-list {
     position: relative;
     display: block;
-    contain: strict;
+    contain: layout;
     width: 100%;
-    overflow: hidden;
 
     &-item {
       width: 100%;
       display: flex;
       position: absolute;
-      transition: top 0.1s;
       user-select: none;
-      height: 56px;
-
-      &.sorting {
-        z-index: 10;
-        transition: none;
-        box-shadow: var(--shadow-3);
-      }
+      transition: top 0.2s;
     }
 
     &-item-wrapper {
@@ -89,11 +81,17 @@
       width: 100%;
       display: flex;
       height: inherit;
+      background: var(--surface);
       align-items: center;
-      background: var(--surface-container-low);
-      transition: left 0.2s;
       left: 0;
       z-index: 2;
+      transition:
+        left 0.2s,
+        background-color 0.1s;
+
+      &:hover {
+        background: var(--surface-container-low);
+      }
 
       .draggable {
         position: absolute;
@@ -110,6 +108,21 @@
       }
     }
 
+    &-item.sorting {
+      transition: none;
+      z-index: 10;
+    }
+
+    &-item.swiping &-item-wrapper {
+      transition: none;
+      background: var(--surface-container);
+    }
+
+    &-item.sorting &-item-wrapper {
+      box-shadow: var(--shadow-3);
+      background: var(--surface-container);
+    }
+
     &-item-content {
       padding-left: var(--md);
     }
@@ -121,22 +134,25 @@
 
       .left,
       .right {
+        inset: 0;
         display: grid;
         height: inherit;
-        inset: 0;
+        max-width: 100%;
+        transition: width 2s;
         position: absolute;
         align-items: center;
         padding: var(--md);
       }
 
-      .left {
-        grid-area: left;
-      }
-
       .right {
         justify-content: end;
-        grid-area: right;
+        margin-left: auto;
       }
+    }
+
+    &-item.swiping .left,
+    &-item.swiping .right {
+      transition: none;
     }
   }
 </style>

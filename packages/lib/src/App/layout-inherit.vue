@@ -18,6 +18,28 @@
   const [root, setRoot] = customRef<HTMLElement>()
   const progress = useLocalStorage('progress', 80)
   const focusLock = useFocusLock(root)
+
+  type Item = {
+    value: number
+    label: string
+  }
+
+  const defaultItems: Item[] = [
+    {
+      value: 1,
+      label: 'Item 1'
+    },
+    {
+      value: 2,
+      label: 'Item 2'
+    },
+    {
+      value: 3,
+      label: 'Item 3'
+    }
+  ]
+
+  const items = ref(defaultItems)
 </script>
 
 <template>
@@ -46,7 +68,23 @@
         consequuntur aspernatur doloribus inventore. Totam, dignissimos in.
         Distinctio nemo amet veritatis doloremque sed molestiae.
       </Skeleton>
-      <List :items="['a', 'b', 'c', 'd']" swipe="dismiss" />
+      <List
+        v-model="items"
+        sortable
+        swipe="custom"
+        :swipeOptions="{
+          left: {
+            color: 'red',
+            icon: 'material-symbols:chevron-left',
+            handler: console.log
+          },
+          right: {
+            color: 'green',
+            icon: 'material-symbols:chevron-right',
+            handler: console.log
+          }
+        }"
+      />
     </Layout>
   </Box>
 </template>
