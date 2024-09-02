@@ -18,8 +18,8 @@ export class Colors {
   }
 
   static isLight(color: string): boolean {
-    const [r, g, b] = parseToRgba(color)
-    return r > 180 || r + g + b > 450
+    const [r, g, b] = parseToRgba(color).map((v) => v / 255)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.5
   }
 
   set(colorString: string | String): this {
