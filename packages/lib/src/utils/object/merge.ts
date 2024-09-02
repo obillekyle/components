@@ -20,3 +20,10 @@ export function mergeObject<T extends object, U extends object>(
 
   return output as T & U
 }
+
+export function shallowMerge<T extends object, O>(
+  target: T,
+  source: O
+): T & O {
+  return Object.assign({}, target, source)
+}
