@@ -21,6 +21,7 @@ export * from './Slider'
 export * from './Snackbar'
 export * from './Switch'
 export * from './Text'
+export * from './ThemeProvider'
 export * from './Toast'
 
 export { default as Box } from './Box'

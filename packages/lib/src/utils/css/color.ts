@@ -3,26 +3,30 @@ import type { ColorString } from './type'
 import { toCamelCase } from '../string/cases'
 import { toVar } from './main'
 
-import ColorEngine from '../color-engine'
-
-export const engine = new ColorEngine('#0df')
-const engineShades = engine.getShades()
-const engineColors = engine.getColorVariables()
+import { DefaultThemeObject } from '@/components/ThemeProvider/defaults'
+import type { ThemeObject } from '@/components/ThemeProvider/types'
 
 export const c = getCSSColor
-export function getCSSColor(value: ColorString): string {
+export function getCSSColor(
+  this: ThemeObject | void,
+  value: ColorString,
+  raw = false
+): string {
   value = value.trim()
+  const { $vars, $shades } = (this || DefaultThemeObject).colors
 
   if (value.startsWith('$')) {
     const colorKey = value.slice(1)
     const objectId = toCamelCase(colorKey)
 
-    if (objectId in engineColors) {
-      return toVar(colorKey, engineColors[objectId])
+    if (objectId in $vars) {
+      const value = $vars[objectId]
+      return raw ? value : toVar(colorKey, value)
     }
 
-    if (colorKey in engineShades) {
-      return toVar(colorKey, engineShades[colorKey])
+    if ($shades.has(colorKey)) {
+      const value = $shades.get(colorKey)!
+      return raw ? value : toVar(colorKey, value)
     }
   }
 

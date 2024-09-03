@@ -12,8 +12,8 @@ export function resolver() {
   const defElems = DefaultElementSizes as any
 
   const engine = new ColorEngine('#0af')
+  const shades = engine.getShades('light')
   const colors: Record<string, string> = engine.getColorVariables('light')
-  const shades: Record<string, string> = engine.getShades('light')
 
   function setVariables(content: string): string {
     if (typeof content !== 'string') return content
@@ -42,8 +42,8 @@ export function resolver() {
 
     content = content.replaceAll(VAR_OTHER, (match, key) => {
       const variable = toCamelCase(key)
-      if (variable in shades) {
-        return `var(--${key},${shades[variable]})`
+      if (shades.has(variable)) {
+        return `var(--${key},${shades.get(variable)})`
       }
 
       if (key in colors) {

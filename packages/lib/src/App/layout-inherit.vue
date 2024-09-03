@@ -72,7 +72,7 @@
         v-model="items"
         sortable
         swipe="custom"
-        :swipeOptions="{
+        :swipe-options="{
           left: {
             color: 'red',
             icon: 'material-symbols:chevron-left',
