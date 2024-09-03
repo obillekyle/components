@@ -16,6 +16,8 @@
     overflow: hidden;
     position: relative;
     color: transparent;
+    user-select: none;
+    pointer-events: none;
     border-radius: var(--xs);
     background: var(--surface-container-highest);
 
@@ -40,7 +42,6 @@
     }
 
     > * {
-      pointer-events: none;
       opacity: 0;
     }
   }

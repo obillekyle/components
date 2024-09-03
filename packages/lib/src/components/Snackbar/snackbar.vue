@@ -106,6 +106,8 @@
       * {
         font-size: var(--font-sm);
         color: var(--inverse-primary);
+
+        --ripple-color: var(--surface);
       }
     }
 
