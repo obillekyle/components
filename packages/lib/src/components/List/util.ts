@@ -1,6 +1,7 @@
+import { toProxy } from '@/ref/tools'
 import type { UseList } from './types'
 
-import { inject, shallowRef, type Ref } from 'vue'
+import { inject, shallowRef } from 'vue'
 
 const dummyUseList: UseList = {
   items: { value: [] } as any,
@@ -14,15 +15,7 @@ const dummyUseList: UseList = {
   swipeOptions: {}
 }
 
-type WithProxyRef<T> = T & Ref<T>
-
 export function useList() {
   const items = inject('list-provide', shallowRef<UseList>(dummyUseList))
-
-  return new Proxy(items, {
-    get(target, key, receiver) {
-      if (key === 'value') return target.value
-      return Reflect.get(target.value, key, receiver)
-    }
-  }) as WithProxyRef<UseList>
+  return toProxy(items)
 }

@@ -5,11 +5,11 @@
   import { Colors } from '@/utils/colors/class'
   import { addPX } from '@/utils/css/sizes'
   import { evaluate } from '@/utils/function/evaluate'
+  import { clamp } from '@/utils/number/range'
   import { Icon } from '@iconify/vue'
   import { ref, watch } from 'vue'
   import { useList } from './util'
 
-  import { clamp } from '@/utils/number/range'
   import HybridIcon from '../Misc/hybrid-icon.vue'
 
   interface ListItemProps extends /* @vue-ignore */ BoxProps {
@@ -71,7 +71,7 @@
     root.value.style.top = addPX(props.index * list.size)
   })
 
-  const [swiping, swipeEvent] = useDrag(({ x }, event) => {
+  const [swiping, swipeEvent] = useDrag(({ x, scrolledY }, event) => {
     if (sorting.value || !wrapper.value) return
     if (list.swipe === 'off') return
 
@@ -80,9 +80,10 @@
 
     let offset = x - swipe.value.start
 
-    const registerSwipe = Math.abs(x - swipe.value.start) > 32
+    const registerSwipe = Math.abs(swipe.value.start - x) > 32
 
-    if (!registerSwipe) {
+    if (!registerSwipe || scrolledY) {
+      swipe.value.end = swipe.value.start
       wrapper.value.style.left = '0px'
       return
     }
