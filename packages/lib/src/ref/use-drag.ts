@@ -1,5 +1,8 @@
-import { ref, type Ref } from 'vue'
-import { getClientPos, type Position } from '../utils/dom/events'
+import type { Position } from '@/utils/dom/events'
+import type { Ref } from 'vue'
+
+import { getClientPos } from '@/utils/dom/events'
+import { ref } from 'vue'
 
 type DragEventHandler = (e: TouchEvent | MouseEvent | PointerEvent) => void
 
