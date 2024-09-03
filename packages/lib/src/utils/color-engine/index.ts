@@ -84,21 +84,23 @@ export class ColorEngine {
   }
 
   getShades(theme: 'light' | 'dark' = 'light') {
-    const values: Record<string, string> = {}
+    const values = new Map<string, string>()
     const light = theme === 'light'
     for (const [prefix, colors] of Object.entries(this.colors)) {
       for (const shade of shades) {
         const key = prefix + '-' + shade
         const value = light ? shade : 100 - shade
-        values[key] = colors.shade(value)
+        values.set(key, colors.shade(value))
 
         for (let index = 0; index < 9; index++) {
+          const alpha = (index + 1) * 0.1
           const color = colors.shade(value, (index + 1) * 0.1)
-          values[key + '-' + (index + 1) * 10] = color
+          values.set(key + '-' + alpha, color)
         }
       }
     }
-    return values
+
+    return Object.freeze(values) as ReadonlyMap<string, string>
   }
 
   clear() {
