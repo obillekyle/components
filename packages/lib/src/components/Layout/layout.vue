@@ -2,12 +2,12 @@
   import '@/assets/layout.scss'
 
   import type { BoxProps } from '../Box/util'
-  import type { ThemeProps } from './util'
+  import type { ThemeProps } from '../ThemeProvider/types'
 
   import { provide, ref } from 'vue'
 
+  import ThemeProvider from '../ThemeProvider/theme-provider.vue'
   import ScrollContainer from './scroll-container.vue'
-  import ThemeProvider from './theme-provider.vue'
 
   defineProps<ThemeProps & /** @vue-ignore */ BoxProps>()
   defineOptions({ name: 'MdLayout' })

@@ -2,24 +2,48 @@
   import Box from '@/components/Box/box.vue'
   import Button from '@/components/Button/button.vue'
   import Layout from '@/components/Layout/layout.vue'
+  import List from '@/components/List/list.vue'
   import LinearProgressSvg from '@/components/Progress/linear-progress-svg.vue'
   import Skeleton from '@/components/Skeleton/skeleton.vue'
   import Slider from '@/components/Slider/slider.vue'
   import Switch from '@/components/Switch/switch.vue'
   import Text from '@/components/Text/text.vue'
-  import { customRef } from '@/utils/ref/custom-ref'
-  import { useFocusLock } from '@/utils/ref/use-focus-lock'
-  import { useLocalStorage } from '@/utils/ref/use-local-storage'
+
+  import { customRef } from '@/ref/custom-ref'
+  import { useFocusLock } from '@/ref/use-focus-lock'
+  import { useLocalStorage } from '@/ref/use-local-storage'
   import { ref } from 'vue'
 
   const isDark = ref(true)
   const [root, setRoot] = customRef<HTMLElement>()
   const progress = useLocalStorage('progress', 80)
   const focusLock = useFocusLock(root)
+
+  type Item = {
+    value: number
+    label: string
+  }
+
+  const defaultItems: Item[] = [
+    {
+      value: 1,
+      label: 'Item 1'
+    },
+    {
+      value: 2,
+      label: 'Item 2'
+    },
+    {
+      value: 3,
+      label: 'Item 3'
+    }
+  ]
+
+  const items = ref(defaultItems)
 </script>
 
 <template>
-  <Box class="layout-wrapper" width="100%" :height="500" :ref="setRoot">
+  <Box class="layout-wrapper" width="100%" :height="600" :ref="setRoot">
     <Layout inherit :options="{ colors: { primary: 'orange' } }">
       <Button
         left-icon="material-symbols:lock-outline"
@@ -44,6 +68,23 @@
         consequuntur aspernatur doloribus inventore. Totam, dignissimos in.
         Distinctio nemo amet veritatis doloremque sed molestiae.
       </Skeleton>
+      <List
+        v-model="items"
+        sortable
+        swipe="custom"
+        :swipe-options="{
+          left: {
+            color: 'red',
+            icon: 'material-symbols:chevron-left',
+            handler: console.log
+          },
+          right: {
+            color: 'green',
+            icon: 'material-symbols:chevron-right',
+            handler: console.log
+          }
+        }"
+      />
     </Layout>
   </Box>
 </template>

@@ -1,5 +1,5 @@
 import { ref, type Ref } from 'vue'
-import { evaluate } from '../function/evaluate'
+import { evaluate } from '../utils/function/evaluate'
 import type { RefGetter, StateFn } from './types'
 
 export function customRef<T>(): [

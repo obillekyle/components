@@ -19,8 +19,9 @@
 
   const circle = computed(() => {
     const { value, diameter, stroke } = props
+    const hasSpace = value > 6 && value < 85
 
-    const space = stroke * 3
+    const space = hasSpace ? stroke * 3 : 0
     const infinite = !Number.isFinite(value)
     const radius = (diameter - stroke) / 2
 

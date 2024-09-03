@@ -18,7 +18,6 @@ import fs from 'node:fs'
 import path from 'node:path'
 import Logger from '../logger'
 import { getSizeTotal } from './build'
-import { Compressor } from './compress'
 
 let packSize = 0,
   saveSize = 0,
@@ -86,7 +85,6 @@ export function attachStyles({
 }: ASOptions = {}): Plugin {
   let config: ResolvedConfig
   const name: string = 'attach-styles'
-  const compressor = new Compressor()
 
   return {
     name,
@@ -102,13 +100,13 @@ export function attachStyles({
 
       if (isCSS(id)) {
         if (isCSS(entry)) {
-          const cssString = compressor.compress(await formatCss(code))
+          const cssString = await formatCss(code)
           css[entry] = (css[entry] || '') + cssString
           return
         }
 
         if (entry.endsWith('.vue')) {
-          const cssString = compressor.compress(await formatCss(code))
+          const cssString = await formatCss(code)
           const indexMap = importedMap[entry]
           css[entry] = (css[entry] || '') + cssString
 
@@ -190,7 +188,7 @@ export function attachStyles({
     },
 
     async writeBundle() {
-      const script = getHelperFileContent(prefix, compressor.getMap())
+      const script = getHelperFileContent(prefix)
       const parentDir = path.join(process.cwd(), config.build.outDir)
       const minified = await transform(script, { loader: 'js' })
 

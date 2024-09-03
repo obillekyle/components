@@ -1,31 +1,62 @@
 <script setup lang="ts">
-  import type { ListProps } from './types'
+  import type { ListEmits, ListItemType, ListProps, UseList } from './types'
 
   import { addPX } from '@/utils/css/sizes'
-  import { provide } from 'vue'
+  import { computed, provide, ref } from 'vue'
 
   import ListItem from './list-item.vue'
 
-  const properties = withDefaults(defineProps<ListProps>(), {
+  const props = withDefaults(defineProps<ListProps>(), {
+    size: 56,
     swipe: 'off',
-    listComp: 'div',
-    items: () => []
+    swipeDistance: 200,
+    listComp: 'div'
   })
 
-  provide('items', properties.items)
-  provide('parentProps', properties)
+  const listItems = computed(() =>
+    props.items?.map((item) => {
+      if (typeof item === 'object') return item
+      return { value: item, label: item }
+    })
+  )
+
+  const root = ref<HTMLElement>()
+  const model = defineModel<ListItemType[]>({
+    default: []
+  })
+
+  const emit = defineEmits<ListEmits>()
+
+  const items = computed({
+    get: () => listItems.value ?? model.value,
+    set: (value) => (model.value = value)
+  })
+
+  const listProvide = computed<UseList>(() => ({
+    items: items,
+    root: root.value,
+    swipe: props.swipe,
+    sortable: props.sortable,
+    swipeOptions: props.swipeOptions ?? {},
+    swipeDistance: props.swipeDistance,
+    component: props.listComp,
+    size: props.size,
+    emit
+  }))
+
+  provide('list-provide', listProvide)
 
   defineOptions({ name: 'MdList' })
-  const height = addPX((properties.items.length + 1) * 60)
+  const height = addPX((items.value.length + 1) * props.size)
 </script>
 
 <template>
-  <div class="md-list" :style="{ height }">
+  <div class="md-list" :style="{ height }" ref="root">
     <ListItem
       v-for="(item, index) in items"
-      :key="item.id"
+      :key="item.value"
       :index="index"
-      :props="item.props"
+      v-bind="item"
     />
   </div>
 </template>
@@ -34,32 +65,33 @@
   .md-list {
     position: relative;
     display: block;
+    contain: layout;
     width: 100%;
-    overflow: hidden;
 
     &-item {
       width: 100%;
       display: flex;
       position: absolute;
-      transition: top 0.1s;
       user-select: none;
-      height: 56px;
-
-      &.dragged {
-        z-index: 10;
-        transition: none;
-        box-shadow: var(--shadow-3);
-      }
+      transition: top 0.2s;
     }
 
-    &-content {
+    &-item-wrapper {
       position: absolute;
       width: 100%;
       display: flex;
       height: inherit;
-      background: var(--surface-container-low);
-      transition: left 0.1s;
+      background: var(--surface);
+      align-items: center;
+      left: 0;
       z-index: 2;
+      transition:
+        left 0.2s,
+        background-color 0.1s;
+
+      &:hover {
+        background: var(--surface-container-low);
+      }
 
       .draggable {
         position: absolute;
@@ -76,6 +108,25 @@
       }
     }
 
+    &-item.sorting {
+      transition: none;
+      z-index: 10;
+    }
+
+    &-item.swiping &-item-wrapper {
+      transition: none;
+      background: var(--surface-container);
+    }
+
+    &-item.sorting &-item-wrapper {
+      box-shadow: var(--shadow-3);
+      background: var(--surface-container);
+    }
+
+    &-item-content {
+      padding-left: var(--md);
+    }
+
     &-swipe-indicator {
       position: absolute;
       z-index: 1;
@@ -83,22 +134,25 @@
 
       .left,
       .right {
+        inset: 0;
         display: grid;
         height: inherit;
-        inset: 0;
+        max-width: 100%;
+        transition: width 2s;
         position: absolute;
         align-items: center;
         padding: var(--md);
       }
 
-      .left {
-        grid-area: left;
-      }
-
       .right {
         justify-content: end;
-        grid-area: right;
+        margin-left: auto;
       }
+    }
+
+    &-item.swiping .left,
+    &-item.swiping .right {
+      transition: none;
     }
   }
 </style>

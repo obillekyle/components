@@ -29,6 +29,8 @@
     "./*": "./dist/components/*/index.js",
     "./*.vue": "./dist/components/*.vue.js",
     "./*.js": "./dist/components/*.js",
+    "./ref": "./dist/ref/index.js",
+    "./ref/*": "./dist/ref/*.js",
     "./utils": "./dist/utils/index.js",
     "./utils/*": "./dist/utils/*/index.js",
     "./utils/*.js": "./dist/utils/*.js"

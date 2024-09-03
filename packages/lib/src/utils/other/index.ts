@@ -1,1 +1,2 @@
-export * from './get-dominant-color'
+export * from './fast-avg-color'
+export * from './image-palette'

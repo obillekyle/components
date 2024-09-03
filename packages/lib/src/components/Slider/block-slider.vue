@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import type { Component } from 'vue'
 
+  import { useDrag } from '@/ref/use-drag'
+  import { useRect } from '@/ref/use-rect'
   import { clamp, mapNumberToRange } from '@/utils/number/range'
-  import { useDrag } from '@/utils/ref/use-drag'
-  import { useRect } from '@/utils/ref/use-rect'
   import { computed, ref } from 'vue'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
@@ -59,10 +59,10 @@
     const maxOffset = props.max - props.min
 
     const cursorPos = clamp(pos - height, 0, width)
-    const pad = (cursorPos / width) * height
+    const boxWidth = width - height
 
-    const offset = clamp(cursorPos + pad, 0, width)
-    const value = (offset / width) * maxOffset
+    const offset = clamp(cursorPos, 0, width)
+    const value = (offset / boxWidth) * maxOffset
 
     sliderVal.value = Math.round(value / step.value) * step.value
   })
@@ -114,7 +114,7 @@
 
 <style lang="scss">
   .md-block-slider {
-    --height: var(--component-xxl);
+    --height: var(--component-xl);
 
     user-select: none;
     position: relative;
@@ -125,8 +125,9 @@
     grid-template-columns: var(--height) 1fr;
     min-height: var(--height);
     background: var(--secondary-container);
-    border-radius: calc(var(--height) / 2.25);
-    font-size: var(--font-lg);
+    border-radius: 999px;
+    font-size: var(--font-md);
+    font-weight: 500;
 
     &-icon {
       width: var(--height);

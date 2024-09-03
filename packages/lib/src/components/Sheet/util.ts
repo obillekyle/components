@@ -1,4 +1,3 @@
-import type { UtilityFunction } from '@/utils/component-manager'
 import type { Component } from 'vue'
 
 export interface SheetProps {
@@ -10,14 +9,4 @@ export interface SheetProps {
   resizable?: boolean
   focusLock?: boolean
   size?: number
-}
-
-const defaultUtility: UtilityFunction<SheetProps> = {
-  id: Number.NaN,
-  close: () => {},
-  modify: () => {}
-}
-
-export const SHEET = {
-  DEFAULT_UTILITY: defaultUtility
 }

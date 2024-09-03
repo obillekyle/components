@@ -4,7 +4,7 @@
   import { useSheet } from '@/components/Sheet/sheet-manager'
   import { useSnackbar } from '@/components/Snackbar/snackbar-manager'
   import { useToast } from '@/components/Toast/toast-manager'
-  import { useLocalStorage } from '@/utils/ref/use-local-storage'
+  import { useLocalStorage } from '@/ref/use-local-storage'
 
   import Box from '@/components/Box/box.vue'
   import Button from '@/components/Button/button.vue'

@@ -98,6 +98,7 @@
         &.selected {
           background: var(--inverse-surface);
           color: var(--inverse-on-surface);
+          box-shadow: none;
         }
       }
 

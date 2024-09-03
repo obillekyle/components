@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 
 import { ref } from 'vue'
-import { evaluate } from '../function/evaluate'
+import { evaluate } from '../utils/function/evaluate'
 
 type ToggleValues = boolean | (1 | 0) | ('on' | 'off')
 type ToggleFn<T extends ToggleValues> = {

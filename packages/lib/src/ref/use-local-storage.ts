@@ -1,5 +1,5 @@
 import { computed, onMounted, onUnmounted, ref, type Ref } from 'vue'
-import { parser, stringify } from '../object/transform'
+import { parser, stringify } from '../utils/object/transform'
 
 export function useLocalStorage<T>(key: string): Ref<T | undefined>
 export function useLocalStorage<T>(key: string, defaultValue: T): Ref<T>

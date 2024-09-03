@@ -115,10 +115,11 @@ function parseStyleObject(name: string, object: any, resolve = true) {
   const parser = resolve ? cssPropValue : addUnit
 
   for (const key in object) {
-    if (!object[key]) continue
+    const value = object[key]
+    if (value === undefined || value === null) continue
 
     const property = keyPrefix[key] ?? toKebabCase(key)
-    const cssValue = parser(object[key], unitsByProp[key])
+    const cssValue = parser(value, unitsByProp[key])
 
     declarations += `${property.replace('$', '--')}: ${cssValue}; `
   }
@@ -152,25 +153,27 @@ function getStyles(style: any): Record<string, any> {
   })
 }
 
-// prettier-ignore
 export const createStyle: CreateStyle = (styles: any, options) => {
-    const prefix = options?.prefix ?? 'md-css-'
-    const resolve = options?.resolveVars
-    const object = ref(getStyles(styles()))
-    
-    const name = computed(() => {
-      const string = JSON.stringify(object.value)
-      return string === '{}' ?  "" :  prefix + hashStr(string, 6)
-    })
+  const prefix = options?.prefix ?? 'md-css-'
+  const resolve = options?.resolveVars
+  const object = ref(getStyles(styles()))
 
-    watch(name, (newName, oldName) => {
-      mount(newName, object.value, resolve)
-      dismount(oldName)
-    })
-    
-    watch(styles, (value) => {object.value = getStyles(value)}, {deep: true})
-    onBeforeMount(() => mount(name.value, object.value, resolve))
-    onUnmounted(() => setTimeout(() => dismount(name.value), 5000))
+  const name = computed(() => {
+    const string = JSON.stringify(object.value)
+    return string === '{}' ? '' : prefix + hashStr(string, 6)
+  })
 
-    return name
-  }
+  watch(name, (newName, oldName) => {
+    mount(newName, object.value, resolve)
+    dismount(oldName)
+  })
+
+  watch(styles, (value) => (object.value = getStyles(value)), {
+    deep: true
+  })
+
+  onBeforeMount(() => mount(name.value, object.value, resolve))
+  onUnmounted(() => setTimeout(() => dismount(name.value), 5000))
+
+  return name
+}

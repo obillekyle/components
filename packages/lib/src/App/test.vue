@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import '@/assets/tooltip.scss'
-  import { customRef } from '@/utils/ref/custom-ref'
-  import { useRect } from '@/utils/ref/use-rect'
+  import { customRef } from '@/ref/custom-ref'
+  import { useRect } from '@/ref/use-rect'
   import { onMounted, onUnmounted } from 'vue'
 
   let floater: HTMLElement | undefined

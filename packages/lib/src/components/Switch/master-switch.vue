@@ -24,7 +24,9 @@
     defaultChecked: undefined
   })
 
-  const model = defineModel<boolean>()
+  const model = defineModel<boolean>({
+    default: undefined
+  })
   const inputValue = computed({
     get: () => props.value ?? model.value ?? props.defaultChecked ?? false,
     set: (value) => {

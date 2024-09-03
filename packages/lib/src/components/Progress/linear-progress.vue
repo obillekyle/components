@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import type { SizesString } from '@/utils/css/type'
 
+  import { customRef } from '@/ref/custom-ref'
+  import { useRect } from '@/ref/use-rect'
   import { addUnit, getCSSValue } from '@/utils/css/sizes'
   import { clamp } from '@/utils/number/range'
-  import { customRef } from '@/utils/ref/custom-ref'
-  import { useRect } from '@/utils/ref/use-rect'
   import { computed } from 'vue'
 
   import ViewObserver from '../Misc/view-observer.vue'
@@ -17,14 +17,14 @@
   const [root, setRef] = customRef<HTMLElement>()
   const rect = useRect(root)
 
-  const properties = withDefaults(defineProps<LinearProgressProps>(), {
+  const props = withDefaults(defineProps<LinearProgressProps>(), {
     value: Infinity,
     size: 4
   })
 
   const width = computed(() => rect.value?.width || 0)
   const speed = computed(() => clamp(width.value / 300, 2.5, 6))
-  const noSpace = computed(() => properties.value <= 0)
+  const noSpace = computed(() => props.value <= 0)
 
   defineOptions({ name: 'MdLinearProgress' })
 </script>
@@ -248,6 +248,7 @@
         position: absolute;
         content: '';
         height: inherit;
+        border-radius: inherit;
         background: var(--primary);
       }
 

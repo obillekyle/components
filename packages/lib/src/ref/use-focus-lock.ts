@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { $, getParent } from '../dom/selector'
+import { $, getParent } from '../utils/dom/selector'
 
 const focusableSelector =
   'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
@@ -34,24 +34,53 @@ export function useFocusLock(
 ) {
   const dummy = focusDummy()
   const enabled = ref(state)
+  let ignore = false
+
+  function onClick(event: MouseEvent) {
+    if (!enabled.value) return
+
+    const root = elem.value
+    const target = event.target as HTMLElement
+
+    if (root) {
+      ignore = root.contains(target)
+      ignore || focusFirstFocusable(root)
+    }
+  }
 
   function onBlur(event: FocusEvent) {
     if (!enabled.value) return
-    if (getParent(event.relatedTarget, '[focus-lock]')) return
+
+    const root = event.currentTarget as HTMLElement
+    const target = event.relatedTarget as HTMLElement
+
+    if (ignore) {
+      ignore = false
+      return
+    }
+
+    if (root.contains(target)) return
+    if (getParent(target, '[focus-lock]')) return
 
     event.preventDefault()
-    focusFirstFocusable(event.currentTarget)
+    focusFirstFocusable(root)
   }
 
   function mountEvent(element: HTMLElement) {
     element.setAttribute('focus-lock', '')
-    element.addEventListener('focusout', onBlur)
     element.after(dummy)
+
+    document.addEventListener('pointerdown', onClick)
+    document.addEventListener('focusin', focusOther)
+    element.addEventListener('focusout', onBlur)
+
     focusFirstFocusable(element)
   }
 
   function unmountEvent(element: HTMLElement) {
     element.removeAttribute('focus-lock')
+    document.removeEventListener('pointerdown', onClick)
+    document.removeEventListener('focusin', focusOther)
     element.removeEventListener('focusout', onBlur)
   }
 
@@ -66,15 +95,11 @@ export function useFocusLock(
     newElement && mountEvent(newElement)
   })
 
-  onMounted(() => {
-    elem.value && mountEvent(elem.value)
-    document.addEventListener('focusin', focusOther)
-  })
+  onMounted(() => elem.value && mountEvent(elem.value))
 
   onUnmounted(() => {
     dummy.remove()
     elem.value && unmountEvent(elem.value)
-    document.removeEventListener('focusin', focusOther)
 
     focusLastLockable()
   })

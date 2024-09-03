@@ -60,14 +60,17 @@ export class ComponentManager<T extends object> extends CustomEventHandler<
   }
 
   open(component: T): number
-  open<K extends ComponentID>(key: K, component: T): K
-  open(key: T | ComponentID, component?: T) {
+  open<K extends ComponentID>(key: K, component: T, overwrite?: boolean): K
+  open(key: T | ComponentID, component?: T, overwrite = false) {
     if (typeof key === 'object') {
       component = key
       key = this.nextKey
     }
 
-    if (this.has(key)) return key
+    if (this.has(key)) {
+      overwrite && this.modify(key, component || {})
+      return key
+    }
 
     assert(component, 'Component is not defined')
     const data = mergeObject(this.DEFAULTS, component)
@@ -116,3 +119,5 @@ export class ComponentManager<T extends object> extends CustomEventHandler<
     return Object.fromEntries(this.store.entries())
   }
 }
+
+export default ComponentManager

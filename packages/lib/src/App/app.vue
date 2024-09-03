@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  import { customRef, useLocalStorage } from '@/utils/ref'
-  import { useTooltip } from '@/utils/ref/use-tooltip'
+  import { useLocalStorage } from '@/ref'
   import { ref } from 'vue'
 
   import Headline from '@/components/AppBar/headline.vue'
@@ -30,15 +29,11 @@
   const color = useLocalStorage('theme-color', '#386a1f')
   const isDark = useLocalStorage('dark', true)
   const colorInput = ref<HTMLInputElement>()
-  const [root, setRoot] = customRef<HTMLElement>()
-
-  useTooltip(root, ['title', 'alt', 'class'])
 </script>
 
 <template>
   <Layout
     global-style
-    :ref="setRoot"
     :options="{
       fontFamily: 'Roboto, sans-serif',
       theme: isDark ? 'dark' : 'light',

@@ -2,10 +2,10 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { SnackbarProps } from './util'
 
-  import { ComponentManager } from '@/utils/component-manager'
   import { Icon } from '@iconify/vue'
   import { computed, onMounted, provide, watch } from 'vue'
 
+  import CM from '@/utils/component-manager'
   import Box from '../Box/box.vue'
   import Button from '../Button/button.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
@@ -17,9 +17,7 @@
 
   defineOptions({ name: 'MdSnackbar' })
   const props = defineProps<SnackbarOptions>()
-  const utils = computed(
-    () => props.utils ?? ComponentManager.DEFAULT_UTILITY
-  )
+  const utils = computed(() => props.utils ?? CM.DEFAULT_UTILITY)
 
   let timeout: any
 
@@ -80,8 +78,8 @@
     background: var(--on-surface);
     color: var(--surface);
     min-height: var(--component-md);
-    padding: var(--sm);
-    box-shadow: 0 0 0 1px var(--surface-variant);
+    padding-inline: var(--sm);
+    box-shadow: var(--shadow-1);
     display: flex;
     align-items: center;
 
@@ -108,6 +106,8 @@
       * {
         font-size: var(--font-sm);
         color: var(--inverse-primary);
+
+        --ripple-color: var(--surface);
       }
     }
 
@@ -133,6 +133,7 @@
 
     &.extended {
       display: grid;
+      padding: var(--sm);
       grid-template:
         'content icon' auto
         'actions actions' auto / 1fr auto;

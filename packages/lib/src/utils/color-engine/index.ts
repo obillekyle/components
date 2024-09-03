@@ -24,39 +24,39 @@ export class ColorEngine {
     return {
       primary: getColor(0, 40, 80),
       secondary: getColor(1, 40, 80),
-      tertiary: getColor(3, 40, 80),
+      tertiary: getColor(2, 40, 80),
       error: getColor(3, 40, 80),
 
       onPrimary: getColor(0, 100, 20),
       onSecondary: getColor(1, 100, 20),
-      onTertiary: getColor(3, 100, 20),
+      onTertiary: getColor(2, 100, 20),
       onError: getColor(3, 100, 20),
 
       primaryContainer: getColor(0, 90, 30),
       secondaryContainer: getColor(1, 90, 30),
-      tertiaryContainer: getColor(3, 90, 30),
+      tertiaryContainer: getColor(2, 90, 30),
       errorContainer: getColor(3, 90, 30),
 
       onPrimaryContainer: getColor(0, 30, 90),
       onSecondaryContainer: getColor(1, 30, 90),
-      onTertiaryContainer: getColor(3, 30, 90),
+      onTertiaryContainer: getColor(2, 30, 90),
       onErrorContainer: getColor(3, 30, 90),
 
       primaryFixed: getColor(0, 95),
       secondaryFixed: getColor(1, 95),
-      tertiaryFixed: getColor(3, 95),
+      tertiaryFixed: getColor(2, 95),
 
       primaryFixedDim: dim(getColor(0, 95), 0.1),
       secondaryFixedDim: dim(getColor(1, 95), 0.1),
-      tertiaryFixedDim: dim(getColor(3, 95), 0.1),
+      tertiaryFixedDim: dim(getColor(2, 95), 0.1),
 
       onPrimaryFixed: getColor(0, 15),
       onSecondaryFixed: getColor(1, 15),
-      onTertiaryFixed: getColor(3, 15),
+      onTertiaryFixed: getColor(2, 15),
 
       onPrimaryFixedVariant: getColor(0, 30),
       onSecondaryFixedVariant: getColor(1, 30),
-      onTertiaryFixedVariant: getColor(3, 30),
+      onTertiaryFixedVariant: getColor(2, 30),
 
       surface: getColor(4, 98, 6),
       surfaceDim: getColor(4, 94, 6),
@@ -84,21 +84,23 @@ export class ColorEngine {
   }
 
   getShades(theme: 'light' | 'dark' = 'light') {
-    const values: Record<string, string> = {}
+    const values = new Map<string, string>()
     const light = theme === 'light'
     for (const [prefix, colors] of Object.entries(this.colors)) {
       for (const shade of shades) {
         const key = prefix + '-' + shade
         const value = light ? shade : 100 - shade
-        values[key] = colors.shade(value)
+        values.set(key, colors.shade(value))
 
         for (let index = 0; index < 9; index++) {
+          const alpha = (index + 1) * 0.1
           const color = colors.shade(value, (index + 1) * 0.1)
-          values[key + '-' + (index + 1) * 10] = color
+          values.set(key + '-' + alpha, color)
         }
       }
     }
-    return values
+
+    return Object.freeze(values) as ReadonlyMap<string, string>
   }
 
   clear() {

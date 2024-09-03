@@ -43,7 +43,7 @@
     ref="element"
     @keypress="keyClick"
     class="md-navbar-item special"
-    @click="active = value ?? index"
+    @pointerup="active = value ?? index"
     :class="{ active: (value ?? index) == active }"
   >
     <HybridIcon class="md-navbar-item-icon" :icon="icon" />

@@ -1,216 +1,199 @@
 <script setup lang="ts">
-  import type { ListProps as ListProperties } from './types'
+  import type { BoxProps } from '../Box/util'
 
+  import { useDrag } from '@/ref/use-drag'
+  import { Colors } from '@/utils/colors/class'
   import { addPX } from '@/utils/css/sizes'
-  import { getClientPos } from '@/utils/dom/events'
   import { evaluate } from '@/utils/function/evaluate'
+  import { clamp } from '@/utils/number/range'
   import { Icon } from '@iconify/vue'
-  import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
+  import { ref, watch } from 'vue'
+  import { useList } from './util'
+
   import HybridIcon from '../Misc/hybrid-icon.vue'
 
-  const props = defineProps<{
+  interface ListItemProps extends /* @vue-ignore */ BoxProps {
     index: number
-    props: any
-  }>()
-
-  const parentProps = inject<ListProperties>('parentProps')!
-  const swipeEvent = ref<MouseEvent | TouchEvent>()
-  const arrangeEvent = ref<MouseEvent | TouchEvent>()
-  const content = ref<HTMLElement>()
-  const wrapper = ref<HTMLElement>()
-
-  const value = ref(0)
-  const lastTop = ref(0)
-
-  function swipeDown(e: MouseEvent | TouchEvent) {
-    const target = e.target as HTMLElement
-    if (!content.value) return
-    if (target.matches('.draggable')) return
-    if (parentProps.swipe === 'off') return
-    content.value.style.transition = 'none'
-    swipeEvent.value = e
+    value: number | string
+    label: number | string
   }
 
-  function swipeMove(e: MouseEvent | TouchEvent) {
-    const oldEvent: MouseEvent | TouchEvent | undefined = swipeEvent.value
-    if (!oldEvent) return
+  const props = defineProps<ListItemProps>()
+  const swipe = ref({
+    start: 0,
+    end: 0
+  })
 
-    const element = content.value!
-    let offset = 0
+  const list = useList()
 
-    const clientX = getClientPos(e).x
-    const oldX = getClientPos(oldEvent).x
+  const wrapper = ref<HTMLElement>()
+  const root = ref<HTMLElement>()
 
-    offset = clientX - oldX
+  const sort = ref({
+    top: 0,
+    start: 0,
+    end: 0
+  })
 
-    const registerSwipe = Math.abs(offset) > 32
+  const [sorting, sortEvent] = useDrag(({ y }) => {
+    if (!root.value) return
 
-    if (registerSwipe) {
-      e.preventDefault()
+    sort.value.start ||= y
+    sort.value.top ||= props.index * list.size || 0.1
+
+    const length = list.items.value.length
+    const top = sort.value.top - (sort.value.start - y)
+    const newIndex = clamp(Math.round(top / list.size), 0, length - 1)
+
+    root.value.style.top = addPX(top)
+
+    if (props.index !== newIndex) {
+      const element = list.items.value[props.index]
+      const newArray = [...list.items.value]
+
+      newArray.splice(props.index, 1)
+      newArray.splice(newIndex, 0, element)
+
+      list.items.value = newArray
+
+      list.emit('reorder', {
+        from: props.index,
+        to: newIndex,
+        item: element,
+        value: newArray
+      })
+    }
+  })
+
+  watch(sorting, (sorting) => {
+    if (sorting || !root.value) return
+    sort.value = { top: 0, start: 0, end: 0 }
+    root.value.style.top = addPX(props.index * list.size)
+  })
+
+  const [swiping, swipeEvent] = useDrag(({ x, scrolledY }, event) => {
+    if (sorting.value || !wrapper.value) return
+    if (list.swipe === 'off') return
+
+    swipe.value.start ||= x
+    swipe.value.end = x
+
+    let offset = x - swipe.value.start
+
+    const registerSwipe = Math.abs(swipe.value.start - x) > 32
+
+    if (!registerSwipe || scrolledY) {
+      swipe.value.end = swipe.value.start
+      wrapper.value.style.left = '0px'
+      return
     }
 
+    event.preventDefault()
+
     offset =
-      offset > 0 &&
-      parentProps.swipe === 'custom' &&
-      !parentProps.swipeOptions?.left
+      offset > 0 && list.swipe === 'custom' && !list.swipeOptions.left
         ? offset * 0.1
         : offset
 
     offset =
-      offset < 0 &&
-      parentProps.swipe === 'custom' &&
-      !parentProps.swipeOptions?.right
+      offset < 0 && list.swipe === 'custom' && !list.swipeOptions.right
         ? offset * 0.1
         : offset
 
-    document.body.style.cursor = 'grabbing'
-    element.style.left = addPX(registerSwipe ? offset : 0)
-    value.value = offset
+    wrapper.value.style.left = addPX(offset)
+  }, false)
+
+  function swipeHandler(e: any) {
+    if (list.swipe === 'off') return
+    swipeEvent(e)
   }
 
-  function dismiss() {
-    const element = content.value!
-    element.style.removeProperty('transition')
-    element.style.left = value.value > 0 ? '100%' : '-100%'
+  watch(swiping, (swiping) => {
+    if (swiping || !wrapper.value) return
+    const value = swipe.value.end - swipe.value.start
+    swipe.value = { start: 0, end: 0 }
 
-    setTimeout(() => {
-      evaluate(parentProps.onDismiss, props.index)
-    }, 200)
-  }
-
-  function swipeUp(e: MouseEvent | TouchEvent) {
-    if (!swipeEvent.value) return
-    e.preventDefault()
-
-    swipeEvent.value = undefined
-    document.body.style.removeProperty('cursor')
-    const distance = parentProps.swipeDistance ?? 200
-    const swipeOptions = parentProps.swipeOptions
-    const element = content.value!
-
-    if (Math.abs(value.value) >= distance) {
-      switch (parentProps.swipe) {
+    if (value > list.swipeDistance || value < -list.swipeDistance) {
+      switch (list.swipe) {
         case 'dismiss': {
-          dismiss()
+          dismiss(value)
           return
         }
         case 'custom': {
-          value.value > 0
-            ? evaluate(swipeOptions?.left?.handler, props.index)
-            : evaluate(swipeOptions?.right?.handler, props.index)
+          value > 0
+            ? evaluate(list.swipeOptions.left?.handler, props.index)
+            : evaluate(list.swipeOptions.right?.handler, props.index)
         }
       }
     }
-    element.style.removeProperty('transition')
-    element.style.left = '0px'
+
+    wrapper.value.style.removeProperty('left')
+  })
+
+  function dismiss(value: number) {
+    const element = wrapper.value!
+    element.style.left = value >= 0 ? '100%' : '-100%'
+
+    element.addEventListener(
+      'transitionend',
+      function () {
+        list.items.value = list.items.value.filter(
+          (_, index) => index !== props.index
+        )
+
+        list.emit('dismiss', {
+          index: props.index,
+          value: list.items.value,
+          item: {
+            value: props.value,
+            label: props.label
+          }
+        })
+
+        setTimeout(() => {
+          this.style.removeProperty('left')
+        }, 300)
+      },
+      { once: true }
+    )
   }
 
-  function dragUp(e: MouseEvent | TouchEvent) {
-    if (!arrangeEvent.value) return
-
-    e.preventDefault()
-    const element = wrapper.value!
-    arrangeEvent.value = undefined
-    element.classList.remove('dragged')
-    element.style.top = addPX(props.index * 60)
-    document.body.style.removeProperty('cursor')
-    lastTop.value = props.index * 56
-  }
-
-  function dragMove(e: MouseEvent | TouchEvent) {
-    const oldEvent: MouseEvent | TouchEvent | undefined = arrangeEvent.value
-    if (!oldEvent) return
-    e.preventDefault()
-
-    const clientY = getClientPos(e).y
-    const oldY = getClientPos(oldEvent).y
-
-    const element = wrapper.value!
-    const offset = clientY - oldY
-
-    const y = lastTop.value + offset + 2
-    const index = Math.floor(y / 56)
-
-    if (index !== props.index) {
-      evaluate(parentProps.onReorder, props.index, index)
+  const isSwipingLeft = ref(false)
+  watch(
+    () => swipe.value.end,
+    (value) => {
+      if (!value) return
+      isSwipingLeft.value = swipe.value.end > swipe.value.start
     }
-
-    document.body.style.cursor = 'grabbing'
-    element.style.top = addPX(y)
-  }
-
-  function dragDown(e: MouseEvent | TouchEvent) {
-    e.preventDefault()
-    if (!wrapper.value) return
-    if (arrangeEvent.value) return
-    if (!parentProps.sortable) return
-    wrapper.value.classList.add('dragged')
-    arrangeEvent.value = e
-  }
-
-  onMounted(() => {
-    document.addEventListener('mousemove', swipeMove)
-    document.addEventListener('mouseup', swipeUp)
-    document.addEventListener('mouseleave', swipeUp)
-
-    document.addEventListener('mousemove', dragMove)
-    document.addEventListener('mouseup', dragUp)
-    document.addEventListener('mouseleave', dragUp)
-
-    document.addEventListener('touchmove', swipeMove)
-    document.addEventListener('touchend', swipeUp)
-
-    document.addEventListener('touchmove', dragMove)
-    document.addEventListener('touchend', dragUp)
-  })
-
-  onBeforeUnmount(() => {
-    document.removeEventListener('mousemove', swipeMove)
-    document.removeEventListener('mouseup', swipeUp)
-    document.removeEventListener('mouseleave', swipeUp)
-
-    document.removeEventListener('mousemove', dragMove)
-    document.removeEventListener('mouseup', dragUp)
-    document.removeEventListener('mouseleave', dragUp)
-
-    document.removeEventListener('touchmove', swipeMove)
-    document.removeEventListener('touchend', swipeUp)
-
-    document.addEventListener('touchmove', dragMove)
-    document.addEventListener('touchend', dragUp)
-    document.body.style.removeProperty('cursor')
-  })
+  )
 </script>
 
 <template>
   <div
-    ref="wrapper"
+    ref="root"
     class="md-list-item"
-    @mousedown="swipeDown"
-    @touchstart="swipeDown"
-    :style="{ top: addPX(index * 60) }"
+    :class="{ sorting, swiping }"
+    @pointerdown="swipeHandler"
+    :style="{ top: addPX(index * list.size), height: addPX(list.size) }"
   >
-    <div class="md-list-content" ref="content" :data-index="props.index">
-      <component :is="parentProps.listComp" v-bind="props.props" />
-      <div
-        class="draggable"
-        @mousedown="dragDown"
-        @touchmove="dragDown"
-        v-if="parentProps.sortable"
-      >
+    <div class="md-list-item-wrapper" ref="wrapper" :data-index="index">
+      <component :value :is="list.component" class="md-list-item-content">
+        {{ label }}
+      </component>
+      <div v-if="list.sortable" class="draggable" @pointerdown="sortEvent">
         <Icon icon="material-symbols:drag-handle" :width="24" />
       </div>
     </div>
-    <div
-      class="md-list-swipe-indicator"
-      v-if="parentProps.swipe === 'custom'"
-    >
-      <template :key="key" v-for="(item, key) in parentProps.swipeOptions">
+    <div class="md-list-swipe-indicator" v-if="list.swipe === 'custom'">
+      <template :key="key" v-for="(item, key) in list.swipeOptions">
         <HybridIcon
+          v-if="item"
+          v-show="(key === 'left') === isSwipingLeft"
           :class="key"
-          v-show="key == 'left' ? value > 0 : value < 0"
-          v-if="typeof item == 'object'"
-          :style="{ background: item.color }"
+          :style="{
+            background: item.color,
+            color: Colors.isLight(item.color) ? '#000' : '#fff'
+          }"
           :icon="item.icon"
         />
       </template>

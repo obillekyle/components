@@ -26,9 +26,9 @@
 
   defineOptions({ name: 'MdFloatingIndicator' })
   withDefaults(defineProps<FloaterProperties>(), {
-    color: '$error-container',
+    color: '$error',
     offset: 0,
-    size: '#font-xxs',
+    size: '#font-xs',
     pos: 'top-right'
   })
 </script>
@@ -36,6 +36,7 @@
 <template>
   <div class="md-floater">
     <Box
+      v-if="text"
       class="md-floater-text"
       :class="pos"
       :styled="{
@@ -57,17 +58,22 @@
     height: max-content;
 
     &-text {
-      display: flex;
+      display: grid;
       position: absolute;
-      align-items: center;
-      justify-content: center;
+      place-items: center;
       pointer-events: none;
-      padding: 1px 3px;
+      min-height: var(--md);
+      min-width: var(--md);
       border-radius: 999px;
+      line-height: 0;
       z-index: 1;
-      box-shadow: 0 0 2px var(--mono-60);
-      font-size: var(--sm);
+      box-shadow: 0 0 2px var(--shadow-1);
       color: var(--surface);
+
+      &:empty {
+        min-height: var(--xxs);
+        min-width: var(--xxs);
+      }
 
       &.top {
         top: var(--offset);

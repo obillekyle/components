@@ -11,9 +11,9 @@ export function parseColors(colors: ColorParam): ColorOptions<Colors> {
 
     return {
       primary: color,
-      secondary: pipe(hsla(h, s * 0.2, 0.2, 1), toHex, Colors.from),
-      tertiary: pipe(color.opposite.toString(), toHex, Colors.from),
+      secondary: pipe(hsla(h, s * 0.4, 0.2, 1), toHex, Colors.from),
       neutral: pipe(hsla(h, s * 0.05, 0.5, 1), toHex, Colors.from),
+      tertiary: color.opposite,
       error: Colors.from('red')
     }
   }
@@ -21,9 +21,13 @@ export function parseColors(colors: ColorParam): ColorOptions<Colors> {
   const primary = Colors.from(colors.primary ?? '#fff')
   const [h, s] = primary['main']
 
-  const newColors = Object.assign({}, colors, { $vars: undefined })
-  newColors.secondary ??= toHex(hsla(h, s * 0.2, 0.2, 1))
-  newColors.tertiary ??= toHex(primary.opposite.toString())
+  const newColors = Object.assign({}, colors, {
+    $vars: undefined,
+    $shades: undefined
+  })
+
+  newColors.secondary ??= toHex(hsla(h, s * 0.4, 0.2, 1))
+  newColors.tertiary ??= primary.opposite.toString()
   newColors.neutral ??= toHex(hsla(h, s * 0.05, 0.5, 1))
   newColors.error ??= 'red'
 

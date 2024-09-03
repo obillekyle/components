@@ -1,4 +1,4 @@
-import type { Component } from 'vue'
+import type { Component, Ref } from 'vue'
 
 export type SwipeOptions = {
   left?: {
@@ -13,18 +13,47 @@ export type SwipeOptions = {
   }
 }
 
-export type ListItemType<T extends Record<string, any> = {}> = {
-  id: number
-  props: T
+export type ListItemType = {
+  value: string | number
+  label: string | number
 }
 
 export type ListProps = {
   sortable?: boolean
-  items?: ListItemType[]
+  size?: number
+  items?: (ListItemType | string | number)[]
   swipe?: 'dismiss' | 'custom' | 'off'
   listComp?: string | Component
   swipeDistance?: number
-  onReorder?: (from: number, to: number) => void
-  onDismiss?: (id: number) => void
   swipeOptions?: SwipeOptions
+}
+
+export type ReorderArgs = {
+  from: number
+  to: number
+  item: ListItemType
+  value: ListItemType[]
+}
+
+export type DismissArgs = {
+  index: number
+  item: ListItemType
+  value: ListItemType[]
+}
+
+export type ListEmits = {
+  (event: 'reorder', emit: ReorderArgs): void
+  (event: 'dismiss', emit: DismissArgs): void
+}
+
+export type UseList = {
+  size: number
+  sortable: boolean
+  component: string | Component
+  swipe: 'dismiss' | 'custom' | 'off'
+  swipeDistance: number
+  swipeOptions: SwipeOptions
+  items: Ref<ListItemType[]>
+  root: HTMLElement | undefined
+  emit: ListEmits
 }
