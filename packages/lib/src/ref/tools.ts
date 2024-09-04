@@ -12,7 +12,7 @@ export const ProxyValue = Symbol('value')
 export type WithProxyRef<T extends Ref> = ShallowReactive<UnwrapRef<T>> & {
   [ProxyValue]: UnwrapRef<T>
 }
-export function toProxy<T extends Ref>(
+export function toProxy<T extends Ref<object>>(
   refValue: T,
   readonly = false
 ): WithProxyRef<T> {
