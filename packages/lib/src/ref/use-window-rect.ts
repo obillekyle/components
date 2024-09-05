@@ -1,4 +1,5 @@
 import { onMounted, onUnmounted, ref } from 'vue'
+import { toProxy } from './tools'
 
 export function useWindowSize() {
   const rect = ref({ width: 0, height: 0 })
@@ -7,7 +8,10 @@ export function useWindowSize() {
     rect.value = { width: window.innerWidth, height: window.innerHeight }
   }
 
-  onMounted(() => addEventListener('resize', handleResize))
+  onMounted(() => {
+    handleResize()
+    addEventListener('resize', handleResize)
+  })
   onUnmounted(() => removeEventListener('resize', handleResize))
-  return rect
+  return toProxy(rect, true)
 }
