@@ -3,20 +3,23 @@ import type { Ref } from 'vue'
 import { ref } from 'vue'
 import { evaluate } from '../utils/function/evaluate'
 
-type ToggleValues = boolean | (1 | 0) | ('on' | 'off')
-type ToggleFn<T extends ToggleValues> = {
+type ToggleFn<I> = {
   (): void
-  (value: T | ((value: T) => T | undefined)): void
+  (value: I | ((value: I) => I | undefined)): void
 }
 
 // prettier-ignore
 type UseToggle = {
   (): [Ref<boolean>, ToggleFn<boolean>]
-  <T extends 1 | 0>(value: T): [Ref<1 | 0>, ToggleFn<1 | 0>]
-  <T extends 'on' | 'off'>(value: T): [Ref<'on' | 'off'>, ToggleFn<'on' | 'off'>]
+  (defaultValue?: boolean): [Ref<boolean>, ToggleFn<boolean>]
+  <O, I>(defaultValue: I | O, off: O, on: I): [Ref<I | O>, ToggleFn<I | O>]
 }
 
-export const useToggle: UseToggle = function (value: any = false): any {
+export const useToggle: UseToggle = function (
+  value = false,
+  off = false,
+  on = true
+): any {
   const state = ref(value)
 
   function toggle(value?: any) {
@@ -24,21 +27,8 @@ export const useToggle: UseToggle = function (value: any = false): any {
       value = undefined
     }
 
-    if (!value) {
-      switch (typeof state.value) {
-        case 'boolean': {
-          state.value = !state.value
-          break
-        }
-        case 'string': {
-          state.value = state.value === 'on' ? 'off' : 'on'
-          break
-        }
-        case 'number': {
-          state.value = state.value ? 0 : 1
-          break
-        }
-      }
+    if (value === undefined) {
+      value = state.value === off ? on : off
       return
     }
 
@@ -47,7 +37,7 @@ export const useToggle: UseToggle = function (value: any = false): any {
       return
     }
 
-    state.value = value
+    state.value = value === off || value === on ? value : off
   }
 
   return [state, toggle]
