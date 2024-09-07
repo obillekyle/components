@@ -77,7 +77,7 @@ export const getCSSValue: ValueGetter = function (
     }
 
     if (sizes.includes(suffix) && prefix in DefaultSizes) {
-      const key = type + '-' + prefix
+      const key = prefix + '-' + suffix
       const def = DefaultSizes[prefix][suffix]
       return toVar(key, addUnit(def, unit))
     }

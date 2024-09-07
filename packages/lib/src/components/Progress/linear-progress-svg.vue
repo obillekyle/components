@@ -23,7 +23,7 @@
   defineOptions({ name: 'MdLinearProgress' })
 
   const noSpace = computed(() => props.value <= 0)
-  const width = computed(() => rect.value?.width || 0)
+  const width = computed(() => (rect.ready ? rect.width : 0))
   const speed = computed(() => clamp(width.value / 300, 2.5, 6))
 
   const length = computed(() => {
@@ -42,7 +42,7 @@
     :ref="setRef"
     apply="animate"
     class="md-progress-2"
-    :class="{ noSpace }"
+    :no-space
     :style="{
       '--width': getCSSValue(width),
       '--height': getCSSValue(size),
@@ -98,13 +98,22 @@
   .md-progress-2 {
     --spacing: var(--xxs);
 
+    width: 100%;
+    line-height: 0;
     position: relative;
     overflow: hidden;
-    line-height: 0;
-    width: 100%;
     height: var(--height);
-    background: transparent;
     border-radius: var(--md);
+
+    &:has(&-bar)::after {
+      height: 100%;
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      aspect-ratio: 1;
+      background: var(--primary);
+      right: 0;
+    }
 
     &-bar {
       width: 100%;
@@ -124,6 +133,14 @@
       &-bg {
         stroke: var(--secondary-container);
       }
+    }
+
+    &[no-space='true'] &-bar-bg {
+      stroke-dashoffset: 0;
+    }
+
+    &[no-space='true'] &-bar-draw {
+      stroke-dashoffset: 1;
     }
 
     &-infinite {

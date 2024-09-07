@@ -1,17 +1,20 @@
 import type { Ref } from 'vue'
 
 import { onBeforeMount, onBeforeUnmount, ref, watch } from 'vue'
+import { toProxy } from './tools'
 
-export function useRect(
-  elem: Ref<HTMLElement | undefined>
-): Ref<DOMRect | undefined> {
+type RectType = { ready: false } | ({ ready: true } & DOMRect)
+
+export function useRect(elem: Ref<HTMLElement | undefined>) {
   let observer: ResizeObserver
-  const rect = ref<DOMRect>()
+  const rect = ref<RectType>({ ready: false })
 
   onBeforeMount(() => {
     if (typeof ResizeObserver === 'undefined') return
     observer = new ResizeObserver(([entry]) => {
-      rect.value = entry.target.getBoundingClientRect()
+      rect.value = Object.assign(entry.target.getBoundingClientRect(), {
+        ready: true
+      })
     })
 
     elem.value && observer.observe(elem.value)
@@ -23,5 +26,5 @@ export function useRect(
   })
 
   onBeforeUnmount(() => observer.disconnect())
-  return rect
+  return toProxy(rect, true)
 }

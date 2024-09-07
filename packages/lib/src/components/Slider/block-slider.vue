@@ -51,9 +51,9 @@
 
   const step = computed(() => props.step ?? 1 / 10 ** props.decimal)
   const [dragging, dragEvent] = useDrag((position) => {
-    if (!rect.value) return
+    if (!rect.ready) return
 
-    const { width, height, left } = rect.value
+    const { width, height, left } = rect
 
     const pos = position.x - left
     const maxOffset = props.max - props.min
@@ -68,8 +68,8 @@
   })
 
   const position = computed(() => {
-    if (!rect.value) return 0
-    const newMin = rect.value.height / rect.value.width
+    if (!rect.ready) return 0
+    const newMin = rect.height / rect.width
     const oldMin = (sliderVal.value - props.min) / (props.max - props.min)
     return mapNumberToRange(oldMin * 100, 0, 100, newMin * 100, 100)
   })

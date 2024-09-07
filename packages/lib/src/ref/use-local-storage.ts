@@ -1,4 +1,4 @@
-import { computed, onMounted, onUnmounted, ref, type Ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 import { parser, stringify } from '../utils/object/transform'
 
 export function useLocalStorage<T>(key: string): Ref<T | undefined>
@@ -26,11 +26,11 @@ export function useLocalStorage<T>(key: string, defaultValue?: T) {
     removeEventListener('storage', handleDataChange)
   })
 
-  return computed({
-    get: () => value.value,
-    set: (v) => {
-      localStorage.setItem(key, stringify(v))
-      value.value = v
-    }
+  watch(value, (v) => {
+    v === undefined
+      ? localStorage.removeItem(key)
+      : localStorage.setItem(key, stringify(v))
   })
+
+  return value
 }

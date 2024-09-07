@@ -120,6 +120,7 @@ out
 .nuxt
 .output
 dist
+dist-*
 
 # Gatsby files
 

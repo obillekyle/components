@@ -35,22 +35,28 @@
 
   const wrapper = ref<HTMLElement>()
   const model = defineModel<number>()
-  const wrapperRect = useRect(wrapper)
+  const rect = useRect(wrapper)
 
-  const values = computed(() =>
-    props.values
-      ? props.values
-          .map((v) => (is(v, 'object') ? v.value : v))
-          .sort((a, b) => a - b)
-      : []
-  )
+  const values = computed(() => {
+    if (!props.values) return { raw: [], formatted: [] }
 
-  const limit = computed(() => {
-    const hasValues = values.value.length > 0
+    const formatted = [...props.values].sort().map((v) => {
+      return is(v, 'object') ? v : { label: String(v), value: v }
+    })
 
     return {
-      min: hasValues ? Math.min(...values.value) : props.min,
-      max: hasValues ? Math.max(...values.value) : props.max,
+      formatted,
+      raw: formatted.map((v) => v.value)
+    }
+  })
+
+  const limit = computed(() => {
+    const { raw } = values.value
+    const hasValues = raw.length > 0
+
+    return {
+      min: hasValues ? Math.min(...raw) : props.min,
+      max: hasValues ? Math.max(...raw) : props.max,
       step: props.step ?? 1 / 10 ** props.decimal
     }
   })
@@ -66,30 +72,25 @@
     },
     set: (value) => {
       const { min, max } = limit.value
-      value = clamp(value, min, max)
-      model.value = value
-      emit('change', value)
+      model.value = clamp(value, min, max)
+      emit('change', model.value)
     }
   })
 
   function getLabel(value: number) {
-    if (!props.values) return removeExtraZeros(value.toFixed(props.decimal))
-
-    const vals = props.values
-    const item = vals.find((v) => is(v, 'object') && v.value === value)
-    return is(item, 'number') ? item : item?.label || value
+    return props.values
+      ? values.value.formatted.find((v) => v.value === value)?.label
+      : removeExtraZeros(value.toFixed(props.decimal))
   }
 
-  const [dragging, dragEvent] = useDrag((position) => {
-    const rect = wrapperRect.value!
-
-    if (!rect) return
+  const [dragging, dragEvent] = useDrag(({ x }) => {
+    if (!rect.ready) return
 
     const { min, max, step } = limit.value
 
     const offset = rect.height / 2
     const length = rect.width
-    const clientX = position.x - rect.left
+    const clientX = x - rect.left
     const pos = offsetRange(length, clientX, -offset)
 
     const maxOffset = max - min
@@ -97,7 +98,7 @@
     const value = clamp(percent * maxOffset + min, min, max)
 
     if (props.values) {
-      sliderVal.value = findNearestNumber(value, values.value)
+      sliderVal.value = findNearestNumber(value, values.value.raw)
       return
     }
 
@@ -105,10 +106,10 @@
   })
 
   function getPosition(value: number) {
-    if (!wrapperRect.value) return 0
+    if (!rect.ready) return 0
 
     const { min, max } = limit.value
-    const { width, height } = wrapperRect.value
+    const { width, height } = rect
 
     const maxOffset = max - min
     const percent = (value - min) / maxOffset
@@ -121,7 +122,7 @@
   function handleKeydown(e: KeyboardEvent) {
     const { step } = limit.value
 
-    const vals = values.value
+    const vals = values.value.raw
     const value = sliderVal.value
 
     if (e.key === 'ArrowLeft') {
@@ -132,7 +133,7 @@
         return
       }
 
-      sliderVal.value = value - step
+      sliderVal.value -= step
       return
     }
 
@@ -144,7 +145,7 @@
         return
       }
 
-      sliderVal.value = value + step
+      sliderVal.value += step
     }
   }
 
@@ -179,21 +180,21 @@
       <div class="md-slider-labels" v-if="values">
         <template v-if="showLabel">
           <div
-            :key="value"
+            :key="label"
             class="md-slider-label"
-            v-for="value in values"
+            v-for="{ value, label } in values.formatted"
             :class="{ covered: value === sliderVal }"
             :style="{ '--offset': getPosition(value) }"
           >
-            {{ getLabel(value) }}
+            {{ label }}
           </div>
         </template>
       </div>
       <div class="md-slider-indicators" v-if="values">
         <div
-          class="md-slider-indicator"
           :key="value"
-          v-for="value in values"
+          v-for="value in values.raw"
+          class="md-slider-indicator"
           :class="{ covered: value <= sliderVal }"
           :style="{ '--offset': getPosition(value) }"
         />

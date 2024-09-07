@@ -12,13 +12,24 @@ export const ProxyValue = Symbol('value')
 export type WithProxyRef<T extends Ref> = ShallowReactive<UnwrapRef<T>> & {
   [ProxyValue]: UnwrapRef<T>
 }
-export function toProxy<T extends Ref>(
+export function toProxy<T extends Ref<object>>(
   refValue: T,
   readonly = false
 ): WithProxyRef<T> {
-  const reactiveTarget = shallowReactive(refValue.value)
+  const reactiveTarget = shallowReactive<any>(refValue.value)
+  watch(
+    refValue,
+    (v: any, o: any) => {
+      for (const key in o) {
+        delete reactiveTarget[key]
+      }
 
-  watch(refValue, (v) => Object.assign(reactiveTarget, v))
+      for (const key in v) {
+        reactiveTarget[key] = v[key]
+      }
+    },
+    { immediate: true }
+  )
 
   return new Proxy(reactiveTarget, {
     get: (target, key, receiver) =>

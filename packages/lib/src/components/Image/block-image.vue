@@ -3,18 +3,20 @@
 
   import type { BoxProps } from '@/components/Box/util'
   import type { Component } from 'vue'
+  import type { Status } from './util'
 
-  import { getBoxProps } from '@/components/Box/util'
+  import { customRef } from '@/ref/custom-ref'
+  import { useRect } from '@/ref/use-rect'
   import { clean } from '@/utils/object/data'
-  import { onMounted, onUnmounted, ref, watch } from 'vue'
-  import { resolveImage } from './util'
+  import { assert } from '@/utils/object/is'
+  import { onUnmounted, ref, shallowReactive, watch } from 'vue'
+  import { getData } from './util'
 
-  import Box from '@/components/Box/box.vue'
   import ViewObserver from '../Misc/view-observer.vue'
   import DefaultLoader from './default-loader.vue'
 
-  interface BlockImageProps extends BoxProps {
-    src?: string | Blob
+  interface BlockImageProps extends /* @vue-ignore */ BoxProps {
+    src?: string
     alt?: string
     fit?: 'contain' | 'cover' | 'fill'
     position?: 'left' | 'center' | 'right' | 'top' | 'bottom'
@@ -27,6 +29,9 @@
     loader?: Component
   }
 
+  const [root, setRoot] = customRef<HTMLElement>()
+  const rect = useRect(root)
+
   const props = withDefaults(defineProps<BlockImageProps>(), {
     fit: 'cover',
     position: 'center',
@@ -34,76 +39,68 @@
     loader: DefaultLoader
   })
 
-  const progress = ref(0)
-  const image = ref<string>()
-  const error = ref(false)
-  const visible = ref(false)
-  const boxProps = getBoxProps(props)
-
-  async function resolve() {
-    error.value = false
-    let source = props.src
-
-    if (image.value) {
-      clean(image.value)
-      image.value = undefined
-    }
-
-    if (!source) {
-      error.value = true
-      return
-    }
-
-    source =
-      source instanceof Blob
-        ? URL.createObjectURL(source)
-        : source
-            .replaceAll('[width]', String(props.width))
-            .replaceAll('[height]', String(props.height))
-
-    try {
-      const data = await resolveImage(source, (e) => (progress.value = e))
-      image.value = URL.createObjectURL(data)
-    } catch {
-      error.value = true
-    }
-  }
-
-  watch(visible, (v) => {
-    if (!props.lazy) return
-    if (v && !progress.value && !image.value && !error.value) {
-      resolve()
-    }
+  const image = ref<string>('')
+  const status = shallowReactive<Status>({
+    progress: 0,
+    error: false,
+    visible: false
   })
 
+  function resolve() {
+    assert(rect.ready, 'rect must be ready')
+
+    getData(
+      {
+        src: props.src,
+        width: props.width || rect.width,
+        height: props.height || rect.height
+      },
+      image,
+      status
+    )
+  }
+
+  watch(
+    () => rect.ready && status.visible,
+    (visible) => {
+      if (!visible || !props.lazy) return
+      if (status.progress || status.error || image.value) return
+      resolve()
+    }
+  )
+
   watch(() => props.src, resolve)
-  onMounted(() => !props.lazy && resolve())
   onUnmounted(() => clean(image.value))
+  watch(
+    () => rect.ready,
+    () => !props.lazy && resolve()
+  )
 
   defineOptions({ name: 'MdBlockImage' })
 </script>
 
 <template>
   <ViewObserver
-    :as="Box"
+    :width
+    :height
     :offset="50"
-    v-model="visible"
-    v-bind="boxProps"
+    :ref="setRoot"
     class="md-block-image md-image"
-    :class="{ loaded: image, 'image-error': error, span }"
+    @viewchange="status.visible = $event"
+    :class="{ loaded: image, 'image-error': status.error, span }"
   >
     <div class="md-loader">
       <component
         :is="loader"
-        :error
-        :progress
+        :error="status.error"
+        :progress="status.progress"
         :ready="!!image"
         @retry="resolve"
       />
     </div>
     <img
       class="md-image-element"
-      v-if="!error"
+      v-if="!status.error"
       :src="image"
       :alt
       :width

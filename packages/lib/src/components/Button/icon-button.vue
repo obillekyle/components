@@ -1,17 +1,18 @@
 <script setup lang="ts">
   import type { SizesString } from '@/utils/css/type'
-  import type { ButtonHTMLAttributes } from 'vue'
+  import type { ButtonHTMLAttributes, Component } from 'vue'
 
   import { getCSSValue } from '@/utils/css/sizes'
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
-  import { Icon } from '@iconify/vue'
+
+  import HybridIcon from '../Misc/hybrid-icon.vue'
 
   interface IconButtonProperties
     extends /* @vue-ignore */ ButtonHTMLAttributes {
-    icon: string
     size?: SizesString
     selected?: boolean
+    icon: string | Component
     variant?: 'filled' | 'tonal' | 'outlined' | 'standard'
   }
 
@@ -32,7 +33,7 @@
       class="md-icon-button-wrapper"
       :class="{ selected, [variant ?? 'standard']: true }"
     >
-      <Icon
+      <HybridIcon
         :icon="icon"
         :style="{ fontSize: getCSSValue(size ?? '#md', 'px', 'icon') }"
       />
@@ -48,7 +49,8 @@
     background: none;
     cursor: pointer;
     vertical-align: top;
-    display: inline-block;
+    display: inline-grid;
+    place-items: center;
     width: var(--component-md);
     height: var(--component-md);
     -webkit-tap-highlight-color: #0000;
@@ -59,7 +61,6 @@
       place-content: center;
       position: relative;
       overflow: hidden;
-      margin: var(--xxs);
       border-radius: 999px;
       pointer-events: none;
       width: var(--component-sm);

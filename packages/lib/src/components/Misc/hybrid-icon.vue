@@ -1,10 +1,13 @@
 <script setup lang="ts">
-  import { Icon } from '@iconify/vue'
+  import type { SizesString } from '@/utils/css/type'
   import type { Component } from 'vue'
+
+  import { getCSSValue } from '@/utils/css/sizes'
+  import { Icon } from '@iconify/vue'
 
   defineProps<{
     icon?: string | Component
-    size?: number
+    size?: SizesString
   }>()
 
   defineOptions({
@@ -17,9 +20,8 @@
   <div v-if="icon" v-bind="$attrs" class="md-icon">
     <Icon
       v-if="typeof icon == 'string'"
+      :style="{ fontSize: getCSSValue(size ?? '#md', 'px', 'icon') }"
       :icon="icon"
-      :width="size ?? 24"
-      :inline="false"
     />
     <component v-else :is="icon" />
   </div>
@@ -28,6 +30,6 @@
 
 <style lang="scss">
   .md-icon {
-    line-height: 1;
+    line-height: 0;
   }
 </style>
