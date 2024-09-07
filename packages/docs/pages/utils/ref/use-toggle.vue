@@ -2,8 +2,8 @@
   import { useToggle } from '@vue-material/core'
 
   const [value, toggle] = useToggle()
-  const [onOff, toggleOnOff] = useToggle('on')
-  const [value2, toggle2] = useToggle(0)
+  const [onOff, toggleOnOff] = useToggle('on', 'off', 'on')
+  const [value2, toggle2] = useToggle(0, 0, 1)
 </script>
 
 <template>

@@ -5,7 +5,6 @@
 
 <template>
   <TextInput
-    span
     v-model="text"
     placeholder="Enter some text and reload"
     variant="outlined"

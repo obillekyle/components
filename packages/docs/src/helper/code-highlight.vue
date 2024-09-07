@@ -1,14 +1,14 @@
 <script setup lang="ts">
   import { Icon } from '@iconify/vue'
-  import { keyClick } from '@vue-material/core'
+  import { keyClick, useTheme } from '@vue-material/core'
   import Box from '@vue-material/core/Box'
   import { customRef } from '@vue-material/core/ref'
   import { $ } from '@vue-material/core/utils/dom'
   import { codeToHtml } from 'shiki/bundle/web'
-  import { computed, inject, onMounted, ref, watch } from 'vue'
+  import { computed, onMounted, ref, watch } from 'vue'
 
-  const theme = inject('options', ref({ theme: 'light' }))
-  const isDark = computed(() => theme.value.theme === 'dark')
+  const theme = useTheme()
+  const isDark = computed(() => theme.theme === 'dark')
 
   const props = defineProps<{
     height?: string
@@ -168,6 +168,7 @@
     pre.shiki {
       padding: var(--md);
       font-size: var(--font-sm);
+      background: var(--surface-bright) !important;
       height: 100%;
       overflow: auto;
     }

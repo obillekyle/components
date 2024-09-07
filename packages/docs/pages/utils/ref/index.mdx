@@ -9,7 +9,7 @@ import UseToggle from './use-toggle.vue'
 export const meta = {
   title: 'Ref',
   description: 'Some custom refs',
-  source: 'packages/lib/src/utils/ref.ts',
+  source: 'packages/lib/src/ref',
   inherits: []
 }
 
@@ -17,11 +17,10 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts
-    import { <fn> } from '@vue-material/core'
-    import { <fn> } from '@vue-material/core/utils'
-    import { <fn> } from '@vue-material/core/utils/ref'
-    ```
+```ts
+import { <fn> } from '@vue-material/core'
+import { <fn> } from '@vue-material/core/ref'
+```
   </CodeHighlight>
 </Preview>
 
@@ -31,9 +30,9 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts
-    function fnRef<T extends Ref>(ref: T): RefGetter;
-    ```
+```ts
+function fnRef<T extends Ref>(ref: T): RefGetter;
+```
   </CodeHighlight>
 </Preview>
 
@@ -42,27 +41,26 @@ export const meta = {
     <FnRef />
   </PreviewFrame>
   <CodeHighlight>
-    ```vue
-    Usage example
+```vue
+Usage example
 
-    <script setup lang="ts">
-      import { ref } from 'vue'
-      import { Box, fnRef } from '@vue-material/core'
+<script setup lang="ts">
+  import { ref } from 'vue'
+  import { Box, fnRef } from '@vue-material/core'
 
-      const root = ref<HTMLElement>()
-      const setRef = fnRef(root)
+  const root = ref<HTMLElement>()
+  const setRef = fnRef(root)
 
-      function changeText() {
-        if (!root.value) return
-        root.value.innerHTML = 'Hello World!'
-      }
-    </script>
+  function changeText() {
+    if (!root.value) return
+    root.value.innerHTML = 'Hello World!'
+  }
+</script>
 
-    <template>
-      <Box :ref="setRef" @click="changeText"> Click me </Box>
-    </template>
-    ```
-
+<template>
+  <Box :ref="setRef" @click="changeText"> Click me </Box>
+</template>
+```
   </CodeHighlight>
 </Preview>
 
@@ -79,10 +77,10 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts
-    function customRef<T>(defaultValue: T): [Ref<T>, StateFn<T>];
-    function customRef<T>(): [Ref<T | undefined>, T extends Element ? RefGetter : StateFn<T | undefined>];
-    ```
+```ts
+function customRef<T>(defaultValue: T): [Ref<T>, StateFn<T>];
+function customRef<T>(): [Ref<T | undefined>, T extends Element ? RefGetter : StateFn<T | undefined>];
+```
   </CodeHighlight>
 </Preview>
 
@@ -92,27 +90,27 @@ export const meta = {
   </PreviewFrame>
 
   <CodeHighlight>
-    ```vue
-    Usage example
+```vue
+Usage example
 
-    <script setup lang="ts">
-      import { Box, customRef } from '@vue-material/core'
+<script setup lang="ts">
+  import { Box, customRef } from '@vue-material/core'
 
-      const [root, setRef] = customRef<HTMLElement>()
-      const [text, setText] = customRef('Click me!')
+  const [root, setRef] = customRef<HTMLElement>()
+  const [text, setText] = customRef('Click me!')
 
-      function changeText() {
-        if (!root.value) return
+  function changeText() {
+    if (!root.value) return
 
-        root.value.style.color = 'green'
-        setText('Hello World!')
-      }
-    </script>
+    root.value.style.color = 'green'
+    setText('Hello World!')
+  }
+</script>
 
-    <template>
-      <Box :ref="setRef" @click="changeText"> {{ text }} </Box>
-    </template>
-    ```
+<template>
+  <Box :ref="setRef" @click="changeText"> {{ text }} </Box>
+</template>
+```
 
   </CodeHighlight>
 </Preview>
@@ -129,9 +127,9 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts
-    function useLocalStorage<T>(key: string, defaultValue: T): Ref<T>;
-    ```
+```ts
+function useLocalStorage<T>(key: string, defaultValue: T): Ref<T>;
+```
   </CodeHighlight>
 </Preview>
 
@@ -141,18 +139,18 @@ export const meta = {
   </PreviewFrame>
 
   <CodeHighlight>
-    ```vue
-    Usage example
+```vue
+Usage example
 
-    <script setup lang="ts">
-      import { TextInput, useLocalStorage } from '@vue-material/core'
-      const text = useLocalStorage('text', 'Hello World!')
-    </script>
+<script setup lang="ts">
+  import { TextInput, useLocalStorage } from '@vue-material/core'
+  const text = useLocalStorage('text', 'Hello World!')
+</script>
 
-    <template>
-      <TextInput span v-model="text" placeholder="Enter some text and reload" />
-    </template>
-    ```
+<template>
+  <TextInput v-model="text" placeholder="Enter some text and reload" />
+</template>
+```
 
   </CodeHighlight>
 </Preview>
@@ -170,40 +168,41 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts
-    type ToggleValues = boolean | ('on' | 'off') | (1 | 0);
-    function useToggle<T extends ToggleValues>(defaultValue: T): [Ref<T>, ToggleFn<T>];
-    ```
+```ts
+function useToggle(defaultValue?: boolean): [Ref<boolean>, ToggleFn<boolean>];
+function useToggle<O, I>(defaultValue: O | I, off: O, on: I): [Ref<I | O>, ToggleFn<I | O>];
+```
   </CodeHighlight>
   <PreviewFrame>
     <UseToggle />
   </PreviewFrame>
 
   <CodeHighlight>
-    ```vue
-    <script setup lang="ts">
-      import { useToggle } from '@vue-material/core'
+```vue
+<script setup lang="ts">
+  import { useToggle } from '@vue-material/core'
 
-      const [value, toggle] = useToggle()
-      const [onOff, toggleOnOff] = useToggle('on')
-      const [value2, toggle2] = useToggle(0)
-    </script>
+  const [value, toggle] = useToggle()
+  const [onOff, toggleOnOff] = useToggle('on', 'off', 'on')
+  const [value2, toggle2] = useToggle(0, 0, 1)
+</script>
 
-    <template>
-      <div class="use-toggle">
-        <div @click="toggle">Boolean: {{ value }}</div>
-        <div @click="toggleOnOff">String: {{ onOff }}</div>
-        <div @click="toggle2">Number: {{ value2 }}</div>
-      </div>
-    </template>
+<template>
+  <div class="use-toggle">
+    <div @click="toggle">Boolean: {{ value }}</div>
+    <div @click="toggleOnOff">String: {{ onOff }}</div>
+    <div @click="toggle2">Number: {{ value2 }}</div>
+  </div>
+</template>
 
-    <style scoped>
-      .use-toggle {
-        cursor: pointer;
-        user-select: none;
-      }
-    </style>
-    ```
+<style scoped>
+  .use-toggle {
+    cursor: pointer;
+    user-select: none;
+  }
+</style>
+```
+    
   </CodeHighlight>
 </Preview>
 
@@ -214,12 +213,12 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts
-    type RefGetter = (
-      ref: Element | Component | null, 
-      refs: Record<string, any>
-    ) => void;
-    ```
+```ts
+type RefGetter = (
+  ref: Element | Component | null, 
+  refs: Record<string, any>
+) => void;
+```
   </CodeHighlight>
 </Preview>
 
@@ -227,11 +226,11 @@ export const meta = {
 
 <Preview>
   <CodeHighlight>
-    ```ts
-    type ToggleFn<T extends ToggleValues> = {
-      (): void
-      (value: T | ((value: T) => T)): void
-    };
-    ```
+```ts
+type ToggleFn<T extends ToggleValues> = {
+  (): void
+  (value: T | ((value: T) => T)): void
+};
+```
   </CodeHighlight>
 </Preview>
