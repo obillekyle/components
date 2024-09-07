@@ -1,27 +1,33 @@
 <script setup lang="ts">
   import '@/assets/image.scss'
 
-  import type { Component, HTMLAttributes } from 'vue'
+  import type { Component } from 'vue'
   import type { BoxProps } from '../Box/util'
   import type { FrameVariants } from '../Frame/variants'
+  import type { Status } from './util'
 
   import { clean } from '@/utils/object/data'
   import { as } from '@/utils/object/is'
-  import { hashStr } from '@/utils/string/hash'
-  import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+  import {
+    computed,
+    onMounted,
+    onUnmounted,
+    ref,
+    shallowReactive,
+    watch
+  } from 'vue'
   import { getBoxProps } from '../Box/util'
   import { frames } from '../Frame/variants'
-  import { resolveImage } from './util'
+  import { getData } from './util'
 
+  import { hashStr } from '@/utils'
   import Box from '../Box/box.vue'
   import ViewObserver from '../Misc/view-observer.vue'
   import DefaultLoader from './default-loader.vue'
 
-  interface SquareImageProps
-    extends BoxProps,
-      /* @vue-ignore */ HTMLAttributes {
-    src?: string | Blob
-    size?: number | string
+  interface SquareImageProps extends BoxProps {
+    src?: string
+    size?: number
     frame?: FrameVariants | 'none'
     lazy?: boolean
     loader?: Component
@@ -33,54 +39,39 @@
     loader: DefaultLoader
   })
 
-  const boxProps = getBoxProps(props, {
-    width: props.size,
-    height: props.size,
-    r: '#xs'
+  const boxProps = getBoxProps(props)
+
+  const image = ref<string>('')
+  const status = shallowReactive<Status>({
+    progress: 0,
+    error: false,
+    visible: false
   })
 
-  const progress = ref(0)
-  const image = ref<string>()
-  const error = ref(false)
-  const visible = ref(false)
-  const id = computed(
-    () => 'img-' + hashStr(String(props.src) + image.value, 6)
+  const id = computed(() =>
+    image.value ? 'md-image-' + hashStr(image.value) : undefined
   )
 
-  async function resolve() {
-    error.value = false
-    let source = props.src
-
-    if (image.value) {
-      clean(image.value)
-      image.value = undefined
-    }
-
-    if (!source) {
-      error.value = true
-      return
-    }
-
-    source =
-      source instanceof Blob
-        ? URL.createObjectURL(source)
-        : source.replaceAll('[size]', String(props.size))
-
-    try {
-      const data = await resolveImage(source, (v) => (progress.value = v))
-      image.value = URL.createObjectURL(data)
-    } catch (error_) {
-      console.warn(error_)
-      error.value = true
-    }
+  function resolve() {
+    if (!props.src) return
+    getData(
+      {
+        src: props.src,
+        size: props.size
+      },
+      image,
+      status
+    )
   }
 
-  watch(visible, (v) => {
-    if (!props.lazy) return
-    if (v && !progress.value && !image.value && !error.value) {
+  watch(
+    () => status.visible,
+    (visible) => {
+      if (!visible || !props.lazy) return
+      if (status.progress || status.error || image.value) return
       resolve()
     }
-  })
+  )
 
   watch(() => props.src, resolve)
   onMounted(() => !props.lazy && resolve())
@@ -91,18 +82,20 @@
   <ViewObserver
     :as="Box"
     :offset="50"
-    apply="visible"
+    :width="size"
+    :height="size"
     v-bind="boxProps"
-    v-model="visible"
+    apply="visible"
     class="md-square-image md-image"
-    :class="{ loaded: image, [frame]: true, error }"
+    @viewchange="status.visible = $event"
+    :class="{ loaded: image, [frame]: true, error: status.error }"
     :title="as<string>($attrs['alt'])"
   >
     <component
       class="md-loader"
       :is="loader"
-      :error
-      :progress
+      :error="status.error"
+      :progress="status.progress"
       :ready="!!image"
       @retry="resolve"
     />
@@ -161,7 +154,8 @@
     justify-content: center;
     align-items: center;
 
-    &.default {
+    &.none {
+      border-radius: var(--xs);
       background: var(--surface-container);
     }
 
