@@ -34,7 +34,7 @@
     :ref="setRef"
     apply="animate"
     class="md-progress"
-    :class="{ noSpace }"
+    :no-space
     :style="{
       height: getCSSValue(size),
       '--speed': addUnit(speed, 's')
@@ -189,6 +189,7 @@
       &::before,
       &::after {
         top: 0;
+        right: 0;
         content: '';
         position: absolute;
         border-radius: inherit;
@@ -196,7 +197,6 @@
       }
 
       &::before {
-        right: 0;
         transition: left 0.25s var(--timing-standard);
         background: var(--secondary-container);
         left: calc(var(--value) * 1% + var(--xxs));
@@ -209,7 +209,7 @@
       }
     }
 
-    &.no-space &-bar::before {
+    &[no-space='true'] &-bar::before {
       left: 0;
     }
 
