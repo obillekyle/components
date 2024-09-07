@@ -32,16 +32,9 @@
     return props.apply || {}
   })
 
-  const intersectionCallback: IntersectionObserverCallback = (entries) => {
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        visible.value = true
-        emit('viewchange', true)
-      } else {
-        visible.value = false
-        emit('viewchange', false)
-      }
-    }
+  const intersectionCallback: IntersectionObserverCallback = ([entry]) => {
+    visible.value = entry.isIntersecting
+    emit('viewchange', entry.isIntersecting)
   }
 
   onMounted(() => {
