@@ -52,7 +52,8 @@
     "format": "run-s format:prettier format:eslint format:stylelint",
     "build-only": "vite build",
     "build": "run-s check:types build-only",
-    "preview": "vite preview"
+    "build:preview": "vite build -c vite.preview.ts",
+    "preview": "vite preview -c vite.preview.ts"
   },
   "dependencies": {
     "bezier-easing": "^2.1.0",
