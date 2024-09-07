@@ -179,7 +179,7 @@
         <IconButton icon="material-symbols:inbox-outline-rounded" />
       </Floater>
 
-      <a href="https://google.com" target="_blank">Google</a>
+      <Text as="a" href="https://google.com" target="_blank">Google</Text>
     </div>
 
     <!-- List -->

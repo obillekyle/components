@@ -22,7 +22,7 @@
     size: 4
   })
 
-  const width = computed(() => rect.value?.width || 0)
+  const width = computed(() => (rect.ready ? rect.width : 0))
   const speed = computed(() => clamp(width.value / 300, 2.5, 6))
   const noSpace = computed(() => props.value <= 0)
 

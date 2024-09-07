@@ -35,7 +35,7 @@
 
   const wrapper = ref<HTMLElement>()
   const model = defineModel<number>()
-  const wrapperRect = useRect(wrapper)
+  const rect = useRect(wrapper)
 
   const values = computed(() =>
     props.values
@@ -80,16 +80,13 @@
     return is(item, 'number') ? item : item?.label || value
   }
 
-  const [dragging, dragEvent] = useDrag((position) => {
-    const rect = wrapperRect.value!
-
-    if (!rect) return
+    if (!rect.ready) return
 
     const { min, max, step } = limit.value
 
     const offset = rect.height / 2
     const length = rect.width
-    const clientX = position.x - rect.left
+    const clientX = x - rect.left
     const pos = offsetRange(length, clientX, -offset)
 
     const maxOffset = max - min
@@ -105,10 +102,10 @@
   })
 
   function getPosition(value: number) {
-    if (!wrapperRect.value) return 0
+    if (!rect.ready) return 0
 
     const { min, max } = limit.value
-    const { width, height } = wrapperRect.value
+    const { width, height } = rect
 
     const maxOffset = max - min
     const percent = (value - min) / maxOffset

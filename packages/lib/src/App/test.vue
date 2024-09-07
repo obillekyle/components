@@ -9,7 +9,7 @@
   let title = ''
 
   const [root, setRoot] = customRef<HTMLElement>()
-  const rootRect = useRect(root)
+  const rect = useRect(root)
 
   defineOptions({
     name: 'MdTest'
@@ -21,9 +21,8 @@
 
   function onEnter() {
     const element = root.value
-    const rect = rootRect.value
 
-    if (element && rect) {
+    if (element && rect.ready) {
       title = element.title
       element.title = ''
 

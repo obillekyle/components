@@ -50,9 +50,9 @@
   useFocusLock(root)
 
   const [dragging, dragHandler] = useDrag((position) => {
-    if (!rect.value) return
+    if (!rect.ready) return
     const { x, y } = position
-    const { height, width } = rect.value
+    const { height, width } = rect
     positions[props.direction!]({ x, y, width, height } as DOMRect)
   })
 
