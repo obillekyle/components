@@ -16,7 +16,6 @@
     value?: number[]
     defaultValue?: number[]
     items?: (number | string | SelectItem)[]
-    span?: boolean
     optionComp?: Component
     multiple?: boolean
     required?: boolean
@@ -37,11 +36,10 @@
   const props = withDefaults(defineProps<SelectProps>(), {
     optionComp: OptionItem,
     multiple: false,
-    required: false,
-    items: () => []
+    required: false
   })
 
-  const values = computed(() => toSelectItems(props.items))
+  const values = computed(() => toSelectItems(props.items ?? []))
   const model = defineModel<number[]>()
   const selected = computed({
     get: () => props.value ?? model.value ?? props.defaultValue ?? [],
@@ -85,7 +83,7 @@
 </script>
 
 <template>
-  <div class="md-select" :class="{ open: show, span }" ref="select">
+  <div class="md-select" :open="show || undefined" ref="select">
     <div
       tabindex="0"
       class="md-select-wrapper"
@@ -95,7 +93,7 @@
     >
       <div
         class="md-select-single"
-        v-if="selected.length === 1 && !multiple && items[selected[0]]"
+        v-if="selected.length === 1 && !multiple && values[selected[0]]"
       >
         <div class="md-select-option">
           <component :is="optionComp" v-bind="values[selected[0]]" />
@@ -249,7 +247,7 @@
       }
     }
 
-    &.open {
+    &[open] {
       .md-select-wrapper {
         box-shadow: 0 0 0 2px inset var(--primary);
         border-bottom-left-radius: 0;
