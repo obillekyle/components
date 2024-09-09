@@ -5,7 +5,6 @@ import { getCurrentInstance, inject } from 'vue'
 
 export const SheetManager = new ComponentManager<SheetProps>({
   defaults: {
-    type: 'modal',
     focusLock: true,
     resizable: true,
     closeable: false,
