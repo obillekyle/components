@@ -82,8 +82,8 @@
     }
 
     path {
-      stroke-dasharray: 24; /* Length of the path, adjust as needed */
-      stroke-dashoffset: 24; /* Start hidden */
+      stroke-dasharray: 24;
+      stroke-dashoffset: 24;
       stroke: var(--on-primary);
     }
 

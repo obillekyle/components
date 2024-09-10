@@ -1,6 +1,10 @@
 /* eslint-env node */
 require('@rushstack/eslint-patch/modern-module-resolution')
 
+/**
+ * @type {import('eslint').Linter.LegacyConfig}
+ *
+ */
 module.exports = {
   root: true,
   extends: [

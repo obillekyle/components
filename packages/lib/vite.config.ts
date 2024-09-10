@@ -1,11 +1,12 @@
+import { defineConfig } from 'vite'
+import { attachStyles, resolver } from './plugins'
+
 import vue from '@vitejs/plugin-vue'
 import glob from 'fast-glob'
 import path from 'node:path'
-import { defineConfig } from 'vite'
 import circleDependency from 'vite-plugin-circular-dependency'
 import dts from 'vite-plugin-dts'
 import VueDevTools from 'vite-plugin-vue-devtools'
-import { attachStyles, resolver } from './plugins'
 
 // https://vitejs.dev/config/
 export default defineConfig({
