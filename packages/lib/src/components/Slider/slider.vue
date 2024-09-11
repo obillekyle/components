@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useDrag } from '@/ref/use-drag'
   import { useRect } from '@/ref/use-rect'
-  import { removeExtraZeros } from '@/utils/number/format'
+  import { toDecimalFixed } from '@/utils/number/format'
   import {
     clamp,
     findNearestNumber,
@@ -29,8 +29,7 @@
   const emit = defineEmits<SliderEmits>()
   const props = withDefaults(defineProps<SliderProperties>(), {
     min: 0,
-    max: 100,
-    decimal: 0
+    max: 100
   })
 
   const wrapper = ref<HTMLElement>()
@@ -52,12 +51,14 @@
 
   const limit = computed(() => {
     const { raw } = values.value
+    const { min, max, step, decimal } = props
     const hasValues = raw.length > 0
 
     return {
-      min: hasValues ? Math.min(...raw) : props.min,
-      max: hasValues ? Math.max(...raw) : props.max,
-      step: props.step ?? 1 / 10 ** props.decimal
+      min: hasValues ? Math.min(...raw) : min,
+      max: hasValues ? Math.max(...raw) : max,
+      step: step ?? 1 / 10 ** (decimal || 0),
+      decimal: decimal ?? String(step ?? 1).split('.')[1]?.length
     }
   })
 
@@ -71,8 +72,8 @@
       )
     },
     set: (value) => {
-      const { min, max } = limit.value
-      model.value = clamp(value, min, max)
+      const { min, max, decimal } = limit.value
+      model.value = toDecimalFixed(clamp(value, min, max), decimal)
       emit('change', model.value)
     }
   })
@@ -80,7 +81,7 @@
   function getLabel(value: number) {
     return props.values
       ? values.value.formatted.find((v) => v.value === value)?.label
-      : removeExtraZeros(value.toFixed(props.decimal))
+      : toDecimalFixed(value, limit.value.decimal)
   }
 
   const [dragging, dragEvent] = useDrag(({ x }) => {

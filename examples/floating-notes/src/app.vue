@@ -5,6 +5,7 @@
     IconButton,
     Layout,
     ScrollContainer,
+    Slider,
     clamp,
     customRef,
     targetsSelf,
@@ -12,9 +13,10 @@
     useFocusLock,
     useLocalStorage,
     useToggle,
+    useRect,
     useWindowSize
   } from '@vue-material/core'
-  import { onMounted, ref, watch } from 'vue'
+  import { onMounted, computed, ref, watch } from 'vue'
 
   const text = ref<HTMLElement>()
   const [root, rootRef] = customRef<HTMLElement>()
@@ -43,6 +45,21 @@
 
   useFocusLock(root)
   const wRect = useWindowSize()
+  const rect = useRect(root)
+
+  const position = computed(() => {
+    if (!rect.ready) {
+      return {
+        top: 0,
+        left: 0
+      }
+    }
+
+    return {
+      top: clamp(settings.value.position.y, 0, wRect.height - rect.height),
+      left: clamp(settings.value.position.x, 0, wRect.width - rect.width)
+    }
+  })
 
   let start = {
     top: 0,
@@ -90,7 +107,17 @@
     root.value!.style.left = `${left}px`
   })
 
+  function dragHandler(event: any) {
+    if (settings.value.pinned) return
+    dragEvent(event)
+  }
+
   watch(dragging, (state) => {
+    if (state === true) {
+      settings.value.extra = false
+      return
+    }
+
     if (state === false && root.value) {
       const { left: x, top: y } = end
       settings.value.position = { x, y }
@@ -119,10 +146,12 @@
     <Box
       :ref="rootRef"
       class="window"
+      :class="{ dragging }"
       width="400"
       :styled="{
-        left: settings.position.x,
-        top: settings.position.y
+        opacity: settings.opacity,
+        left: position.left,
+        top: position.top
       }"
     >
       <Box.Flex
@@ -131,7 +160,7 @@
         align="center"
         height="#size-md"
         class="window-top-bar"
-        @pointerdown="targetsSelf($event, dragEvent)"
+        @pointerdown="targetsSelf($event, dragHandler)"
       >
         <IconButton
           @click="settings.pinned = !settings.pinned"
@@ -150,7 +179,14 @@
         </Box.Flex>
       </Box.Flex>
 
-      <ScrollContainer class="window-content">
+      <ScrollContainer
+        class="window-content"
+        :styled="{
+          wordWrap: settings.wrap ? 'break-word' : 'normal',
+          whiteSpace: settings.wrap ? 'pre' : 'normal',
+          textAlign: settings.align
+        }"
+      >
         <div
           class="window-text"
           :contenteditable="editing && 'plaintext-only'"
@@ -187,8 +223,18 @@
           />
         </Box.Flex>
         <IconButton
-          :icon="settings.extra ? 'mdi:chevron-down' : 'mdi:chevron-up'"
+          :icon="settings.extra ? 'mdi:chevron-up' : 'mdi:chevron-down'"
           @click="settings.extra = !settings.extra"
+        />
+      </div>
+      <div class="window-extra" v-if="settings.extra">
+        <span>Background opacity: {{ settings.opacity }}</span>
+        <Slider
+          class="window-extra-slider"
+          :step="0.01"
+          :min="0.25"
+          :max="1"
+          v-model="settings.opacity"
         />
       </div>
     </Box>
@@ -198,13 +244,23 @@
 <style lang="scss">
   .container {
     background: transparent;
+    overflow: layout;
   }
 
   .window {
-    position: absolute;
+    position: fixed;
     display: grid;
     background-color: var(--surface-container);
     border-radius: var(--sm);
+    transition:
+      opacity 0.2s ease-in-out,
+      box-shadow 0.2s ease-in-out;
+
+    &:hover,
+    &.dragging {
+      opacity: 1;
+      box-shadow: var(--shadow-2);
+    }
 
     &-top-bar {
       width: 100%;
@@ -233,6 +289,11 @@
       display: flex;
       border-top: 1px solid var(--outline-variant);
       height: var(--component-md);
+    }
+
+    &-extra {
+      border-top: 1px solid var(--outline-variant);
+      padding: var(--sm);
     }
   }
 </style>
