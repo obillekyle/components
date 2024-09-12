@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { useDrag } from '@/ref/use-drag'
+  import { useValue } from '@/ref/use-form-value'
   import { useRect } from '@/ref/use-rect'
   import { toDecimalFixed } from '@/utils/number/format'
   import {
@@ -12,6 +13,7 @@
 
   interface SliderProperties {
     value?: number
+    name?: string
     defaultValue?: number
     values?: number[] | { label: string; value: number }[]
     min?: number
@@ -39,9 +41,9 @@
   const values = computed(() => {
     if (!props.values) return { raw: [], formatted: [] }
 
-    const formatted = [...props.values].sort().map((v) => {
-      return is(v, 'object') ? v : { label: String(v), value: v }
-    })
+    const formatted = [...props.values]
+      .map((v) => (is(v, 'object') ? v : { label: String(v), value: v }))
+      .sort((a, b) => a.value - b.value)
 
     return {
       formatted,
@@ -62,20 +64,11 @@
     }
   })
 
-  const sliderVal = computed({
-    get: () => {
-      const { min, max } = limit.value
-      return (
-        props.value ??
-        model.value ??
-        clamp(props.defaultValue ?? min, min, max)
-      )
-    },
-    set: (value) => {
-      const { min, max, decimal } = limit.value
-      model.value = toDecimalFixed(clamp(value, min, max), decimal)
-      emit('change', model.value)
-    }
+  const sliderVal = useValue(limit.value.min, props, model, (value) => {
+    const { min, max, decimal } = limit.value
+    value = toDecimalFixed(clamp(value, min, max), decimal)
+    emit('change', value)
+    return value
   })
 
   function getLabel(value: number) {

@@ -4,15 +4,17 @@
 
   import { getCSSValue } from '@/utils/css/sizes'
   import { keyClick } from '@/utils/dom/events'
-  import { computed, ref } from 'vue'
+  import { useBoolValue } from '@/ref/use-form-value'
+  import { ref } from 'vue'
 
   interface SwitchProps
     extends /* @vue-ignore */ Omit<
       InputHTMLAttributes,
       'size' | 'onChange'
     > {
+    name?: string
     size?: SizesString
-    value?: boolean
+    checked?: boolean
     defaultChecked?: boolean
     variant?: 'outline' | 'filled'
     length?: number
@@ -23,25 +25,19 @@
   }
 
   const inputRef = ref<HTMLInputElement>()
-  const model = defineModel<boolean>({
-    default: undefined
-  })
-
   const emit = defineEmits<SwitchEmits>()
+  const model = defineModel<boolean>({ default: undefined })
   const props = withDefaults(defineProps<SwitchProps>(), {
     size: '#xs',
-    value: undefined,
+    checked: undefined,
     defaultChecked: undefined,
     variant: 'outline',
     length: 1.9
   })
 
-  const inputValue = computed({
-    get: () => props.value ?? model.value ?? props.defaultChecked ?? false,
-    set: (value) => {
-      model.value = value
-      emit('change', value)
-    }
+  const inputValue = useBoolValue(false, props, model, (value) => {
+    emit('change', value)
+    return value
   })
 
   defineOptions({
@@ -63,6 +59,7 @@
     }"
   >
     <input
+      :name
       type="checkbox"
       v-bind="$attrs"
       v-model="inputValue"

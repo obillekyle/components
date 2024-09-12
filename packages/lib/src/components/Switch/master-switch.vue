@@ -2,14 +2,14 @@
   import type { HTMLAttributes } from 'vue'
 
   import { rippleEffect } from '@/utils/dom/ripple'
-  import { computed } from 'vue'
 
   import Switch from './switch.vue'
+  import { useBoolValue } from '@/ref/use-form-value'
 
   interface MasterSwitchProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
     name?: string
-    value?: boolean
+    checked?: boolean
     defaultChecked?: boolean
   }
 
@@ -20,19 +20,14 @@
   defineOptions({ name: 'MasterSwitch' })
   const emits = defineEmits<MasterSwitchEmits>()
   const props = withDefaults(defineProps<MasterSwitchProps>(), {
-    value: undefined,
+    checked: undefined,
     defaultChecked: undefined
   })
 
-  const model = defineModel<boolean>({
-    default: undefined
-  })
-  const inputValue = computed({
-    get: () => props.value ?? model.value ?? props.defaultChecked ?? false,
-    set: (value) => {
-      model.value = value
-      emits('change', value)
-    }
+  const model = defineModel<boolean>({ default: undefined })
+  const inputValue = useBoolValue(false, props, model, (value) => {
+    emits('change', value)
+    return value
   })
 </script>
 
@@ -42,11 +37,11 @@
     @click="inputValue = !inputValue"
     @pointerdown="rippleEffect"
   >
-    <div class="label">
-      <slot>{{ name }}</slot>
+    <div class="md-master-switch-label">
+      <slot />
     </div>
     <div class="md-master-switch-toggle">
-      <Switch :value="inputValue" variant="filled" />
+      <Switch :name :checked="inputValue" variant="filled" />
     </div>
   </div>
 </template>

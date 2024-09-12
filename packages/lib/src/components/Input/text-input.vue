@@ -2,7 +2,9 @@
   import '@/assets/input.scss'
   import type { Component, InputHTMLAttributes } from 'vue'
 
-  import { computed, ref } from 'vue'
+  import { useValue } from '@/ref/use-form-value'
+
+  import { ref } from 'vue'
   import HybridIcon from '../Misc/hybrid-icon.vue'
   import Counter from './counter.vue'
 
@@ -15,6 +17,7 @@
     defaultValue?: string
     prefix?: string
     suffix?: string
+    name?: string
     variant?: 'filled' | 'outlined'
     counter?: boolean
     span?: boolean
@@ -29,12 +32,9 @@
   const model = defineModel<string>()
   const emit = defineEmits<InputTextEmits>()
 
-  const inputValue = computed({
-    get: () => props.value ?? model.value ?? props.defaultValue ?? '',
-    set: (value) => {
-      model.value = value
-      emit('change', value)
-    }
+  const inputValue = useValue('', props, model, (value) => {
+    emit('change', value)
+    return value
   })
 </script>
 
@@ -48,6 +48,7 @@
     <div class="md-input-content" :data-placeholder="placeholder">
       <span v-if="prefix">{{ prefix }}</span>
       <input
+        :name
         type="text"
         placeholder=""
         v-bind="$attrs"

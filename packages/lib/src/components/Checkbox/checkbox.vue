@@ -1,12 +1,13 @@
 <script setup lang="ts">
+  import { useBoolValue } from '@/ref'
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
-  import { computed, ref } from 'vue'
+  import { ref } from 'vue'
 
   interface CheckboxProps {
     defaultChecked?: boolean
     checked?: boolean
-    disabled?: boolean
+    name?: string
   }
 
   interface CheckboxEmits {
@@ -14,8 +15,7 @@
   }
 
   const props = withDefaults(defineProps<CheckboxProps>(), {
-    checked: undefined,
-    disabled: undefined
+    checked: undefined
   })
 
   const root = ref<HTMLElement>()
@@ -23,13 +23,9 @@
   const model = defineModel<boolean>({ default: undefined })
   defineOptions({ name: 'MdCheckbox', inheritAttrs: false })
 
-  const checked = computed({
-    get: () => props.checked ?? model.value ?? props.defaultChecked,
-    set: (value) => {
-      if (props.disabled) return
-      model.value = value
-      emit('checked', value)
-    }
+  const checked = useBoolValue(false, props, model, (value) => {
+    emit('checked', value)
+    return value
   })
 </script>
 
@@ -50,13 +46,7 @@
       >
         <path d="M0.699219 4.69922L4 8L11.3008 0.699219" stroke-width="2" />
       </svg>
-      <input
-        type="checkbox"
-        v-model="checked"
-        v-bind="$attrs"
-        ref="root"
-        :disabled
-      />
+      <input type="checkbox" v-model="checked" v-bind="$attrs" ref="root" />
     </div>
   </div>
 </template>

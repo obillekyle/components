@@ -10,6 +10,7 @@
   import { filterByName, toSelectItems, toggleItem } from './util'
 
   import OptionItem from './option-item.vue'
+  import { useValue } from '@/ref/use-form-value'
 
   interface SelectProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
@@ -32,21 +33,18 @@
   const setOptions = fnRef(options)
   const select = ref<HTMLElement>()
 
-  const emit = defineEmits<SelectEmits>()
   const props = withDefaults(defineProps<SelectProps>(), {
     optionComp: OptionItem,
     multiple: false,
     required: false
   })
 
-  const values = computed(() => toSelectItems(props.items ?? []))
+  const emit = defineEmits<SelectEmits>()
   const model = defineModel<number[]>()
-  const selected = computed({
-    get: () => props.value ?? model.value ?? props.defaultValue ?? [],
-    set: (value) => {
-      model.value = value
-      emit('change', value)
-    }
+  const values = computed(() => toSelectItems(props.items ?? []))
+  const selected = useValue([], props, model, (value) => {
+    emit('change', value)
+    return value
   })
 
   const filteredItems = computed(() => {
