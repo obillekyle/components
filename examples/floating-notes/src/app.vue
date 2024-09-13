@@ -113,11 +113,6 @@
   }
 
   watch(dragging, (state) => {
-    if (state === true) {
-      settings.value.extra = false
-      return
-    }
-
     if (state === false && root.value) {
       const { left: x, top: y } = end
       settings.value.position = { x, y }
