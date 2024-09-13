@@ -4,8 +4,9 @@ export function inRange(
   max: number,
   excludeLimit = false
 ) {
-  if (excludeLimit) return value > min && value < max
-  return value >= min && value <= max
+  return excludeLimit
+    ? value > min && value < max
+    : value >= min && value <= max
 }
 
 export function mapNumberToRange(

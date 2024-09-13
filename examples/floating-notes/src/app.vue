@@ -48,12 +48,7 @@
   const rect = useRect(root)
 
   const position = computed(() => {
-    if (!rect.ready) {
-      return {
-        top: 0,
-        left: 0
-      }
-    }
+    if (!rect.ready) return { top: 0, left: 0 }
 
     return {
       top: clamp(settings.value.position.y, 0, wRect.height - rect.height),
@@ -116,6 +111,8 @@
     if (state === false && root.value) {
       const { left: x, top: y } = end
       settings.value.position = { x, y }
+      root.value.style.removeProperty('top')
+      root.value.style.removeProperty('left')
 
       end = { top: 0, left: 0, x: 0, y: 0 }
       start = { top: 0, left: 0, x: 0, y: 0 }
@@ -229,6 +226,7 @@
           :step="0.01"
           :min="0.25"
           :max="1"
+          size="#component-xs"
           v-model="settings.opacity"
         />
       </div>

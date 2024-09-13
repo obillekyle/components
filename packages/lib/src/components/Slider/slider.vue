@@ -1,7 +1,10 @@
 <script setup lang="ts">
+  import type { SizesString } from '@/utils/css/type'
+
   import { useDrag } from '@/ref/use-drag'
   import { useValue } from '@/ref/use-form-value'
   import { useRect } from '@/ref/use-rect'
+  import { getCSSValue } from '@/utils/css/sizes'
   import { toDecimalFixed } from '@/utils/number/format'
   import {
     clamp,
@@ -14,6 +17,7 @@
   interface SliderProperties {
     value?: number
     name?: string
+    size?: SizesString
     defaultValue?: number
     values?: number[] | { label: string; value: number }[]
     min?: number
@@ -105,9 +109,7 @@
     const { min, max } = limit.value
     const { width, height } = rect
 
-    const maxOffset = max - min
-    const percent = (value - min) / maxOffset
-
+    const percent = (value - min) / (max - min)
     return offsetRange(width, percent * width, height / 2)
   }
 
@@ -153,11 +155,15 @@
     @keydown="handleKeydown"
     @mousedown="dragEvent"
     @dblclick="dragEvent"
+    :style="{
+      '--thumb-offset': thumbPos,
+      '--thumb-height': getCSSValue(size || '#component-md')
+    }"
   >
     <div class="md-slider-value" v-if="showValue">
       {{ sliderVal }}
     </div>
-    <div class="md-slider-wrapper" :style="{ '--thumb-offset': thumbPos }">
+    <div class="md-slider-wrapper">
       <div
         class="md-slider-thumb"
         :dragging
@@ -200,13 +206,12 @@
 <style lang="scss">
   .md-slider {
     --thumb-width: var(--xxs);
-    --thumb-height: var(--component-md);
     --track-height: var(--md);
 
     display: grid;
     user-select: none;
     align-items: center;
-    height: var(--thumb-height);
+    height: max(var(--thumb-height), var(--track-height));
     min-width: calc(var(--thumb-height) * 2);
     width: 100%;
 
@@ -272,7 +277,7 @@
       position: absolute;
       left: calc(var(--thumb-offset) * 1px);
       width: var(--thumb-width);
-      height: var(--thumb-height);
+      height: max(var(--thumb-height), var(--track-height));
       border-radius: 999px;
       translate: -50% 0;
       background: var(--primary);
