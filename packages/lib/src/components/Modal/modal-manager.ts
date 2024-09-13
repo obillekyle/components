@@ -1,7 +1,7 @@
 import type { ModalProps } from './util'
 
 import { ComponentManager } from '@/utils/component-manager'
-import { getCurrentInstance, inject } from 'vue'
+import { inject } from 'vue'
 
 export const ModalManager = new ComponentManager<ModalProps>({
   defaults: {
@@ -11,8 +11,4 @@ export const ModalManager = new ComponentManager<ModalProps>({
   }
 })
 
-export function useModal() {
-  return getCurrentInstance()
-    ? inject('modal-manager', ModalManager)
-    : ModalManager
-}
+export const useModal = () => inject('modal-manager', ModalManager)

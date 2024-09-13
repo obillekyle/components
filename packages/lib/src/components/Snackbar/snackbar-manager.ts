@@ -1,7 +1,7 @@
 import type { SnackbarProps } from './util'
 
 import { ComponentManager } from '@/utils/component-manager'
-import { getCurrentInstance, inject } from 'vue'
+import { inject } from 'vue'
 
 export const SnackbarManager = new ComponentManager<SnackbarProps>({
   defaults: {
@@ -10,8 +10,4 @@ export const SnackbarManager = new ComponentManager<SnackbarProps>({
   }
 })
 
-export function useSnackbar() {
-  return getCurrentInstance()
-    ? inject('snackbar-manager', SnackbarManager)
-    : SnackbarManager
-}
+export const useSnackbar = () => inject('snackbar-manager', SnackbarManager)

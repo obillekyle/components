@@ -25,6 +25,7 @@
 </script>
 
 <template>
+  <slot />
   <div class="md-sheet-provider">
     <transition-group name="md-sheet">
       <Sheet
@@ -36,5 +37,4 @@
       />
     </transition-group>
   </div>
-  <slot />
 </template>

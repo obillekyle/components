@@ -1,7 +1,7 @@
 import type { ToastProps } from './util'
 
 import { ComponentManager } from '@/utils/component-manager'
-import { getCurrentInstance, inject } from 'vue'
+import { inject } from 'vue'
 
 export const ToastManager = new ComponentManager<ToastProps>({
   defaults: {
@@ -9,8 +9,4 @@ export const ToastManager = new ComponentManager<ToastProps>({
   }
 })
 
-export function useToast() {
-  return getCurrentInstance()
-    ? inject('toast-manager', ToastManager)
-    : ToastManager
-}
+export const useToast = () => inject('toast-manager', ToastManager)
