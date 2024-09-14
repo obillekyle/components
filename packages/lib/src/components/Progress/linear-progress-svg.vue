@@ -22,9 +22,9 @@
 
   defineOptions({ name: 'MdLinearProgress' })
 
-  const noSpace = computed(() => props.value <= 0)
   const width = computed(() => (rect.ready ? rect.width : 0))
   const speed = computed(() => clamp(width.value / 300, 2.5, 6))
+  const noSpace = computed(() => props.value <= 0 || undefined)
 
   const length = computed(() => {
     const length = (props.value / 100) * width.value
@@ -42,7 +42,7 @@
     :ref="setRef"
     apply="animate"
     class="md-progress-2"
-    :no-space
+    :no-space="noSpace"
     :style="{
       '--width': getCSSValue(width),
       '--height': getCSSValue(size),

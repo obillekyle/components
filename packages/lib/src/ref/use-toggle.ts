@@ -28,7 +28,7 @@ export const useToggle: UseToggle = function (
     }
 
     if (value === undefined) {
-      value = state.value === off ? on : off
+      state.value = state.value === off ? on : off
       return
     }
 

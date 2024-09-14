@@ -7,6 +7,7 @@
   import { computed, ref } from 'vue'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
+  import { useValue } from '@/ref/use-form-value'
 
   interface BlockSliderProps {
     value?: number
@@ -37,16 +38,10 @@
   const wrapper = ref<HTMLElement>()
   const rect = useRect(wrapper)
 
-  const sliderVal = computed({
-    get: () =>
-      props.value ??
-      model.value ??
-      clamp(props.defaultValue ?? props.min, props.min, props.max),
-    set(value) {
-      value = clamp(value, props.min, props.max)
-      model.value = value
-      emit('change', value)
-    }
+  const sliderVal = useValue(props.min, props, model, (value) => {
+    value = clamp(value, props.min, props.max)
+    emit('change', value)
+    return value
   })
 
   const step = computed(() => props.step ?? 1 / 10 ** props.decimal)

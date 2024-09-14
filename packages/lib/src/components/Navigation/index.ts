@@ -1,25 +1,23 @@
 import NavigationBar from './navigation-bar.vue'
-import NavigationContainer from './navigation-container.vue'
-import navigationContent from './navigation-content.vue'
-import NavigationEntry from './navigation-entry.vue'
-import NavigationItem from './navigation-item.vue'
+import Container from './navigation-container.vue'
+import Content from './navigation-content.vue'
+import Entry from './navigation-entry.vue'
+import Item from './navigation-item.vue'
 
 type NavigationComponent = typeof NavigationBar & {
   Bar: typeof NavigationBar
-  Container: typeof NavigationContainer
-  Content: typeof navigationContent
-  Entry: typeof NavigationEntry
-  Item: typeof NavigationItem
+  Container: typeof Container
+  Content: typeof Content
+  Entry: typeof Entry
+  Item: typeof Item
 }
 
-const Navigation = NavigationBar as NavigationComponent
-Navigation.Bar = NavigationBar
-Navigation.Container = NavigationContainer
-Navigation.Content = navigationContent
-Navigation.Entry = NavigationEntry
-Navigation.Item = NavigationItem
-
-export default Navigation
+export default Object.assign({}, NavigationBar, {
+  Container,
+  Content,
+  Entry,
+  Item
+}) as NavigationComponent
 
 export { default as NavigationBar } from './navigation-bar.vue'
 export { default as NavigationContainer } from './navigation-container.vue'

@@ -1,7 +1,11 @@
 <script setup lang="ts">
+  import type { SizesString } from '@/utils/css/type'
+
   import { useDrag } from '@/ref/use-drag'
+  import { useValue } from '@/ref/use-form-value'
   import { useRect } from '@/ref/use-rect'
-  import { removeExtraZeros } from '@/utils/number/format'
+  import { getCSSValue } from '@/utils/css/sizes'
+  import { toDecimalFixed } from '@/utils/number/format'
   import {
     clamp,
     findNearestNumber,
@@ -12,6 +16,8 @@
 
   interface SliderProperties {
     value?: number
+    name?: string
+    size?: SizesString
     defaultValue?: number
     values?: number[] | { label: string; value: number }[]
     min?: number
@@ -29,8 +35,7 @@
   const emit = defineEmits<SliderEmits>()
   const props = withDefaults(defineProps<SliderProperties>(), {
     min: 0,
-    max: 100,
-    decimal: 0
+    max: 100
   })
 
   const wrapper = ref<HTMLElement>()
@@ -40,9 +45,9 @@
   const values = computed(() => {
     if (!props.values) return { raw: [], formatted: [] }
 
-    const formatted = [...props.values].sort().map((v) => {
-      return is(v, 'object') ? v : { label: String(v), value: v }
-    })
+    const formatted = [...props.values]
+      .map((v) => (is(v, 'object') ? v : { label: String(v), value: v }))
+      .sort((a, b) => a.value - b.value)
 
     return {
       formatted,
@@ -52,35 +57,28 @@
 
   const limit = computed(() => {
     const { raw } = values.value
+    const { min, max, step, decimal } = props
     const hasValues = raw.length > 0
 
     return {
-      min: hasValues ? Math.min(...raw) : props.min,
-      max: hasValues ? Math.max(...raw) : props.max,
-      step: props.step ?? 1 / 10 ** props.decimal
+      min: hasValues ? Math.min(...raw) : min,
+      max: hasValues ? Math.max(...raw) : max,
+      step: step ?? 1 / 10 ** (decimal || 0),
+      decimal: decimal ?? String(step ?? 1).split('.')[1]?.length
     }
   })
 
-  const sliderVal = computed({
-    get: () => {
-      const { min, max } = limit.value
-      return (
-        props.value ??
-        model.value ??
-        clamp(props.defaultValue ?? min, min, max)
-      )
-    },
-    set: (value) => {
-      const { min, max } = limit.value
-      model.value = clamp(value, min, max)
-      emit('change', model.value)
-    }
+  const sliderVal = useValue(limit.value.min, props, model, (value) => {
+    const { min, max, decimal } = limit.value
+    value = toDecimalFixed(clamp(value, min, max), decimal)
+    emit('change', value)
+    return value
   })
 
   function getLabel(value: number) {
     return props.values
       ? values.value.formatted.find((v) => v.value === value)?.label
-      : removeExtraZeros(value.toFixed(props.decimal))
+      : toDecimalFixed(value, limit.value.decimal)
   }
 
   const [dragging, dragEvent] = useDrag(({ x }) => {
@@ -111,9 +109,7 @@
     const { min, max } = limit.value
     const { width, height } = rect
 
-    const maxOffset = max - min
-    const percent = (value - min) / maxOffset
-
+    const percent = (value - min) / (max - min)
     return offsetRange(width, percent * width, height / 2)
   }
 
@@ -159,11 +155,15 @@
     @keydown="handleKeydown"
     @mousedown="dragEvent"
     @dblclick="dragEvent"
+    :style="{
+      '--thumb-offset': thumbPos,
+      '--thumb-height': getCSSValue(size || '#component-md')
+    }"
   >
     <div class="md-slider-value" v-if="showValue">
       {{ sliderVal }}
     </div>
-    <div class="md-slider-wrapper" :style="{ '--thumb-offset': thumbPos }">
+    <div class="md-slider-wrapper">
       <div
         class="md-slider-thumb"
         :dragging
@@ -206,13 +206,12 @@
 <style lang="scss">
   .md-slider {
     --thumb-width: var(--xxs);
-    --thumb-height: var(--component-md);
     --track-height: var(--md);
 
     display: grid;
     user-select: none;
     align-items: center;
-    height: var(--thumb-height);
+    height: max(var(--thumb-height), var(--track-height));
     min-width: calc(var(--thumb-height) * 2);
     width: 100%;
 
@@ -278,7 +277,7 @@
       position: absolute;
       left: calc(var(--thumb-offset) * 1px);
       width: var(--thumb-width);
-      height: var(--thumb-height);
+      height: max(var(--thumb-height), var(--track-height));
       border-radius: 999px;
       translate: -50% 0;
       background: var(--primary);

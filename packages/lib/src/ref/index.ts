@@ -4,6 +4,7 @@ export * from './tools'
 
 export * from './use-drag'
 export * from './use-focus-lock'
+export * from './use-form-value'
 export * from './use-local-storage'
 export * from './use-preferred-theme'
 export * from './use-rect'

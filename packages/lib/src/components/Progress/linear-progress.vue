@@ -24,7 +24,7 @@
 
   const width = computed(() => (rect.ready ? rect.width : 0))
   const speed = computed(() => clamp(width.value / 300, 2.5, 6))
-  const noSpace = computed(() => props.value <= 0)
+  const noSpace = computed(() => props.value <= 0 || undefined)
 
   defineOptions({ name: 'MdLinearProgress' })
 </script>
@@ -34,7 +34,7 @@
     :ref="setRef"
     apply="animate"
     class="md-progress"
-    :no-space
+    :no-space="noSpace"
     :style="{
       height: getCSSValue(size),
       '--speed': addUnit(speed, 's')

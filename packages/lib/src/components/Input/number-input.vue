@@ -1,14 +1,18 @@
 <script setup lang="ts">
   import '@/assets/input.scss'
-  import type { Component, InputHTMLAttributes } from 'vue'
-  import { computed, ref, useAttrs } from 'vue'
 
+  import type { Component, InputHTMLAttributes } from 'vue'
+
+  import { ref, useAttrs } from 'vue'
   import { clamp } from '@/utils/number/range'
+  import { useValue } from '@/ref/use-form-value'
+
   import HybridIcon from '../Misc/hybrid-icon.vue'
   import NumberArrows from './number-arrows.vue'
 
   interface InputNumber
     extends /** @vue-ignore */ Omit<InputHTMLAttributes, 'onChange'> {
+    name?: string
     span?: boolean
     value?: number
     defaultValue?: number
@@ -27,17 +31,14 @@
   const model = defineModel<number>()
 
   const attributes = useAttrs()
-  const inputValue = computed({
-    get: () => props.value ?? model.value ?? props.defaultValue ?? 0,
-    set: (value) => {
-      const min = Number(attributes.min)
-      const max = Number(attributes.max)
+  const inputValue = useValue(0, props, model, (value) => {
+    const min = Number(attributes.min)
+    const max = Number(attributes.max)
 
-      value = clamp(value, min, max)
+    value = clamp(value, min, max)
+    emit('change', value)
 
-      model.value = value
-      emit('change', value)
-    }
+    return value
   })
 </script>
 
@@ -50,6 +51,7 @@
     <HybridIcon class="md-input-icon left" :icon="leftIcon" />
     <div class="md-input-content" :data-placeholder="placeholder">
       <input
+        :name
         ref="input"
         type="number"
         placeholder=""

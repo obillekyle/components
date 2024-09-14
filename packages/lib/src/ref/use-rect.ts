@@ -1,30 +1,39 @@
 import type { Ref } from 'vue'
 
-import { onBeforeMount, onBeforeUnmount, ref, watch } from 'vue'
+import { FrameQueue } from '@/utils/other/frame-queue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { toProxy } from './tools'
 
-type RectType = { ready: false } | ({ ready: true } & DOMRect)
+const isSimilar = (a: DOMRect, b: DOMRect) =>
+  a.left === b.left &&
+  a.top === b.top &&
+  a.right === b.right &&
+  a.bottom === b.bottom &&
+  a.width === b.width &&
+  a.height === b.height
 
+type RectType = { ready: false } | ({ ready: true } & DOMRect)
 export function useRect(elem: Ref<HTMLElement | undefined>) {
-  let observer: ResizeObserver
   const rect = ref<RectType>({ ready: false })
 
-  onBeforeMount(() => {
-    if (typeof ResizeObserver === 'undefined') return
-    observer = new ResizeObserver(([entry]) => {
-      rect.value = Object.assign(entry.target.getBoundingClientRect(), {
-        ready: true
-      })
-    })
+  function updateRect() {
+    if (!elem.value && rect.value.ready) {
+      rect.value = { ready: false }
+      return
+    }
 
-    elem.value && observer.observe(elem.value)
-  })
+    if (!elem.value) return
 
-  watch(elem, (newElement, oldElement) => {
-    oldElement && observer.unobserve(oldElement)
-    newElement && observer.observe(newElement)
-  })
+    const oldRect = rect.value
+    const newRect = elem.value.getBoundingClientRect()
 
-  onBeforeUnmount(() => observer.disconnect())
+    if (!oldRect.ready || !isSimilar(oldRect, newRect)) {
+      rect.value = Object.assign(newRect, { ready: true })
+    }
+  }
+
+  onMounted(() => FrameQueue.add(updateRect))
+  onBeforeUnmount(() => FrameQueue.remove(updateRect))
+
   return toProxy(rect, true)
 }

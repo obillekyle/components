@@ -26,11 +26,15 @@ export function useLocalStorage<T>(key: string, defaultValue?: T) {
     removeEventListener('storage', handleDataChange)
   })
 
-  watch(value, (v) => {
-    v === undefined
-      ? localStorage.removeItem(key)
-      : localStorage.setItem(key, stringify(v))
-  })
+  watch(
+    value,
+    (v) => {
+      v === undefined
+        ? localStorage.removeItem(key)
+        : localStorage.setItem(key, stringify(v))
+    },
+    { deep: true }
+  )
 
   return value
 }
