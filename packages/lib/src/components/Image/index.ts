@@ -1,14 +1,11 @@
-import BlockImage from './block-image.vue'
-import SquareImage from './square-image.vue'
+import Image from './block-image.vue'
+import Square from './square-image.vue'
 
-type ImageComponent = typeof BlockImage & {
-  Square: typeof SquareImage
+type ImageComponent = typeof Image & {
+  Square: typeof Square
 }
 
-const Image = BlockImage as ImageComponent
-Image.Square = SquareImage
-
-export default Image
+export default Object.assign({}, Image, { Square }) as ImageComponent
 
 export { default as BlockImage } from './block-image.vue'
 export { default as SquareImage } from './square-image.vue'
