@@ -21,10 +21,7 @@ export function parseColors(colors: ColorParam): ColorOptions<Colors> {
   const primary = Colors.from(colors.primary ?? '#fff')
   const [h, s] = primary['main']
 
-  const newColors = Object.assign({}, colors, {
-    $vars: undefined,
-    $shades: undefined
-  })
+  const newColors = Object.assign({}, colors)
 
   newColors.secondary ??= toHex(hsla(h, s * 0.4, 0.2, 1))
   newColors.tertiary ??= primary.opposite.toString()
@@ -32,6 +29,7 @@ export function parseColors(colors: ColorParam): ColorOptions<Colors> {
   newColors.error ??= 'red'
 
   for (const color in newColors) {
+    if (color.startsWith('$')) continue
     newColors[color] = Colors.from(newColors[color] ?? '#fff')
   }
 
