@@ -29,8 +29,9 @@ export function parseColors(colors: ColorParam): ColorOptions<Colors> {
   newColors.error ??= 'red'
 
   for (const color in newColors) {
-    if (color.startsWith('$')) continue
-    newColors[color] = Colors.from(newColors[color] ?? '#fff')
+    color.startsWith('$')
+      ? delete newColors[color]
+      : (newColors[color] = Colors.from(newColors[color] ?? '#fff'))
   }
 
   return newColors as ColorOptions<Colors>
