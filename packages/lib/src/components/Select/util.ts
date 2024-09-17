@@ -1,7 +1,6 @@
 export type SelectItem = {
-  readonly id: string | number
-  readonly name: string
-  [key: string]: any
+  label: string
+  value: string
 }
 
 export function toSelectItems(
@@ -10,20 +9,20 @@ export function toSelectItems(
   return items.map((item) => {
     if (typeof item === 'object') return item
     const stringItem = String(item)
-    return { id: stringItem, name: stringItem }
+    return { value: stringItem, label: stringItem }
   })
 }
 
-export function toggleItem<T>(list: T[], item: T): T[] {
-  const index = list.indexOf(item)
+export function toggleItem<T>(list: T[], value: T): T[] {
+  const index = list.indexOf(value)
   return index === -1
-    ? [...list, item]
+    ? [...list, value]
     : list.filter((_, index_) => index_ !== index)
 }
 
-export function filterByName<T extends { name: string }>(
+export function filterByLabel<T extends { label: string }>(
   list: T[],
-  name: string
+  label: string
 ): T[] {
-  return list.filter((item) => item.name.includes(name))
+  return list.filter((item) => item.label.includes(label))
 }

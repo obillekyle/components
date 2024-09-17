@@ -1,8 +1,7 @@
 <script setup lang="ts">
-  defineProps<{
-    name: string
-    id: string | number
-  }>()
+  import type { SelectItem } from './util'
+
+  defineProps<SelectItem>()
 
   defineOptions({
     name: 'MdSelectOptionItem'
@@ -10,7 +9,7 @@
 </script>
 
 <template>
-  <div :data-id="id" class="md-select-option-item">{{ name }}</div>
+  <div :value class="md-select-option-item">{{ label }}</div>
 </template>
 
 <style lang="scss" scoped>

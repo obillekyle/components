@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { Component, HTMLAttributes } from 'vue'
+  import type { HTMLAttributes } from 'vue'
   import type { SelectItem } from './util'
 
   import { fnRef } from '@/ref/fn-ref'
@@ -7,7 +7,7 @@
   import { rippleEffect } from '@/utils/dom/ripple'
   import { Icon } from '@iconify/vue'
   import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-  import { filterByName, toSelectItems, toggleItem } from './util'
+  import { filterByLabel, toSelectItems, toggleItem } from './util'
 
   import OptionItem from './option-item.vue'
   import { useValue } from '@/ref/use-form-value'
@@ -17,7 +17,6 @@
     value?: number[]
     defaultValue?: number[]
     items?: (number | string | SelectItem)[]
-    optionComp?: Component
     multiple?: boolean
     required?: boolean
     placeholder?: string
@@ -49,21 +48,28 @@
 
   const filteredItems = computed(() => {
     const query = search.value.toLowerCase()
-    return query ? filterByName(values.value, query) : values.value
+    return query ? filterByLabel(values.value, query) : values.value
   })
 
   defineOptions({ name: 'MdSelect' })
+  defineSlots<{
+    default: {
+      label: string
+      value: number
+      active: boolean
+    }
+  }>()
 
-  function handleClick(index?: number) {
-    if (index === undefined) {
+  function handleClick(value?: number) {
+    if (value === undefined) {
       if (props.multiple || props.required) return
       selected.value = []
       return
     }
 
     selected.value = props.multiple
-      ? toggleItem(selected.value, index)
-      : [index]
+      ? toggleItem(selected.value, value)
+      : [value]
   }
 
   watch(show, (show) => {
@@ -89,23 +95,26 @@
       @pointerdown="rippleEffect"
       @keypress="keyClick"
     >
-      <div
-        class="md-select-single"
-        v-if="selected.length === 1 && !multiple && values[selected[0]]"
-      >
-        <div class="md-select-option">
-          <component :is="optionComp" v-bind="values[selected[0]]" />
+      <div class="md-select-single" v-if="!multiple">
+        <div class="md-select-option" v-if="selected.length > 0">
+          <slot v-bind="values[selected[0]]" v-if="values[selected[0]]">
+            <OptionItem v-bind="values[selected[0]]" />
+          </slot>
         </div>
-      </div>
-
-      <div
-        class="md-select-single"
-        v-if="selected.length === 0 && !multiple"
-      >
-        <div class="md-select-placeholder">{{ placeholder }}</div>
+        <div class="md-select-placeholder" v-else>{{ placeholder }}</div>
       </div>
 
       <div class="select-multi" v-if="multiple">
+        <div class="md-select-options" v-if="selected.length > 0">
+          <div
+            :key="index"
+            v-for="(item, index) in values"
+            class="md-select-multi-chip"
+          >
+            <span> {{ item.label }} </span>
+            <Icon icon="mdi:close" @click="handleClick(index)" />
+          </div>
+        </div>
         <input
           v-model="search"
           type="text"
@@ -120,7 +129,7 @@
 
     <div class="md-select-options-dropdown" @click="show = false">
       <div
-        tabindex="0"
+        :tabindex="show ? 0 : -1"
         class="md-select-option empty"
         v-if="!required && !multiple"
         @click="handleClick()"
@@ -129,16 +138,17 @@
       />
       <div
         v-for="(item, index) in filteredItems"
-        tabindex="0"
+        :tabindex="show ? 0 : -1"
         class="md-select-option"
         :key="index"
         :ref="setOptions"
-        :data-index="index"
         @click="handleClick(index)"
         @pointerdown="rippleEffect"
         :class="{ active: selected.includes(index) }"
       >
-        <component :is="optionComp" v-bind="item" />
+        <slot v-bind="item">
+          <OptionItem v-bind="item" />
+        </slot>
       </div>
     </div>
   </div>
@@ -245,7 +255,8 @@
       }
     }
 
-    &[open] {
+    &[open],
+    &:has(input:focus) {
       .md-select-wrapper {
         box-shadow: 0 0 0 2px inset var(--primary);
         border-bottom-left-radius: 0;

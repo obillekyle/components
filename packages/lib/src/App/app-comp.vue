@@ -71,11 +71,14 @@
         prefix="Hello"
         variant="outlined"
       />
-      <Select placeholder="Select" span :items="['one', 'two']" />
+      <Select placeholder="Select" span multiple :items="['one', 'two']" />
       <div class="flex">
         <Switch />
         <Switch variant="filled" />
         <Switch variant="filled" default-checked />
+
+        <Checkbox />
+        <Checkbox default-checked />
       </div>
     </div>
 
@@ -302,6 +305,7 @@
   import IconButton from '@/components/Button/icon-button.vue'
   import CardBody from '@/components/Card/card-body.vue'
   import Card from '@/components/Card/card.vue'
+  import Checkbox from '@/components/Checkbox/checkbox.vue'
   import ChipGroup from '@/components/Chip/chip-group.vue'
   import Chip from '@/components/Chip/chip.vue'
   import Divider from '@/components/Divider/divider.vue'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useLocalStorage } from '@/ref'
-  import { ref } from 'vue'
+  import { provide, ref } from 'vue'
 
   import Headline from '@/components/AppBar/headline.vue'
   import TopAppBar from '@/components/AppBar/top-bar.vue'
@@ -29,6 +29,8 @@
   const color = useLocalStorage('theme-color', '#386a1f')
   const isDark = useLocalStorage('dark', true)
   const colorInput = ref<HTMLInputElement>()
+
+  provide('theme-color', color)
 </script>
 
 <template>
