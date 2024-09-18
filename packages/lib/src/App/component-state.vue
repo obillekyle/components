@@ -111,8 +111,8 @@
     <p>Sheets</p>
     <Select
       :items="[...options]"
-      @change="([v]) => (position = options[v])"
-      :value="[options.indexOf(position) || 0]"
+      @change="([v]) => (position = v as typeof position)"
+      :value="[position]"
     />
     <Button @click="openSheet">Open Sheet</Button>
   </Box>
