@@ -42,7 +42,7 @@
     :ref="setRef"
     apply="animate"
     class="md-progress-2"
-    :no-space="noSpace"
+    :no-space="noSpace || undefined"
     :style="{
       '--width': getCSSValue(width),
       '--height': getCSSValue(size),
@@ -135,11 +135,11 @@
       }
     }
 
-    &[no-space='true'] &-bar-bg {
+    &[no-space] &-bar-bg {
       stroke-dashoffset: 0;
     }
 
-    &[no-space='true'] &-bar-draw {
+    &[no-space] &-bar-draw {
       stroke-dashoffset: 1;
     }
 
@@ -148,9 +148,9 @@
 
       &-1,
       &-2 {
+        fill: none;
         stroke-linecap: round;
         stroke-width: var(--height);
-        fill: none;
       }
 
       &-1 {
@@ -181,13 +181,13 @@
       }
 
       75% {
-        stroke-dasharray: calc(var(--width) * 0.7) calc(var(--width));
+        stroke-dasharray: calc(var(--width) * 0.7) var(--width);
         stroke-dashoffset: calc(var(--width) * -2);
       }
 
       100% {
         stroke-dashoffset: calc(var(--width) * -3);
-        stroke-dasharray: calc(var(--width)) calc(var(--width));
+        stroke-dasharray: var(--width) var(--width);
       }
     }
 

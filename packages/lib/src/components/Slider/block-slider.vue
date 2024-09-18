@@ -5,9 +5,9 @@
   import { useRect } from '@/ref/use-rect'
   import { clamp, mapNumberToRange } from '@/utils/number/range'
   import { computed, ref } from 'vue'
+  import { useValue } from '@/ref/use-form-value'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
-  import { useValue } from '@/ref/use-form-value'
 
   interface BlockSliderProps {
     value?: number
@@ -98,9 +98,11 @@
     @keydown="handleKeydown"
     :style="{ '--pos': position }"
   >
-    <div class="md-block-slider-icon" :data-value="sliderVal">
-      <HybridIcon :icon="icon" />
-    </div>
+    <HybridIcon
+      :icon
+      :data-value="sliderVal"
+      class="md-block-slider-icon"
+    />
     <div class="md-block-slider-content">
       <slot />
     </div>
@@ -150,9 +152,9 @@
 
     &::after {
       top: 50%;
+      aspect-ratio: 1;
       right: calc(var(--height) / 4);
       width: calc(var(--height) * 0.1);
-      aspect-ratio: 1;
       transform: translateY(-50%);
       border-radius: inherit;
     }
