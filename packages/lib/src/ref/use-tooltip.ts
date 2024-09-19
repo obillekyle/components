@@ -16,7 +16,7 @@ export function useTooltip(
 
   const selector = Array.isArray(attr)
     ? attr.map((i) => `[${i}]`).join(',')
-    : attr
+    : `[${attr}]`
 
   function getAttr(element: HTMLElement) {
     const search = Array.isArray(attr) ? attr : [attr]
@@ -106,6 +106,7 @@ export function useTooltip(
         floater.remove()
       }
 
+      current = undefined
       floater.classList.remove('show')
       floater.addEventListener('transitionend', function () {
         this.remove()
