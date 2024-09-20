@@ -13,10 +13,12 @@
   import { useFocusLock } from '@/ref/use-focus-lock'
   import { ref } from 'vue'
   import TextInput from '@/components/Input/text-input.vue'
+  import { useTooltip } from '@/ref/use-tooltip'
 
   const isDark = ref(true)
   const [root, setRoot] = customRef<HTMLElement>()
   const focusLock = useFocusLock(root)
+  useTooltip(root, 'class')
 
   const data = useLocalStorage('data', {})
 
@@ -86,9 +88,7 @@
       </Form>
 
       <pre>
-        <code>
-{{ JSON.stringify(data, null, 2) }}
-        </code>
+        <code>{{ JSON.stringify(data, null, 2) }}</code>
       </pre>
     </Layout>
   </Box>
@@ -97,7 +97,7 @@
 <style lang="scss">
   .layout-wrapper {
     position: relative;
-    contain: content;
+    contain: layout;
     border: 1px solid var(--surface-container);
   }
 </style>

@@ -1,143 +1,104 @@
 import '@/assets/tooltip.scss'
-import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
-import { getParent } from '../utils/dom/selector'
-import { debounce } from '../utils/function/perf'
+import { FrameQueue } from '@/utils/other/frame-queue'
+import {
+  onMounted,
+  onUnmounted,
+  shallowReactive,
+  watch,
+  type Ref
+} from 'vue'
+
+function newFloater(content: string): HTMLElement {
+  const floater = document.createElement('div')
+
+  floater.textContent = content
+  floater.classList.add('md-tooltip')
+
+  return floater
+}
+
+function getFloaterPos(
+  target: HTMLElement,
+  floater: HTMLElement
+): { top: string; left: string } {
+  const tRect = target.getBoundingClientRect()
+  const fRect = floater.getBoundingClientRect()
+
+  const onBottom = tRect.top < fRect.height
+  const top = onBottom ? tRect.top + tRect.height : tRect.top
+  const left = tRect.width / 2 + tRect.left
+
+  return { top: top + 'px', left: left + 'px' }
+}
 
 export function useTooltip(
   elem: Ref<HTMLElement | undefined>,
   attr: string | string[] = 'title',
   state = true
 ) {
-  let tooltip = ''
-  let timeout: any
-  const enabled = ref(state)
-  let current: HTMLElement | undefined
-  let floater: HTMLElement | undefined
+  const target = shallowReactive({
+    enabled: state,
+    current: undefined as HTMLElement | undefined,
+    floater: undefined as HTMLElement | undefined
+  })
 
   const selector = Array.isArray(attr)
-    ? attr.map((i) => `[${i}]`).join(',')
-    : `[${attr}]`
+    ? attr.map((i) => `[${i}]:hover`).join(',')
+    : `[${attr}]:hover`
 
   function getAttr(element: HTMLElement) {
     const search = Array.isArray(attr) ? attr : [attr]
     return search.map((i) => element.getAttribute(i) ?? '').find(Boolean)
   }
 
-  function showTooltip(this: HTMLElement) {
-    this.classList.add('show')
+  function changeSetter() {
+    if (!target.enabled || !elem.value) return
+
+    const elements = elem.value.querySelectorAll(selector)
+    // eslint-disable-next-line unicorn/prefer-at
+    const current = elements[elements.length - 1]
+
+    if (current && current !== target.current) {
+      target.current = current as HTMLElement
+      return
+    }
+
+    if (!current) {
+      target.current = undefined
+    }
   }
 
-  function onEnter(event: Event) {
-    if (!enabled.value) return
+  watch(
+    () => target.current,
+    (current) => {
+      if (!elem.value) return
 
-    debounce(
-      () => {
-        const container = elem.value!
-        const newTarget = getParent(event.target, selector, true)
+      if (target.floater) {
+        const floater = target.floater
 
-        if (newTarget === current) return
-        if (newTarget === undefined) return
-        if (newTarget === event.currentTarget) return
-
-        cleanupTooltip.bind(current)()
-
-        if (event.type !== 'touchstart') {
-          event.preventDefault()
+        if (floater.classList.contains('show')) {
+          floater.classList.remove('show')
+          setTimeout(() => floater.remove(), 500)
+        } else {
+          floater.remove()
         }
 
-        current = newTarget
-        tooltip = getAttr(current) ?? ''
-
-        if (attr.includes('title') && current.hasAttribute('title')) {
-          current.setAttribute('title', '')
-        }
-
-        const newFloater = document.createElement('div')
-
-        floater = newFloater
-        floater.textContent = tooltip
-        floater.className = 'md-tooltip'
-
-        container.append(floater)
-
-        const tRect = current.getBoundingClientRect()
-        const fRect = floater.getBoundingClientRect()
-        const cRect = container.getBoundingClientRect()
-
-        const onBottom = tRect.top < fRect.height
-        const top = onBottom ? tRect.top + tRect.height : tRect.top
-        const left = tRect.width / 2 + tRect.left
-        const maxWidth =
-          tRect.left < fRect.width / 2
-            ? tRect.width / 2
-            : cRect.width - (tRect.left + fRect.width / 2)
-
-        floater.classList.toggle('bottom', onBottom)
-
-        floater.style.top = top + 'px'
-        floater.style.left = left + 'px'
-        floater.style.maxWidth = maxWidth + 'px'
-
-        timeout && clearTimeout(timeout)
-        timeout = setTimeout(showTooltip.bind(floater), 800)
-
-        current.addEventListener('mouseleave', cleanupTooltip)
-        current.addEventListener('touchend', cleanupTooltip)
-      },
-      { key: 'tooltip', wait: 200 }
-    )
-  }
-
-  function cleanupTooltip(this: HTMLElement | void, event?: Event) {
-    if (event && event.type !== 'touchend') {
-      event.preventDefault()
-    }
-
-    if (floater && this) {
-      this.removeEventListener('mouseleave', cleanupTooltip)
-      this.removeEventListener('touchend', cleanupTooltip)
-
-      if (attr.includes('title') && this.hasAttribute('title')) {
-        this.setAttribute('title', tooltip)
+        target.floater = undefined
       }
 
-      if (!floater.classList.contains('show')) {
-        timeout && clearTimeout(timeout)
-        floater.remove()
+      if (current) {
+        const floater = newFloater(getAttr(current) ?? '')
+        Object.assign(floater.style, getFloaterPos(current, floater))
+        setTimeout(() => floater.classList.add('show'), 500)
+
+        elem.value.after(floater)
+        target.floater = floater
       }
-
-      current = undefined
-      floater.classList.remove('show')
-      floater.addEventListener('transitionend', function () {
-        this.remove()
-      })
     }
-  }
+  )
 
-  function mount(element: HTMLElement) {
-    element.addEventListener('focusin', onEnter)
-    element.addEventListener('mousemove', onEnter)
-    element.addEventListener('touchstart', onEnter, { passive: true })
-  }
+  onMounted(() => FrameQueue.add(changeSetter))
+  onUnmounted(() => FrameQueue.remove(changeSetter))
 
-  function unmount(element: HTMLElement) {
-    element.removeEventListener('focusin', onEnter)
-    element.removeEventListener('mousemove', onEnter)
-    element.removeEventListener('touchstart', onEnter)
-  }
-
-  watch(elem, (newElement, oldElement) => {
-    newElement && mount(newElement)
-    oldElement && unmount(oldElement)
-  })
-
-  onMounted(() => elem.value && mount(elem.value))
-  onUnmounted(() => elem.value && unmount(elem.value))
-
-  return {
-    enabled,
-    get currentTarget() {
-      return current
-    }
-  }
+  return target
 }

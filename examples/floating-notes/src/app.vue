@@ -45,14 +45,8 @@
   })
 
   useFocusLock(root)
-  const tooltip = useTooltip(root, ['tooltip'])
+  useTooltip(root, ['tooltip'])
 
-  watch(
-    () => tooltip.currentTarget,
-    (target) => {
-      console.log(target)
-    }
-  )
   const wRect = useWindowSize()
   const rect = useRect(root)
 
