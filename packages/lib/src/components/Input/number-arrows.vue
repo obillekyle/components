@@ -1,10 +1,7 @@
 <script setup lang="ts">
   import { Icon } from '@iconify/vue'
 
-  const model = defineModel<number>({
-    required: true,
-    default: 0
-  })
+  const model = defineModel({ default: 0 })
 </script>
 
 <template>

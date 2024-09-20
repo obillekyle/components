@@ -32,8 +32,8 @@
 
   const attributes = useAttrs()
   const inputValue = useValue(0, props, model, (value) => {
-    const min = Number(attributes.min)
-    const max = Number(attributes.max)
+    const min = Number(attributes.min || Number.NEGATIVE_INFINITY)
+    const max = Number(attributes.max || Number.POSITIVE_INFINITY)
 
     value = clamp(value, min, max)
     emit('change', value)
@@ -56,7 +56,7 @@
         type="number"
         placeholder=""
         v-bind="$attrs"
-        v-model="model"
+        v-model="inputValue"
       />
       <NumberArrows v-model="inputValue" />
     </div>
