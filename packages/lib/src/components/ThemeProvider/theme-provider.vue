@@ -59,16 +59,13 @@
 
   const className = createStyle(
     () => {
-      const theme = themeOptions.value.theme
-      const colors = themeOptions.value.colors
-      const sizes = themeOptions.value.sizes
-      const components = themeOptions.value.component
-      const { color, fontFamily } = themeOptions.value
+      const { theme, colors, sizes, component, color, fontFamily } =
+        themeOptions.value
 
       let values: Map<string, string> = new Map([
-        ...colors.$shades,
         ...Object.entries(colors.$vars),
-        ...Object.entries(components).map<[string, string]>(
+        ...(props.extras ? colors.$shades : []),
+        ...Object.entries(component).map<[string, string]>(
           ([key, value]) => [key + '-size', getCSSValue(value)]
         ),
         ...Object.entries(sizes).flatMap(([size, value]) =>
@@ -82,8 +79,8 @@
 
       return Object.assign(object, {
         colorScheme: theme,
-        color: getCSSColor(color),
-        fontFamily: fontFamily
+        fontFamily: fontFamily,
+        color: getCSSColor(color)
       })
     },
     { prefix: 'md-theme-', resolveVars: false }
