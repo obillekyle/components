@@ -19,7 +19,7 @@
     class="md-text"
     v-bind="boxProps"
     :styled="{
-      $lines: 'raw:' + lines,
+      $lines: 'raw:' + (lines || 'auto'),
 
       color,
       textAlign,
