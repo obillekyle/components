@@ -3,6 +3,7 @@ import { type Plugin, type ResolvedConfig } from 'vite'
 import { transform } from 'esbuild'
 import { gzipSync } from 'node:zlib'
 import {
+  CURRENT_SRC,
   formatCss,
   getHelperFileContent,
   getImportedStyles,
@@ -99,7 +100,7 @@ export function attachStyles({
     },
 
     async transform(code, id) {
-      const relative = path.relative(path.resolve(process.cwd(), 'src'), id)
+      const relative = path.relative(CURRENT_SRC, id)
       const entry = normalize(relative.split('?')[0])
 
       if (isCSS(id)) {
@@ -125,14 +126,12 @@ export function attachStyles({
         }
       }
 
-      const styleImports = getImportedStyles(code, entry, config)
-
-      for (const styleImport of styleImports) {
+      for (const styleImport of getImportedStyles(code, entry, config)) {
         const { ext, dir, name } = path.parse(entry)
         const id = ext === '.vue' ? entry : normalize(path.join(dir, name))
 
         const importSet = css.imports.get(id) || new Set()
-        css.imports.has(entry) || css.imports.set(entry, importSet)
+        css.imports.has(id) || css.imports.set(id, importSet)
 
         importSet.add(styleImport)
       }
