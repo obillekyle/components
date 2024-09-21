@@ -24,8 +24,10 @@ let packSize = 0,
   contents = '',
   logger = new Logger('attach-styles')
 
-const css: Record<string, string> = {}
-const importedMap: Record<string, string[]> = {}
+const css = {
+  declarations: new Map<string, string>(),
+  imports: new Map<string, Set<string>>()
+}
 
 async function deleteCSSFiles(
   dir: string,
@@ -72,6 +74,7 @@ async function deleteCSSFiles(
 
 type ASOptions = {
   prefix?: string
+  global?: string
   cleanIgnore?: string[]
   cleanCSS?: boolean
   transform?: (code: string, id: string) => string
@@ -81,7 +84,8 @@ export function attachStyles({
   prefix = 'css',
   cleanIgnore = [],
   cleanCSS = true,
-  transform: t = (s) => s
+  transform: t = (s) => s,
+  global = ''
 }: ASOptions = {}): Plugin {
   let config: ResolvedConfig
   const name: string = 'attach-styles'
@@ -101,17 +105,21 @@ export function attachStyles({
       if (isCSS(id)) {
         if (isCSS(entry)) {
           const cssString = await formatCss(code)
-          css[entry] = (css[entry] || '') + cssString
+          const oldString = css.declarations.get(entry) || ''
+
+          css.declarations.set(entry, oldString + cssString)
           return
         }
 
         if (entry.endsWith('.vue')) {
           const cssString = await formatCss(code)
-          const indexMap = importedMap[entry]
-          css[entry] = (css[entry] || '') + cssString
+          const oldString = css.declarations.get(entry) || ''
+          const importSet = css.imports.get(entry) || new Set()
 
-          if (!indexMap) importedMap[entry] = [entry]
-          else if (!indexMap.includes(entry)) indexMap.push(entry)
+          importSet.add(entry)
+
+          css.imports.has(entry) || css.imports.set(entry, importSet)
+          css.declarations.set(entry, oldString + cssString)
 
           return
         }
@@ -120,51 +128,47 @@ export function attachStyles({
       const styleImports = getImportedStyles(code, entry, config)
 
       for (const styleImport of styleImports) {
-        const file = path.parse(entry)
-        const id =
-          file.ext === '.vue'
-            ? entry
-            : normalize(path.join(file.dir, file.name))
+        const { ext, dir, name } = path.parse(entry)
+        const id = ext === '.vue' ? entry : normalize(path.join(dir, name))
 
-        const map = importedMap[id]
+        const importSet = css.imports.get(id) || new Set()
+        css.imports.has(entry) || css.imports.set(entry, importSet)
 
-        if (map) map.push(styleImport)
-        else importedMap[id] = [styleImport]
+        importSet.add(styleImport)
       }
     },
     async renderChunk(code, { name, fileName }) {
-      let added = false
-      const imports = importedMap[name]
+      const imports = css.imports.get(name) || new Set()
 
-      if (imports?.length) {
-        for (const imported of imports) {
-          if (imported.endsWith('.vue')) {
-            const cssString = t(css[imported], imported)
+      if (imports.size > 0) {
+        let add = ''
+        let i = false
+        const root = relativeFromSrc(name)
 
-            if (cssString) {
-              if (!added) {
-                const root = relativeFromSrc(name)
-                code = `import $i from '${root}/attach-styles.js';\n` + code
-                added = true
-              }
-              code += `\n$i(${JSON.stringify(cssString)}, '${hash(imported)}');`
-            }
+        for (const module of imports) {
+          const modulePath = path.parse(module)
+          if (modulePath.ext === '.vue') {
+            const cssString = t(css.declarations.get(module)!, module)
+            add += i ? '' : `import $i from '${root}/attach-styles.js'\n;`
+            add += `$i(${JSON.stringify(cssString)}, '${hash(module)}');\n`
+
+            i = true
             continue
           }
 
-          const file = path.parse(imported)
           let relative = normalize(
-            path.relative(path.dirname(fileName), path.dirname(imported))
+            path.relative(path.dirname(fileName), modulePath.dir)
           )
+
           relative = relative.startsWith('.') ? relative : `./${relative}`
-          code = `import '${relative}/${file.name}.css.js';\n${code}`
+          add += `import '${relative}/${modulePath.name}.css.js'\n;`
         }
 
-        return code
+        return add + code
       }
 
       if (isCSS(name)) {
-        const cssString = t(css[name], name)
+        const cssString = t(css.declarations.get(name)!, name)
         const root = relativeFromSrc(name)
         const newFile = `
           import i from '${root}/attach-styles.js';
@@ -188,7 +192,7 @@ export function attachStyles({
     },
 
     async writeBundle() {
-      const script = getHelperFileContent(prefix)
+      const script = getHelperFileContent(prefix, global)
       const parentDir = path.join(process.cwd(), config.build.outDir)
       const minified = await transform(script, { loader: 'js' })
 

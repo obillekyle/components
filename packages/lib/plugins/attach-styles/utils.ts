@@ -3,6 +3,8 @@ import crypto from 'node:crypto'
 import path from 'node:path'
 import { normalizePath, type ResolvedConfig } from 'vite'
 
+export const CURRENT_SRC = path.resolve(process.cwd(), 'src')
+
 export async function formatCss(
   css: string,
   minify: boolean | string = true
@@ -24,7 +26,7 @@ export function isCSS(string_: string) {
   return /\.(scss|sass|css|styl|stylus|less)$/.test(string_)
 }
 
-export function getHelperFileContent(prefix: string) {
+export function getHelperFileContent(prefix: string, global: string) {
   return `
     let lastStyleTag = null
 
@@ -54,6 +56,8 @@ export function getHelperFileContent(prefix: string) {
         }
       }
     }
+
+    injectCSS(${JSON.stringify(global)}, 'global');
   `
 }
 
@@ -66,8 +70,8 @@ export function normalize(string_: string) {
 export function relativeFromSrc(name: string) {
   return normalize(
     path.relative(
-      path.resolve(process.cwd(), 'src', path.dirname(name)),
-      path.resolve(process.cwd(), 'src')
+      path.resolve(CURRENT_SRC, path.dirname(name)),
+      CURRENT_SRC
     )
   )
 }
@@ -80,8 +84,7 @@ export function resolveAlias(path: string, config: ResolvedConfig) {
     for (const alias of aliases) {
       if (
         (typeof alias.find === 'string' && path.startsWith(alias.find)) ||
-        // eslint-disable-next-line unicorn/prefer-regexp-test
-        path.match(alias.find)
+        (alias.find instanceof RegExp && alias.find.test(path))
       ) {
         return path.replace(alias.find, alias.replacement)
       }
@@ -101,19 +104,17 @@ export function getImportedStyles(
   const imports: string[] = []
   const match = code.matchAll(re)
 
-  for (const m of match) {
-    if (m[1].includes('?')) continue
-    imports.push(m[1])
+  for (const [, imported] of match) {
+    if (imported.includes('?')) continue
+    imports.push(imported)
   }
-
-  const sourceRoot = path.resolve(process.cwd(), 'src')
 
   return imports.map((m) => {
     const imported = m.startsWith('.')
-      ? path.resolve(path.join(sourceRoot, path.dirname(origin)), m)
+      ? path.resolve(path.join(CURRENT_SRC, path.dirname(origin)), m)
       : resolveAlias(m, config)
 
-    return normalize(path.relative(sourceRoot, imported))
+    return normalize(path.relative(CURRENT_SRC, imported))
   })
 }
 
