@@ -110,18 +110,28 @@ function dismount(name: string) {
   count > 0 ? (style!.dataset.count = String(count)) : style?.remove()
 }
 
+const cssStore = new Map<string, string>()
+
 function parseStyleObject(name: string, object: any, resolve = true) {
   let declarations: string = ''
-  const parser = resolve ? cssPropValue : addUnit
 
-  for (const key in object) {
-    const value = object[key]
-    if (value === undefined || value === null) continue
+  if (cssStore.has(name)) {
+    declarations = cssStore.get(name)!
+  } else {
+    const parser = resolve ? cssPropValue : addUnit
 
-    const property = keyPrefix[key] ?? toKebabCase(key)
-    const cssValue = parser(value, unitsByProp[key])
+    for (const key in object) {
+      const value = object[key]
+      if (value === undefined || value === null) continue
 
-    declarations += `${property.replace('$', '--')}: ${cssValue}; `
+      const prop = keyPrefix[key] ?? toKebabCase(key)
+      const cssValue = parser(value, unitsByProp[key])
+      const key2 = prop[0] === '$' ? '--' + prop.slice(1) : prop
+
+      declarations += `${key2}: ${cssValue}; `
+    }
+
+    cssStore.set(name, declarations)
   }
 
   return `.${name} { ${declarations} }`
@@ -138,7 +148,6 @@ function mount(name: string, object: any, resolve = true) {
     return
   }
 
-  style.dataset.count = String(count)
   style.setAttribute('for', name)
   style.dataset.count = String(count)
   style.innerHTML = parseStyleObject(name, object, resolve)

@@ -1,11 +1,11 @@
 import type { ColorOptions, ColorParam } from '../colors'
 import type { ColorEngineVars } from './types'
 
-import { darken, saturate } from 'color2k'
+import { darken, saturate, toHex } from 'color2k'
 import { Colors, parseColors, shades } from '../colors'
 
 function dim(color: string, amount: number) {
-  return saturate(darken(color, amount), -0.2)
+  return toHex(saturate(darken(color, amount), -0.2))
 }
 
 export class ColorEngine {
