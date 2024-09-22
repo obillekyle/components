@@ -86,9 +86,7 @@
     <div class="showcase-entry">
       <div class="showcase-entry-title">Progress</div>
       <LinearProgress />
-      <LinearProgressSvg />
       <LinearProgress :value="slider" />
-      <LinearProgressSvg :value="slider" />
       <div class="flex">
         <CircularProgress />
         <CircularProgress :value="slider" />
@@ -320,7 +318,6 @@
   import HybridIcon from '@/components/Misc/hybrid-icon.vue'
   import Paper from '@/components/Paper/paper.vue'
   import CircularProgress from '@/components/Progress/circular-progress.vue'
-  import LinearProgressSvg from '@/components/Progress/linear-progress-svg.vue'
   import LinearProgress from '@/components/Progress/linear-progress.vue'
   import Select from '@/components/Select/select.vue'
   import Skeleton from '@/components/Skeleton/skeleton.vue'

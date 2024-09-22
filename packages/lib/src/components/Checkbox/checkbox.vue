@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useBoolValue } from '@/ref'
+  import { useBoolValue } from '@/ref/use-form-value'
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
   import { ref } from 'vue'

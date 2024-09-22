@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import type { SizesString } from '@/utils/css/type'
-
   import { customRef } from '@/ref/custom-ref'
   import { useRect } from '@/ref/use-rect'
   import { addUnit, getCSSValue } from '@/utils/css/sizes'
@@ -11,7 +9,7 @@
 
   interface LinearProgressProps {
     value?: number
-    size?: SizesString
+    size?: number
   }
 
   const [root, setRef] = customRef<HTMLElement>()
@@ -19,245 +17,214 @@
 
   const props = withDefaults(defineProps<LinearProgressProps>(), {
     value: Infinity,
-    size: 4
+    size: 5
   })
+
+  defineOptions({ name: 'MdLinearProgress' })
 
   const width = computed(() => (rect.ready ? rect.width : 0))
   const speed = computed(() => clamp(width.value / 300, 2, 6))
   const noSpace = computed(() => props.value <= 0 || undefined)
 
-  defineOptions({ name: 'MdLinearProgress' })
+  const length = computed(() => {
+    const length = (props.value / 100) * width.value
+    return {
+      percent: length,
+      dash2Array: width.value,
+      dash2Offset: -(length + props.size * 2),
+      dashArray: `${length} ${width.value}`
+    }
+  })
 </script>
 
 <template>
   <ViewObserver
     :ref="setRef"
     apply="animate"
-    class="md-progress"
-    :no-space="noSpace"
+    class="md-progress-2"
+    :no-space="noSpace || undefined"
     :style="{
-      height: getCSSValue(size),
+      '--width': getCSSValue(width),
+      '--height': getCSSValue(size),
       '--speed': addUnit(speed, 's')
     }"
   >
-    <div class="md-progress-infinite" v-if="value === Infinity">
-      <div class="md-progress-infinite-bar" />
-    </div>
-    <div class="md-progress-bar" v-else :style="`--value: ${value}`" />
+    <svg
+      class="md-progress-2-infinite"
+      xmlns="http://www.w3.org/2000/svg"
+      :viewBox="`0 0 ${width} ${size}`"
+      v-if="!Number.isFinite(value)"
+    >
+      <path
+        class="md-progress-2-infinite-2"
+        :d="`M 0 ${size / 2} L ${width} ${size / 2}`"
+        :stroke-width="size"
+      />
+      <path
+        class="md-progress-2-infinite-1"
+        :d="`M 0 ${size / 2} L ${width} ${size / 2}`"
+        stroke="var(--primary)"
+      />
+    </svg>
+
+    <svg
+      v-else
+      class="md-progress-2-bar"
+      xmlns="http://www.w3.org/2000/svg"
+      :viewBox="`0 0 ${width} ${size}`"
+      :style="{
+        '--value': clamp(value, 0, 100)
+      }"
+    >
+      <path
+        class="md-progress-2-bar-bg"
+        :d="`M 0 ${size / 2} L ${width} ${size / 2}`"
+        :stroke-width="size"
+        :stroke-dasharray="length.dash2Array"
+        :stroke-dashoffset="length.dash2Offset"
+      />
+      <path
+        class="md-progress-2-bar-draw"
+        :d="`M 0 ${size / 2} L ${width} ${size / 2}`"
+        :stroke-width="size"
+        :stroke-dasharray="length.dashArray"
+        :stroke-dashoffset="0"
+      />
+    </svg>
   </ViewObserver>
 </template>
 
 <style lang="scss">
-  @keyframes infinite-load {
-    0% {
-      left: 0%;
-      right: 100%;
-    }
+  .md-progress-2 {
+    --spacing: var(--xxs);
 
-    20% {
-      left: 0%;
-    }
-
-    40% {
-      left: 30%;
-      right: 0%;
-    }
-
-    70% {
-      left: 100%;
-      right: 0%;
-    }
-  }
-
-  @keyframes infinite-load-2 {
-    50% {
-      right: 100%;
-    }
-
-    75% {
-      right: 30%;
-      left: 0%;
-    }
-
-    90% {
-      right: 0%;
-    }
-
-    100% {
-      left: 100%;
-      right: 0%;
-    }
-  }
-
-  @keyframes infinite-load-bg-1 {
-    0% {
-      left: var(--xxs);
-      right: 0%;
-    }
-
-    40% {
-      left: calc(100% + var(--xxs));
-      right: 0%;
-    }
-
-    40.001% {
-      left: 0%;
-      right: 100%;
-    }
-
-    50% {
-      left: 0%;
-      right: 100%;
-    }
-
-    75% {
-      right: calc(100% + var(--xxs));
-      left: 0%;
-    }
-
-    100% {
-      right: calc(0% + var(--xxs));
-      left: 0%;
-    }
-  }
-
-  @keyframes infinite-load-bg-2 {
-    20% {
-      right: calc(100% + var(--xxs));
-      left: 0%;
-    }
-
-    40% {
-      left: 0%;
-      right: calc(70% + var(--xxs));
-    }
-
-    49.999% {
-      left: 0%;
-    }
-
-    50% {
-      left: var(--xxs);
-    }
-
-    69.999% {
-      right: var(--xxs);
-    }
-
-    70% {
-      right: 0%;
-    }
-
-    75% {
-      left: calc(70% + var(--xxs));
-    }
-
-    90% {
-      left: calc(100% + var(--xxs));
-    }
-
-    100% {
-      left: calc(100% + var(--xxs));
-      right: 0%;
-    }
-  }
-
-  .md-progress {
+    width: 100%;
+    line-height: 0;
     position: relative;
     overflow: hidden;
-    width: 100%;
-    background: transparent;
+    height: var(--height);
     border-radius: var(--md);
 
-    &:not(.animate) {
-      *,
-      *::before,
-      *::after {
-        animation-play-state: paused !important;
-      }
+    &:has(&-bar)::after {
+      height: 100%;
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      aspect-ratio: 1;
+      background: var(--primary);
+      right: 0;
     }
 
     &-bar {
-      height: inherit;
-      overflow: hidden;
-      background: var(--primary);
-      width: calc(var(--value) * 1%);
-      transition: width 0.25s var(--timing-standard);
-      will-change: width;
-      border-radius: inherit;
+      width: 100%;
+      vertical-align: top;
 
-      &::before,
-      &::after {
-        top: 0;
-        right: 0;
-        content: '';
-        position: absolute;
-        border-radius: inherit;
-        height: inherit;
+      &-draw,
+      &-bg {
+        stroke-linecap: round;
+        stroke-width: var(--height);
+        fill: none;
       }
 
-      &::before {
-        transition: left 0.25s var(--timing-standard);
-        background: var(--secondary-container);
-        left: calc(var(--value) * 1% + var(--xxs));
+      &-draw {
+        stroke: var(--primary);
       }
 
-      &::after {
-        aspect-ratio: 1;
-        max-height: var(--xxs);
-        background: var(--primary);
+      &-bg {
+        stroke: var(--secondary-container);
       }
     }
 
-    &[no-space='true'] &-bar::before {
-      left: 0;
+    &[no-space] &-bar-bg {
+      stroke-dashoffset: 0;
+    }
+
+    &[no-space] &-bar-draw {
+      stroke-dashoffset: 1;
     }
 
     &-infinite {
-      height: inherit;
-      overflow: hidden;
-      position: relative;
-      border-radius: inherit;
+      width: 100%;
 
-      &-bar {
-        height: inherit;
-        position: relative;
-        border-radius: inherit;
-
-        &::before,
-        &::after {
-          position: absolute;
-          content: '';
-          height: inherit;
-          background: var(--secondary-container);
-          border-radius: inherit;
-        }
-
-        &::after {
-          animation: infinite-load-bg-1 infinite var(--speed) linear;
-        }
-
-        &::before {
-          animation: infinite-load-bg-2 infinite var(--speed) linear;
-        }
+      &-1,
+      &-2 {
+        fill: none;
+        stroke-linecap: round;
+        stroke-width: var(--height);
       }
 
-      &::before,
-      &::after {
-        top: 0;
-        position: absolute;
-        content: '';
-        height: inherit;
-        border-radius: inherit;
-        background: var(--primary);
+      &-1 {
+        stroke: var(--primary);
+        animation: md-progress-linear-1 var(--speed) linear infinite;
       }
 
-      &::before {
-        animation: infinite-load infinite var(--speed) linear;
+      &-2 {
+        stroke: var(--secondary-container);
+        animation: md-progress-linear-2 var(--speed) linear infinite;
+      }
+    }
+
+    @keyframes md-progress-linear-1 {
+      0% {
+        stroke-dasharray: 0 var(--width);
+        stroke-dashoffset: 0;
       }
 
-      &::after {
-        animation: infinite-load-2 infinite var(--speed) linear;
+      25% {
+        stroke-dasharray: calc(var(--width) * 0.7) var(--width);
+        stroke-dashoffset: 0;
+      }
+
+      50% {
+        stroke-dasharray: calc(var(--width) * 0.3) var(--width);
+        stroke-dashoffset: calc(var(--width) * -1);
+      }
+
+      75% {
+        stroke-dasharray: calc(var(--width) * 0.7) var(--width);
+        stroke-dashoffset: calc(var(--width) * -2);
+      }
+
+      100% {
+        stroke-dashoffset: calc(var(--width) * -3);
+        stroke-dasharray: var(--width) var(--width);
+      }
+    }
+
+    @keyframes md-progress-linear-2 {
+      0% {
+        stroke-dasharray: var(--width) var(--width);
+        stroke-dashoffset: calc(var(--spacing) * -2);
+      }
+
+      25% {
+        stroke-dasharray: var(--width)
+          calc((var(--width) * 0.7) + var(--spacing) * 4);
+        stroke-dashoffset: calc(
+          (var(--width) * -0.7) - (var(--spacing) * 2)
+        );
+      }
+
+      50% {
+        stroke-dasharray: calc(var(--width) - (var(--spacing) * 4))
+          calc((var(--width) * 0.3) + var(--spacing) * 4);
+        stroke-dashoffset: calc(
+          (var(--width) * -1.3) - (var(--spacing) * 2)
+        );
+      }
+
+      75% {
+        stroke-dasharray: calc(var(--width) - (var(--spacing) * 4))
+          calc((var(--width) * 0.7) + (var(--spacing) * 4));
+        stroke-dashoffset: calc(
+          (var(--width) * -2.7) - (var(--spacing) * 2)
+        );
+      }
+
+      100% {
+        stroke-dasharray: var(--width)
+          calc(var(--width) + (var(--spacing) * 2));
+        stroke-dashoffset: calc((var(--width) * -4) - (var(--spacing) * 2));
       }
     }
   }

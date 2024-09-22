@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { SizesString } from '@/utils'
+  import type { SizesString } from '@/utils/css/type'
   import type { BoxProps } from '../Box/util'
   import type { FrameVariants } from './variants'
 
