@@ -98,7 +98,10 @@ export function useTooltip(
   )
 
   onMounted(() => FrameQueue.add(changeSetter))
-  onUnmounted(() => FrameQueue.remove(changeSetter))
+  onUnmounted(() => {
+    FrameQueue.remove(changeSetter)
+    target.floater?.remove()
+  })
 
   return target
 }
