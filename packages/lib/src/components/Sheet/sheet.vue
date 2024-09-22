@@ -129,8 +129,9 @@
       padding-top: var(--xl);
       background: var(--surface-container-high);
       border-radius: var(--xxl);
-      min-width: min(300px, 100%);
-      max-width: min(640px, 100%);
+      min-width: min(350px, 100%);
+      width: 500px;
+      max-width: 75%;
       max-height: 100%;
 
       &:not(:has(.md-sheet-handle.dragging)) {
@@ -152,7 +153,6 @@
 
     &.right &-wrapper {
       height: 100%;
-      max-width: 480px;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
       right: 0;
@@ -164,7 +164,6 @@
 
     &.left &-wrapper {
       height: 100%;
-      max-width: 480px;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       left: 0;
@@ -294,8 +293,23 @@
     }
 
     &-content {
-      padding-inline: var(--xl);
+      padding-inline: var(--xs);
       color: var(--on-surface-variant);
+    }
+  }
+
+  @media (width <= 500px) {
+    .md-sheet {
+      &.left &-wrapper,
+      &.right &-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+      }
+
+      &-handle {
+        display: none;
+      }
     }
   }
 </style>
