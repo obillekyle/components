@@ -9,18 +9,6 @@ export function inRange(
     : value >= min && value <= max
 }
 
-export function mapNumberToRange(
-  number: number,
-  oldMin: number,
-  oldMax: number,
-  newMin: number,
-  newMax: number
-): number {
-  return (
-    ((number - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin
-  )
-}
-
 export function findNearestNumber(
   number: number,
   numbers: number[]
@@ -50,4 +38,18 @@ export function offsetRange(
 ): number {
   const half = length / 2
   return pos - ((pos - half) / half) * offset
+}
+
+export function mapNumberToRange(
+  number: number,
+  oldMin: number,
+  oldMax: number,
+  newMin: number,
+  newMax: number
+): number {
+  return clamp(
+    ((number - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin,
+    newMin,
+    newMax
+  )
 }
