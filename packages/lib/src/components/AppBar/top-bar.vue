@@ -1,56 +1,72 @@
 <script setup lang="ts">
+  import { mapNumberToRange } from '@/utils/number/range'
   import { inject, ref } from 'vue'
 
-  const scrollHeight = inject('content-scroll-top', ref(0))
-  const headerTitle = inject('header-title', ref(''))
+  defineProps<{
+    headline?: string
+  }>()
 
-  defineOptions({
-    name: 'MdTopAppBar'
-  })
+  const scroll = inject('scroll-container', ref({ x: 0, y: 0 }))
+  defineOptions({ name: 'MdTopAppBar' })
 </script>
 
 <template>
   <header
     class="md-header"
-    :class="{ 'on-top': scrollHeight < 6, 'has-title': headerTitle }"
+    :style="`--opacity: ${mapNumberToRange(scroll.y, 48, 80, 0, 1)}`"
   >
     <slot />
-    <div class="md-header-title" v-if="headerTitle">
-      {{ headerTitle }}
+    <div v-if="headline" class="md-header-title">
+      {{ headline }}
     </div>
     <div class="md-header-actions" v-if="$slots.actions">
       <slot name="actions" />
     </div>
   </header>
+  <div class="md-header-content">
+    <slot name="content" :headline>
+      <div
+        v-if="headline"
+        class="md-header-headline"
+        :style="`opacity: ${1 - mapNumberToRange(scroll.y, 0, 40, 0, 1)}`"
+      >
+        {{ headline }}
+      </div>
+    </slot>
+  </div>
 </template>
 
 <style lang="scss">
   .md-header {
+    top: 0;
     display: flex;
     align-items: center;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
+    position: sticky;
     z-index: 100;
-    height: var(--header-size);
-    background: var(--surface-container);
+    min-height: var(--header-size);
 
     &-title {
       transition: color 0.2s;
       font-size: var(--font-xl);
+      opacity: var(--opacity);
 
       &:first-child {
         padding-left: var(--md);
       }
     }
 
-    &.on-top {
-      background: transparent;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--surface-container);
+      opacity: var(--opacity);
+    }
 
-      .md-header-title {
-        color: transparent;
-      }
+    &-content {
+      padding: var(--md);
+      font-size: var(--component-sm);
     }
 
     &-actions {
