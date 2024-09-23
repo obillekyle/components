@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <ScrollContainer class="md-sheet-content" p="0" tabindex="0">
+      <ScrollContainer class="md-sheet-content" tabindex="0">
         <slot>
           <HybridComponent :as="content" />
         </slot>

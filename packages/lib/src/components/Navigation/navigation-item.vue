@@ -21,20 +21,17 @@
 
   defineOptions({ name: 'MdNavigationItem' })
 
-  const index = computed({
-    get: () => {
-      if (props.value) return props.value
+  const index = computed(() => {
+    if (props.value) return props.value
 
-      if (root.value) {
-        const parent = root.value
+    if (root.value) {
+      const parent = root.value
 
-        return [...parent.children]
-          .filter((e) => e.matches('button.md-navbar-item.special'))
-          .indexOf(element.value!)
-      }
-      return Number.NaN
-    },
-    set: () => {}
+      return [...parent.children]
+        .filter((e) => e.matches('button.md-navbar-item.special'))
+        .indexOf(element.value!)
+    }
+    return Number.NaN
   })
 </script>
 
@@ -46,7 +43,7 @@
     @pointerup="active = value ?? index"
     :class="{ active: (value ?? index) == active }"
   >
-    <HybridIcon class="md-navbar-item-icon" :icon="icon" />
+    <HybridIcon class="md-navbar-item-icon" :icon />
     <div class="md-navbar-item-name">
       <slot>
         <HybridComponent :as="name" />
