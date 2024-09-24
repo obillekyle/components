@@ -71,11 +71,14 @@
         prefix="Hello"
         variant="outlined"
       />
-      <Select placeholder="Select" span :items="['one', 'two']" />
+      <Select placeholder="Select" span multiple :items="['one', 'two']" />
       <div class="flex">
         <Switch />
         <Switch variant="filled" />
         <Switch variant="filled" default-checked />
+
+        <Checkbox />
+        <Checkbox default-checked />
       </div>
     </div>
 
@@ -83,9 +86,7 @@
     <div class="showcase-entry">
       <div class="showcase-entry-title">Progress</div>
       <LinearProgress />
-      <LinearProgressSvg />
       <LinearProgress :value="slider" />
-      <LinearProgressSvg :value="slider" />
       <div class="flex">
         <CircularProgress />
         <CircularProgress :value="slider" />
@@ -302,6 +303,7 @@
   import IconButton from '@/components/Button/icon-button.vue'
   import CardBody from '@/components/Card/card-body.vue'
   import Card from '@/components/Card/card.vue'
+  import Checkbox from '@/components/Input/checkbox.vue'
   import ChipGroup from '@/components/Chip/chip-group.vue'
   import Chip from '@/components/Chip/chip.vue'
   import Divider from '@/components/Divider/divider.vue'
@@ -309,14 +311,13 @@
   import Frame from '@/components/Frame/frame.vue'
   import BlockImage from '@/components/Image/block-image.vue'
   import SquareImage from '@/components/Image/square-image.vue'
-  import NumberInput from '@/components/Input/number-input.vue'
-  import TextInput from '@/components/Input/text-input.vue'
+  import NumberInput from '@/components/Input/number.vue'
+  import TextInput from '@/components/Input/text.vue'
   import List from '@/components/List/list.vue'
   import ColorBlock from '@/components/Misc/color-block.vue'
   import HybridIcon from '@/components/Misc/hybrid-icon.vue'
   import Paper from '@/components/Paper/paper.vue'
   import CircularProgress from '@/components/Progress/circular-progress.vue'
-  import LinearProgressSvg from '@/components/Progress/linear-progress-svg.vue'
   import LinearProgress from '@/components/Progress/linear-progress.vue'
   import Select from '@/components/Select/select.vue'
   import Skeleton from '@/components/Skeleton/skeleton.vue'

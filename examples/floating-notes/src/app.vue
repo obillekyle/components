@@ -14,7 +14,8 @@
     useLocalStorage,
     useToggle,
     useRect,
-    useWindowSize
+    useWindowSize,
+    useTooltip
   } from '@vue-material/core'
   import { onMounted, computed, ref, watch } from 'vue'
 
@@ -44,6 +45,8 @@
   })
 
   useFocusLock(root)
+  useTooltip(root, ['tooltip'])
+
   const wRect = useWindowSize()
   const rect = useRect(root)
 
@@ -155,11 +158,13 @@
         @pointerdown="targetsSelf($event, dragHandler)"
       >
         <IconButton
+          tooltip="Pin"
           @click="settings.pinned = !settings.pinned"
           :icon="settings.pinned ? 'mdi:pin' : 'mdi:pin-outline'"
         />
         <Box.Flex ml="auto">
           <IconButton
+            tooltip="Clear note"
             @click="data = ''"
             icon="mdi:delete-outline"
             v-if="data && !editing"
@@ -176,6 +181,7 @@
         :styled="{
           wordWrap: settings.wrap ? 'break-word' : 'normal',
           whiteSpace: settings.wrap ? 'pre' : 'normal',
+          textWrap: settings.wrap ? 'wrap' : 'nowrap',
           textAlign: settings.align
         }"
       >
@@ -190,7 +196,11 @@
       </ScrollContainer>
 
       <div class="window-bottom-bar">
-        <Box.Flex class="window-bottom-bar-align" mr="auto">
+        <Box.Flex
+          mr="auto"
+          class="window-bottom-bar-align"
+          tooltip="Alignment"
+        >
           <IconButton
             @click="settings.align = 'left'"
             :selected="settings.align == 'left'"
@@ -210,11 +220,13 @@
           <Divider direction="y" />
 
           <IconButton
+            tooltip="Wrap"
             @click="settings.wrap = !settings.wrap"
             :icon="settings.wrap ? 'mdi:wrap' : 'mdi:wrap-disabled'"
           />
         </Box.Flex>
         <IconButton
+          tooltip="Settings"
           :icon="settings.extra ? 'mdi:chevron-up' : 'mdi:chevron-down'"
           @click="settings.extra = !settings.extra"
         />

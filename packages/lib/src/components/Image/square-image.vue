@@ -8,6 +8,7 @@
 
   import { clean } from '@/utils/object/data'
   import { as } from '@/utils/object/is'
+  import { hashStr } from '@/utils/string/hash'
   import {
     computed,
     onMounted,
@@ -20,7 +21,6 @@
   import { frames } from '../Frame/variants'
   import { getData } from './util'
 
-  import { hashStr } from '@/utils'
   import Box from '../Box/box.vue'
   import ViewObserver from '../Misc/view-observer.vue'
   import DefaultLoader from './default-loader.vue'

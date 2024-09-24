@@ -7,17 +7,21 @@
     "nightwatch.conf.*",
     "playwright.config.*",
     "plugins/**/*.ts",
-    "src/utils/color*/**/*.ts",
-    "src/utils/function/**/*.ts"
+    "src/**/*"
   ],
   "exclude": ["src/**/*.test.ts"],
   "compilerOptions": {
     "composite": true,
     "noEmit": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
 
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "types": ["node"]
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }

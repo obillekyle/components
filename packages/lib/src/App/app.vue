@@ -1,8 +1,7 @@
 <script setup lang="ts">
-  import { useLocalStorage } from '@/ref'
-  import { ref } from 'vue'
+  import { useLocalStorage } from '@/ref/use-local-storage'
+  import { provide, ref } from 'vue'
 
-  import Headline from '@/components/AppBar/headline.vue'
   import TopAppBar from '@/components/AppBar/top-bar.vue'
   import IconButton from '@/components/Button/icon-button.vue'
   import SquareImage from '@/components/Image/square-image.vue'
@@ -29,6 +28,8 @@
   const color = useLocalStorage('theme-color', '#386a1f')
   const isDark = useLocalStorage('dark', true)
   const colorInput = ref<HTMLInputElement>()
+
+  provide('theme-color', color)
 </script>
 
 <template>
@@ -61,7 +62,7 @@
     </template>
 
     <template #header>
-      <TopAppBar>
+      <TopAppBar headline="App Title">
         <template #actions>
           <IconButton
             icon="material-symbols:palette-outline"
@@ -90,7 +91,6 @@
       <ModalProvider>
         <SnackbarProvider>
           <SheetProvider>
-            <Headline title="Header Title" />
             <MasterSwitch v-model="isDark">Dark Mode</MasterSwitch>
             <AppComp v-if="tab === 0" />
             <ColorShades v-else-if="tab === 1" />

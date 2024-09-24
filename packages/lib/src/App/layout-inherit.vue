@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import Box from '@/components/Box/box.vue'
   import Button from '@/components/Button/button.vue'
-  import Checkbox from '@/components/Checkbox/checkbox.vue'
+  import Checkbox from '@/components/Input/checkbox.vue'
   import Form from '@/components/Form/form.vue'
   import Layout from '@/components/Layout/layout.vue'
   import List from '@/components/List/list.vue'
@@ -12,11 +12,13 @@
   import { customRef } from '@/ref/custom-ref'
   import { useFocusLock } from '@/ref/use-focus-lock'
   import { ref } from 'vue'
-  import TextInput from '@/components/Input/text-input.vue'
+  import TextInput from '@/components/Input/text.vue'
+  import { useTooltip } from '@/ref/use-tooltip'
 
   const isDark = ref(true)
   const [root, setRoot] = customRef<HTMLElement>()
   const focusLock = useFocusLock(root)
+  useTooltip(root, 'class')
 
   const data = useLocalStorage('data', {})
 
@@ -86,9 +88,7 @@
       </Form>
 
       <pre>
-        <code>
-{{ JSON.stringify(data, null, 2) }}
-        </code>
+        <code>{{ JSON.stringify(data, null, 2) }}</code>
       </pre>
     </Layout>
   </Box>
@@ -97,7 +97,7 @@
 <style lang="scss">
   .layout-wrapper {
     position: relative;
-    contain: content;
+    contain: layout;
     border: 1px solid var(--surface-container);
   }
 </style>

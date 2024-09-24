@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import Divider from '@/components/Divider/divider.vue'
-  import TextInput from '@/components/Input/text-input.vue'
+  import TextInput from '@/components/Input/text.vue'
 </script>
 
 <template>

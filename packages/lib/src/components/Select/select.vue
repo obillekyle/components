@@ -1,74 +1,73 @@
 <script setup lang="ts">
-  import type { Component, HTMLAttributes } from 'vue'
+  import type { HTMLAttributes } from 'vue'
   import type { SelectItem } from './util'
 
-  import { fnRef } from '@/ref/fn-ref'
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
   import { Icon } from '@iconify/vue'
-  import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
-  import { filterByName, toSelectItems, toggleItem } from './util'
+  import { computed, onMounted, onUnmounted, ref } from 'vue'
+  import { filterByLabel, toSelectItems, toggleItem } from './util'
 
   import OptionItem from './option-item.vue'
   import { useValue } from '@/ref/use-form-value'
 
   interface SelectProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
-    value?: number[]
-    defaultValue?: number[]
+    value?: (string | number)[]
+    defaultValue?: (string | number)[]
     items?: (number | string | SelectItem)[]
-    optionComp?: Component
     multiple?: boolean
     required?: boolean
     placeholder?: string
   }
 
   type SelectEmits = {
-    (e: 'change', value: number[]): void
+    (e: 'change', value: (string | number)[]): void
   }
 
   const show = ref(false)
   const search = ref('')
-  const options = ref<HTMLElement[]>([])
-  const setOptions = fnRef(options)
   const select = ref<HTMLElement>()
 
-  const props = withDefaults(defineProps<SelectProps>(), {
-    optionComp: OptionItem,
-    multiple: false,
-    required: false
-  })
-
-  const emit = defineEmits<SelectEmits>()
-  const model = defineModel<number[]>()
+  const props = defineProps<SelectProps>()
+  const emits = defineEmits<SelectEmits>()
+  const model = defineModel<(string | number)[]>()
   const values = computed(() => toSelectItems(props.items ?? []))
   const selected = useValue([], props, model, (value) => {
-    emit('change', value)
+    emits('change', value)
     return value
   })
 
   const filteredItems = computed(() => {
     const query = search.value.toLowerCase()
-    return query ? filterByName(values.value, query) : values.value
+    return query ? filterByLabel(values.value, query) : values.value
+  })
+
+  const firstSelected = computed(() => {
+    if (props.multiple || selected.value.length === 0) return
+    return values.value.find((item) => item.value === selected.value[0])
   })
 
   defineOptions({ name: 'MdSelect' })
+  defineSlots<{
+    default: {
+      label: string
+      value: number
+      active: boolean
+    }
+  }>()
 
-  function handleClick(index?: number) {
-    if (index === undefined) {
+  function handleClick(value?: string | number) {
+    if (value === undefined) {
       if (props.multiple || props.required) return
       selected.value = []
       return
     }
 
     selected.value = props.multiple
-      ? toggleItem(selected.value, index)
-      : [index]
+      ? toggleItem(selected.value, value)
+      : [value]
   }
-
-  watch(show, (show) => {
-    if (show) options.value[0]?.focus()
-  })
 
   function closeIfClickOutside(event: MouseEvent) {
     if (show.value && !select.value?.contains(event.target as Node)) {
@@ -89,23 +88,27 @@
       @pointerdown="rippleEffect"
       @keypress="keyClick"
     >
-      <div
-        class="md-select-single"
-        v-if="selected.length === 1 && !multiple && values[selected[0]]"
-      >
-        <div class="md-select-option">
-          <component :is="optionComp" v-bind="values[selected[0]]" />
+      <div class="md-select-single" v-if="!multiple">
+        <div class="md-select-option" v-if="firstSelected">
+          <slot v-bind="firstSelected">
+            <OptionItem v-bind="firstSelected" />
+          </slot>
         </div>
+        <div class="md-select-placeholder" v-else>{{ placeholder }}</div>
       </div>
 
-      <div
-        class="md-select-single"
-        v-if="selected.length === 0 && !multiple"
-      >
-        <div class="md-select-placeholder">{{ placeholder }}</div>
-      </div>
+      <div class="md-select-multi" v-if="multiple">
+        <template v-if="selected.length > 0">
+          <div
+            :key="item"
+            v-for="item in selected"
+            class="md-select-multi-chip"
+          >
+            <span> {{ values.find((i) => i.value === item)?.label }} </span>
+            <Icon icon="mdi:close" @click="handleClick(item)" />
+          </div>
+        </template>
 
-      <div class="select-multi" v-if="multiple">
         <input
           v-model="search"
           type="text"
@@ -118,27 +121,28 @@
       </div>
     </div>
 
-    <div class="md-select-options-dropdown" @click="show = false">
+    <div class="md-select-dropdown" @click="show = false">
       <div
-        tabindex="0"
         class="md-select-option empty"
         v-if="!required && !multiple"
+        :tabindex="show ? 0 : -1"
         @click="handleClick()"
         @pointerdown="rippleEffect"
         :class="{ active: selected.length === 0 }"
       />
       <div
-        v-for="(item, index) in filteredItems"
-        tabindex="0"
         class="md-select-option"
-        :key="index"
-        :ref="setOptions"
-        :data-index="index"
-        @click="handleClick(index)"
+        v-for="item in filteredItems"
+        :tabindex="show ? 0 : -1"
+        :key="item.value"
+        @keypress="keyClick"
+        @click="handleClick(item.value)"
         @pointerdown="rippleEffect"
-        :class="{ active: selected.includes(index) }"
+        :class="{ active: selected.includes(item.value) }"
       >
-        <component :is="optionComp" v-bind="item" />
+        <slot v-bind="item" :active="selected.includes(item.value)">
+          <OptionItem v-bind="item" />
+        </slot>
       </div>
     </div>
   </div>
@@ -154,11 +158,11 @@
       width: 100%;
     }
 
-    > *:has(.md-select-placeholder) {
+    > :has(.md-select-placeholder) {
       grid-area: placeholder;
     }
 
-    .md-select-wrapper {
+    &-wrapper {
       display: grid;
       grid-template-columns: 1fr 48px;
       grid-template-areas: 'placeholder icon';
@@ -175,22 +179,47 @@
         text-align: center;
         font-size: var(--font-lg);
       }
+    }
 
-      .md-select-icon {
-        line-height: 0;
-        grid-area: icon;
-        place-self: center;
-        transition: transform 0.25s var(--timing-standard);
+    &-multi {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+
+      input {
+        height: var(--size);
+        background: none;
+        border: none;
+        outline: none;
+        font: inherit;
       }
 
-      .md-select-placeholder {
-        font-size: var(--font-lg);
-        padding-inline: var(--lg);
-        color: var(--mono-60);
+      &-chip {
+        background: var(--primary);
+        color: var(--on-primary);
+        padding: var(--xxs) var(--xs);
+        border-radius: var(--xxs);
+        font-size: var(--font-sm);
+        display: flex;
+        margin-left: var(--xs);
+        align-items: center;
       }
     }
 
-    .md-select-options-dropdown {
+    &-icon {
+      line-height: 0;
+      grid-area: icon;
+      place-self: center;
+      transition: transform 0.25s var(--timing-standard);
+    }
+
+    &-placeholder {
+      font-size: var(--font-lg);
+      padding-inline: var(--lg);
+      color: var(--mono-60);
+    }
+
+    &-dropdown {
       position: absolute;
       top: var(--size);
       left: 0;
@@ -199,20 +228,20 @@
       border: 1px solid var(--outline);
       border-radius: 0 0 var(--xxs) var(--xxs);
       border-top: none;
-      overflow: auto;
       pointer-events: none;
       min-height: var(--size);
       max-height: calc(var(--size) * 3.1);
-      opacity: 0;
-      transform: scaleY(0.9);
-      z-index: 5;
       transform-origin: top;
+      transform: scaleY(0.9);
+      overflow: auto;
+      opacity: 0;
+      z-index: 5;
       transition:
         opacity 0.25s var(--timing-standard),
         transform 0.25s var(--timing-standard);
     }
 
-    .md-select-option {
+    &-option {
       display: grid;
       align-content: center;
       position: relative;
@@ -228,12 +257,12 @@
         opacity: 0;
         z-index: -1;
         border-radius: var(--xxs);
-        background: var(--primary-container);
+        background: var(--primary);
         transition: opacity 0.25s var(--timing-standard);
       }
 
       &.active {
-        color: var(--on-primary-container);
+        color: var(--on-primary);
 
         &::before {
           opacity: 1;
@@ -245,7 +274,8 @@
       }
     }
 
-    &[open] {
+    &[open],
+    &:has(input:focus) {
       .md-select-wrapper {
         box-shadow: 0 0 0 2px inset var(--primary);
         border-bottom-left-radius: 0;
@@ -257,7 +287,7 @@
         }
       }
 
-      .md-select-options-dropdown {
+      .md-select-dropdown {
         opacity: 1;
         pointer-events: initial;
         transform: scaleY(1);

@@ -1,21 +1,17 @@
 <script setup lang="ts">
-  import { type HTMLAttributes } from 'vue'
+  import type { BoxProps } from '../Box/util'
   import Flex from '../Box/Flex/flex-box.vue'
-  import { getBoxProps, type BoxProps } from '../Box/util'
 
-  interface CardActionsProps
-    extends BoxProps,
-      /* @vue-ignore */ HTMLAttributes {
+  interface CardActionsProps extends /* @vue-ignore */ BoxProps {
     separator?: boolean
   }
 
   defineOptions({ name: 'MdCardImage' })
-  const props = defineProps<CardActionsProps>()
-  const boxProps = getBoxProps(props)
+  defineProps<CardActionsProps>()
 </script>
 
 <template>
-  <Flex v-bind="boxProps" class="md-card-actions" :class="{ separator }">
+  <Flex class="md-card-actions" :class="{ separator }">
     <div class="md-card-actions-sub">
       <slot name="sub" />
     </div>

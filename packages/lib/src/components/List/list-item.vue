@@ -7,7 +7,7 @@
   import { evaluate } from '@/utils/function/evaluate'
   import { clamp } from '@/utils/number/range'
   import { Icon } from '@iconify/vue'
-  import { ref, watch } from 'vue'
+  import { reactive, ref, watch } from 'vue'
   import { useList } from './util'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
@@ -18,18 +18,17 @@
     label: number | string
   }
 
+  const root = ref<HTMLElement>()
+  const wrapper = ref<HTMLElement>()
   const props = defineProps<ListItemProps>()
-  const swipe = ref({
+  const swipe = reactive({
     start: 0,
     end: 0
   })
 
   const list = useList()
 
-  const wrapper = ref<HTMLElement>()
-  const root = ref<HTMLElement>()
-
-  const sort = ref({
+  const sort = reactive({
     top: 0,
     start: 0,
     end: 0
@@ -38,11 +37,11 @@
   const [sorting, sortEvent] = useDrag(({ y }) => {
     if (!root.value) return
 
-    sort.value.start ||= y
-    sort.value.top ||= props.index * list.size || 0.1
+    sort.start ||= y
+    sort.top ||= props.index * list.size || 0.1
 
     const length = list.items.value.length
-    const top = sort.value.top - (sort.value.start - y)
+    const top = sort.top - (sort.start - y)
     const newIndex = clamp(Math.round(top / list.size), 0, length - 1)
 
     root.value.style.top = addPX(top)
@@ -67,51 +66,46 @@
 
   watch(sorting, (sorting) => {
     if (sorting || !root.value) return
-    sort.value = { top: 0, start: 0, end: 0 }
+    Object.assign(sort, { top: 0, start: 0, end: 0 })
     root.value.style.top = addPX(props.index * list.size)
   })
 
-  const [swiping, swipeEvent] = useDrag(({ x, scrolledY }, event) => {
+  const isSwipingLeft = ref(false)
+  function noSwipe(position: 'left' | 'right', offset: number) {
+    return position === 'left'
+      ? offset > 0 && list.swipe === 'custom' && !list.swipeOptions.left
+      : offset < 0 && list.swipe === 'custom' && !list.swipeOptions.right
+  }
+
+  const [swiping, swipeEvent] = useDrag(({ x, scrolledY }) => {
     if (sorting.value || !wrapper.value) return
     if (list.swipe === 'off') return
 
-    swipe.value.start ||= x
-    swipe.value.end = x
+    swipe.start ||= x
+    swipe.end = x
 
-    let offset = x - swipe.value.start
+    let offset = x - swipe.start
 
-    const registerSwipe = Math.abs(swipe.value.start - x) > 32
+    const registerSwipe = Math.abs(swipe.start - x) > 32
 
     if (!registerSwipe || scrolledY) {
-      swipe.value.end = swipe.value.start
+      swipe.end = swipe.start
       wrapper.value.style.left = '0px'
       return
     }
 
-    event.preventDefault()
-
-    offset =
-      offset > 0 && list.swipe === 'custom' && !list.swipeOptions.left
-        ? offset * 0.1
-        : offset
-
-    offset =
-      offset < 0 && list.swipe === 'custom' && !list.swipeOptions.right
-        ? offset * 0.1
-        : offset
+    offset *= noSwipe('left', offset) ? 0.1 : 1
+    offset *= noSwipe('right', offset) ? 0.1 : 1
 
     wrapper.value.style.left = addPX(offset)
   }, false)
 
-  function swipeHandler(e: any) {
-    if (list.swipe === 'off') return
-    swipeEvent(e)
-  }
+  const swipeHandler = (e: any) => list.swipe !== 'off' && swipeEvent(e)
 
   watch(swiping, (swiping) => {
     if (swiping || !wrapper.value) return
-    const value = swipe.value.end - swipe.value.start
-    swipe.value = { start: 0, end: 0 }
+    const value = swipe.end - swipe.start
+    Object.assign(swipe, { start: 0, end: 0 })
 
     if (value > list.swipeDistance || value < -list.swipeDistance) {
       switch (list.swipe) {
@@ -158,13 +152,9 @@
     )
   }
 
-  const isSwipingLeft = ref(false)
   watch(
-    () => swipe.value.end,
-    (value) => {
-      if (!value) return
-      isSwipingLeft.value = swipe.value.end > swipe.value.start
-    }
+    () => swipe.end,
+    (value) => value && (isSwipingLeft.value = swipe.end > swipe.start)
   )
 </script>
 

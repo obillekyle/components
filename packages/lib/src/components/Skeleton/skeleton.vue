@@ -32,10 +32,6 @@
     }
 
     @keyframes slide {
-      from {
-        translate: -100% 0;
-      }
-
       to {
         translate: 100% 0;
       }

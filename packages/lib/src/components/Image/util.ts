@@ -63,10 +63,7 @@ export async function getData(
     String((props as any)[prop] || match)
   )
 
-  try {
-    const data = await resolveImage(source, (e) => (status.progress = e))
-    image.value = URL.createObjectURL(data)
-  } catch {
-    status.error = true
-  }
+  resolveImage(source, (e) => (status.progress = e))
+    .then((data) => (image.value = URL.createObjectURL(data)))
+    .catch(() => (status.error = true))
 }

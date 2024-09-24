@@ -25,15 +25,14 @@ export const meta = {
         Layout,
         TopAppBar,
         IconButton,
-        BlockImage,
-        Headline
+        BlockImage
       } from '@vue-material/core'
     </script>
 
     <template>
       <Layout>
         <template #header>
-          <TopAppBar>
+          <TopAppBar headline="App Title">
 
             <IconButton icon="material-symbols:menu" />
 
@@ -43,7 +42,6 @@ export const meta = {
           </TopAppBar>
         </template>
 
-        <Headline title="Title" />
         <h2 class="info">These are the apps contents</h2>
         <BlockImage
           :ratio="3 / 2"

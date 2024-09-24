@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import { attachStyles, resolver } from './plugins'
+import { attachStyles, getGlobal } from './plugins'
 
 import vue from '@vitejs/plugin-vue'
 import glob from 'fast-glob'
@@ -23,7 +23,7 @@ export default defineConfig({
     vue(),
     VueDevTools(),
     circleDependency(),
-    attachStyles({ transform: resolver() })
+    attachStyles({ global: getGlobal() })
   ],
   server: {
     strictPort: true,

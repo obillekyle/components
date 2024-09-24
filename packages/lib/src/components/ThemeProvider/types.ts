@@ -41,4 +41,5 @@ export type ThemeProps = {
   global?: boolean
   options?: Partial<ThemeOptions>
   inherit?: boolean
+  extras?: boolean
 }

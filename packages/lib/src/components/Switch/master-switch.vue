@@ -2,9 +2,9 @@
   import type { HTMLAttributes } from 'vue'
 
   import { rippleEffect } from '@/utils/dom/ripple'
+  import { useBoolValue } from '@/ref/use-form-value'
 
   import Switch from './switch.vue'
-  import { useBoolValue } from '@/ref/use-form-value'
 
   interface MasterSwitchProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
@@ -32,38 +32,54 @@
 </script>
 
 <template>
-  <div
-    class="md-master-switch"
-    @click="inputValue = !inputValue"
-    @pointerdown="rippleEffect"
-  >
-    <div class="md-master-switch-label">
-      <slot />
-    </div>
-    <div class="md-master-switch-toggle">
-      <Switch :name :checked="inputValue" variant="filled" />
+  <div class="md-master-switch">
+    <div
+      class="md-master-switch-wrapper"
+      @click="inputValue = !inputValue"
+      @pointerdown="rippleEffect"
+    >
+      <div class="md-master-switch-label">
+        <slot />
+      </div>
+      <div class="md-master-switch-toggle">
+        <Switch
+          :name
+          :checked="inputValue"
+          variant="filled"
+          :length="1.6"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss">
   .md-master-switch {
-    position: sticky;
     top: 0;
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    overflow: hidden;
-    background: var(--primary-fixed);
-    color: var(--on-primary-fixed);
-    padding: var(--xxl) var(--lg);
-    margin-bottom: var(--md);
-    border-radius: var(--xxl);
-    font-size: var(--font-lg);
     z-index: 10;
-    box-shadow: var(--shadow-3);
+    position: sticky;
+    padding-top: var(--md);
+    margin-bottom: var(--xxl);
+    background: var(--surface);
+    border-radius: 0 0 var(--xxl) var(--xxl);
 
-    --ripple-color: var(--on-primary-fixed-variant);
+    &-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      background: var(--primary-fixed);
+      color: var(--on-primary-fixed);
+      height: var(--component-xl);
+      padding-inline: var(--lg);
+      margin-bottom: var(--md);
+      border-radius: var(--xxl);
+      font-size: var(--font-lg);
+      box-shadow: var(--shadow-3);
+
+      --ripple-color: var(--on-primary-fixed-variant);
+    }
 
     &-toggle {
       pointer-events: none;
@@ -84,5 +100,10 @@
         }
       }
     }
+  }
+
+  .md-scroll:has(.md-header) .md-master-switch {
+    top: var(--header-size);
+    margin-top: -1px;
   }
 </style>

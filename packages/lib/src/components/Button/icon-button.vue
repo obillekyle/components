@@ -29,15 +29,12 @@
     @pointerdown="rippleEffect($event, 'div')"
     @keydown="keyClick($event, ['Enter', ' '])"
   >
-    <div
+    <HybridIcon
+      :icon
       class="md-icon-button-wrapper"
       :class="{ selected, [variant ?? 'standard']: true }"
-    >
-      <HybridIcon
-        :icon="icon"
-        :style="{ fontSize: getCSSValue(size ?? '#md', 'px', 'icon') }"
-      />
-    </div>
+      :style="{ fontSize: getCSSValue(size ?? '#md', 'px', 'icon') }"
+    />
   </button>
 </template>
 

@@ -4,10 +4,12 @@
   import { useLocalStorage } from '@/ref/use-local-storage'
   import { openFilePickerAsync } from '@/utils/dom/file-picker'
   import { fastAvgColor, ImagePalette } from '@/utils/other'
+  import { inject, ref } from 'vue'
 
   const color = useLocalStorage('dominant-color', '#ffffff')
   const colors = useLocalStorage<string[]>('dominant-colors', [])
   const avg = useLocalStorage('average-color', '#ffffff')
+  const themeColor = inject('theme-color', ref('#ffffff'))
 
   async function uploadImage() {
     const file = await openFilePickerAsync({ accept: 'image/*' })
@@ -33,7 +35,13 @@
   <ColorBlock :color="avg" />
 
   <div class="flex">
-    <ColorBlock v-for="color in colors" :key="color" :color="color">
+    <ColorBlock
+      v-for="color in colors"
+      :key="color"
+      :color="color"
+      @click="themeColor = color"
+      style="cursor: pointer"
+    >
       {{ color }}
     </ColorBlock>
   </div>
