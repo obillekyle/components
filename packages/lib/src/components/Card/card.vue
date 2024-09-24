@@ -20,7 +20,7 @@
   <Box
     v-bind="boxProps"
     :class="`md-card ${variant ?? 'outlined'}`"
-    :styled="{ '--card-padding': p }"
+    :styled="{ '--card-padding': p, ...styled }"
   >
     <slot />
   </Box>

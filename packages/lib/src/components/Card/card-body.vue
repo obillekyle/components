@@ -1,19 +1,14 @@
 <script setup lang="ts">
-  import type { HTMLAttributes } from 'vue'
-  import Box from '../Box/box.vue'
-  import { getBoxProps, type BoxProps } from '../Box/util'
+  import type { BoxProps } from '../Box/util'
 
-  interface CardBodyProps
-    extends BoxProps,
-      /* @vue-ignore */ HTMLAttributes {}
+  import Box from '../Box/box.vue'
 
   defineOptions({ name: 'MdCardBody' })
-  const props = defineProps<CardBodyProps>()
-  const boxProps = getBoxProps(props)
+  defineProps</* @vue-ignore */ BoxProps>()
 </script>
 
 <template>
-  <Box v-bind="boxProps" class="md-card-body">
+  <Box class="md-card-body">
     <slot />
   </Box>
 </template>
