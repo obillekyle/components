@@ -29,6 +29,7 @@
   const props = defineProps<InputNumber>()
   const emit = defineEmits<InputNumberEmits>()
   const model = defineModel<number>()
+  defineOptions({ name: 'MdInputNumber' })
 
   const attributes = useAttrs()
   const inputValue = useValue(0, props, model, (value) => {

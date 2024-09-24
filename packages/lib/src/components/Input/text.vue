@@ -6,7 +6,7 @@
 
   import { ref } from 'vue'
   import HybridIcon from '../Misc/hybrid-icon.vue'
-  import Counter from './counter.vue'
+  import Counter from './char-counter.vue'
 
   interface InputText
     extends /** @vue-ignore */ Omit<InputHTMLAttributes, 'onChange'> {
@@ -31,6 +31,7 @@
   const props = defineProps<InputText>()
   const model = defineModel<string>()
   const emit = defineEmits<InputTextEmits>()
+  defineOptions({ name: 'MdInputText' })
 
   const inputValue = useValue('', props, model, (value) => {
     emit('change', value)
