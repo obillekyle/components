@@ -21,9 +21,9 @@ export function getGlobal() {
       css += `--${prefix}-${suffix}:${value}px;`
     }
 
-  css += '--header-size: var(--component-sm);'
-  css += '--navbar-size: var(--component-lg);'
-  css += '--fab-size: var(--component-xs);'
+  css += '--header-size: var(--size-sm);'
+  css += '--navbar-size: var(--size-lg);'
+  css += '--fab-size: var(--size-xs);'
 
   for (const [key, value] of Object.entries(colors.light)) {
     css += `--${toKebabCase(key)}:${value};`
