@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import {
     BlockImage,
-    Headline,
     IconButton,
     Layout,
     TopAppBar
@@ -21,7 +20,7 @@
     }"
   >
     <template #header>
-      <TopAppBar>
+      <TopAppBar headline="App Title">
         <IconButton icon="material-symbols:menu" />
         <template #actions>
           <IconButton icon="mdi:dots-vertical" />
@@ -29,7 +28,6 @@
       </TopAppBar>
     </template>
 
-    <Headline title="Title" />
     <h2 class="info">These are the apps contents</h2>
     <BlockImage
       :ratio="3 / 2"

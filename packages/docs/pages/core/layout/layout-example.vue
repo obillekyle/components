@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import {
     Fab,
-    Headline,
     IconButton,
     Layout,
     MasterSwitch,
@@ -20,7 +19,7 @@
     }"
   >
     <template #header>
-      <TopAppBar>
+      <TopAppBar headline="My App">
         <IconButton icon="material-symbols:menu" />
         <template #actions>
           <IconButton icon="mdi:dots-vertical" />
@@ -41,7 +40,6 @@
       </Navigation>
     </template>
 
-    <Headline title="My App" />
     <MasterSwitch name="Top Switch" />
 
     <p>
