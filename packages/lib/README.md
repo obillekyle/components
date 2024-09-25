@@ -45,34 +45,78 @@ Recreated the [Material Design Components](https://github.com/material-component
 
 ```bash
 # NPM
-npm install @vue-material/core @iconify/vue
+npm install @vue-material/core
 
 # Yarn
-yarn add @vue-material/core @iconify/vue
+yarn add @vue-material/core
 
 # PNPM
-pnpm add @vue-material/core @iconify/vue
+pnpm add @vue-material/core
 
 # BUN
-bun install @vue-material/core @iconify/vue
+bun install @vue-material/core
 ```
+## Contents
 
-## Components
+### Components
 
-- [Box](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Box)
-- [Button](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Button)
-- [Chip](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Chip)
-- [Divider](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Divider)
-- [Header](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Header)
-- [Image](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Image)
-- [Input](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Input)
-- [Layout](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Layout)
-- [List](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/List)
-- [Misc](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Misc)
-- [Navigation](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Navigation)
-- [Paper](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Paper)
-- [Progress](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Progress)
-- [Select](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Select)
-- [Slider](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Slider)
-- [Switch](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Switch)
-- [Text](https://github.com/obillekyle/components/tree/main/packages/lib/src/components/Text)
+Total components: 40
+
+- [AppBar](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/AppBar)
+- [Box](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Box)
+- [Button](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Button)
+- [Card](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Card)
+- [Chip](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Chip)
+- [Divider](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Divider)
+- [Flex](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Box/Flex)
+- [Form](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Form)
+- [Image](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Image)
+- [Frame](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Frame)
+- [Input](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Input)
+- [Layout](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Layout)
+- [List](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/List)
+- [Misc](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Misc)
+- [Modal](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Modal)
+- [Navigation](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Navigation)
+- [Paper](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Paper)
+- [Progress](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Progress)
+- [Select](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Select)
+- [Sheet](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Sheet)
+- [Skeleton](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Skeleton)
+- [Slider](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Slider)
+- [Snackbar](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Snackbar)
+- [Switch](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Switch)
+- [Text](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Text)
+- [ThemeProvider](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/ThemeProvider)
+- [Toast](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Toast)
+
+### Custom Refs / Hooks
+
+Total custom refs (not including component specific hooks): 9
+
+
+- [customRef](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/ref/custom-ref)
+- [fnRef](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/ref/fn-ref)
+- [use-drag](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-drag)
+- [use-focus-lock](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-focus-lock)
+- [use-form-value](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-form-value)
+- [use-local-storage](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/ref/use-local-storage)
+- [use-preferred-theme](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-preferred-theme)
+- [use-rect](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-rect)
+- [use-toggle](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-toggle)
+- [use-tooltip](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-tooltip)
+- [use-window-rect](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-window-rect)
+
+### Utils
+
+- [color-engine](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/color-engine)
+- [colors](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/colors)
+- [component-manager](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/component-manager)
+- [css](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/css)
+- [dom](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/dom)
+- [event](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/event)
+- [function](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/function)
+- [number](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/number)
+- [object](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/object)
+- [other](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/other)
+- [string](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/string)
