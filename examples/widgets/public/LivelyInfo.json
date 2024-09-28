@@ -1,0 +1,11 @@
+{
+  "AppVersion": "2.0.7.4",
+  "Title": "Widgets",
+  "Desc": "A wallpaper widget for your desktop",
+  "Author": "obillekyle",
+  "License": "MIT",
+  "Contact": "https://github.com/obillekyle/components",
+  "Type": 1,
+  "Arguments": "--system-information",
+  "FileName": "index.html"
+}

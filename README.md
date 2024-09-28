@@ -43,8 +43,9 @@ Still incomplete
 
 ## Packages
 
-- [Main Library](https://github.com/obillekyle/components/tree/main/packages/lib)
-- [Documentation](https://github.com/obillekyle/components/tree/main/packages/docs)
+- [Main Library](/packages/lib)
+- [Documentation](/packages/docs)
+- [Examples](/packages/examples)
 
 
 ## Get Started
