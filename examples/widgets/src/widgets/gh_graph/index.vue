@@ -5,10 +5,12 @@
     useTooltip
   } from '@vue-material/core'
   import { ref, onMounted, onUnmounted } from 'vue'
+  import { Icon } from '@iconify/vue'
   import dayjs from 'dayjs'
 
   let interval: any = 0
 
+  const loading = ref(false)
   const gh_token = import.meta.env.VITE_GITHUB_TOKEN
   const username = import.meta.env.VITE_GITHUB_USERNAME
 
@@ -19,6 +21,7 @@
   )
 
   async function fetchInfo() {
+    loading.value = true
     const query = `
     query {
       user(login: "${user.value}") {
@@ -66,6 +69,7 @@
         }
       }
 
+      loading.value = false
       commitGraph.value = newGraph
     }
   }
@@ -83,46 +87,55 @@
   })
 
   const year = dayjs().year()
+  const todayOffset = dayjs().day()
 
-  function getDate(week: number, day = 0) {
-    const firstDayOfYear = dayjs(`${year}-01-01`)
+  // function getDate(week: number, day = 0) {
+  //   const firstDayOfYear = dayjs(`${year}-01-01`)
 
-    const firstWeekStart = firstDayOfYear.day(1).add((week - 1) * 7, 'day')
-    const targetDate = firstWeekStart.day(day)
+  //   const firstWeekStart = firstDayOfYear.day(1).add((week - 1) * 7, 'day')
+  //   const targetDate = firstWeekStart.day(day)
 
-    return targetDate
-  }
+  //   return targetDate
+  // }
 
   onUnmounted(() => clearInterval(interval))
   defineOptions({ name: 'MdWidgetGhGraph' })
 </script>
 
 <template>
-  <div class="md-widget-gh-graph" ref="calendar">
-    <span>Your contributions from {{ year }}</span>
-    <div class="md-gh-contribution-calendar">
+  <div class="md-widget-gh-graph">
+    <div class="md-gh-contribution-header">
+      <Icon icon="carbon:calendar" :width="24" />
+      <span>{{ year }}</span>
+      <Icon
+        icon="carbon:renew"
+        :width="24"
+        class="md-gh-contribution-refresh"
+        :class="{ loading }"
+        @click="fetchInfo"
+      />
+    </div>
+    <div class="md-gh-contribution-calendar" ref="calendar">
       <div
         :key
         class="md-gh-contribution-week"
         v-for="(week, key) of commitGraph"
       >
-        <div
-          class="md-gh-contribution-day"
-          v-for="(count, day) of week"
-          :key="day"
-          :style="`opacity: ${count ? mapNumberToRange(count, 0, 10, 0.3, 1) : 0.1}`"
-          :contributions="`${count} contributions from ${getDate(
-            key,
-            day
-          ).format('MMM D')}`"
-        />
+        <template v-for="(count, day) of week" :key="day">
+          <div
+            class="md-gh-contribution-day"
+            :style="`opacity: ${count ? mapNumberToRange(count, 0, 10, 0.3, 1) : 0.1}`"
+            v-if="!(key === commitGraph.length - 1 && day > todayOffset)"
+          />
+        </template>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-  .md-widget-gh-graph {
+  .md-gh-contribution-calendar {
+    display: flex;
     overflow-x: auto;
 
     &::-webkit-scrollbar {
@@ -134,8 +147,26 @@
     }
   }
 
-  .md-gh-contribution-calendar {
+  .md-gh-contribution-header {
     display: flex;
+    align-items: center;
+    gap: var(--xs);
+    margin-bottom: var(--xs);
+  }
+
+  .md-gh-contribution-refresh {
+    cursor: pointer;
+    margin-left: auto;
+
+    &.loading {
+      animation: spin 2s linear infinite reverse;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
   }
 
   .md-gh-contribution-week {

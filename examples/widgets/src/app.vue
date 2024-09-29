@@ -4,17 +4,18 @@
     useLocalStorage,
     ImagePalette,
     clamp,
-    ModalProvider
+    SheetProvider
   } from '@vue-material/core'
 
   import MdWidgetWrapper from './components/widget-wrapper.vue'
-  import { onMounted, ref, computed, watch } from 'vue'
+  import { onMounted, ref, computed, watch, provide } from 'vue'
+  import { DEFAULT_WIDGETS } from './defaults'
 
   defineOptions({ name: 'MdWallpaper' })
 
   const ready = ref(false)
-  const active = useLocalStorage('wallpaper', 0)
   const colorFromWallpaper = ref('#ffffff')
+  const active = useLocalStorage('wallpaper', 0)
   const themeColor = useLocalStorage('theme-color', '')
 
   let wallpapers = ref(['https://picsum.photos/1920/1080?random=1'])
@@ -28,13 +29,13 @@
     colorFromWallpaper.value = palette.dominant
   }
 
+  const widgets = useLocalStorage('widgets', DEFAULT_WIDGETS)
+
   onMounted(async () => {
     const req = await fetch('/wallpapers.json')
 
     if (req.ok) wallpapers.value = await req.json()
-
     ready.value = true
-
     getWallpaperColor()
   })
 
@@ -49,6 +50,11 @@
   })
 
   watch(active, getWallpaperColor)
+
+  provide('active', active)
+  provide('widgets', widgets)
+  provide('wallpapers', wallpapers)
+  provide('theme-color', themeColor)
 </script>
 
 <template>
@@ -63,8 +69,8 @@
       backgroundRepeat: 'no-repeat'
     }"
   >
-    <ModalProvider>
+    <SheetProvider>
       <MdWidgetWrapper />
-    </ModalProvider>
+    </SheetProvider>
   </Layout>
 </template>
