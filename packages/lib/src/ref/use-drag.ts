@@ -120,8 +120,8 @@ export function useDrag(
     let flingY = false
 
     const pos = getClientPos(event)
-    const offsetX = firstPos.x - pos.x
-    const offsetY = firstPos.y - pos.y
+    const offsetX = pos.x - firstPos.x
+    const offsetY = pos.y - firstPos.y
 
     if (start && Date.now() - start < 300) {
       flingX = Math.abs(offsetX) > 20
