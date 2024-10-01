@@ -21,12 +21,12 @@ export const keyClick: KeyClickFunction = (event, key = ' ') => {
 export type Position = { x: number; y: number }
 
 export function getClientPos(event: TouchEvent | MouseEvent): Position {
-  return event instanceof MouseEvent
-    ? { x: event.clientX, y: event.clientY }
-    : {
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY
+  return 'changedTouches' in event
+    ? {
+        x: event.changedTouches[0].clientX,
+        y: event.changedTouches[0].clientY
       }
+    : { x: event.clientX, y: event.clientY }
 }
 
 type TargetsSelfFn = {
