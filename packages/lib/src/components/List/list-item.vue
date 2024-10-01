@@ -7,7 +7,7 @@
   import { evaluate } from '@/utils/function/evaluate'
   import { clamp } from '@/utils/number/range'
   import { Icon } from '@iconify/vue'
-  import { reactive, ref, watch } from 'vue'
+  import { ref } from 'vue'
   import { useList } from './util'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
@@ -21,108 +21,97 @@
   const root = ref<HTMLElement>()
   const wrapper = ref<HTMLElement>()
   const props = defineProps<ListItemProps>()
-  const swipe = reactive({
-    start: 0,
-    end: 0
-  })
 
   const list = useList()
 
-  const sort = reactive({
-    top: 0,
-    start: 0,
-    end: 0
-  })
+  let sortTop: number | undefined
 
-  const [sorting, sortEvent] = useDrag(({ y }) => {
-    if (!root.value) return
+  const [sorting, sortEvent] = useDrag({
+    move: ({ offsetY }) => {
+      if (!root.value) return
 
-    sort.start ||= y
-    sort.top ||= props.index * list.size || 0.1
+      sortTop ||= props.index * list.size || 0.1
 
-    const length = list.items.value.length
-    const top = sort.top - (sort.start - y)
-    const newIndex = clamp(Math.round(top / list.size), 0, length - 1)
+      const length = list.items.value.length
+      const top = sortTop + offsetY
+      const newIndex = clamp(Math.round(top / list.size), 0, length - 1)
 
-    root.value.style.top = addPX(top)
+      root.value.style.top = addPX(top)
 
-    if (props.index !== newIndex) {
-      const element = list.items.value[props.index]
-      const newArray = [...list.items.value]
+      if (props.index !== newIndex) {
+        const element = list.items.value[props.index]
+        const newArray = [...list.items.value]
 
-      newArray.splice(props.index, 1)
-      newArray.splice(newIndex, 0, element)
+        newArray.splice(props.index, 1)
+        newArray.splice(newIndex, 0, element)
 
-      list.items.value = newArray
+        list.items.value = newArray
 
-      list.emit('reorder', {
-        from: props.index,
-        to: newIndex,
-        item: element,
-        value: newArray
-      })
+        list.emit('reorder', {
+          from: props.index,
+          to: newIndex,
+          item: element,
+          value: newArray
+        })
+      }
+    },
+    end: () => {
+      if (!root.value) return
+      root.value.style.top = addPX(props.index * list.size)
+      sortTop = undefined
     }
-  })
-
-  watch(sorting, (sorting) => {
-    if (sorting || !root.value) return
-    Object.assign(sort, { top: 0, start: 0, end: 0 })
-    root.value.style.top = addPX(props.index * list.size)
   })
 
   const isSwipingLeft = ref(false)
-  function noSwipe(position: 'left' | 'right', offset: number) {
-    return position === 'left'
-      ? offset > 0 && list.swipe === 'custom' && !list.swipeOptions.left
-      : offset < 0 && list.swipe === 'custom' && !list.swipeOptions.right
-  }
 
-  const [swiping, swipeEvent] = useDrag(({ x, scrolledY }) => {
-    if (sorting.value || !wrapper.value) return
-    if (list.swipe === 'off') return
+  const swiped = (value = 0) => Math.abs(value) > 32
+  const noSwipe = (position: 'left' | 'right', offset = 0) =>
+    list.swipe === 'custom' &&
+    list.swipeOptions[position] === undefined &&
+    (position === 'left' ? offset > 0 : offset < 0)
 
-    swipe.start ||= x
-    swipe.end = x
+  const [swiping, swipeEvent] = useDrag(
+    {
+      move: ({ scrolledY, offsetX }) => {
+        if (list.swipe === 'off') return
+        if (sorting.value || !wrapper.value) return
+        if (offsetX !== 0) isSwipingLeft.value = offsetX > 0
 
-    let offset = x - swipe.start
-
-    const registerSwipe = Math.abs(swipe.start - x) > 32
-
-    if (!registerSwipe || scrolledY) {
-      swipe.end = swipe.start
-      wrapper.value.style.left = '0px'
-      return
-    }
-
-    offset *= noSwipe('left', offset) ? 0.1 : 1
-    offset *= noSwipe('right', offset) ? 0.1 : 1
-
-    wrapper.value.style.left = addPX(offset)
-  }, false)
-
-  const swipeHandler = (e: any) => list.swipe !== 'off' && swipeEvent(e)
-
-  watch(swiping, (swiping) => {
-    if (swiping || !wrapper.value) return
-    const value = swipe.end - swipe.start
-    Object.assign(swipe, { start: 0, end: 0 })
-
-    if (value > list.swipeDistance || value < -list.swipeDistance) {
-      switch (list.swipe) {
-        case 'dismiss': {
-          dismiss(value)
+        if (!swiped(offsetX) || scrolledY) {
+          wrapper.value.style.left = '0px'
           return
         }
-        case 'custom': {
-          value > 0
-            ? evaluate(list.swipeOptions.left?.handler, props.index)
-            : evaluate(list.swipeOptions.right?.handler, props.index)
-        }
-      }
-    }
 
-    wrapper.value.style.removeProperty('left')
-  })
+        offsetX *= noSwipe('left', offsetX) ? 0.1 : 1
+        offsetX *= noSwipe('right', offsetX) ? 0.1 : 1
+
+        wrapper.value.style.left = addPX(offsetX)
+      },
+      end: ({ offsetX, scrolledY, flingX }) => {
+        if (!wrapper.value) return
+        if (!swiped(offsetX) || scrolledY) return
+
+        if (Math.abs(offsetX) > list.swipeDistance || flingX) {
+          switch (list.swipe) {
+            case 'dismiss': {
+              dismiss(offsetX)
+              return
+            }
+            case 'custom': {
+              offsetX > 0
+                ? evaluate(list.swipeOptions.left?.handler, props.index)
+                : evaluate(list.swipeOptions.right?.handler, props.index)
+            }
+          }
+        }
+
+        wrapper.value.style.removeProperty('left')
+      }
+    },
+    false
+  )
+
+  const swipeHandler = (e: any) => list.swipe !== 'off' && swipeEvent(e)
 
   function dismiss(value: number) {
     const element = wrapper.value!
@@ -151,11 +140,6 @@
       { once: true }
     )
   }
-
-  watch(
-    () => swipe.end,
-    (value) => value && (isSwipingLeft.value = swipe.end > swipe.start)
-  )
 </script>
 
 <template>
