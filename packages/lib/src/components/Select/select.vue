@@ -1,21 +1,22 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from 'vue'
-  import type { SelectItem } from './util'
+  import type { MixedValues } from '@/utils/other/to-object-value'
 
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
   import { Icon } from '@iconify/vue'
   import { computed, onMounted, onUnmounted, ref } from 'vue'
-  import { filterByLabel, toSelectItems, toggleItem } from './util'
+  import { filterByLabel, toggleItem } from './util'
+  import { useValue } from '@/ref/use-form-value'
+  import { toObjectValue } from '@/utils/other/to-object-value'
 
   import OptionItem from './option-item.vue'
-  import { useValue } from '@/ref/use-form-value'
 
   interface SelectProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
     value?: (string | number)[]
     defaultValue?: (string | number)[]
-    items?: (number | string | SelectItem)[]
+    items?: MixedValues
     multiple?: boolean
     required?: boolean
     placeholder?: string
@@ -32,7 +33,7 @@
   const props = defineProps<SelectProps>()
   const emits = defineEmits<SelectEmits>()
   const model = defineModel<(string | number)[]>()
-  const values = computed(() => toSelectItems(props.items ?? []))
+  const values = computed(() => toObjectValue(props.items ?? []))
   const selected = useValue([], props, model, (value) => {
     emits('change', value)
     return value

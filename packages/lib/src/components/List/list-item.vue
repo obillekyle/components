@@ -75,7 +75,7 @@
       move: ({ scrolledY, offsetX }) => {
         if (list.swipe === 'off') return
         if (sorting.value || !wrapper.value) return
-        if (offsetX !== 0) isSwipingLeft.value = offsetX > 0
+        if (offsetX) isSwipingLeft.value = offsetX > 0
 
         if (!swiped(offsetX) || scrolledY) {
           wrapper.value.style.left = '0px'
@@ -98,9 +98,10 @@
               return
             }
             case 'custom': {
-              offsetX > 0
-                ? evaluate(list.swipeOptions.left?.handler, props.index)
-                : evaluate(list.swipeOptions.right?.handler, props.index)
+              evaluate(
+                list.swipeOptions[offsetX > 0 ? 'left' : 'right']?.handler,
+                props.index
+              )
             }
           }
         }
