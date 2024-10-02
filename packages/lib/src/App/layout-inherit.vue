@@ -14,6 +14,7 @@
   import { ref } from 'vue'
   import TextInput from '@/components/Input/text.vue'
   import { useTooltip } from '@/ref/use-tooltip'
+  import TabSwitcher from '@/components/AppBar/tab-switcher.vue'
 
   const isDark = ref(true)
   const [root, setRoot] = customRef<HTMLElement>()
@@ -34,11 +35,12 @@
     },
     {
       value: 2,
-      label: 'Item 2'
+      label: 'Item 2 with a long label'
     },
     {
       value: 3,
-      label: 'Item 3'
+      label:
+        'Item 3 with a very very long label that reaches the line width limit'
     }
   ]
 
@@ -55,6 +57,8 @@
         Toggle Focus Lock
       </Button>
       <Text> State of focus lock: {{ focusLock }} </Text>
+
+      <TabSwitcher :items />
 
       <Switch v-model="isDark" />
       <Text :p="isDark ? '#sm' : '#lg'">
