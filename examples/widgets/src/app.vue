@@ -10,6 +10,7 @@
   import MdWidgetWrapper from './components/widget-wrapper.vue'
   import { onMounted, ref, computed, watch, provide } from 'vue'
   import { DEFAULT_WIDGETS } from './defaults'
+  import dayjs from 'dayjs'
 
   defineOptions({ name: 'MdWallpaper' })
 
@@ -17,6 +18,7 @@
   const colorFromWallpaper = ref('#ffffff')
   const active = useLocalStorage('wallpaper', 0)
   const themeColor = useLocalStorage('theme-color', '')
+  const startTime = dayjs()
 
   let wallpapers = ref(['https://picsum.photos/1920/1080?random=1'])
 
@@ -55,6 +57,7 @@
   provide('widgets', widgets)
   provide('wallpapers', wallpapers)
   provide('theme-color', themeColor)
+  provide('start-time', startTime)
 </script>
 
 <template>
@@ -74,3 +77,9 @@
     </SheetProvider>
   </Layout>
 </template>
+
+<style>
+  :root {
+    --taskbar-height: var(--component-lg);
+  }
+</style>

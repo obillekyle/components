@@ -55,7 +55,7 @@
 
     &-configure {
       position: absolute;
-      bottom: var(--component-xl);
+      bottom: var(--taskbar-height);
       right: 0;
     }
   }

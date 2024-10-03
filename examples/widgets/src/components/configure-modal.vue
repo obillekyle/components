@@ -88,7 +88,7 @@
 
     &-confirm {
       position: absolute;
-      bottom: var(--md);
+      bottom: calc(var(--taskbar-height) + var(--md));
       right: var(--md);
     }
   }
