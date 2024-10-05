@@ -14,6 +14,7 @@
 
   import ViewObserver from '../Misc/view-observer.vue'
   import DefaultLoader from './default-loader.vue'
+  import Box from '../Box/box.vue'
 
   interface BlockImageProps extends /* @vue-ignore */ BoxProps {
     src?: string
@@ -25,7 +26,6 @@
     cover?: boolean
     width?: number
     height?: number
-    span?: boolean
     loader?: Component
   }
 
@@ -70,24 +70,24 @@
   )
 
   watch(() => props.src, resolve)
-  onUnmounted(() => clean(image.value))
   watch(
     () => rect.ready,
     () => !props.lazy && resolve()
   )
 
+  onUnmounted(() => clean(image.value))
   defineOptions({ name: 'MdBlockImage' })
 </script>
 
 <template>
   <ViewObserver
-    :width
-    :height
-    :offset="50"
-    :ref="setRoot"
+    :as="Box"
+    offset="50"
     class="md-block-image md-image"
+    :ref="setRoot"
+    :loading="!image || undefined"
+    :error="status.error || undefined"
     @viewchange="status.visible = $event"
-    :class="{ loaded: image, 'image-error': status.error, span }"
   >
     <div class="md-loader">
       <component
@@ -111,14 +111,12 @@
 
 <style lang="scss">
   .md-block-image {
-    overflow: hidden;
     border-radius: var(--sm);
     aspect-ratio: v-bind('props.ratio');
     background: var(--surface-container);
 
     img {
       display: block;
-      opacity: 0;
       object-fit: v-bind('props.fit');
       object-position: v-bind('props.position');
       transition: opacity 0.2s ease-out;

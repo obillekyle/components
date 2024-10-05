@@ -15,6 +15,7 @@
   import TextInput from '@/components/Input/text.vue'
   import { useTooltip } from '@/ref/use-tooltip'
   import TabSwitcher from '@/components/AppBar/tab-switcher.vue'
+  import TopBar from '@/components/AppBar/top-bar.vue'
 
   const isDark = ref(true)
   const [root, setRoot] = customRef<HTMLElement>()
@@ -49,7 +50,25 @@
 
 <template>
   <Box class="layout-wrapper" width="100%" :height="600" :ref="setRoot">
-    <Layout inherit :options="{ colors: { primary: 'orange' } }">
+    <Layout inherit :options="{ colors: 'orange' }">
+      <template #header>
+        <TopBar headline="My App" />
+        <TabSwitcher
+          :items="[
+            'This is tab 1',
+            'This is tab 2',
+            'This is tab 3',
+            'This is tab 4',
+            'This is tab 5',
+            'This is tab 6',
+            'This is tab 7',
+            'This is tab 8',
+            'This is tab 9',
+            'This is tab 10'
+          ]"
+        />
+      </template>
+
       <Button
         left-icon="material-symbols:lock-outline"
         @click="focusLock = !focusLock"
@@ -57,8 +76,6 @@
         Toggle Focus Lock
       </Button>
       <Text> State of focus lock: {{ focusLock }} </Text>
-
-      <TabSwitcher :items />
 
       <Switch v-model="isDark" />
       <Text :p="isDark ? '#sm' : '#lg'">
