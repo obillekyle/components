@@ -81,7 +81,12 @@
 </script>
 
 <template>
-  <div class="md-select" :open="show || undefined" ref="select">
+  <div
+    ref="select"
+    class="md-select"
+    :open="show || undefined"
+    :multiple="multiple || undefined"
+  >
     <div
       tabindex="0"
       class="md-select-wrapper"
@@ -168,7 +173,7 @@
       grid-template-columns: 1fr 48px;
       grid-template-areas: 'placeholder icon';
       align-items: center;
-      height: var(--size);
+      min-height: var(--size);
       position: relative;
       overflow: hidden;
       border-radius: var(--xxs);
@@ -184,11 +189,13 @@
 
     &-multi {
       display: flex;
+      gap: var(--xs);
+      padding: var(--xs);
       flex-wrap: wrap;
       align-items: center;
 
       input {
-        height: var(--size);
+        height: 100%;
         background: none;
         border: none;
         outline: none;
@@ -202,7 +209,6 @@
         border-radius: var(--xxs);
         font-size: var(--font-sm);
         display: flex;
-        margin-left: var(--xs);
         align-items: center;
       }
     }
