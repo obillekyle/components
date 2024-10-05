@@ -81,12 +81,11 @@
 
 <template>
   <Layout
+    class="md-docs"
     :options="{
       color: '$on-surface',
       theme: isDark ? 'dark' : 'light',
-      colors: {
-        primary: color
-      }
+      colors: color
     }"
   >
     <template #navbar>
