@@ -293,6 +293,7 @@
     }
 
     &-content {
+      grid-area: content;
       padding-inline: var(--xs);
       color: var(--on-surface-variant);
     }
