@@ -32,21 +32,25 @@
   })
 
   function changeActive() {
-    const index = value.value
     if (root.value && indicator.value) {
       const active = root.value.querySelector(
-        '.md-tab-switcher-item[index="' + index + '"]'
+        '.md-tab-switcher-item[active]'
       ) as HTMLElement
       if (active) {
-        active.scrollIntoView({ block: 'center' })
+        root.value.scrollTo({
+          left:
+            active.offsetLeft +
+            active.offsetWidth / 2 -
+            root.value.offsetWidth / 2,
+          behavior: 'smooth'
+        })
         indicator.value.style.width = active.offsetWidth + 'px'
         indicator.value.style.left = active.offsetLeft + 'px'
       }
     }
   }
 
-  watch(value, changeActive)
-  watch(wSize, changeActive)
+  watch([items, value, wSize], changeActive, { flush: 'post' })
   onMounted(changeActive)
 </script>
 
@@ -54,11 +58,10 @@
   <div class="md-tab-switcher" ref="root">
     <div
       v-for="item in items"
-      :key="item.value"
       class="md-tab-switcher-item"
-      :class="{ active: item.value === value }"
+      :key="item.value"
+      :active="item.value === value || undefined"
       @click="value = item.value"
-      :index="item.value"
       @pointerdown="rippleEffect"
     >
       {{ item.label }}
@@ -72,8 +75,11 @@
     height: var(--component-md);
     display: flex;
     position: sticky;
+    top: 0;
+    z-index: 4;
     align-items: center;
     overflow: auto;
+    background: var(--surface);
     border-bottom: 1px solid var(--surface-container);
     scrollbar-width: none;
 
@@ -92,7 +98,7 @@
       user-select: none;
       white-space: nowrap;
 
-      &.active {
+      &[active] {
         color: var(--primary);
       }
     }
@@ -117,5 +123,10 @@
         border-top-right-radius: var(--xxs);
       }
     }
+  }
+
+  .md-header-content + .md-tab-switcher {
+    z-index: 5;
+    top: var(--header-size);
   }
 </style>
