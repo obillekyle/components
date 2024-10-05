@@ -10,8 +10,10 @@
     if (
       'getBattery' in navigator &&
       typeof navigator.getBattery == 'function'
-    )
-      battery.value = await navigator.getBattery().level
+    ) {
+      const Battery = await navigator.getBattery()
+      battery.value = Battery.level * 100
+    }
   }
 
   onMounted(() => {
