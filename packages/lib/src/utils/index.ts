@@ -1,5 +1,6 @@
 export * from './color-engine'
 export * from './colors'
+export * from './create-style'
 export * from './css'
 export * from './dom'
 export * from './event'

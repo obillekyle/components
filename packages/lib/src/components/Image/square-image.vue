@@ -7,7 +7,7 @@
   import type { Status } from './util'
 
   import { clean } from '@/utils/object/data'
-  import { createStyle } from '@/utils/css/create-style'
+  import { createStyle } from '@/utils/create-style'
   import { onMounted, onUnmounted, ref, shallowReactive, watch } from 'vue'
   import { frames } from '../Frame/variants'
   import { toSvgMask } from '../Frame/util'

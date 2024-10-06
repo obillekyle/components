@@ -2,7 +2,7 @@
   import type { BoxProps } from '@/components/Box/util'
   import type { SizesString } from '@/utils/css/type'
 
-  import { createStyle } from '@/utils/css/create-style'
+  import { createStyle } from '@/utils/create-style'
 
   import Box from '../box.vue'
 
