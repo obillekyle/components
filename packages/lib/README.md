@@ -60,7 +60,7 @@ bun install @vue-material/core
 
 ### Components
 
-Total components: 40
+Total components: 42
 
 - [AppBar](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/AppBar)
 - [Box](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/components/Box)
@@ -92,7 +92,7 @@ Total components: 40
 
 ### Custom Refs / Hooks
 
-Total custom refs (not including component specific hooks): 9
+Total custom refs (not including component specific hooks): 11
 
 
 - [customRef](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/ref/custom-ref)
@@ -100,6 +100,7 @@ Total custom refs (not including component specific hooks): 9
 - [use-drag](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-drag)
 - [use-focus-lock](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-focus-lock)
 - [use-form-value](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-form-value)
+- [use-key-event](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-key-event)
 - [use-local-storage](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/ref/use-local-storage)
 - [use-preferred-theme](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-preferred-theme)
 - [use-rect](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/hooks/use-rect)
@@ -113,6 +114,7 @@ Total custom refs (not including component specific hooks): 9
 - [colors](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/colors)
 - [component-manager](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/component-manager)
 - [css](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/css)
+- [create-style](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/create-style)
 - [dom](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/dom)
 - [event](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/event)
 - [function](https://github.com/obillekyle/components/tree/alpha/packages/lib/src/utils/function)
