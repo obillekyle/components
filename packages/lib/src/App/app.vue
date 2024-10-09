@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useIDBStorage } from '@/ref/use-idb-storage'
   import { useLocalStorage } from '@/ref/use-local-storage'
   import { provide, ref } from 'vue'
 
@@ -26,7 +27,7 @@
 
   const tab = useLocalStorage('tab', 0)
   const color = useLocalStorage('theme-color', '#386a1f')
-  const isDark = useLocalStorage('dark', true)
+  const isDark = useIDBStorage('dark', true)
   const colorInput = ref<HTMLInputElement>()
 
   provide('theme-color', color)
@@ -38,9 +39,7 @@
     :options="{
       fontFamily: 'Roboto, sans-serif',
       theme: isDark ? 'dark' : 'light',
-      colors: {
-        primary: color
-      }
+      colors: color
     }"
   >
     <template #navbar>
