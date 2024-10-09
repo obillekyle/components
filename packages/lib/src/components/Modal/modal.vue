@@ -126,6 +126,10 @@
 
     &-content {
       color: var(--on-surface-variant);
+
+      .md-scroll-wrapper {
+        padding: 0;
+      }
     }
 
     &-actions {

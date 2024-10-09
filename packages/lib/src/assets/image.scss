@@ -12,6 +12,10 @@
     place-items: center;
     transition: opacity 0.2s ease-out;
 
+    &:empty {
+      display: none;
+    }
+
     &-enter-active,
     &-leave-active {
       transition: opacity 0.3s var(--timing-standard);
@@ -27,25 +31,20 @@
     border-radius: inherit;
   }
 
-  &.error img {
+  &[loading] {
+    pointer-events: none;
+    background: var(--surface-container);
+
+    img {
+      opacity: 0;
+    }
+  }
+
+  &[error] img {
     pointer-events: none;
   }
 
-  &.loaded {
-    background: none;
-
-    .md-loader {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    image,
-    img {
-      opacity: 1;
-    }
-  }
-
-  &.span {
+  &[span] {
     flex-grow: 1;
     width: 100% !important;
     height: auto !important;

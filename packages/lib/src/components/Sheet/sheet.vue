@@ -5,7 +5,7 @@
   import { useDrag } from '@/ref/use-drag'
   import { useFocusLock } from '@/ref/use-focus-lock'
   import { useRect } from '@/ref/use-rect'
-  import { createStyle } from '@/utils/css/create-style'
+  import { createStyle } from '@/utils/create-style'
   import { keyClick, targetsSelf } from '@/utils/dom/events'
   import { Icon } from '@iconify/vue'
   import { computed, provide, ref, watch } from 'vue'
@@ -293,6 +293,7 @@
     }
 
     &-content {
+      grid-area: content;
       padding-inline: var(--xs);
       color: var(--on-surface-variant);
     }

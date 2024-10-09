@@ -19,7 +19,23 @@ export const WIDGETS: Record<string, WidgetInfo> = {
     name: 'GitHub Contribution Calendar',
     icon: 'mdi:github',
     description: 'Show your github cantribution calendar'
+  },
+  uptime: {
+    name: 'Uptime',
+    icon: 'mdi:clock-outline',
+    description: 'Show uptime information'
+  },
+  battery: {
+    name: 'Battery',
+    icon: 'material-symbols:battery-0-bar',
+    description: 'Show battery percentage'
   }
 }
 
-export const DEFAULT_WIDGETS = ['clock', 'network']
+export const DEFAULT_WIDGETS = [
+  'clock',
+  'network',
+  'gh_graph',
+  'uptime',
+  'battery'
+]

@@ -1,11 +1,8 @@
 <script setup lang="ts">
-  import type { SelectItem } from './util'
+  import type { ObjectValue } from '@/utils/other/to-object-value'
 
-  defineProps<SelectItem>()
-
-  defineOptions({
-    name: 'MdSelectOptionItem'
-  })
+  defineProps<ObjectValue>()
+  defineOptions({ name: 'MdSelectOptionItem' })
 </script>
 
 <template>

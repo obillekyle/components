@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import type { BoxProps } from './util'
 
-  import { createStyle } from '@/utils/css/create-style'
+  import { createStyle } from '@/utils/create-style'
 
   defineOptions({ name: 'MdBox' })
   const props = defineProps<BoxProps>()
-  const className = createStyle(() => props)
+  const className = createStyle(() => ({ ...props }))
 </script>
 
 <template>

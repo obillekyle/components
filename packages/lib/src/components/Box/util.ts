@@ -1,4 +1,5 @@
-import type { CSSProperties, ColorVariants, SizesString } from '@/utils/css'
+import type { CSSProperties } from '@/utils/create-style/types'
+import type { ColorVariants, SizesString } from '@/utils/css'
 import type { Component, Ref } from 'vue'
 
 import { reactive, shallowRef, watch } from 'vue'
@@ -59,7 +60,7 @@ export const getBoxProps: GetBoxProps = (props: any, defs: any = {}) => {
     const newObj: Record<string, string> = {}
 
     for (const boxKey of boxKeys) {
-      if (props[boxKey] || defs[boxKey])
+      if (props[boxKey] ?? defs[boxKey])
         newObj[boxKey] = props[boxKey] ?? defs[boxKey]
     }
 

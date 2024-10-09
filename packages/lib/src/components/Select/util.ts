@@ -1,15 +1,4 @@
-export type SelectItem = {
-  label: string
-  value: string | number
-}
-
-export function toSelectItems(
-  items: (number | string | SelectItem)[]
-): SelectItem[] {
-  return items.map((item) =>
-    typeof item === 'object' ? item : { value: item, label: String(item) }
-  )
-}
+import type { ObjectValue } from '@/utils/other/to-object-value'
 
 export function toggleItem<T>(list: T[], value: T): T[] {
   const index = list.indexOf(value)
@@ -18,6 +7,6 @@ export function toggleItem<T>(list: T[], value: T): T[] {
     : list.filter((_, index_) => index_ !== index)
 }
 
-export function filterByLabel(list: SelectItem[], label: string) {
+export function filterByLabel(list: ObjectValue[], label: string) {
   return list.filter((item) => item.label.includes(label))
 }

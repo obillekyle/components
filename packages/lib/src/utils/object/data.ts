@@ -19,7 +19,5 @@ export function dataURLtoBlob(dataURL: string): Blob | undefined {
 }
 
 export function clean(objectUrl?: string) {
-  typeof objectUrl === 'string' &&
-    objectUrl.startsWith('blob:') &&
-    URL.revokeObjectURL(objectUrl)
+  typeof objectUrl === 'string' && URL.revokeObjectURL(objectUrl)
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import type { ListEmits, ListItemType, ListProps, UseList } from './types'
 
+  import { is } from '@/utils/object/is'
   import { addPX } from '@/utils/css/sizes'
   import { computed, provide, ref } from 'vue'
 
@@ -14,15 +15,14 @@
   })
 
   const listItems = computed(() =>
-    props.items?.map((item) => {
-      if (typeof item === 'object') return item
-      return { value: item, label: item }
-    })
+    props.items?.map((item) =>
+      is(item, 'object') ? item : { value: item, label: item }
+    )
   )
 
   const root = ref<HTMLElement>()
   const model = defineModel<ListItemType[]>({
-    default: []
+    default: () => []
   })
 
   const emit = defineEmits<ListEmits>()

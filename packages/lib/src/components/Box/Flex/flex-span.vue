@@ -10,7 +10,6 @@
 
 <template>
   <Box class="md-flex-span">
-    <MdFlexSpan />
     <slot />
   </Box>
 </template>
