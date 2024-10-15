@@ -40,14 +40,11 @@ class ImagePalette {
   }
 
   private static getVibrance(r: number, g: number, b: number): number {
-    const rNorm = r / 255
-    const gNorm = g / 255
-    const bNorm = b / 255
+    r /= 255
+    g /= 255
+    b /= 255
 
-    const max = Math.max(rNorm, gNorm, bNorm)
-    const min = Math.min(rNorm, gNorm, bNorm)
-
-    return max - min
+    return Math.max(r, g, b) - Math.min(r, g, b)
   }
 
   private findOrMerge(
