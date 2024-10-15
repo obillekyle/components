@@ -152,7 +152,11 @@
     :style="{ top: addPX(index * list.size), height: addPX(list.size) }"
   >
     <div class="md-list-item-wrapper" ref="wrapper" :data-index="index">
-      <component :value :is="list.component" class="md-list-item-content">
+      <component
+        v-bind="props"
+        :is="list.component"
+        class="md-list-item-content"
+      >
         {{ label }}
       </component>
       <div v-if="list.sortable" class="draggable" @pointerdown="sortEvent">
@@ -165,11 +169,11 @@
           v-if="item"
           v-show="(key === 'left') === isSwipingLeft"
           :class="key"
+          :icon="item.icon"
           :style="{
             background: item.color,
             color: Colors.isLight(item.color) ? '#000' : '#fff'
           }"
-          :icon="item.icon"
         />
       </template>
     </div>
