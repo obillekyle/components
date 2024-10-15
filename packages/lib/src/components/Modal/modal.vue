@@ -49,8 +49,9 @@
         >
           <Icon :inline="false" :width="24" icon="material-symbols:close" />
         </div>
+        <HybridComponent v-if="fullScreen" :as="subAction" />
         <slot name="title">
-          <HybridComponent :as="title" />
+          <HybridComponent class="md-modal-title-text" :as="title" />
         </slot>
       </div>
 
@@ -61,7 +62,7 @@
       </ScrollContainer>
 
       <div class="md-modal-actions" v-if="actions || subAction">
-        <HybridComponent :as="subAction" />
+        <HybridComponent v-if="!fullScreen" :as="subAction" />
 
         <div
           class="md-modal-primary-actions"
@@ -138,9 +139,12 @@
     }
 
     &-close {
-      margin-right: var(--md);
       cursor: pointer;
       line-height: 0;
+    }
+
+    &-close + &-title-text {
+      margin-right: var(--md);
     }
 
     &-actions &-primary-actions {
