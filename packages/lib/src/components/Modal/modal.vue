@@ -73,6 +73,7 @@
             :key="index"
             :label="action.label"
             :variant="action.variant ?? 'text'"
+            :disabled="action.disabled"
             @click="action.onClick(utils)"
           />
         </div>
