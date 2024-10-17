@@ -2,14 +2,12 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { ModalProps } from './util'
 
-  import { customRef } from '@/ref/custom-ref'
   import { useFocusLock } from '@/ref/use-focus-lock'
   import { keyClick, targetsSelf } from '@/utils/dom/events'
   import { Icon } from '@iconify/vue'
-  import { computed, provide } from 'vue'
+  import { ref, computed, provide } from 'vue'
 
   import CM from '@/utils/component-manager'
-  import Box from '../Box/box.vue'
   import Button from '../Button/button.vue'
   import ScrollContainer from '../Layout/scroll-container.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
@@ -23,16 +21,16 @@
   const props = defineProps<ModalOptions>()
   const utils = computed(() => props.utils ?? CM.DEFAULT_UTILITY)
 
-  const [root, setRef] = customRef<HTMLElement>()
+  const root = ref<HTMLElement>()
 
   useFocusLock(root)
 
-  provide('modal-utils', utils)
+  provide('modal-utils', utils.value)
 </script>
 
 <template>
-  <Box
-    :ref="setRef"
+  <div
+    ref="root"
     class="md-modal"
     :class="{ 'md-modal-fullscreen': fullScreen }"
     @click="closeable && targetsSelf($event, utils.close)"
@@ -79,7 +77,7 @@
         </div>
       </div>
     </div>
-  </Box>
+  </div>
 </template>
 
 <style lang="scss">

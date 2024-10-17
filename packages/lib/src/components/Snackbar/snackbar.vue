@@ -24,12 +24,12 @@
   function startTimeout(time: number = props.timeout ?? Infinity) {
     timeout && clearTimeout(timeout)
     if (Number.isFinite(time)) {
-      timeout = setTimeout(() => utils.value.close(), props.timeout)
+      timeout = setTimeout(utils.value.close, props.timeout)
     }
   }
 
   onMounted(startTimeout)
-  provide('snackbar-utils', utils)
+  provide('snackbar-utils', utils.value)
   watch(() => props.timeout, startTimeout)
 </script>
 

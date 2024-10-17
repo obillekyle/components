@@ -62,7 +62,7 @@
     }
   })
 
-  provide('sheet-utils', utils)
+  provide('sheet-utils', utils.value)
 </script>
 
 <template>
