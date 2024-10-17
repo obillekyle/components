@@ -2,11 +2,10 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { ToastProps } from './util'
 
-  import { ComponentManager } from '@/utils/component-manager'
+  import { ComponentManager as CM } from '@/utils/component-manager'
   import { computed, onMounted, provide } from 'vue'
   import { TOAST, getFaviconUrl } from './util'
 
-  import Box from '../Box/box.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
   import HybridIcon from '../Misc/hybrid-icon.vue'
   import Scroller from '../Text/scroller.vue'
@@ -18,18 +17,15 @@
 
   defineOptions({ name: 'MdToast' })
   const props = defineProps<ToastOptions>()
-  const utils = computed(
-    () => props.utils ?? ComponentManager.DEFAULT_UTILITY
-  )
+  const utils = computed(() => props.utils ?? CM.DEFAULT_UTILITY)
   const icon = computed(() => props.icon ?? getFaviconUrl())
-  onMounted(() =>
-    setTimeout(() => utils.value.close(), TOAST.DEFAULT_TIMEOUT)
-  )
-  provide('toast-utils', utils)
+
+  onMounted(() => setTimeout(utils.value.close, TOAST.DEFAULT_TIMEOUT))
+  provide('toast-utils', utils.value)
 </script>
 
 <template>
-  <Box
+  <div
     class="md-toast"
     :class="{
       [variant ?? 'short']: true,
@@ -57,7 +53,7 @@
     <Text class="md-toast-content" v-else lines="3">
       <slot> <HybridComponent :as="message" /> </slot>
     </Text>
-  </Box>
+  </div>
 </template>
 
 <style lang="scss">

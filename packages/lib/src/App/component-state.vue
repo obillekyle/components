@@ -5,11 +5,13 @@
   import { useSnackbar } from '@/components/Snackbar/snackbar-manager'
   import { useToast } from '@/components/Toast/toast-manager'
   import { useLocalStorage } from '@/ref/use-local-storage'
+  import { h } from 'vue'
 
   import Box from '@/components/Box/box.vue'
   import Button from '@/components/Button/button.vue'
   import Select from '@/components/Select/select.vue'
   import Mock from './mock-content.vue'
+  import IconButton from '@/components/Button/icon-button.vue'
 
   const snackbar = useSnackbar()
   const modal = useModal()
@@ -51,6 +53,10 @@
       content: Mock,
       fullScreen: true,
       closeable: true,
+      subAction: h(IconButton, {
+        icon: 'material-symbols:info-outline',
+        onClick: () => openModal()
+      }),
       actions: MODAL.PRESET_ACTION_CLOSE('OK')
     })
   }

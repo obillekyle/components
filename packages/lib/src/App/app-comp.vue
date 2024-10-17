@@ -176,6 +176,9 @@
         ab.
       </Scroller>
 
+      <Floater offset="#xxs">
+        <IconButton icon="material-symbols:inbox-outline-rounded" />
+      </Floater>
       <Floater text="3" offset="#xxs">
         <IconButton icon="material-symbols:inbox-outline-rounded" />
       </Floater>

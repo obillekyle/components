@@ -73,6 +73,7 @@
       position: absolute;
       background-color: inherit;
       display: flex;
+      align-items: center;
       right: 0;
     }
   }

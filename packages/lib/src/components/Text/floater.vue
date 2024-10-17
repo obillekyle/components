@@ -2,8 +2,8 @@
   import type { SizesString } from '@/utils/css/type'
   import type { Component } from 'vue'
 
-  import Box from '../Box/box.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
+  import { createStyle } from '@/utils/create-style'
 
   type Positions =
     | 'top'
@@ -25,28 +25,20 @@
   }
 
   defineOptions({ name: 'MdFloatingIndicator' })
-  withDefaults(defineProps<FloaterProperties>(), {
-    color: '$error',
-    offset: 0,
-    size: '#font-xs',
-    pos: 'top-right'
-  })
+  const props = defineProps<FloaterProperties>()
+
+  const classes = createStyle(() => ({
+    $offset: props.offset || 0,
+    background: props.color,
+    fontSize: props.size
+  }))
 </script>
 
 <template>
   <div class="md-floater">
-    <Box
-      v-if="text"
-      class="md-floater-text"
-      :class="pos"
-      :styled="{
-        $offset: offset,
-        background: color,
-        fontSize: size
-      }"
-    >
+    <div class="md-floater-text" :class="[pos || 'top-right', classes]">
       <HybridComponent :as="text" />
-    </Box>
+    </div>
     <slot />
   </div>
 </template>
@@ -64,15 +56,19 @@
       pointer-events: none;
       min-height: var(--md);
       min-width: var(--md);
+      padding-inline: var(--xxs);
       border-radius: 999px;
+      font-size: var(--font-sm);
+      background: var(--primary);
       line-height: 0;
       z-index: 1;
       box-shadow: 0 0 2px var(--shadow-1);
       color: var(--surface);
 
       &:empty {
-        min-height: var(--xxs);
-        min-width: var(--xxs);
+        min-height: var(--xs);
+        min-width: var(--xs);
+        padding-inline: 0;
       }
 
       &.top {

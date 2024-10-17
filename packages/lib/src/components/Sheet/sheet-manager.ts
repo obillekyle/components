@@ -1,6 +1,6 @@
 import type { SheetProps } from './util'
 
-import { ComponentManager } from '@/utils/component-manager'
+import { ComponentManager, injected } from '@/utils/component-manager'
 import { inject } from 'vue'
 
 export const SheetManager = new ComponentManager<SheetProps>({
@@ -13,3 +13,4 @@ export const SheetManager = new ComponentManager<SheetProps>({
 })
 
 export const useSheet = () => inject('sheet-manager', SheetManager)
+export const useSheetUtils = () => injected<SheetProps>('sheet-utils')
