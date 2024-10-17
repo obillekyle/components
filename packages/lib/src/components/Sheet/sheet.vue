@@ -120,14 +120,16 @@
     background: #0008;
 
     &-wrapper {
+      --surface: var(--surface-container-high);
+
+      position: absolute;
+      overflow: hidden;
       display: grid;
       grid-template:
         'title' var(--component-lg)
         'content' auto;
-      position: absolute;
-      overflow: hidden;
       padding-top: var(--xl);
-      background: var(--surface-container-high);
+      background: var(--surface);
       border-radius: var(--xxl);
       min-width: min(350px, 100%);
       width: 500px;

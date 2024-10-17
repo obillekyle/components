@@ -6,7 +6,6 @@
   import { computed, onMounted, provide, watch } from 'vue'
 
   import CM from '@/utils/component-manager'
-  import Box from '../Box/box.vue'
   import Button from '../Button/button.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
   import Text from '../Text/text.vue'
@@ -34,7 +33,7 @@
 </script>
 
 <template>
-  <Box
+  <div
     class="md-snackbar"
     :class="{
       static: Number.isNaN(utils.id),
@@ -66,7 +65,7 @@
       :width="24"
       :inline="false"
     />
-  </Box>
+  </div>
 </template>
 
 <style lang="scss">

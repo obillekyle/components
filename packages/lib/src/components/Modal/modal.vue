@@ -91,6 +91,8 @@
     background: #0008;
 
     &-wrapper {
+      --surface: var(--surface-container-high);
+
       display: grid;
       overflow: hidden;
       position: absolute;
@@ -100,15 +102,11 @@
         'content' 1fr
         'actions' auto;
       padding: var(--xl);
-      background: var(--surface-container-high);
+      background: var(--surface);
       border-radius: var(--xxl);
       min-width: min(300px, calc(100% - var(--xl)));
       max-width: min(500px, calc(100% - var(--xl)));
       max-height: calc(100% - var(--xl));
-    }
-
-    .md-input.outlined .md-input-content::after {
-      background: var(--surface-container-high);
     }
 
     &-icon {
