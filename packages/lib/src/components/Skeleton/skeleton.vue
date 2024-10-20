@@ -27,7 +27,7 @@
       inset: 0;
       opacity: 0.3;
       background: linear-gradient(90deg, #0000, var(--on-surface), #0000);
-      animation: slide 1.5s infinite ease-in-out;
+      animation: slide 1.5s infinite var(--timing-standard);
       translate: -100% 0;
     }
 

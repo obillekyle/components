@@ -74,6 +74,18 @@
   }
 }
 
+@media (prefers-reduced-motion) {
+  :root,
+  .md-theme-provider {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0s !important;
+      transition-duration: 0s !important;
+    }
+  }
+}
+
 @keyframes focus {
   0% {
     outline-width: 0;
