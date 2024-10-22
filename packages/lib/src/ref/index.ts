@@ -3,6 +3,7 @@ export * from './fn-ref'
 export * from './tools'
 
 export * from './use-drag'
+export * from './use-fetch'
 export * from './use-focus-lock'
 export * from './use-form-value'
 export * from './use-idb-storage'

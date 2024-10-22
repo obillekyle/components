@@ -43,7 +43,7 @@
     }"
   >
     <template #navbar>
-      <NavBar v-model="tab" labels="active">
+      <NavBar v-model="tab">
         <NavContent mt="#xl">
           <SquareImage alt="App Logo" src="/favicon.svg" :size="60" />
         </NavContent>

@@ -37,11 +37,13 @@ export class IDBStorage extends CustomEventHandler<StorageEvents> {
   }
 
   public static get addEventListener() {
-    return IDBStorage.init().addEventListener
+    const instance = IDBStorage.init()
+    return instance.addEventListener.bind(instance)
   }
 
   public static get removeEventListener() {
-    return IDBStorage.init().removeEventListener
+    const instance = IDBStorage.init()
+    return instance.removeEventListener.bind(instance)
   }
 
   private static openDB() {

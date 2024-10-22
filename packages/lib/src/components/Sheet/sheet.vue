@@ -49,9 +49,8 @@
 
   useFocusLock(root)
 
-  const [dragging, dragHandler] = useDrag((position) => {
+  const [dragging, dragHandler] = useDrag(({ x, y }) => {
     if (!rect.ready) return
-    const { x, y } = position
     const { height, width } = rect
     positions[props.direction!]({ x, y, width, height } as DOMRect)
   })
@@ -62,7 +61,7 @@
     }
   })
 
-  provide('sheet-utils', utils)
+  provide('sheet-utils', utils.value)
 </script>
 
 <template>
@@ -120,14 +119,16 @@
     background: #0008;
 
     &-wrapper {
+      --surface: var(--surface-container-high);
+
+      position: absolute;
+      overflow: hidden;
       display: grid;
       grid-template:
         'title' var(--component-lg)
         'content' auto;
-      position: absolute;
-      overflow: hidden;
       padding-top: var(--xl);
-      background: var(--surface-container-high);
+      background: var(--surface);
       border-radius: var(--xxl);
       min-width: min(350px, 100%);
       width: 500px;

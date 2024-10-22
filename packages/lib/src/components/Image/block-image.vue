@@ -3,18 +3,14 @@
 
   import type { BoxProps } from '@/components/Box/util'
   import type { Component } from 'vue'
-  import type { Status } from './util'
 
-  import { customRef } from '@/ref/custom-ref'
-  import { useRect } from '@/ref/use-rect'
-  import { clean } from '@/utils/object/data'
-  import { assert } from '@/utils/object/is'
-  import { onUnmounted, ref, shallowReactive, watch } from 'vue'
-  import { getData } from './util'
+  import { useFetch } from '@/ref/use-fetch'
+  import { ref, watch } from 'vue'
+  import { getSrc } from './util'
 
+  import Box from '../Box/box.vue'
   import ViewObserver from '../Misc/view-observer.vue'
   import DefaultLoader from './default-loader.vue'
-  import Box from '../Box/box.vue'
 
   interface BlockImageProps extends /* @vue-ignore */ BoxProps {
     src?: string
@@ -29,9 +25,6 @@
     loader?: Component
   }
 
-  const [root, setRoot] = customRef<HTMLElement>()
-  const rect = useRect(root)
-
   const props = withDefaults(defineProps<BlockImageProps>(), {
     fit: 'cover',
     position: 'center',
@@ -39,43 +32,18 @@
     loader: DefaultLoader
   })
 
-  const image = ref<string>('')
-  const status = shallowReactive<Status>({
-    progress: 0,
-    error: false,
-    visible: false
-  })
-
-  function resolve() {
-    assert(rect.ready, 'rect must be ready')
-
-    getData(
-      {
-        src: props.src,
-        width: props.width || rect.width,
-        height: props.height || rect.height
-      },
-      image,
-      status
-    )
-  }
+  const visible = ref(false)
+  const fetch = useFetch(() => getSrc(props), 'url-blob', { init: false })
 
   watch(
-    () => rect.ready && status.visible,
+    visible,
     (visible) => {
-      if (!visible || !props.lazy) return
-      if (status.progress || status.error || image.value) return
-      resolve()
-    }
+      if (fetch.ready || fetch.loading || fetch.error) return
+      if (!props.lazy || visible) fetch.refetch()
+    },
+    { immediate: true }
   )
 
-  watch(() => props.src, resolve)
-  watch(
-    () => rect.ready,
-    () => !props.lazy && resolve()
-  )
-
-  onUnmounted(() => clean(image.value))
   defineOptions({ name: 'MdBlockImage' })
 </script>
 
@@ -84,24 +52,23 @@
     :as="Box"
     offset="50"
     class="md-block-image md-image"
-    :ref="setRoot"
-    :loading="!image || undefined"
-    :error="status.error || undefined"
-    @viewchange="status.visible = $event"
+    :loading="fetch.loading || undefined"
+    :error="fetch.error || undefined"
+    v-model="visible"
   >
     <div class="md-loader">
       <component
         :is="loader"
-        :error="status.error"
-        :progress="status.progress"
-        :ready="!!image"
-        @retry="resolve"
+        :error="fetch.error"
+        :progress="fetch.progress"
+        :ready="fetch.ready"
+        @retry="fetch.refetch"
       />
     </div>
     <img
       class="md-image-element"
-      v-if="!status.error"
-      :src="image"
+      v-if="!fetch.error"
+      :src="fetch.data"
       :alt
       :width
       :height

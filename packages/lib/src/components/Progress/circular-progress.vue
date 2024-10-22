@@ -22,7 +22,7 @@
     const hasSpace = value > 6 && value < 85
 
     const space = hasSpace ? stroke * 3 : 0
-    const infinite = !Number.isFinite(value)
+    const infinite = !Number.isFinite(value) || value < 0
     const radius = (diameter - stroke) / 2
 
     const circumference = 2 * Math.PI * radius

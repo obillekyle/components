@@ -53,7 +53,7 @@
       class="md-progress-2-infinite"
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="`0 0 ${width} ${size}`"
-      v-if="!Number.isFinite(value)"
+      v-if="!Number.isFinite(value) || value < 0"
     >
       <path
         class="md-progress-2-infinite-2"

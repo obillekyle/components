@@ -11,7 +11,7 @@ export function parseColors(colors: ColorParam): ColorOptions<Colors> {
   const primary = Colors.from(colors.primary ?? '#fff')
   const [h, s] = primary['main']
 
-  const newColors = Object.assign({}, colors)
+  const newColors = Object.assign({ primary }, colors)
 
   newColors.secondary ??= toHex(hsla(h, s * 0.4, 0.2, 1))
   newColors.tertiary ??= primary.opposite

@@ -1,3 +1,4 @@
+import { inject } from 'vue'
 import { canBeNumber } from '../css/main'
 import { CustomEventHandler } from '../event'
 import { evaluate } from '../function/evaluate'
@@ -31,6 +32,7 @@ export class ComponentManager<T extends object> extends CustomEventHandler<
   ComponentManagerEvents<T>
 > {
   private options: ComponentOptions<T> = {}
+  private store = new Map<ComponentID, T>()
 
   private get INCREMENT_START() {
     return this.options.startIncrement ?? 1000
@@ -39,8 +41,6 @@ export class ComponentManager<T extends object> extends CustomEventHandler<
   private get DEFAULTS() {
     return this.options.defaults ?? {}
   }
-
-  private store = new Map<ComponentID, T>()
 
   private get nextKey() {
     return this.INCREMENT_START + getUnique()
@@ -118,6 +118,10 @@ export class ComponentManager<T extends object> extends CustomEventHandler<
   get data(): { [key: ComponentID]: T } {
     return Object.fromEntries(this.store.entries())
   }
+}
+
+export function injected<T>(injectID: string): UtilityFunction<T> {
+  return inject(injectID, ComponentManager.DEFAULT_UTILITY)
 }
 
 export default ComponentManager

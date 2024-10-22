@@ -2,14 +2,12 @@
   import type { UtilityFunction } from '@/utils/component-manager'
   import type { ModalProps } from './util'
 
-  import { customRef } from '@/ref/custom-ref'
   import { useFocusLock } from '@/ref/use-focus-lock'
   import { keyClick, targetsSelf } from '@/utils/dom/events'
   import { Icon } from '@iconify/vue'
-  import { computed, provide } from 'vue'
+  import { ref, computed, provide } from 'vue'
 
   import CM from '@/utils/component-manager'
-  import Box from '../Box/box.vue'
   import Button from '../Button/button.vue'
   import ScrollContainer from '../Layout/scroll-container.vue'
   import HybridComponent from '../Misc/hybrid-component.vue'
@@ -23,16 +21,16 @@
   const props = defineProps<ModalOptions>()
   const utils = computed(() => props.utils ?? CM.DEFAULT_UTILITY)
 
-  const [root, setRef] = customRef<HTMLElement>()
+  const root = ref<HTMLElement>()
 
   useFocusLock(root)
 
-  provide('modal-utils', utils)
+  provide('modal-utils', utils.value)
 </script>
 
 <template>
-  <Box
-    :ref="setRef"
+  <div
+    ref="root"
     class="md-modal"
     :class="{ 'md-modal-fullscreen': fullScreen }"
     @click="closeable && targetsSelf($event, utils.close)"
@@ -49,8 +47,9 @@
         >
           <Icon :inline="false" :width="24" icon="material-symbols:close" />
         </div>
+        <HybridComponent v-if="fullScreen" :as="subAction" />
         <slot name="title">
-          <HybridComponent :as="title" />
+          <HybridComponent class="md-modal-title-text" :as="title" />
         </slot>
       </div>
 
@@ -61,7 +60,7 @@
       </ScrollContainer>
 
       <div class="md-modal-actions" v-if="actions || subAction">
-        <HybridComponent :as="subAction" />
+        <HybridComponent v-if="!fullScreen" :as="subAction" />
 
         <div
           class="md-modal-primary-actions"
@@ -72,12 +71,13 @@
             :key="index"
             :label="action.label"
             :variant="action.variant ?? 'text'"
+            :disabled="action.disabled"
             @click="action.onClick(utils)"
           />
         </div>
       </div>
     </div>
-  </Box>
+  </div>
 </template>
 
 <style lang="scss">
@@ -91,6 +91,8 @@
     background: #0008;
 
     &-wrapper {
+      --surface: var(--surface-container-high);
+
       display: grid;
       overflow: hidden;
       position: absolute;
@@ -100,15 +102,11 @@
         'content' 1fr
         'actions' auto;
       padding: var(--xl);
-      background: var(--surface-container-high);
+      background: var(--surface);
       border-radius: var(--xxl);
       min-width: min(300px, calc(100% - var(--xl)));
       max-width: min(500px, calc(100% - var(--xl)));
       max-height: calc(100% - var(--xl));
-    }
-
-    .md-input.outlined .md-input-content::after {
-      background: var(--surface-container-high);
     }
 
     &-icon {
@@ -138,9 +136,12 @@
     }
 
     &-close {
-      margin-right: var(--md);
       cursor: pointer;
       line-height: 0;
+    }
+
+    &-close + &-title-text {
+      margin-right: var(--md);
     }
 
     &-actions &-primary-actions {

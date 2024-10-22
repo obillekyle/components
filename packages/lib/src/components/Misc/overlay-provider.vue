@@ -8,13 +8,13 @@
 </script>
 
 <template>
-  <SnackbarProvider>
-    <ModalProvider>
-      <ToastProvider>
+  <ToastProvider>
+    <SnackbarProvider>
+      <ModalProvider>
         <SheetProvider>
           <slot />
         </SheetProvider>
-      </ToastProvider>
-    </ModalProvider>
-  </SnackbarProvider>
+      </ModalProvider>
+    </SnackbarProvider>
+  </ToastProvider>
 </template>
