@@ -23,8 +23,7 @@ export function toProxy<T extends Ref<object>>(
   )
 
   return new Proxy(reactiveTarget, {
-    get: (target, key, receiver) =>
-      key === ProxyValue ? target : Reflect.get(target, key, receiver),
+    get: (t, k, r) => (k === ProxyValue ? t : Reflect.get(t, k, r)),
     set(_, key, value, receiver) {
       if (readonly || isReadonly(refValue)) return false
 
