@@ -2,17 +2,8 @@
 import type { MaybeFunction } from '@/utils/function/types'
 import type { Ref } from 'vue'
 
-import { evaluate } from '@/utils/function/evaluate'
-import { is } from '@/utils/object/is'
-import {
-  computed,
-  isRef,
-  onUnmounted,
-  reactive,
-  shallowRef,
-  watch
-} from 'vue'
-import { toProxy } from './tools'
+import { computed, onUnmounted, reactive, shallowRef, watch } from 'vue'
+import { modifiedComputed, toProxy } from './tools'
 
 type FetchResult<T> =
   | {
@@ -51,45 +42,47 @@ type FetchResult<T> =
 type FetchInit = {
   withCredentials?: boolean
   headers?: Record<string, string>
+  cache?: boolean
   init?: boolean
 }
 
 type URLType = MaybeFunction<string> | Ref<string>
 
+// prettier-ignore
 type UseFetch = {
-  (
-    url: URLType,
-    type: 'text' | 'url-blob',
-    init?: FetchInit
-  ): FetchResult<string>
   (url: URLType, type: 'blob', init?: FetchInit): FetchResult<Blob>
-  <T>(
-    url: URLType,
-    type?: 'json' | (string & {}),
-    init?: FetchInit
-  ): FetchResult<T>
+  (url: URLType, type: 'text' | 'url-blob', init?: FetchInit): FetchResult<string>
+  <T>(url: URLType, type?: 'json' | (string & {}), init?: FetchInit): FetchResult<T>
 }
+
+const memoryCache = new Map<string, any>()
 
 export const useFetch: UseFetch = (
   url: URLType,
   type = 'json',
-  init?: FetchInit
-) => {
+  init: FetchInit = {}
+): any => {
   let xhr: XMLHttpRequest
+  let doFetch = init.init ?? true
+  const cache = init.cache ?? true
+
   const data = shallowRef()
   const status = reactive({
-    init: init?.init ?? true,
     ready: false,
     error: false,
     loading: false,
     progress: -1
   })
 
-  async function request(url: string) {
+  const src = modifiedComputed(url)
+
+  async function request() {
+    const url = src.value
+    const id = `${type}:${url}`
     status.loading && xhr?.abort()
 
-    if (!status.init) {
-      status.init = true
+    if (!doFetch) {
+      doFetch = true
       return
     }
 
@@ -98,18 +91,26 @@ export const useFetch: UseFetch = (
     status.loading = true
     status.progress = -1
 
+    if (cache && memoryCache.has(id)) {
+      data.value = memoryCache.get(id)
+
+      status.ready = true
+      status.loading = false
+      status.progress = 100
+      return
+    }
+
     xhr = new XMLHttpRequest()
     xhr.open('GET', url, true)
 
     xhr.withCredentials = init?.withCredentials ?? false
     xhr.responseType = type === 'url-blob' ? 'blob' : (type as any)
-
     for (const [key, value] of Object.entries(init?.headers || {})) {
       xhr.setRequestHeader(key, value)
     }
 
-    xhr.onprogress = (event) => {
-      status.progress = (event.total ? event.loaded / event.total : 0) * 100
+    xhr.onprogress = ({ loaded, total }) => {
+      status.progress = (total ? loaded / total : 0) * 100
     }
 
     xhr.onload = () => {
@@ -127,10 +128,16 @@ export const useFetch: UseFetch = (
         }
         default: {
           console.error('Invalid useFetch data type')
+          status.loading = false
           status.error = true
-          break
+          return
         }
       }
+
+      const cacheHeader = xhr.getResponseHeader('Cache-Control') ?? ''
+
+      if (cache && !['no-cache', 'no-store'].includes(cacheHeader))
+        memoryCache.set(id, data.value)
 
       status.ready = true
       status.loading = false
@@ -145,24 +152,18 @@ export const useFetch: UseFetch = (
     xhr.send()
   }
 
-  watch(is(url, 'string') ? () => url : url, request, { immediate: true })
+  watch(src, request, { immediate: true })
   onUnmounted(() => {
-    type === 'url-blob' && URL.revokeObjectURL(data.value)
+    type === 'url-blob' && !cache && URL.revokeObjectURL(data.value)
     xhr?.abort()
   })
 
   return toProxy(
-    computed(
-      () =>
-        ({
-          data: data.value,
-          error: status.error,
-          ready: status.ready,
-          progress: status.progress,
-          loading: status.loading,
-          refetch: () => request(isRef(url) ? url.value : evaluate(url))
-          // biome-ignore lint/suspicious/noExplicitAny: function returns multiple types of data
-        }) as FetchResult<any>
+    computed(() =>
+      Object.assign({}, status, {
+        refetch: request,
+        data: data.value
+      })
     )
   )
 }
