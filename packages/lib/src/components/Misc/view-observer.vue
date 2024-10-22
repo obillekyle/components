@@ -48,7 +48,7 @@
     }
   })
 
-  onBeforeUnmount(() => observer.disconnect())
+  onBeforeUnmount(() => observer?.disconnect())
   defineOptions({ name: 'MdViewObserver' })
 </script>
 
