@@ -112,6 +112,16 @@ export class IDBStorage extends CustomEventHandler<StorageEvents> {
     })
   }
 
+  public static async hasItem(key: string): Promise<boolean> {
+    const store = await IDBStorage.getStore('readonly')
+    const request = store.get(key)
+
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => resolve(!!request.result)
+      request.onerror = () => reject(request.error)
+    })
+  }
+
   public static async removeItem(key: string): Promise<void> {
     const store = await IDBStorage.getStore('readwrite')
     const request = store.delete(key)
