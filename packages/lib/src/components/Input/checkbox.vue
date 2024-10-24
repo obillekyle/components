@@ -6,6 +6,7 @@
 
   interface CheckboxProps {
     defaultChecked?: boolean
+    partial?: boolean
     checked?: boolean
     name?: string
   }
@@ -44,7 +45,8 @@
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M0.699219 4.69922L4 8L11.3008 0.699219" stroke-width="2" />
+        <path d="M1 4.5H11" v-if="partial" />
+        <path d="M0.699219 4.69922L4 8L11.3008 0.699219" v-else />
       </svg>
       <input type="checkbox" v-model="checked" v-bind="$attrs" ref="root" />
     </div>
@@ -72,6 +74,7 @@
     }
 
     path {
+      stroke-width: 2px;
       stroke-dasharray: 24;
       stroke-dashoffset: 24;
       stroke: var(--on-primary);

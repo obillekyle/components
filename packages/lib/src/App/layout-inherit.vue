@@ -17,7 +17,7 @@
   import TabSwitcher from '@/components/AppBar/tab-switcher.vue'
   import TopBar from '@/components/AppBar/top-bar.vue'
 
-  const isDark = ref(true)
+  const partial = ref(true)
   const [root, setRoot] = customRef<HTMLElement>()
   const focusLock = useFocusLock(root)
   useTooltip(root, 'class')
@@ -77,13 +77,14 @@
       </Button>
       <Text> State of focus lock: {{ focusLock }} </Text>
 
-      <Switch v-model="isDark" />
-      <Text :p="isDark ? '#sm' : '#lg'">
+      <Text>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         eiusmod tempor incididunt ut labore et dolore magna aliqua.
       </Text>
 
-      <Checkbox />
+      <span>Partial: {{ partial }}</span>
+      <Switch v-model="partial" />
+      <Checkbox :partial />
 
       <List
         v-model="items"
