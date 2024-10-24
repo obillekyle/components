@@ -6,6 +6,7 @@
   import { keyClick, targetsSelf } from '@/utils/dom/events'
   import { Icon } from '@iconify/vue'
   import { ref, computed, provide } from 'vue'
+  import { createStyle } from '@/utils/create-style'
 
   import CM from '@/utils/component-manager'
   import Button from '../Button/button.vue'
@@ -20,6 +21,7 @@
   defineOptions({ name: 'MdModal' })
   const props = defineProps<ModalOptions>()
   const utils = computed(() => props.utils ?? CM.DEFAULT_UTILITY)
+  const styled = createStyle(() => ({ $width: props.width }))
 
   const root = ref<HTMLElement>()
 
@@ -32,7 +34,7 @@
   <div
     ref="root"
     class="md-modal"
-    :class="{ 'md-modal-fullscreen': fullScreen }"
+    :class="{ 'md-modal-fullscreen': fullScreen, [styled]: true }"
     @click="closeable && targetsSelf($event, utils.close)"
   >
     <div class="md-modal-wrapper">
@@ -104,8 +106,8 @@
       padding: var(--xl);
       background: var(--surface);
       border-radius: var(--xxl);
-      min-width: min(300px, calc(100% - var(--xl)));
-      max-width: min(500px, calc(100% - var(--xl)));
+      min-width: min(var(--width, 300px), calc(100% - var(--xl)));
+      max-width: min(var(--width, 500px), calc(100% - var(--xl)));
       max-height: calc(100% - var(--xl));
     }
 
