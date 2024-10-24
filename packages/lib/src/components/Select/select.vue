@@ -50,13 +50,6 @@
   })
 
   defineOptions({ name: 'MdSelect' })
-  defineSlots<{
-    default: {
-      label: string
-      value: number
-      active: boolean
-    }
-  }>()
 
   function handleClick(value?: string | number) {
     if (value === undefined) {

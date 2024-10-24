@@ -79,6 +79,10 @@
 
         <Checkbox />
         <Checkbox default-checked />
+        <Radio>
+          <RadioItem value="Hello" label="Hello" />
+          <RadioItem value="Hello2" label="Hello2" />
+        </Radio>
       </div>
     </div>
 
@@ -176,7 +180,7 @@
         ab.
       </Scroller>
 
-      <Floater offset="#xxs">
+      <Floater offset="#sm">
         <IconButton icon="material-symbols:inbox-outline-rounded" />
       </Floater>
       <Floater text="3" offset="#xxs">
@@ -306,6 +310,8 @@
   import IconButton from '@/components/Button/icon-button.vue'
   import CardBody from '@/components/Card/card-body.vue'
   import Card from '@/components/Card/card.vue'
+  import Radio from '@/components/Input/radio.vue'
+  import RadioItem from '@/components/Input/radio-item.vue'
   import Checkbox from '@/components/Input/checkbox.vue'
   import ChipGroup from '@/components/Chip/chip-group.vue'
   import Chip from '@/components/Chip/chip.vue'

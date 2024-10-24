@@ -10,12 +10,15 @@ export function useIDBStorage<T>(key: string, defaultValue?: T) {
 
   async function itemUpdate(data: { key: string }) {
     if (data.key === key) {
-      index.value = (await IDBStorage.getItem(key)) ?? defaultValue
+      index.value = await IDBStorage.getItem(key)
     }
   }
 
   onMounted(async () => {
-    index.value = await IDBStorage.getItem(key)
+    if (await IDBStorage.hasItem(key)) {
+      index.value = await IDBStorage.getItem(key)
+    }
+
     IDBStorage.addEventListener('storage', itemUpdate)
   })
 
