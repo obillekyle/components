@@ -55,7 +55,7 @@
     }
   })
 
-  const limit = computed(() => {
+  const option = computed(() => {
     const { raw } = values.value
     const { min, max, step, decimal } = props
     const hasValues = raw.length > 0
@@ -68,8 +68,8 @@
     }
   })
 
-  const sliderVal = useValue(limit.value.min, props, model, (value) => {
-    const { min, max, decimal } = limit.value
+  const sliderVal = useValue(option.value.min, props, model, (value) => {
+    const { min, max, decimal } = option.value
     value = toDecimalFixed(clamp(value, min, max), decimal)
     emit('change', value)
     return value
@@ -78,13 +78,13 @@
   function getLabel(value: number) {
     return props.values
       ? values.value.formatted.find((v) => v.value === value)?.label
-      : toDecimalFixed(value, limit.value.decimal)
+      : toDecimalFixed(value, option.value.decimal)
   }
 
   const [dragging, dragEvent] = useDrag(({ x }) => {
     if (!rect.ready) return
 
-    const { min, max, step } = limit.value
+    const { min, max, step } = option.value
 
     const offset = rect.height / 2
     const length = rect.width
@@ -106,7 +106,7 @@
   function getPosition(value: number) {
     if (!rect.ready) return 0
 
-    const { min, max } = limit.value
+    const { min, max } = option.value
     const { width, height } = rect
 
     const percent = (value - min) / (max - min)
@@ -116,7 +116,7 @@
   const thumbPos = computed(() => getPosition(sliderVal.value))
 
   function handleKeydown(e: KeyboardEvent) {
-    const { step } = limit.value
+    const { step } = option.value
 
     const vals = values.value.raw
     const value = sliderVal.value
@@ -172,8 +172,8 @@
       />
       <input
         type="range"
-        :min="limit.min"
-        :max="limit.max"
+        :min="option.min"
+        :max="option.max"
         v-model="sliderVal"
       />
       <div class="md-slider-track" ref="wrapper" />
