@@ -10,7 +10,7 @@
 </script>
 
 <template>
-  <div class="md-input-number-counter">
+  <div class="md-input-number-arrows">
     <span>{{ length }}</span>
     <span v-if="max">/{{ max }}</span>
   </div>

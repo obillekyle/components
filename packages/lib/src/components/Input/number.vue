@@ -15,6 +15,8 @@
     name?: string
     span?: boolean
     value?: number
+    prefix?: string
+    suffix?: string
     defaultValue?: number
     placeholder?: string
     variant?: 'filled' | 'outlined'
@@ -27,7 +29,7 @@
 
   const input = ref<HTMLInputElement>()
   const props = defineProps<InputNumber>()
-  const emit = defineEmits<InputNumberEmits>()
+  const emits = defineEmits<InputNumberEmits>()
   const model = defineModel<number>()
   defineOptions({ name: 'MdInputNumber' })
 
@@ -37,7 +39,7 @@
     const max = Number(attributes.max || Number.POSITIVE_INFINITY)
 
     value = clamp(value, min, max)
-    emit('change', value)
+    emits('change', value)
 
     return value
   })
@@ -48,15 +50,21 @@
     class="md-input number"
     @click="input?.focus()"
     :class="{ span, [variant ?? 'filled']: true }"
+    :data-placeholder="placeholder"
   >
-    <HybridIcon class="md-input-icon left" :icon="leftIcon" />
-    <div class="md-input-content" :data-placeholder="placeholder">
+    <div class="md-input-wrapper">
+      <HybridIcon class="md-input-icon left" :icon="leftIcon" />
+      <span class="md-input-placeholder">{{ placeholder }}</span>
+      <span class="md-input-prefix" v-if="prefix">{{ prefix }}</span>
+      <span class="md-input-suffix" v-if="suffix">{{ suffix }}</span>
+
       <input
         :name
         ref="input"
         type="number"
         placeholder=""
         v-bind="$attrs"
+        class="md-input-field"
         v-model="inputValue"
       />
       <NumberArrows v-model="inputValue" />

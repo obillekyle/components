@@ -54,6 +54,7 @@
         placeholder="Input"
         left-icon="material-symbols:search"
         span
+        textbox
         @change="(e) => console.log(e)"
         prefix="Hello"
       />
@@ -62,6 +63,22 @@
         placeholder="Input"
         span
         left-icon="material-symbols:monetization-on-outline-rounded"
+      />
+      <TextInput
+        class="input"
+        placeholder="Input"
+        span
+        prefix="Hello"
+        variant="outlined"
+      />
+      <TextInput
+        class="input"
+        placeholder="Input"
+        left-icon="material-symbols:search"
+        span
+        textbox
+        prefix="Hello"
+        variant="outlined"
       />
       <TextInput
         class="input"

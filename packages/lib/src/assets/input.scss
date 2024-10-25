@@ -1,193 +1,75 @@
 /* stylelint-disable no-descending-specificity */
 .md-input {
-  flex-grow: 0;
-  display: inline-flex;
-  align-items: center;
-  align-self: center;
-  width: max-content;
-  position: relative;
-  transition: box-shadow 0.2s;
-  min-height: var(--component-lg);
-  color: var(--on-surface-variant);
-  margin-block: var(--xs);
+  display: inline-block;
+  margin-block: var(--xxs);
 
-  &-content,
-  input {
-    flex: 1 1 auto;
+  &-wrapper {
+    display: grid;
+    place-items: center;
+    position: relative;
+    color: var(--on-surface-variant);
+    transition: box-shadow 0.2s;
+    padding-left: var(--md);
+    grid-template:
+      'l-icon prefix input suffix r-icon n-arrows' var(--component-lg)
+      '   .     .    input    .     .       .    ' auto
+      / auto auto 1fr auto auto auto;
   }
 
-  &.span {
-    min-width: initial;
-    width: 100%;
+  &-icon {
+    display: grid;
+    place-items: center;
+    width: var(--component-md);
+    aspect-ratio: 1;
+
+    &.left {
+      margin-left: calc(var(--md) * -1);
+      grid-area: l-icon;
+    }
+
+    &.right {
+      grid-area: r-icon;
+    }
   }
 
-  input {
+  &-prefix {
+    grid-area: prefix;
+    padding-right: var(--xxs);
+  }
+
+  &-suffix {
+    grid-area: suffix;
+  }
+
+  &-field {
+    background: none;
     border: none;
     outline: none;
-    background: none;
-    height: 100%;
-    width: 100%;
-    min-height: inherit;
-    margin-left: -2px;
-    color: inherit;
+    grid-area: input;
     font: inherit;
+    width: 100%;
+    min-height: 100%;
+    color: currentcolor;
 
     &:focus {
       color: var(--on-surface);
     }
   }
 
-  &:focus-within [data-placeholder]::after {
-    color: var(--primary);
-  }
-
-  &.outlined {
-    border-radius: var(--xxs);
-    box-shadow: 0 0 0 1px inset var(--outline);
-
-    &:focus-within {
-      box-shadow: 0 0 0 2px inset var(--primary);
-    }
-
-    [data-placeholder]::after {
-      top: 0;
-      transform: translate(0, -45%);
-      padding-inline: var(--xxs);
-      margin-left: calc(var(--xxs) * -1);
-      font-size: var(--font-sm);
-      background: var(--surface);
-    }
-
-    &:has(.md-input-icon.left) [data-placeholder]::after {
-      transform: translate(calc(var(--icon-xxl) * -1), -45%);
-    }
-  }
-
-  &-content {
-    position: relative;
+  textarea {
+    resize: none;
     height: 100%;
-    width: 100%;
-    display: flex;
-    min-height: inherit;
-    padding-inline: var(--md);
-    font-size: var(--font-lg);
-
-    &:has(span) {
-      gap: var(--xs);
-    }
-
-    span {
-      align-items: center;
-      display: inline-flex;
-    }
-
-    &[data-placeholder]::after {
-      content: attr(data-placeholder);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      position: absolute;
-      max-width: calc(100% - var(--md));
-      left: var(--md);
-      transition:
-        top 0.2s,
-        color 0.2s,
-        font-size 0.2s,
-        transform 0.2s;
-    }
-
-    &:has(input:placeholder-shown):not(:focus-within) {
-      span {
-        opacity: 0;
-      }
-
-      &[data-placeholder]::after {
-        color: currentcolor;
-        font-size: var(--font-lg);
-        transform: none !important;
-        top: calc(var(--component-lg) * 0.3);
-      }
-    }
-  }
-
-  &.filled {
-    border-radius: var(--xxs) var(--xxs) 0 0;
-    background: var(--surface-container-highest);
-
-    &::before,
-    &::after {
-      content: '';
-      bottom: 0;
-      position: absolute;
-      background: var(--on-surface-variant);
-      pointer-events: none;
-      height: 1px;
-      width: 100%;
-    }
-
-    &::after {
-      scale: 0 1;
-      transition:
-        background-color 0.2s,
-        scale 0.2s;
-      height: 2px;
-    }
-
-    &:focus-within {
-      &::after {
-        scale: 1 1;
-        background: var(--primary);
-      }
-    }
-
-    [data-placeholder] {
-      input,
-      span {
-        padding-top: var(--sm);
-      }
-
-      &::after {
-        font-size: var(--font-sm);
-        top: var(--xxs);
-      }
-    }
-  }
-
-  &-icon {
-    display: inherit;
-    align-items: center;
-
-    &:first-child {
-      padding-left: var(--sm);
-    }
-
-    &:last-child {
-      padding-right: var(--sm);
-    }
-  }
-
-  &-counter {
-    color: #7779;
-    position: absolute;
-    inset: auto 4px 2px auto;
-    font-size: var(--font-xs);
-  }
-
-  input::-webkit-outer-spin-button,
-  input::-webkit-inner-spin-button {
-    appearance: none;
-    margin: 0;
+    min-height: var(--component-lg);
+    padding-top: var(--md);
   }
 
   &-number-arrows {
+    grid-area: n-arrows;
     display: grid;
     grid-template-rows: 1fr 1fr;
     place-items: center;
-    line-height: 0;
-    height: 100%;
-    position: absolute;
-    right: 0;
     user-select: none;
+    height: 100%;
 
     > * {
       height: 100%;
@@ -204,5 +86,124 @@
     :last-child {
       align-items: start;
     }
+  }
+
+  &-placeholder {
+    top: var(--md);
+    left: var(--md);
+    content: attr(data-placeholder);
+    position: absolute;
+    justify-self: start;
+    transition: all 0.2s;
+  }
+
+  &.outlined {
+    border-radius: var(--xxs);
+    box-shadow: 0 0 0 1px inset var(--outline);
+
+    &:focus-within .md-input-wrapper {
+      box-shadow: 0 0 0 2px inset var(--primary);
+    }
+  }
+
+  &.outlined &-placeholder {
+    background: var(--surface);
+  }
+
+  &.filled {
+    border-radius: var(--xxs) var(--xxs) 0 0;
+    background: var(--surface-container-highest);
+
+    input {
+      padding-top: var(--md);
+    }
+
+    textarea {
+      padding-top: var(--xl);
+    }
+  }
+
+  &.filled &-wrapper::before,
+  &.filled &-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+  }
+
+  &.filled &-wrapper::before {
+    height: 1px;
+    background: var(--on-surface-variant);
+  }
+
+  &.filled &-wrapper::after {
+    scale: 0 1;
+    transition: all 0.2s;
+  }
+
+  &.filled &-prefix,
+  &.filled &-suffix {
+    padding: var(--md) var(--xs) 0 0;
+  }
+
+  &.filled:focus-within &-wrapper::after {
+    background: var(--primary);
+    scale: 1 1;
+  }
+
+  &:has(&-icon.left) &-placeholder {
+    left: var(--component-md);
+  }
+
+  &[empty] {
+    .md-input-prefix,
+    .md-input-suffix,
+    .md-input-field {
+      opacity: 0;
+    }
+  }
+
+  &:focus-within {
+    .md-input-placeholder {
+      color: var(--primary);
+    }
+  }
+
+  &:focus-within,
+  &:not([empty]) {
+    .md-input-placeholder {
+      top: 0;
+      font-size: var(--font-sm);
+    }
+
+    .md-input-prefix,
+    .md-input-suffix,
+    .md-input-field {
+      opacity: 1;
+    }
+  }
+
+  &.filled:focus-within,
+  &.filled:not([empty]) {
+    .md-input-placeholder {
+      top: var(--xxs);
+      font-size: var(--font-sm);
+    }
+  }
+
+  &.outlined:focus-within,
+  &.outlined:not([empty]) {
+    .md-input-placeholder {
+      left: var(--sm) !important;
+      padding-inline: var(--xxs);
+      transform: translateY(-50%);
+    }
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
   }
 }
