@@ -27,5 +27,6 @@
 <template>
   <div class="md-radio-group">
     <slot />
+    <input v-bind="inputAttrs" :name :value type="radio" checked hidden />
   </div>
 </template>
