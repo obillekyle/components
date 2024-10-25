@@ -82,7 +82,7 @@
       stroke: var(--on-primary);
     }
 
-    [checked] {
+    &[checked] {
       .md-checkbox-wrapper {
         background: var(--primary);
         box-shadow: none;
@@ -93,7 +93,7 @@
       }
     }
 
-    [disabled] {
+    &[disabled] {
       filter: grayscale(1);
       cursor: not-allowed;
       pointer-events: none;
@@ -111,7 +111,7 @@
 
   @keyframes draw-checkmark {
     to {
-      stroke-dashoffset: 0; /* Fully visible */
+      stroke-dashoffset: 0;
     }
   }
 </style>

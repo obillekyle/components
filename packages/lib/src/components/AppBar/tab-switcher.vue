@@ -19,17 +19,15 @@
   defineOptions({ name: 'MdTabSwitcher' })
   const model = defineModel<string | number>()
   const props = defineProps<TabSwitcherProps>()
-  const items = computed(() => toObjectValue(props.items ?? []))
   const emits = defineEmits<TabSwitcherEmits>()
-  const wSize = useWindowSize()
 
   const root = ref<HTMLElement>()
   const indicator = ref<HTMLElement>()
+  const wSize = useWindowSize()
 
-  const value = useValue(items.value[0].value, props, model, (value) => {
-    emits('change', value)
-    return value
-  })
+  const items = computed(() => toObjectValue(props.items ?? []))
+  const first = items.value[0].value
+  const value = useValue(first, props, model, (v) => emits('change', v))
 
   function changeActive() {
     if (root.value && indicator.value) {
