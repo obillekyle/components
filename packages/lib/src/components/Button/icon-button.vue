@@ -3,10 +3,9 @@
   import type { ButtonHTMLAttributes, Component } from 'vue'
 
   import { getCSSValue } from '@/utils/css/sizes'
-  import { keyClick } from '@/utils/dom/events'
-  import { rippleEffect } from '@/utils/dom/ripple'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
+  import Action from '../Misc/action.vue'
 
   interface IconButtonProperties
     extends /* @vue-ignore */ ButtonHTMLAttributes {
@@ -17,121 +16,63 @@
   }
 
   defineProps<IconButtonProperties>()
-  defineOptions({ name: 'MdIconButton', inheritAttrs: false })
+  defineOptions({ name: 'MdIconButton' })
 </script>
 
 <template>
-  <button
-    type="button"
+  <Action
     class="md-icon-button"
-    v-bind="$attrs"
-    @click="rippleEffect($event, 'div')"
-    @pointerdown="rippleEffect($event, 'div')"
-    @keydown="keyClick($event, ['Enter', ' '])"
+    :selected="selected || undefined"
+    :variant="variant"
   >
     <HybridIcon
       :icon
-      class="md-icon-button-wrapper"
-      :class="{ selected, [variant ?? 'standard']: true }"
       :style="{ fontSize: getCSSValue(size ?? '#md', 'px', 'icon') }"
     />
-  </button>
+  </Action>
 </template>
 
 <style lang="scss">
   .md-icon-button {
-    padding: 0;
-    border: none;
-    outline: none;
-    background: none;
-    cursor: pointer;
-    vertical-align: top;
-    display: inline-grid;
-    place-items: center;
-    width: var(--component-md);
-    height: var(--component-md);
-    -webkit-tap-highlight-color: #0000;
-
-    &-wrapper {
-      display: grid;
-      place-items: center;
-      place-content: center;
-      position: relative;
-      overflow: hidden;
-      border-radius: 999px;
-      pointer-events: none;
-      width: var(--component-sm);
-      height: var(--component-sm);
-      transition: background-color 0.2s;
-
-      > * {
-        pointer-events: none;
-      }
-
-      &.filled {
-        background: var(--surface-container-highest);
-        color: var(--primary);
-
-        &.selected {
-          background: var(--primary);
-          color: var(--on-primary);
-        }
-      }
-
-      &.tonal {
-        background: var(--surface-container-highest);
-        color: var(--on-surface-variant);
-
-        &.selected {
-          background: var(--secondary-container);
-          color: var(--on-secondary-container);
-        }
-      }
-
-      &.outlined {
-        background: transparent;
-        box-shadow: 0 0 0 1px var(--outline);
-        color: var(--on-surface-variant);
-
-        &.selected {
-          background: var(--inverse-surface);
-          color: var(--inverse-on-surface);
-          box-shadow: none;
-        }
-      }
-
-      &.standard {
-        background: transparent;
-        color: var(--on-surface-variant);
-
-        &.selected {
-          color: var(--primary);
-        }
-      }
+    &[variant='filled'] .md-action-indicator {
+      background: var(--surface-container-highest);
+      color: var(--primary);
     }
 
-    &:focus-visible &-wrapper {
-      outline: 2px dashed var(--primary);
+    &[variant='tonal'] .md-action-indicator {
+      background: var(--surface-container-highest);
+      color: var(--on-surface-variant);
     }
 
-    &-wrapper::after {
-      content: '';
-      inset: 0;
-      opacity: 0;
-      position: absolute;
-      transition: opacity 0.2s;
-      background: var(--on-surface);
+    &[variant='outlined'] .md-action-indicator {
+      background: transparent;
+      box-shadow: 0 0 0 1px var(--outline);
+      color: var(--on-surface-variant);
     }
 
-    &:hover &-wrapper::after {
-      opacity: 0.08;
+    &[variant='standard'] .md-action-indicator {
+      background: transparent;
+      color: var(--on-surface-variant);
     }
 
-    &:disabled &-wrapper {
-      opacity: 0.5;
-      background: var(--surface-container);
-      filter: grayscale(1);
-      cursor: not-allowed;
+    &[variant='filled'][selected] .md-action-indicator {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+
+    &[variant='tonal'][selected] .md-action-indicator {
+      background: var(--secondary-container);
+      color: var(--on-secondary-container);
+    }
+
+    &[variant='outlined'][selected] .md-action-indicator {
+      background: var(--inverse-surface);
+      color: var(--inverse-on-surface);
+      box-shadow: none;
+    }
+
+    &[variant='standard'][selected] .md-action-indicator {
+      color: var(--primary);
     }
   }
 </style>

@@ -2,13 +2,12 @@
   import type { InputHTMLAttributes } from 'vue'
 
   import { useBoolValue } from '@/ref/use-form-value'
-  import { keyClick } from '@/utils/dom/events'
-  import { rippleEffect } from '@/utils/dom/ripple'
+
+  import Action from '../Misc/action.vue'
 
   interface Props {
     inputAttrs?: InputHTMLAttributes
     defaultChecked?: boolean
-    disabled?: boolean
     partial?: boolean
     checked?: boolean
     name?: string
@@ -29,14 +28,10 @@
 </script>
 
 <template>
-  <div
-    tabindex="0"
+  <Action
     class="md-checkbox"
-    @keydown="keyClick"
     @click="checked = !checked"
-    @pointerdown="rippleEffect"
     :checked="checked || undefined"
-    :disabled="disabled || undefined"
   >
     <div class="md-checkbox-wrapper">
       <svg
@@ -49,22 +44,19 @@
         <path d="M1 4.5H11" v-if="partial" />
         <path d="M0.699219 4.69922L4 8L11.3008 0.699219" v-else />
       </svg>
-      <input v-bind="inputAttrs" :name type="checkbox" v-model="checked" />
+      <input
+        v-bind="inputAttrs"
+        :name
+        type="checkbox"
+        v-model="checked"
+        hidden
+      />
     </div>
-  </div>
+  </Action>
 </template>
 
 <style lang="scss">
   .md-checkbox {
-    display: grid;
-    overflow: hidden;
-    position: relative;
-    place-items: center;
-    width: var(--component-sm);
-    height: var(--component-sm);
-    border-radius: 999px;
-    cursor: pointer;
-
     &-wrapper {
       display: grid;
       place-items: center;
@@ -91,21 +83,6 @@
       path {
         animation: draw-checkmark 0.5s var(--timing-standard) forwards;
       }
-    }
-
-    &[disabled] {
-      filter: grayscale(1);
-      cursor: not-allowed;
-      pointer-events: none;
-      opacity: 0.5;
-    }
-
-    input {
-      display: none;
-    }
-
-    &:hover {
-      background: var(--surface-container);
     }
   }
 
