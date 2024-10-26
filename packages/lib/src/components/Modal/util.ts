@@ -1,3 +1,4 @@
+import type { SizesString } from '@/utils'
 import type { UtilityFunction } from '@/utils/component-manager'
 import type { Component } from 'vue'
 
@@ -13,6 +14,7 @@ type ModalAction = {
 export interface ModalProps {
   icon?: Component | string
   title?: Component | string
+  width?: SizesString
   content: Component | string
   actions?: ModalAction[]
   subAction?: Component | string

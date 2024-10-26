@@ -34,7 +34,6 @@
   const fetch = useFetch(() => getSrc(props), 'url-blob', { init: false })
 
   const className = createStyle(() => ({
-    r: '#xs',
     width: props.size,
     height: props.size,
     maskImage:
@@ -88,13 +87,10 @@
     vertical-align: top;
     max-width: 100%;
     aspect-ratio: 1;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    border-radius: var(--xs);
     background: var(--surface-container);
-
-    &.none {
-      border-radius: var(--xs);
-    }
 
     img {
       transition: opacity 0.2s ease-out;

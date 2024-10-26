@@ -43,7 +43,7 @@ export function useFocusLock(
     const target = event.target as HTMLElement
 
     if (root) {
-      ignore = root.contains(target)
+      ignore = root.contains(target) || root === target
       ignore || focusFirstFocusable(root)
     }
   }

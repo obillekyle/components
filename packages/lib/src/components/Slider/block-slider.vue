@@ -24,54 +24,65 @@
   }
 
   defineOptions({ name: 'MdBlockSlider' })
-  const emit = defineEmits<BlockSliderEmits>()
-  const props = withDefaults(defineProps<BlockSliderProps>(), {
-    min: 0,
-    max: 100,
-    step: 1,
-    decimal: 0
-  })
+  const model = defineModel<number>()
+  const emits = defineEmits<BlockSliderEmits>()
+  const props = defineProps<BlockSliderProps>()
 
   let timeout: any
 
-  const model = defineModel<number>()
-  const wrapper = ref<HTMLElement>()
-  const rect = useRect(wrapper)
+  const root = ref<HTMLElement>()
+  const rect = useRect(root)
 
-  const sliderVal = useValue(props.min, props, model, (value) => {
-    value = clamp(value, props.min, props.max)
-    emit('change', value)
+  const option = computed(() => {
+    let { min, max, step, decimal } = props
+    min ??= 0
+    max ??= 100
+
+    return {
+      min,
+      max,
+      offset: max - min,
+      step: step ?? 1 / 10 ** (decimal || 0),
+      decimal: decimal ?? String(step).split('.')[1]?.length ?? 0
+    }
+  })
+
+  const sliderVal = useValue(option.value.min, props, model, (value) => {
+    value = clamp(value, option.value.min, option.value.max)
+    emits('change', value)
     return value
   })
 
-  const step = computed(() => props.step ?? 1 / 10 ** props.decimal)
   const [dragging, dragEvent] = useDrag((position) => {
     if (!rect.ready) return
 
+    const { min, max, step } = option.value
     const { width, height, left } = rect
-
-    const pos = position.x - left
-    const maxOffset = props.max - props.min
-
-    const cursorPos = clamp(pos - height, 0, width)
+    const maxOffset = max - min
     const boxWidth = width - height
 
-    const offset = clamp(cursorPos, 0, width)
+    const client = position.x - left
+    const cursor = clamp(client - height, 0, width)
+    const offset = clamp(cursor, 0, width)
+
     const value = (offset / boxWidth) * maxOffset
 
-    sliderVal.value = Math.round(value / step.value) * step.value
+    sliderVal.value = Math.round(value / step) * step
   })
 
   const position = computed(() => {
     if (!rect.ready) return 0
+
+    const { min, max } = option.value
+
     const newMin = rect.height / rect.width
-    const oldMin = (sliderVal.value - props.min) / (props.max - props.min)
+    const oldMin = (sliderVal.value - min) / (max - min)
     return mapNumberToRange(oldMin * 100, 0, 100, newMin * 100, 100)
   })
 
   const keyHandlers: Record<string, (e: KeyboardEvent) => any> = {
-    ArrowLeft: () => (sliderVal.value -= step.value),
-    ArrowRight: () => (sliderVal.value += step.value)
+    ArrowLeft: () => (sliderVal.value -= option.value.step),
+    ArrowRight: () => (sliderVal.value += option.value.step)
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -90,7 +101,7 @@
 <template>
   <div
     tabindex="0"
-    ref="wrapper"
+    ref="root"
     class="md-block-slider"
     :class="{ dragging }"
     @mousedown="dragEvent"

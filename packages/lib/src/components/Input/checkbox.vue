@@ -1,11 +1,14 @@
 <script setup lang="ts">
-  import { useBoolValue } from '@/ref/use-form-value'
-  import { keyClick } from '@/utils/dom/events'
-  import { rippleEffect } from '@/utils/dom/ripple'
-  import { ref } from 'vue'
+  import type { InputHTMLAttributes } from 'vue'
 
-  interface CheckboxProps {
+  import { useBoolValue } from '@/ref/use-form-value'
+
+  import Action from '../Misc/action.vue'
+
+  interface Props {
+    inputAttrs?: InputHTMLAttributes
     defaultChecked?: boolean
+    partial?: boolean
     checked?: boolean
     name?: string
   }
@@ -14,27 +17,21 @@
     (e: 'checked', value: boolean): void
   }
 
-  const props = withDefaults(defineProps<CheckboxProps>(), {
-    checked: undefined
-  })
-
-  const root = ref<HTMLElement>()
-  const emit = defineEmits<CheckboxEmits>()
+  const emits = defineEmits<CheckboxEmits>()
+  const props = withDefaults(defineProps<Props>(), { checked: undefined })
   const model = defineModel<boolean>({ default: undefined })
-  defineOptions({ name: 'MdCheckbox', inheritAttrs: false })
+  const checked = useBoolValue(false, props, model, (v) =>
+    emits('checked', v)
+  )
 
-  const checked = useBoolValue(false, props, model, (value) => {
-    emit('checked', value)
-    return value
-  })
+  defineOptions({ name: 'MdCheckbox' })
 </script>
 
 <template>
-  <div
+  <Action
     class="md-checkbox"
     @click="checked = !checked"
-    @pointerdown="rippleEffect"
-    @keydown="keyClick"
+    :checked="checked || undefined"
   >
     <div class="md-checkbox-wrapper">
       <svg
@@ -44,23 +41,22 @@
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M0.699219 4.69922L4 8L11.3008 0.699219" stroke-width="2" />
+        <path d="M1 4.5H11" v-if="partial" />
+        <path d="M0.699219 4.69922L4 8L11.3008 0.699219" v-else />
       </svg>
-      <input type="checkbox" v-model="checked" v-bind="$attrs" ref="root" />
+      <input
+        v-bind="inputAttrs"
+        :name
+        type="checkbox"
+        v-model="checked"
+        hidden
+      />
     </div>
-  </div>
+  </Action>
 </template>
 
 <style lang="scss">
   .md-checkbox {
-    display: grid;
-    overflow: hidden;
-    position: relative;
-    place-items: center;
-    width: var(--component-sm);
-    height: var(--component-sm);
-    border-radius: 999px;
-
     &-wrapper {
       display: grid;
       place-items: center;
@@ -72,12 +68,13 @@
     }
 
     path {
+      stroke-width: 2px;
       stroke-dasharray: 24;
       stroke-dashoffset: 24;
       stroke: var(--on-primary);
     }
 
-    &:has(input:checked) {
+    &[checked] {
       .md-checkbox-wrapper {
         background: var(--primary);
         box-shadow: none;
@@ -87,30 +84,11 @@
         animation: draw-checkmark 0.5s var(--timing-standard) forwards;
       }
     }
-
-    &:has(input:disabled) {
-      filter: grayscale(1);
-      cursor: not-allowed;
-      pointer-events: none;
-      opacity: 0.5;
-    }
-
-    input {
-      display: none;
-    }
-
-    &:not(:has(input:disabled)) {
-      cursor: pointer;
-
-      &:hover {
-        background: var(--surface-container);
-      }
-    }
   }
 
   @keyframes draw-checkmark {
     to {
-      stroke-dashoffset: 0; /* Fully visible */
+      stroke-dashoffset: 0;
     }
   }
 </style>
