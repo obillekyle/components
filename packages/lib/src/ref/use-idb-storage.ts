@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 
 import { IDBStorage } from '@/utils/idb'
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, toRaw, watch } from 'vue'
 
 export function useIDBStorage<T>(key: string): Ref<T | undefined>
 export function useIDBStorage<T>(key: string, defaultValue: T): Ref<T>
@@ -22,11 +22,11 @@ export function useIDBStorage<T>(key: string, defaultValue?: T) {
     IDBStorage.addEventListener('storage', itemUpdate)
   })
 
-  onBeforeUnmount(() => {
+  onUnmounted(() => {
     IDBStorage.removeEventListener('storage', itemUpdate)
   })
 
-  watch(index, (value) => IDBStorage.setItem(key, value), {
+  watch(index, (value) => IDBStorage.setItem(key, toRaw(value)), {
     deep: true
   })
 
