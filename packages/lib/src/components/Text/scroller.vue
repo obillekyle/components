@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { addPX, addUnit } from '@/utils/css'
-  import { onMounted, ref, type HTMLAttributes } from 'vue'
+  import { computed, ref, type HTMLAttributes } from 'vue'
   import ViewObserver from '../Misc/view-observer.vue'
+  import { useRect } from '@/ref'
 
   interface ScrollerProperties extends /* @vue-ignore */ HTMLAttributes {
     speed?: number
@@ -9,55 +10,50 @@
     continuous?: boolean
   }
 
-  const properties = withDefaults(defineProps<ScrollerProperties>(), {
+  const props = withDefaults(defineProps<ScrollerProperties>(), {
     speed: 24
   })
 
-  const cloned = ref(false)
   const wrapper = ref<HTMLDivElement>()
   const content = ref<HTMLDivElement>()
 
-  function setScroll() {
-    cloned.value = false
-    setTimeout(() => {
-      if (wrapper.value && content.value) {
-        const wRect = wrapper.value.getBoundingClientRect()
-        const cRect = content.value.getBoundingClientRect()
+  const wRect = useRect(wrapper)
+  const cRect = useRect(content, false)
 
-        const spacing = properties.spacing ?? wRect.width / 2
-        cloned.value = wRect.width < content.value.offsetWidth
-        const speed = (cRect.width + spacing) / properties.speed
-        wrapper.value.style.setProperty('--spacing', addPX(spacing))
-        wrapper.value.style.setProperty(
-          '--speed',
-          addUnit(speed.toFixed(2), 's')
-        )
-      }
-    })
-  }
+  const options = computed(() => {
+    if (!wRect.ready || !cRect.ready) {
+      return { cloned: false, spacing: 0, speed: 0 }
+    }
+
+    const cloned = wRect.width < cRect.width
+    const spacing = props.spacing ?? wRect.width / 2
+    const speed = (cRect.width + spacing) / props.speed
+
+    return {
+      cloned,
+      spacing: addPX(spacing),
+      speed: addUnit(speed.toFixed(2), 's')
+    }
+  })
 
   defineOptions({ name: 'MdScroller' })
-
-  onMounted(() => {
-    setScroll()
-
-    const observer = new ResizeObserver(setScroll)
-    observer.observe(wrapper.value!)
-    observer.observe(content.value!)
-  })
 </script>
 
 <template>
   <ViewObserver
     apply="scroll"
     class="md-scroller"
-    :class="{ cloned, continuous }"
+    :class="{ cloned: options.cloned, continuous }"
+    :style="{
+      '--spacing': options.spacing,
+      '--speed': options.speed
+    }"
   >
     <div class="md-scroller-wrapper" ref="wrapper">
       <div class="md-scroller-content" ref="content">
         <slot />
       </div>
-      <div class="md-scroller-content" v-if="cloned">
+      <div class="md-scroller-content" v-if="options.cloned">
         <slot />
       </div>
     </div>
