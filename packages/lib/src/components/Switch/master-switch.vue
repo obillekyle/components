@@ -42,12 +42,7 @@
         <slot />
       </div>
       <div class="md-master-switch-toggle">
-        <Switch
-          :name
-          :checked="inputValue"
-          variant="filled"
-          :length="1.6"
-        />
+        <Switch :name :checked="inputValue" variant="filled" />
       </div>
     </div>
   </div>
@@ -69,16 +64,15 @@
       align-items: center;
       flex-wrap: nowrap;
       overflow: hidden;
-      background: var(--primary-fixed);
-      color: var(--on-primary-fixed);
-      height: var(--component-xl);
+      background: var(--secondary-container);
+      color: var(--on-secondary-container);
+      height: var(--component-xxl);
       padding-inline: var(--lg);
       margin-bottom: var(--md);
       border-radius: var(--xxl);
       font-size: var(--font-lg);
-      box-shadow: var(--shadow-3);
 
-      --ripple-color: var(--on-primary-fixed-variant);
+      --ripple-color: var(--primary);
     }
 
     &-toggle {
@@ -86,19 +80,9 @@
       position: absolute;
       display: grid;
       align-items: center;
-      right: var(--lg);
       top: 0;
       bottom: 0;
-
-      .md-switch:has(input:checked) {
-        box-shadow: 0 0 0 2px inset var(--on-primary-fixed-variant);
-        background: var(--on-primary-fixed-variant) !important;
-
-        &::after,
-        &::before {
-          background: var(--primary-fixed-dim) !important;
-        }
-      }
+      right: var(--md);
     }
   }
 
