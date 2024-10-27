@@ -3,7 +3,7 @@
   import { provide } from 'vue'
 
   defineOptions({ name: 'MdForm' })
-  const model = defineModel<any>({ default: {} })
+  const model = defineModel<any>({ default: () => {} })
   provide('md-form-value', toProxy(model))
 </script>
 

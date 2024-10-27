@@ -20,7 +20,6 @@
     name?: string
     variant?: 'filled' | 'outlined'
     counter?: boolean
-    span?: boolean
     textbox?: boolean
   }
 
@@ -51,7 +50,7 @@
   <div
     class="md-input text"
     @click="inputRef?.focus()"
-    :class="{ span, [variant ?? 'filled']: true }"
+    :class="variant ?? 'filled'"
     :empty="area.empty || undefined"
   >
     <div class="md-input-wrapper">

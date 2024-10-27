@@ -1,7 +1,7 @@
 /* stylelint-disable no-descending-specificity */
 .md-input {
   display: inline-block;
-  margin-block: var(--xxs);
+  margin-block: var(--xs);
 
   &-wrapper {
     display: grid;
@@ -162,6 +162,10 @@
     .md-input-field {
       opacity: 0;
     }
+  }
+
+  &[span] {
+    width: 100%;
   }
 
   &:focus-within {

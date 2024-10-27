@@ -13,7 +13,6 @@
   interface InputNumber
     extends /** @vue-ignore */ Omit<InputHTMLAttributes, 'onChange'> {
     name?: string
-    span?: boolean
     value?: number
     prefix?: string
     suffix?: string
@@ -49,7 +48,7 @@
   <div
     class="md-input number"
     @click="input?.focus()"
-    :class="{ span, [variant ?? 'filled']: true }"
+    :class="variant ?? 'filled'"
     :data-placeholder="placeholder"
   >
     <div class="md-input-wrapper">

@@ -16,7 +16,7 @@
 
   const element = ref<HTMLElement>()
   const model = defineModel<ScrollPosition>({
-    default: { x: 0, y: 0 }
+    default: () => ({ x: 0, y: 0 })
   })
 
   provide('scroll-container', model)
