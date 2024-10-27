@@ -4,13 +4,12 @@
 
   import { getCSSColor } from '@/utils/css/color'
   import { computed } from 'vue'
-  import { getBoxProps } from '../Box/util'
   import { useTheme } from '../ThemeProvider/hook'
 
   import Colors from '@/utils/colors'
   import Box from '../Box/box.vue'
 
-  interface ColorBlockProps extends BoxProps {
+  interface ColorBlockProps extends /* @vue-ignore */ BoxProps {
     color: ColorString
     text?: ColorString
   }
@@ -20,13 +19,9 @@
   defineOptions({ name: 'MdColorBlock' })
   const props = defineProps<ColorBlockProps>()
 
-  const boxProps = getBoxProps(props, {
-    width: '#size-xs',
-    height: '#size-xs',
-    p: '#sm'
-  })
-
   const color = computed(() => {
+    theme.theme // for the computed color to be re-evaluated
+
     const background = getCSSColor.call(theme, props.color, true)
     const textColor = Colors.isLight(background) ? 'black' : 'white'
 
@@ -38,12 +33,7 @@
 </script>
 
 <template>
-  <Box
-    class="md-color-block"
-    v-bind="boxProps"
-    :title="props.color"
-    :style="color"
-  >
+  <Box class="md-color-block" :title="color.background" :style="color">
     <slot />
   </Box>
 </template>
@@ -56,5 +46,8 @@
     text-wrap: wrap;
     place-items: center;
     display: inline-grid;
+    width: var(--size-xs);
+    height: var(--size-xs);
+    padding: var(--sm);
   }
 </style>
