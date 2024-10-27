@@ -24,22 +24,26 @@ export type Types =
   | 'symbol'
   | 'undefined'
 
-export function is<T extends Types>(
-  value: unknown,
-  type: T
-): value is TypeFromTypes<T> {
-  if (type === 'null') return value === null
-  if (type === 'array') return Array.isArray(value)
-  if (type === 'object') return typeof value === 'object' && value !== null
-
-  return typeof value === type
-}
-
 export const as = <T>(v: any): T => v
 
 export function assert(value: any, message?: string): asserts value {
   if (!value) throw new Error(message)
 }
 
-export const isPureObject = (obj: any): boolean =>
-  typeof obj === 'object' && obj !== null && obj.constructor === Object
+export function isObject(value: any): value is Record<string, any> | any[] {
+  return typeof value === 'object' && value !== null
+}
+
+export const isPureObject = (obj: any): obj is Record<string, any> =>
+  isObject(obj) && obj.constructor === Object
+
+export function is<T extends Types>(
+  value: unknown,
+  type: T
+): value is TypeFromTypes<T> {
+  if (type === 'null') return value === null
+  if (type === 'array') return Array.isArray(value)
+  if (type === 'object') return isObject(value)
+
+  return typeof value === type
+}
