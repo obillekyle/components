@@ -1,4 +1,5 @@
 import type { MaybeFunction } from '@/utils'
+import { replaceDeep } from '@/utils/object/merge'
 import type { ComputedRef, Ref, ShallowReactive, UnwrapRef } from 'vue'
 
 import { computed, isReadonly, isRef, shallowReactive, watch } from 'vue'
@@ -13,14 +14,9 @@ export function toProxy<T extends Ref<object>>(
   readonly = false
 ): WithProxyRef<T> {
   const reactiveTarget = shallowReactive<any>(refValue.value)
-  watch(
-    refValue,
-    (v: any, o: any) => {
-      for (const key in o) delete reactiveTarget[key]
-      for (const key in v) reactiveTarget[key] = v[key]
-    },
-    { immediate: true }
-  )
+  watch(refValue, (v) => replaceDeep(reactiveTarget, v), {
+    immediate: true
+  })
 
   return new Proxy(reactiveTarget, {
     get: (t, k, r) => (k === ProxyValue ? t : Reflect.get(t, k, r)),
