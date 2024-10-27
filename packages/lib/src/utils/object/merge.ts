@@ -1,3 +1,4 @@
+import { reactive } from 'vue'
 import { isPureObject } from './is'
 
 export function mergeObject<T extends object, U extends object>(
@@ -26,4 +27,16 @@ export function shallowMerge<T extends object, O>(
   source: O
 ): T & O {
   return Object.assign({}, target, source)
+}
+
+/** Modifies original object, beware of side effects */
+export function replaceDeep(ref: any, value: any) {
+  if (!isPureObject(value)) return value
+
+  ref = isPureObject(ref) ? ref : reactive({})
+
+  for (const key in value) ref[key] = replaceDeep(ref[key], value[key])
+  for (const key in ref) key in value || delete ref[key]
+
+  return ref
 }

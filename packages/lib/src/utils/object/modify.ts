@@ -25,14 +25,7 @@ type ToArrayFunction = {
 
 export const toArray: ToArrayFunction = (value) => {
   if (Array.isArray(value)) return value
-  if (
-    typeof value === 'string' ||
-    value instanceof Map ||
-    value instanceof Set ||
-    value instanceof String ||
-    typeof value[Symbol.iterator] === 'function'
-  )
-    return [...value]
+  if (typeof value[Symbol.iterator] === 'function') return [...value]
 
   throw new TypeError('Unsupported type')
 }
