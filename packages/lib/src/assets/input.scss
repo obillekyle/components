@@ -48,7 +48,6 @@
     grid-area: input;
     font: inherit;
     width: 100%;
-    min-height: 100%;
     color: currentcolor;
 
     &:focus {
@@ -97,22 +96,26 @@
     transition: all 0.2s;
   }
 
-  &.outlined {
-    border-radius: var(--xxs);
-    box-shadow: 0 0 0 1px inset var(--outline);
+  &[variant='outlined'] {
+    .md-input-wrapper {
+      border-radius: var(--xxs);
+      box-shadow: 0 0 0 1px inset var(--outline);
+    }
 
     &:focus-within .md-input-wrapper {
       box-shadow: 0 0 0 2px inset var(--primary);
     }
   }
 
-  &.outlined &-placeholder {
+  &[variant='outlined'] &-placeholder {
     background: var(--surface);
   }
 
-  &.filled {
-    border-radius: var(--xxs) var(--xxs) 0 0;
-    background: var(--surface-container-highest);
+  &[variant='filled'] {
+    .md-input-wrapper {
+      border-radius: var(--xxs) var(--xxs) 0 0;
+      background: var(--surface-container-highest);
+    }
 
     input {
       padding-top: var(--md);
@@ -123,8 +126,8 @@
     }
   }
 
-  &.filled &-wrapper::before,
-  &.filled &-wrapper::after {
+  &[variant='filled'] &-wrapper::before,
+  &[variant='filled'] &-wrapper::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -132,22 +135,22 @@
     height: 2px;
   }
 
-  &.filled &-wrapper::before {
+  &[variant='filled'] &-wrapper::before {
     height: 1px;
     background: var(--on-surface-variant);
   }
 
-  &.filled &-wrapper::after {
+  &[variant='filled'] &-wrapper::after {
     scale: 0 1;
     transition: all 0.2s;
   }
 
-  &.filled &-prefix,
-  &.filled &-suffix {
+  &[variant='filled'] &-prefix,
+  &[variant='filled'] &-suffix {
     padding: var(--md) var(--xs) 0 0;
   }
 
-  &.filled:focus-within &-wrapper::after {
+  &[variant='filled']:focus-within &-wrapper::after {
     background: var(--primary);
     scale: 1 1;
   }
@@ -188,16 +191,16 @@
     }
   }
 
-  &.filled:focus-within,
-  &.filled:not([empty]) {
+  &[variant='filled']:focus-within,
+  &[variant='filled']:not([empty]) {
     .md-input-placeholder {
       top: var(--xxs);
       font-size: var(--font-sm);
     }
   }
 
-  &.outlined:focus-within,
-  &.outlined:not([empty]) {
+  &[variant='outlined']:focus-within,
+  &[variant='outlined']:not([empty]) {
     .md-input-placeholder {
       left: var(--sm) !important;
       padding-inline: var(--xxs);
