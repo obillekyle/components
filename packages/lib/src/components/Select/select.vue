@@ -12,6 +12,7 @@
 
   import OptionItem from './option-item.vue'
   import HybridIcon from '../Misc/hybrid-icon.vue'
+  import Chip from '../Chip/chip.vue'
 
   interface SelectProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {
@@ -96,16 +97,14 @@
     :empty="isEmpty || undefined"
   >
     <div class="md-input-selected" v-if="multiple">
-      <div
-        class="md-input-selected-item"
+      <Chip
+        variant="outlined"
         v-for="item in active.values"
         @click="handleClick(item.value)"
-        @pointerdown="rippleEffect"
         :key="item.value"
-      >
-        <OptionItem v-bind="item" />
-        <HybridIcon icon="mdi:close" />
-      </div>
+        :label="item.label"
+        :right-icon="'mdi:close'"
+      />
     </div>
     <div class="md-input-wrapper" @click="show = !show">
       <HybridIcon class="md-input-icon left" :icon />
@@ -172,26 +171,11 @@
 
     &-selected {
       margin-bottom: var(--xs);
+      flex-wrap: wrap;
+      display: flex;
 
       &:empty {
         display: none;
-      }
-
-      &-item {
-        display: flex;
-        overflow: hidden;
-        position: relative;
-        align-items: center;
-        padding-inline: var(--md);
-        height: var(--component-md);
-      }
-
-      &-single {
-        padding-top: var(--md);
-      }
-
-      .md-icon {
-        margin-left: auto;
       }
     }
 
