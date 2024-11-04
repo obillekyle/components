@@ -173,6 +173,7 @@
       margin-bottom: var(--xs);
       flex-wrap: wrap;
       display: flex;
+      gap: var(--xs);
 
       &:empty {
         display: none;
