@@ -80,8 +80,19 @@
   }
 
   const isEmpty = computed(() => {
-    if (props.multiple) return search.value.length === 0
+    if (props.multiple) return active.value.values.length === 0
     return !active.value.first && !show.value
+  })
+
+  const multiSearch = computed({
+    get: (): string => {
+      const length = active.value.values.length
+
+      return length && !show.value
+        ? length + ' items selected'
+        : search.value
+    },
+    set: (value) => (search.value = value)
   })
 
   onMounted(() => addEventListener('click', closeIfClickOutside))
@@ -95,15 +106,16 @@
     type="select"
     :variant="variant ?? 'filled'"
     :empty="isEmpty || undefined"
+    :open="show || undefined"
   >
     <div class="md-input-selected" v-if="multiple">
       <Chip
-        variant="outlined"
-        v-for="item in active.values"
-        @click="handleClick(item.value)"
+        variant="tonal"
         :key="item.value"
         :label="item.label"
-        :right-icon="'mdi:close'"
+        right-icon="lsicon:close-small-filled"
+        v-for="item in active.values"
+        @click="handleClick(item.value)"
       />
     </div>
     <div class="md-input-wrapper" @click="show = !show">
@@ -122,7 +134,7 @@
           class="md-input-field"
           v-model="search"
         />
-        <div class="md-input-field md-input-selected-single" v-else>
+        <div class="md-input-field md-input-selected-item" v-else>
           <slot v-bind="active.first">
             <OptionItem v-bind="active.first" />
           </slot>
@@ -130,10 +142,10 @@
       </template>
 
       <template v-else>
-        <input class="md-input-field" v-model="search" />
+        <input class="md-input-field" v-model="multiSearch" />
       </template>
 
-      <div class="md-input-select-dropdown" :visible="show || undefined">
+      <div class="md-input-select-dropdown">
         <div
           v-if="!multiple && !required"
           class="md-input-select-item"
@@ -175,6 +187,10 @@
       display: flex;
       gap: var(--xs);
 
+      &-item {
+        padding-top: var(--md);
+      }
+
       &:empty {
         display: none;
       }
@@ -193,10 +209,10 @@
       border-radius: 0 0 var(--xxs) var(--xxs);
       box-shadow: var(--shadow-1);
       transform-origin: top;
+    }
 
-      &:not([visible]) {
-        scale: 1 0;
-      }
+    &:not([open]) &-select-dropdown {
+      scale: 1 0;
     }
   }
 </style>
