@@ -18,6 +18,7 @@
   --lg: var(--padding-lg);
   --xl: var(--padding-xl);
   --xxl: var(--padding-xxl);
+  --bottom-offset: 0px;
 
   transform: translate3d(0, 0, 0);
   background: var(--surface);
@@ -33,8 +34,9 @@
   inset: 0;
 
   .md-layout-content {
-    position: absolute;
     inset: 0;
+    position: absolute;
+    bottom: var(--bottom-offset);
   }
 
   &:has(> .md-navbar) {
@@ -67,9 +69,7 @@
     }
 
     &:has(> .md-navbar) {
-      > .md-layout-content {
-        bottom: var(--navbar-size);
-      }
+      --bottom-offset: var(--navbar-size);
     }
   }
 }

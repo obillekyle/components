@@ -15,10 +15,10 @@
   <ThemeProvider class="md-layout" v-bind="$props">
     <slot name="navbar" />
     <div class="md-layout-content">
-      <slot name="fab" />
       <ScrollContainer>
         <template #header>
           <slot name="header" />
+          <slot name="fab" />
         </template>
         <slot />
       </ScrollContainer>
