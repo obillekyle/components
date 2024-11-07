@@ -171,6 +171,7 @@
     width: 100%;
   }
 
+  &[open],
   &:focus-within {
     .md-input-placeholder {
       color: var(--primary);

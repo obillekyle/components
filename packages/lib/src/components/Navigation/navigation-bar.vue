@@ -137,16 +137,16 @@
     }
 
     &-item:hover &-item-icon {
-      background: var(--surface);
+      background: var(--surface-container-highest);
     }
 
     &-item.active {
       .md-navbar-item-icon {
-        color: var(--on-secondary-container);
+        color: var(--on-secondary);
 
         &::before {
           width: var(--size-lg);
-          background: var(--secondary-container);
+          background: var(--secondary);
         }
       }
 
