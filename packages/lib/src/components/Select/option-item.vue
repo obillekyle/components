@@ -11,8 +11,6 @@
 
 <style lang="scss" scoped>
   .md-select-option-item {
-    cursor: pointer;
-    padding-inline: 1rem;
     user-select: none;
   }
 </style>

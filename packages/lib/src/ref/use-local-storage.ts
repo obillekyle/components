@@ -1,6 +1,5 @@
 import type { Ref } from 'vue'
 
-import { replaceDeep } from '@/utils/object/merge'
 import { parser, stringify } from '@/utils/object/transform'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 
@@ -18,7 +17,7 @@ export function useLocalStorage<T>(key: string, defaultValue?: T) {
   function handleDataChange(event: StorageEvent) {
     if (event.key === key) {
       ignore = true
-      value.value = replaceDeep(value.value, getData())
+      value.value = getData()
     }
   }
 
@@ -29,7 +28,7 @@ export function useLocalStorage<T>(key: string, defaultValue?: T) {
   }
 
   onMounted(() => {
-    value.value = replaceDeep(value.value, getData())
+    value.value = getData()
     addEventListener('storage', handleDataChange)
   })
 

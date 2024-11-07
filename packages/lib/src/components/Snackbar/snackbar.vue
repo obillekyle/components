@@ -86,7 +86,7 @@
       position: fixed;
       z-index: 20;
       right: var(--md);
-      bottom: var(--sm);
+      bottom: calc(var(--bottom-offset, 0) + var(--sm));
       width: calc(100% - (var(--md) * 2));
     }
 

@@ -89,6 +89,7 @@
         variant="outlined"
       />
       <Select placeholder="Select" span multiple :items="['one', 'two']" />
+      <Select placeholder="Select" span :items="['one', 'two']" />
       <div class="flex">
         <Switch />
         <Switch variant="filled" />

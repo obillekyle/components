@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, provide, ref } from 'vue'
+  import { onMounted, onUnmounted, provide, ref } from 'vue'
 
   interface ScrollPosition {
     x: number
@@ -11,15 +11,11 @@
     (e: 'scroll', value: ScrollPosition): void
   }
 
-  defineOptions({ name: 'MdScrollContainer' })
   const emit = defineEmits<ScrollContainerEmits>()
-
-  const element = ref<HTMLElement>()
+  const root = ref<HTMLElement>()
   const model = defineModel<ScrollPosition>({
     default: () => ({ x: 0, y: 0 })
   })
-
-  provide('scroll-container', model)
 
   function onScroll(event: Event) {
     const target = event.currentTarget as HTMLElement
@@ -31,17 +27,15 @@
     emit('change', { x, y })
   }
 
-  onMounted(() => {
-    element.value!.addEventListener('scroll', onScroll)
-  })
+  onMounted(() => root.value?.addEventListener('scroll', onScroll))
+  onUnmounted(() => root.value?.removeEventListener('scroll', onScroll))
 
-  onBeforeUnmount(() => {
-    element.value!.removeEventListener('scroll', onScroll)
-  })
+  provide('scroll-container', model)
+  defineOptions({ name: 'MdScrollContainer' })
 </script>
 
 <template>
-  <div class="md-scroll" ref="element">
+  <div class="md-scroll" ref="root">
     <slot name="header" />
     <slot
       name="wrapper"

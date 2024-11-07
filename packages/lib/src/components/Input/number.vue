@@ -48,8 +48,7 @@
   <div
     class="md-input number"
     @click="input?.focus()"
-    :class="variant ?? 'filled'"
-    :data-placeholder="placeholder"
+    :variant="variant ?? 'filled'"
   >
     <div class="md-input-wrapper">
       <HybridIcon class="md-input-icon left" :icon="leftIcon" />

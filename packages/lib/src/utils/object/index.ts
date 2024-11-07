@@ -1,4 +1,5 @@
 export * from './data'
 export * from './is'
+export * from './merge'
 export * from './modify'
 export * from './transform'

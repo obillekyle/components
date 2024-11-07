@@ -50,7 +50,7 @@
   <div
     class="md-input text"
     @click="inputRef?.focus()"
-    :class="variant ?? 'filled'"
+    :variant="variant ?? 'filled'"
     :empty="area.empty || undefined"
   >
     <div class="md-input-wrapper">

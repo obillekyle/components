@@ -1,34 +1,32 @@
 import type { MaybeFunction } from '@/utils'
-import { replaceDeep } from '@/utils/object/merge'
-import type { ComputedRef, Ref, ShallowReactive, UnwrapRef } from 'vue'
+import type { ComputedRef, Ref, ShallowReactive } from 'vue'
 
+import { replaceDeep } from '@/utils/object/merge'
 import { computed, isReadonly, isRef, shallowReactive, watch } from 'vue'
 
 export const ProxyValue = Symbol('value')
-
-export type WithProxyRef<T extends Ref> = ShallowReactive<UnwrapRef<T>> & {
-  [ProxyValue]: UnwrapRef<T>
+export type WithProxyRef<T extends object> = ShallowReactive<T> & {
+  [ProxyValue]: T
 }
-export function toProxy<T extends Ref<object>>(
-  refValue: T,
+export function toProxy<T extends object>(
+  ref: Ref<T>,
   readonly = false
 ): WithProxyRef<T> {
-  const reactiveTarget = shallowReactive<any>(refValue.value)
-  watch(refValue, (v) => replaceDeep(reactiveTarget, v), {
-    immediate: true
+  const state = shallowReactive<any>(ref.value)
+  watch(ref, (v) => replaceDeep(state, v, true), {
+    immediate: true,
+    deep: true
   })
 
-  return new Proxy(reactiveTarget, {
+  return new Proxy(state, {
     get: (t, k, r) => (k === ProxyValue ? t : Reflect.get(t, k, r)),
-    set(_, key, value, receiver) {
-      if (readonly || isReadonly(refValue)) return false
+    set(_, key, value) {
+      if (readonly || isReadonly(ref)) return false
 
-      if (key === ProxyValue) {
-        refValue.value = value
-        return true
-      }
-
-      return Reflect.set(refValue.value, key, value, receiver)
+      key === ProxyValue
+        ? (ref.value = value)
+        : ((ref.value as any)[key] = value)
+      return true
     }
   }) as WithProxyRef<T>
 }

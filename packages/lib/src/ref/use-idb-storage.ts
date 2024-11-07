@@ -1,40 +1,59 @@
-import type { Ref } from 'vue'
+import type { Ref, UnwrapRef } from 'vue'
 
 import { IDBStorage as IDB } from '@/utils/idb'
 
-import { replaceDeep } from '@/utils/object/merge'
-import { onBeforeUnmount, onMounted, ref, toRaw, watch } from 'vue'
+import { onMounted, onUnmounted, ref, toRaw, watch } from 'vue'
 
-export function useIDBStorage<T>(key: string): Ref<T | undefined>
-export function useIDBStorage<T>(key: string, defaultValue: T): Ref<T>
+type WithEvent<T> = Ref<T> & {
+  ready: Ref<boolean>
+  onload?: (v: UnwrapRef<T>) => void
+}
+
+export function useIDBStorage<T>(key: string): WithEvent<T | undefined>
+export function useIDBStorage<T>(key: string, def: T): WithEvent<T>
 export function useIDBStorage<T>(key: string, defaultValue?: T) {
   let ignore = true
+  const ready = ref(false)
   const index = ref<T | undefined>(defaultValue)
+  const state = Object.assign(index, { ready }) as WithEvent<Ref<any>>
 
   async function itemUpdate(data: { key: string }) {
     if (data.key === key) {
+      const data = (await IDB.hasItem(key))
+        ? await IDB.getItem(key)
+        : defaultValue
+
       ignore = true
-      index.value = replaceDeep(index.value, await IDB.getItem(key))
+      index.value = data
     }
   }
 
+  async function storeCleared() {
+    index.value = defaultValue
+  }
+
+  function watcher(data: any) {
+    if (ignore) ignore = false
+    else IDB.setItem(key, toRaw(data))
+  }
   onMounted(async () => {
     if (await IDB.hasItem(key)) {
       const data = await IDB.getItem(key)
-      index.value = replaceDeep(index.value, data)
+      index.value = data
     }
 
+    ready.value = true
+    state.onload?.(index.value)
     IDB.addEventListener('storage', itemUpdate)
+    IDB.addEventListener('store-cleared', storeCleared)
   })
 
-  function watcher(data: any) {
-    if (ignore) return (ignore = false)
+  onUnmounted(() => {
+    IDB.removeEventListener('storage', itemUpdate)
+    IDB.removeEventListener('store-cleared', storeCleared)
+  })
 
-    IDB.setItem(key, toRaw(data))
-  }
-
-  onBeforeUnmount(() => IDB.removeEventListener('storage', itemUpdate))
   watch(index, watcher, { deep: true })
 
-  return index
+  return Object.assign(index, { ready })
 }

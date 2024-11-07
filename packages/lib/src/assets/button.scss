@@ -12,7 +12,7 @@
 .md-chip {
   --size: calc(var(--component-xs) * var(--scale));
 
-  padding-inline: calc(var(--sm) * var(--scale));
+  padding-inline: calc(var(--xs) * var(--scale));
 }
 
 .md-button,

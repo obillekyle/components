@@ -4,13 +4,14 @@
   import { keyClick } from '@/utils/dom/events'
   import { rippleEffect } from '@/utils/dom/ripple'
   import { inject, ref } from 'vue'
+
   import HybridIcon from '../Misc/hybrid-icon.vue'
 
   interface FabProperties extends /* @vue-ignore */ ButtonHTMLAttributes {
     icon?: string | Component
   }
 
-  const scrollTop = inject('content-scroll-top', ref(0))
+  const scroll = inject('scroll-container', ref({ x: 0, y: 0 }))
 
   defineProps<FabProperties>()
   defineOptions({ name: 'MdFloatingActionButton' })
@@ -20,7 +21,7 @@
   <button
     class="md-fab"
     tabindex="0"
-    :class="{ 'on-top': scrollTop < 6 }"
+    :class="{ 'on-top': scroll.x < 6 }"
     @pointerdown="rippleEffect"
     @keydown="keyClick"
   >
@@ -33,8 +34,8 @@
 
 <style lang="scss">
   .md-fab {
-    position: absolute;
-    bottom: var(--md);
+    position: fixed;
+    bottom: calc(var(--bottom-offset, 0) + var(--md));
     right: var(--md);
     padding-inline: var(--md);
     height: var(--fab-size);
@@ -60,7 +61,7 @@
       transition: all 0.2s var(--timing-standard);
     }
 
-    &.on-top .md-fab-label {
+    &.on-top &-label {
       opacity: 1;
       padding-left: var(--sm);
       max-width: 300px;
