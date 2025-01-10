@@ -3,10 +3,10 @@
   import type { ModalProps } from './util'
 
   import { useFocusLock } from '@/ref/use-focus-lock'
+  import { createStyle } from '@/utils/create-style'
   import { keyClick, targetsSelf } from '@/utils/dom/events'
   import { Icon } from '@iconify/vue'
-  import { ref, computed, provide } from 'vue'
-  import { createStyle } from '@/utils/create-style'
+  import { computed, provide, ref } from 'vue'
 
   import CM from '@/utils/component-manager'
   import Button from '../Button/button.vue'

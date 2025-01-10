@@ -5,15 +5,15 @@
   import type { BoxProps } from '../Box/util'
   import type { FrameVariants } from '../Frame/variants'
 
+  import { useFetch } from '@/ref/use-fetch'
   import { createStyle } from '@/utils/create-style'
   import { ref, watch } from 'vue'
-  import { frames } from '../Frame/variants'
   import { toSvgMask } from '../Frame/util'
-  import { useFetch } from '@/ref/use-fetch'
+  import { frames } from '../Frame/variants'
 
+  import Box from '../Box/box.vue'
   import ViewObserver from '../Misc/view-observer.vue'
   import DefaultLoader from './default-loader.vue'
-  import Box from '../Box/box.vue'
   import { getSrc } from './util'
 
   interface SquareImageProps /* @vue-ignore */ extends BoxProps {

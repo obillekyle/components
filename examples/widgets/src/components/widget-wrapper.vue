@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { IconButton, useSheet } from '@vue-material/core'
-  import { defineAsyncComponent, ref, inject } from 'vue'
+  import { defineAsyncComponent, inject, ref } from 'vue'
   import { DEFAULT_WIDGETS } from '../defaults'
 
   const widgets = inject('widgets', ref(DEFAULT_WIDGETS))

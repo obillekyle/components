@@ -4,8 +4,8 @@
 
   import { getCSSValue } from '@/utils/css/sizes'
 
-  import HybridIcon from '../Misc/hybrid-icon.vue'
   import Action from '../Misc/action.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
 
   interface IconButtonProperties
     extends /* @vue-ignore */ ButtonHTMLAttributes {

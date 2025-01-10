@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import type { ListEmits, ListItemType, ListProps, UseList } from './types'
 
-  import { is } from '@/utils/object/is'
   import { addPX } from '@/utils/css/sizes'
+  import { is } from '@/utils/object/is'
   import { computed, provide, ref } from 'vue'
 
   import ListItem from './list-item.vue'

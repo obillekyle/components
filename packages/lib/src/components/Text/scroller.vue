@@ -1,8 +1,8 @@
 <script setup lang="ts">
+  import { useRect } from '@/ref'
   import { addPX, addUnit } from '@/utils/css'
   import { computed, ref, type HTMLAttributes } from 'vue'
   import ViewObserver from '../Misc/view-observer.vue'
-  import { useRect } from '@/ref'
 
   interface ScrollerProperties extends /* @vue-ignore */ HTMLAttributes {
     speed?: number

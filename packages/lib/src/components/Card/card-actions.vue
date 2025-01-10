@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import type { BoxProps } from '../Box/util'
   import Flex from '../Box/Flex/flex-box.vue'
+  import type { BoxProps } from '../Box/util'
 
   interface CardActionsProps extends /* @vue-ignore */ BoxProps {
     separator?: boolean

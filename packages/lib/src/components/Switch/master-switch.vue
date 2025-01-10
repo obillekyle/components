@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import type { HTMLAttributes } from 'vue'
 
-  import { rippleEffect } from '@/utils/dom/ripple'
   import { useBoolValue } from '@/ref/use-form-value'
+  import { rippleEffect } from '@/utils/dom/ripple'
 
   import Switch from './switch.vue'
 

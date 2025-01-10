@@ -3,7 +3,7 @@
   import type { Component, InputHTMLAttributes } from 'vue'
 
   import { useValue } from '@/ref/use-form-value'
-  import { ref, computed } from 'vue'
+  import { computed, ref } from 'vue'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
   import Counter from './char-counter.vue'

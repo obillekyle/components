@@ -6,8 +6,8 @@
 
   import { ColorEngine } from '@/utils/color-engine'
   import { parseColors } from '@/utils/colors/parse-colors'
-  import { getCSSColor } from '@/utils/css/color'
   import { createStyle } from '@/utils/create-style'
+  import { getCSSColor } from '@/utils/css/color'
   import { getCSSValue } from '@/utils/css/sizes'
   import { mergeObject, shallowMerge } from '@/utils/object/merge'
   import { provide, shallowRef, watch } from 'vue'

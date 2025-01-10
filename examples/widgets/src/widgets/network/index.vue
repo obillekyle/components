@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { onMounted, onUnmounted, reactive } from 'vue'
   import { Icon } from '@iconify/vue'
+  import { onMounted, onUnmounted, reactive } from 'vue'
 
   defineOptions({ name: 'MdWidgetNetwork' })
 

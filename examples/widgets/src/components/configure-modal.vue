@@ -1,10 +1,9 @@
 <script setup lang="ts">
   import { inject, ref } from 'vue'
-  import { WIDGETS } from '../defaults'
-  import { DEFAULT_WIDGETS } from '../defaults'
+  import { DEFAULT_WIDGETS, WIDGETS } from '../defaults'
 
-  import { Switch, Button, useSheet } from '@vue-material/core'
   import { Icon } from '@iconify/vue'
+  import { Button, Switch, useSheet } from '@vue-material/core'
 
   const widgets = inject('widgets', ref(DEFAULT_WIDGETS))
   const sheet = useSheet()

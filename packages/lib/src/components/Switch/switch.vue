@@ -2,9 +2,9 @@
   import type { SizesString } from '@/utils/css/type'
   import type { InputHTMLAttributes } from 'vue'
 
+  import { useBoolValue } from '@/ref/use-form-value'
   import { getCSSValue } from '@/utils/css/sizes'
   import { keyClick } from '@/utils/dom/events'
-  import { useBoolValue } from '@/ref/use-form-value'
   import { ref } from 'vue'
 
   interface SwitchProps

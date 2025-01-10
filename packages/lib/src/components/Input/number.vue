@@ -3,9 +3,9 @@
 
   import type { Component, InputHTMLAttributes } from 'vue'
 
-  import { ref, useAttrs } from 'vue'
-  import { clamp } from '@/utils/number/range'
   import { useValue } from '@/ref/use-form-value'
+  import { clamp } from '@/utils/number/range'
+  import { ref, useAttrs } from 'vue'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
   import NumberArrows from './number-arrows.vue'

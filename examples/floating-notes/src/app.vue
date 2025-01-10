@@ -12,12 +12,12 @@
     useDrag,
     useFocusLock,
     useLocalStorage,
-    useToggle,
     useRect,
-    useWindowSize,
-    useTooltip
+    useToggle,
+    useTooltip,
+    useWindowSize
   } from '@vue-material/core'
-  import { onMounted, computed, ref, watch } from 'vue'
+  import { computed, onMounted, ref, watch } from 'vue'
 
   const text = ref<HTMLElement>()
   const [root, rootRef] = customRef<HTMLElement>()

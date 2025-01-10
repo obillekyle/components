@@ -2,10 +2,10 @@
   import type { Component } from 'vue'
 
   import { useDrag } from '@/ref/use-drag'
+  import { useValue } from '@/ref/use-form-value'
   import { useRect } from '@/ref/use-rect'
   import { clamp, mapNumberToRange } from '@/utils/number/range'
   import { computed, ref } from 'vue'
-  import { useValue } from '@/ref/use-form-value'
 
   import HybridIcon from '../Misc/hybrid-icon.vue'
 

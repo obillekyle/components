@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import dayjs from 'dayjs'
 
-  import { onMounted, inject, ref, onUnmounted } from 'vue'
   import { Icon } from '@iconify/vue'
+  import { inject, onMounted, onUnmounted, ref } from 'vue'
 
   let timeout: any = 0
   const uptime = ref('')

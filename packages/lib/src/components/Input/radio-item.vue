@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import type { Component } from 'vue'
 
-  import { ref, inject, computed } from 'vue'
-  import HybridComponent from '../Misc/hybrid-component.vue'
+  import { computed, inject, ref } from 'vue'
   import Action from '../Misc/action.vue'
+  import HybridComponent from '../Misc/hybrid-component.vue'
 
   interface RadioProps {
     label?: string | Component

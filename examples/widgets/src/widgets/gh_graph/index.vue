@@ -1,12 +1,12 @@
 <script setup lang="ts">
+  import { Icon } from '@iconify/vue'
   import {
     mapNumberToRange,
     useLocalStorage,
     useTooltip
   } from '@vue-material/core'
-  import { ref, onMounted, onUnmounted } from 'vue'
-  import { Icon } from '@iconify/vue'
   import dayjs from 'dayjs'
+  import { onMounted, onUnmounted, ref } from 'vue'
 
   let interval: any = 0
 

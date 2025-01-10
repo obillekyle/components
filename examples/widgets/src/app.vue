@@ -1,16 +1,16 @@
 <script setup lang="ts">
   import {
-    Layout,
-    useLocalStorage,
-    ImagePalette,
     clamp,
-    SheetProvider
+    ImagePalette,
+    Layout,
+    SheetProvider,
+    useLocalStorage
   } from '@vue-material/core'
 
-  import MdWidgetWrapper from './components/widget-wrapper.vue'
-  import { onMounted, ref, computed, watch, provide } from 'vue'
-  import { DEFAULT_WIDGETS } from './defaults'
   import dayjs from 'dayjs'
+  import { computed, onMounted, provide, ref, watch } from 'vue'
+  import MdWidgetWrapper from './components/widget-wrapper.vue'
+  import { DEFAULT_WIDGETS } from './defaults'
 
   defineOptions({ name: 'MdWallpaper' })
 

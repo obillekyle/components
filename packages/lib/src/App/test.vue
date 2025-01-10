@@ -11,13 +11,9 @@
   const [root, setRoot] = customRef<HTMLElement>()
   const rect = useRect(root)
 
-  defineOptions({
-    name: 'MdTest'
-  })
-
-  const props = defineProps<{
-    text?: string
-  }>()
+  defineSlots<{ default: any }>()
+  defineOptions({ name: 'MdTest' })
+  const props = defineProps<{ text?: string }>()
 
   function onEnter() {
     const element = root.value

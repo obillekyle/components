@@ -1,18 +1,18 @@
 <script setup lang="ts">
   import '@/assets/input.scss'
 
-  import type { Component, HTMLAttributes } from 'vue'
   import type { MixedValues } from '@/utils/other/to-object-value'
+  import type { Component, HTMLAttributes } from 'vue'
 
+  import { useValue } from '@/ref/use-form-value'
   import { rippleEffect } from '@/utils/dom/ripple'
+  import { toObjectValue } from '@/utils/other/to-object-value'
   import { computed, onMounted, onUnmounted, ref } from 'vue'
   import { filterByLabel, toggleItem } from './util'
-  import { useValue } from '@/ref/use-form-value'
-  import { toObjectValue } from '@/utils/other/to-object-value'
 
-  import OptionItem from './option-item.vue'
-  import HybridIcon from '../Misc/hybrid-icon.vue'
   import Chip from '../Chip/chip.vue'
+  import HybridIcon from '../Misc/hybrid-icon.vue'
+  import OptionItem from './option-item.vue'
 
   interface SelectProps
     extends /* @vue-ignore */ Omit<HTMLAttributes, 'onChange'> {

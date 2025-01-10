@@ -1,21 +1,21 @@
 <script setup lang="ts">
+  import TabSwitcher from '@/components/AppBar/tab-switcher.vue'
+  import TopBar from '@/components/AppBar/top-bar.vue'
   import Box from '@/components/Box/box.vue'
   import Button from '@/components/Button/button.vue'
-  import Checkbox from '@/components/Input/checkbox.vue'
   import Form from '@/components/Form/form.vue'
+  import Checkbox from '@/components/Input/checkbox.vue'
+  import TextInput from '@/components/Input/text.vue'
   import Layout from '@/components/Layout/layout.vue'
   import List from '@/components/List/list.vue'
   import Switch from '@/components/Switch/switch.vue'
   import Text from '@/components/Text/text.vue'
-  import TextInput from '@/components/Input/text.vue'
-  import TabSwitcher from '@/components/AppBar/tab-switcher.vue'
-  import TopBar from '@/components/AppBar/top-bar.vue'
 
   import { customRef } from '@/ref/custom-ref'
   import { useFocusLock } from '@/ref/use-focus-lock'
-  import { ref } from 'vue'
-  import { useTooltip } from '@/ref/use-tooltip'
   import { useIDBStorage } from '@/ref/use-idb-storage'
+  import { useTooltip } from '@/ref/use-tooltip'
+  import { ref } from 'vue'
 
   const partial = ref(true)
   const [root, setRoot] = customRef<HTMLElement>()

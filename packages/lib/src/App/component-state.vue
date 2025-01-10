@@ -9,9 +9,9 @@
 
   import Box from '@/components/Box/box.vue'
   import Button from '@/components/Button/button.vue'
+  import IconButton from '@/components/Button/icon-button.vue'
   import Select from '@/components/Select/select.vue'
   import Mock from './mock-content.vue'
-  import IconButton from '@/components/Button/icon-button.vue'
 
   const snackbar = useSnackbar()
   const modal = useModal()

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useLocalStorage } from '@vue-material/core'
-  import { ref, onMounted, onUnmounted, computed } from 'vue'
+  import { computed, onMounted, onUnmounted, ref } from 'vue'
 
   import dayjs from 'dayjs'
   import ClockDigit from './clock-digit.vue'

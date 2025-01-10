@@ -2,8 +2,8 @@
   import type { SizesString } from '@/utils/css/type'
   import type { Component } from 'vue'
 
-  import HybridComponent from '../Misc/hybrid-component.vue'
   import { createStyle } from '@/utils/create-style'
+  import HybridComponent from '../Misc/hybrid-component.vue'
 
   type Positions =
     | 'top'

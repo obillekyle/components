@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import type { MixedValues } from '@/utils/other/to-object-value'
   import type { VModelProps } from '@/ref/use-form-value'
+  import type { MixedValues } from '@/utils/other/to-object-value'
 
-  import { toObjectValue } from '@/utils/other/to-object-value'
   import { useValue } from '@/ref/use-form-value'
-  import { computed, ref, watch, onMounted } from 'vue'
-  import { rippleEffect } from '@/utils/dom/ripple'
   import { useWindowSize } from '@/ref/use-window-rect'
+  import { rippleEffect } from '@/utils/dom/ripple'
+  import { toObjectValue } from '@/utils/other/to-object-value'
+  import { computed, onMounted, ref, watch } from 'vue'
 
   interface TabSwitcherProps extends VModelProps<string | number> {
     items?: MixedValues
