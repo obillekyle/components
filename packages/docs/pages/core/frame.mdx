@@ -1,0 +1,120 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Frame from '@vue-material/core/Frame'
+import Flex from '@vue-material/core/Box/Flex'
+
+export const meta = {
+  title: 'Frame',
+  description: 'A shaped container component.',
+  source: 'packages/lib/src/components/Frame',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex gap="#sm" align="center" justify="center">
+      <Frame size="96px">
+        Frame
+      </Frame>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Frame } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Frame size="96px">
+        Frame
+      </Frame>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Themes
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex gap="#sm" align="center" justify="center">
+      <Frame theme="primary">Primary</Frame>
+      <Frame theme="secondary">Secondary</Frame>
+      <Frame theme="tertiary">Tertiary</Frame>
+      <Frame theme="error">Error</Frame>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Frame, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap="#sm">
+        <Frame theme="primary">Primary</Frame>
+        <Frame theme="secondary">Secondary</Frame>
+        <Frame theme="tertiary">Tertiary</Frame>
+        <Frame theme="error">Error</Frame>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Shapes
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex gap="#sm" align="center" justify="center">
+      <Frame frame="circle">Circle</Frame>
+      <Frame frame="flower">Flower</Frame>
+      <Frame frame="clover">Clover</Frame>
+      <Frame frame="hexagon">Hexagon</Frame>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Frame, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap="#sm">
+        <Frame frame="circle">Circle</Frame>
+        <Frame frame="flower">Flower</Frame>
+        <Frame frame="clover">Clover</Frame>
+        <Frame frame="hexagon">Hexagon</Frame>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+> #### Inherits `BoxProps`
+
+`size?`: SizesString
+
+- The size of the frame
+- Default: `96`
+
+`frame?`: 'circle' | 'flower' | 'clover' | 'hexagon' | 'none'
+
+- The shape of the frame
+- Default: `'none'`
+
+`theme?`: 'primary' | 'secondary' | 'tertiary' | 'error' | 'none'
+
+- The color theme of the frame
+- Default: `'none'`

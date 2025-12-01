@@ -1,0 +1,73 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Skeleton from '@vue-material/core/Skeleton'
+import Flex from '@vue-material/core/Box/Flex'
+
+export const meta = {
+  title: 'Skeleton',
+  description: 'Display a placeholder for content that is loading.',
+  source: 'packages/lib/src/components/Skeleton',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex direction="column" gap="#sm" style="width: 100%; padding: 20px;">
+      <Skeleton width="100px" height="20px" />
+      <Skeleton width="200px" height="20px" />
+      <Skeleton width="150px" height="100px" />
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Skeleton, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+       <Flex direction="column" gap="#sm">
+        <Skeleton width="100px" height="20px" />
+        <Skeleton width="200px" height="20px" />
+        <Skeleton width="150px" height="100px" />
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Wrapping Content
+
+Skeleton can wrap content to mimic its shape while loading.
+
+<Preview>
+  <PreviewFrame height="100">
+     <Skeleton>
+        <h1>Content Loaded</h1>
+     </Skeleton>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Skeleton } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Skeleton>
+        <h1>Content Loaded</h1>
+      </Skeleton>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+
+## Props
+
+> #### Inherits `BoxProps`
