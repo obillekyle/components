@@ -92,6 +92,10 @@
     }
   }
 
+  code {
+    font-size: var(--font-sm);
+  }
+
   :not(pre) > code {
     font-family: 'JetBrains Mono', monospace;
     background-color: var(--surface-container-low);
