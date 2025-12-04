@@ -1,0 +1,128 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Switch from '@vue-material/core/Switch'
+import Flex from '@vue-material/core/Box/Flex'
+
+export const meta = {
+  title: 'Switch',
+  description: 'A toggle switch component.',
+  source: 'packages/lib/src/components/Switch',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="100">
+    <Flex gap='#sm' align="center" justify="center">
+      <Switch />
+      <Switch checked />
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Switch } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Switch />
+      <Switch checked />
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Variants
+
+<Preview>
+  <PreviewFrame height="100">
+    <Flex gap='#sm' align="center" justify="center">
+      <Switch variant="outline" />
+      <Switch variant="filled" />
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Switch, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap='#sm'>
+        <Switch variant="outline" />
+        <Switch variant="filled" />
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Sizes
+
+<Preview>
+  <PreviewFrame height="100">
+    <Flex gap='#sm' align="center" justify="center">
+      <Switch size="#xxs" />
+      <Switch size="#xs" />
+      <Switch size="#sm" />
+      <Switch size="#md" />
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Switch, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap='#sm'>
+        <Switch size="#xxs" />
+        <Switch size="#xs" />
+        <Switch size="#sm" />
+        <Switch size="#md" />
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+> #### Inherits `InputHTMLAttributes`
+
+`variant?`: 'outline' | 'filled'
+
+- The variant of the switch
+- Default: `"outline"`
+
+`size?`: SizesString
+
+- The size of the switch
+- Default: `"#xs"`
+
+`length?`: number
+
+- The length multiplier of the switch relative to its height
+- Default: `1.9`
+
+`checked?`: boolean
+
+- Whether the switch is checked
+
+`defaultChecked?`: boolean
+
+- The initial checked state
+
+## Events
+
+`change`: (value: boolean) => void
+
+- Emitted when the switch state changes

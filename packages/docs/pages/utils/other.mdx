@@ -1,0 +1,57 @@
+export const meta = {
+  title: 'Other Utilities',
+  description: 'Miscellaneous utility functions.',
+}
+
+## Frame Queue
+
+`FrameQueue` is a utility for scheduling tasks to run on the next animation frame, essentially a manager for `requestAnimationFrame`.
+
+```ts
+import { FrameQueue } from '@/utils/other/frame-queue'
+
+function update() {
+  console.log('Frame update')
+}
+
+// Add task
+FrameQueue.add(update)
+
+// Remove task
+FrameQueue.remove(update)
+```
+
+## Image Utilities
+
+### `getAverageColor(source: string | HTMLImageElement): Promise<string>`
+
+Calculates the average color of an image.
+
+```ts
+import { getAverageColor } from '@/utils/other/fast-avg-color'
+
+const color = await getAverageColor('/path/to/image.jpg')
+```
+
+### `getPalette(source: string | HTMLImageElement): Promise<string[]>`
+
+Generates a color palette from an image.
+
+```ts
+import { getPalette } from '@/utils/other/image-palette'
+
+const palette = await getPalette(imageElement)
+```
+
+## Translation
+
+### `translate(x: number, y: number, unit?: string): string`
+
+Generates a CSS transform string.
+
+```ts
+import { translate } from '@/utils/other/translate'
+
+const style = translate(10, 20) // "translate(10px, 20px)"
+const stylePerc = translate(50, 50, '%') // "translate(50%, 50%)"
+```

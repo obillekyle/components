@@ -1,0 +1,82 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Sheet from '@vue-material/core/Sheet'
+import Button from '@vue-material/core/Button'
+import Flex from '@vue-material/core/Box/Flex'
+import { ref } from 'vue'
+
+export const meta = {
+  title: 'Sheet',
+  description: 'Sheets are surfaces that slide out from the edge of the screen to display content.',
+  source: 'packages/lib/src/components/Sheet',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="400">
+    <div style={{height: '100%', width: '100%', position: 'relative', overflow: 'hidden', background: 'var(--surface-container-low)'}}>
+        <Sheet direction="left" title="Navigation Drawer" resizable={false} closeable={false} style={{position: 'absolute'}}>
+           <div style={{padding: '16px'}}>
+             Sheet Content
+           </div>
+        </Sheet>
+    </div>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { SheetManager, Button } from '@vue-material/core'
+
+      function openSheet() {
+        SheetManager.open({
+            title: 'Sheet',
+            content: 'This is a sheet.',
+            direction: 'right'
+        })
+      }
+    </script>
+
+    <template>
+      <Button @click="openSheet">Open Sheet</Button>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+> **Note:** Similar to `Modal`, `Sheet` can be controlled via `SheetManager` and requires `<Sheet.Provider />` in the app root.
+
+## Directions
+
+Sheets can appear from `left`, `right`, `top`, or `bottom`.
+
+## Props
+
+`title?`: string | Component
+
+- Title of the sheet.
+
+`content?`: string | Component
+
+- Content of the sheet.
+
+`direction?`: 'left' | 'right' | 'top' | 'bottom'
+
+- The edge from which the sheet appears.
+- Default: `left`
+
+`size?`: number
+
+- Initial size of the sheet (width for left/right, height for top/bottom).
+
+`resizable?`: boolean
+
+- Whether the sheet is resizable by dragging.
+
+`closeable?`: boolean
+
+- Whether the sheet can be closed.

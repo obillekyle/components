@@ -1,0 +1,84 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Modal from '@vue-material/core/Modal'
+import Button from '@vue-material/core/Button'
+import Flex from '@vue-material/core/Box/Flex'
+import { ref } from 'vue'
+
+export const meta = {
+  title: 'Modal',
+  description: 'Dialogs inform users about a task and can contain critical information, require decisions, or involve multiple tasks.',
+  source: 'packages/lib/src/components/Modal',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="300">
+     <div style={{height: '300px', position: 'relative', overflow: 'hidden', background: 'var(--surface-container-low)'}}>
+        <Modal
+          title="Basic Modal"
+          content="This is a simple modal dialog."
+          actions={[{ label: 'Close', onClick: null }]}
+          style={{position: 'absolute'}}
+        />
+     </div>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { ModalManager, Button } from '@vue-material/core'
+
+      function openModal() {
+        ModalManager.open({
+          title: 'Basic Modal',
+          content: 'This is a simple modal dialog.',
+          actions: [
+            { label: 'Close', onClick: (utils) => utils.close() }
+          ]
+        })
+      }
+    </script>
+
+    <template>
+      <Button @click="openModal">Open Modal</Button>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+> **Note:** To use `ModalManager`, you must include `<Modal.Provider />` at the root of your application (e.g., in `App.vue`).
+
+## Props
+
+`title?`: string | Component
+
+- The title of the modal.
+
+`content?`: string | Component
+
+- The content of the modal.
+
+`actions?`: { label: string, onClick: (utils) => void, variant?: string, disabled?: boolean }[]
+
+- Array of action buttons.
+
+`icon?`: string | Component
+
+- Icon to display at the top.
+
+`closeable?`: boolean
+
+- Whether the modal can be closed by clicking outside or pressing escape.
+
+`fullScreen?`: boolean
+
+- Whether the modal is fullscreen.
+
+`width?`: string
+
+- Width of the modal.

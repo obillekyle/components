@@ -1,0 +1,64 @@
+export const meta = {
+  title: 'IDB Storage',
+  description: 'A Promise-based wrapper around IndexedDB with cross-tab synchronization.',
+}
+
+## Introduction
+
+`IDBStorage` provides a simple, asynchronous key-value storage interface backed by IndexedDB. It supports storing complex JavaScript objects (structured clone algorithm) and synchronizes updates across different tabs using `BroadcastChannel`.
+
+## Usage
+
+```ts
+import { IDBStorage } from '@/utils/idb'
+
+// Set an item
+await IDBStorage.setItem('user', { name: 'Alice', age: 30 })
+
+// Get an item
+const user = await IDBStorage.getItem('user')
+console.log(user) // { name: 'Alice', age: 30 }
+
+// Check existence
+const exists = await IDBStorage.hasItem('user')
+
+// Remove item
+await IDBStorage.removeItem('user')
+
+// Clear all
+await IDBStorage.clear()
+```
+
+## Event Listening
+
+You can listen for changes in the storage, which is useful for reacting to changes made in other tabs.
+
+```ts
+import { IDBStorage } from '@/utils/idb'
+
+IDBStorage.addEventListener('storage', ({ key }) => {
+  console.log(`Item with key "${key}" changed`)
+})
+
+IDBStorage.addEventListener('store-cleared', () => {
+  console.log('Storage cleared')
+})
+```
+
+## API
+
+### Methods
+
+- `getItem(key: string): Promise<any>`
+- `setItem(key: string, value: any): Promise<void>`
+- `removeItem(key: string): Promise<void>`
+- `hasItem(key: string): Promise<boolean>`
+- `clear(): Promise<void>`
+- `waitForDB(): Promise<void>`: Waits for the database connection to be established.
+
+### Events
+
+- `storage`: Fired when an item is set or removed (cross-tab).
+- `item-set`: Fired when an item is set (local).
+- `item-removed`: Fired when an item is removed (local).
+- `store-cleared`: Fired when storage is cleared.

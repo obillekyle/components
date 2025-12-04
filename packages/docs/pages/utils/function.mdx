@@ -1,0 +1,80 @@
+export const meta = {
+  title: 'Function',
+  description: 'Utilities for function manipulation and performance optimization.',
+}
+
+## Evaluate
+
+Evaluates a value that can be a function or a raw value. If it's a function, it executes it with the provided arguments.
+
+```ts
+import { evaluate } from '@/utils/function'
+
+const val1 = evaluate('hello') // 'hello'
+const val2 = evaluate(() => 'world') // 'world'
+const val3 = evaluate((a) => a + 1, 1) // 2
+```
+
+## Pipe
+
+Pipes a value through a series of functions.
+
+```ts
+import { pipe, asyncPipe } from '@/utils/function'
+
+const result = pipe(
+  1,
+  (n) => n + 1,
+  (n) => n * 2
+) // 4
+
+const asyncResult = await asyncPipe(
+  1,
+  async (n) => n + 1,
+  (n) => n * 2
+) // 4
+```
+
+## Performance
+
+### Throttler
+
+Limits the execution of a function to once every specified time interval.
+
+```ts
+import { throttler } from '@/utils/function'
+
+throttler(() => console.log('clicked'), {
+  key: 'click-logger',
+  wait: 1000
+})
+```
+
+### Debounce
+
+Delays the execution of a function until after a specified wait time has elapsed since the last time it was invoked.
+
+```ts
+import { debounce } from '@/utils/function'
+
+debounce(() => console.log('input stopped'), {
+  key: 'input-logger',
+  wait: 500
+})
+```
+
+### Interval
+
+A wrapper around `setInterval` that manages clearing existing intervals with the same key.
+
+```ts
+import { interval, removeInterval } from '@/utils/function'
+
+const id = interval(() => console.log('tick'), {
+  key: 'timer',
+  time: 1000
+})
+
+// Later
+removeInterval('timer')
+```

@@ -1,0 +1,110 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Navigation from '@vue-material/core/Navigation'
+import Flex from '@vue-material/core/Box/Flex'
+import { ref } from 'vue'
+
+export const meta = {
+  title: 'Navigation',
+  description: 'Navigation components for switching between views.',
+  source: 'packages/lib/src/components/Navigation',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="400">
+    <div style={{position: 'relative', height: '100%', width: '100%', overflow: 'hidden'}}>
+        <Navigation active={0}>
+            <Navigation.Item icon="material-symbols:home" label="Home" />
+            <Navigation.Item icon="material-symbols:settings" label="Settings" />
+            <Navigation.Item icon="material-symbols:person" label="Profile" />
+        </Navigation>
+    </div>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Navigation } from '@vue-material/core'
+      import { ref } from 'vue'
+
+      const activeTab = ref(0)
+    </script>
+
+    <template>
+      <Navigation v-model="activeTab">
+        <Navigation.Item icon="material-symbols:home" label="Home" />
+        <Navigation.Item icon="material-symbols:settings" label="Settings" />
+        <Navigation.Item icon="material-symbols:person" label="Profile" />
+      </Navigation>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Navigation Container
+
+For more complex layouts, use `Navigation.Container` and `Navigation.Content`.
+
+<Preview>
+  <PreviewFrame height="300">
+    <div style={{position: 'relative', height: '100%', width: '100%', overflow: 'hidden'}}>
+        <Navigation active={0}>
+             <Navigation.Container>
+                <Navigation.Item icon="material-symbols:home" label="Home" />
+                <Navigation.Item icon="material-symbols:settings" label="Settings" />
+             </Navigation.Container>
+        </Navigation>
+    </div>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+       import { Navigation } from '@vue-material/core'
+       import { ref } from 'vue'
+
+       const activeTab = ref(0)
+    </script>
+
+    <template>
+      <Navigation v-model="activeTab">
+        <Navigation.Container>
+            <Navigation.Item icon="material-symbols:home" label="Home" />
+            <Navigation.Item icon="material-symbols:settings" label="Settings" />
+        </Navigation.Container>
+      </Navigation>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props (Navigation)
+
+`labels?`: 'always' | 'active' | 'hidden'
+
+- Label display mode.
+- Default: `always`
+
+`active?`: number
+
+- Index of the active item.
+
+## Props (Navigation Item)
+
+`icon`: string | Component
+
+- Icon to display.
+
+`label`: string
+
+- Label text.
+
+`badge?`: string | number
+
+- Badge content.
