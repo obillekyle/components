@@ -1,10 +1,7 @@
 import Preview from '@/helper/preview.vue'
 import PreviewFrame from '@/helper/preview-frame.vue'
 import CodeHighlight from '@/helper/code-highlight.vue'
-import Modal from '@vue-material/core/Modal'
-import Button from '@vue-material/core/Button'
-import Flex from '@vue-material/core/Box/Flex'
-import { ref } from 'vue'
+import ModalExample from './modal-example.vue'
 
 export const meta = {
   title: 'Modal',
@@ -17,36 +14,30 @@ export const meta = {
 
 <Preview>
   <PreviewFrame height="300">
-     <div style={{height: '300px', position: 'relative', overflow: 'hidden', background: 'var(--surface-container-low)'}}>
-        <Modal
-          title="Basic Modal"
-          content="This is a simple modal dialog."
-          actions={[{ label: 'Close' }]}
-          style={{position: 'absolute'}}
-        />
-     </div>
+     <ModalExample />
   </PreviewFrame>
 
   <CodeHighlight>
-    ```vue
-    <script setup lang="ts">
-      import { ModalManager, Button } from '@vue-material/core'
 
-      function openModal() {
-        ModalManager.open({
-          title: 'Basic Modal',
-          content: 'This is a simple modal dialog.',
-          actions: [
-            { label: 'Close', onClick: (utils) => utils.close() }
-          ]
-        })
-      }
-    </script>
+```vue
+<script setup lang="ts">
+  import { ModalManager, Button } from '@vue-material/core'
 
-    <template>
-      <Button @click="openModal">Open Modal</Button>
-    </template>
-    ```
+  function openModal() {
+    ModalManager.open({
+      title: 'Basic Modal',
+      content: 'This is a simple modal dialog.',
+      actions: [
+        { label: 'Close', onClick: (utils) => utils.close() }
+      ]
+    })
+  }
+</script>
+
+<template>
+  <Button @click="openModal">Open Modal</Button>
+</template>
+```
 
   </CodeHighlight>
 </Preview>
@@ -63,7 +54,7 @@ export const meta = {
 
 - The content of the modal.
 
-`actions?`: { label: string, onClick: (utils) => void, variant?: string, disabled?: boolean }[]
+`actions?`: `{ label: string, onClick: (utils) => void, variant?: string, disabled?: boolean }[]`
 
 - Array of action buttons.
 

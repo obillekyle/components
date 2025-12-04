@@ -108,15 +108,15 @@ export const meta = {
 
 > #### Inherits `HTMLAttributes`
 
-`value?`: (string | number)[]
+`value?`: `(string | number)[]`
 
 - The selected values
 
-`defaultValue?`: (string | number)[]
+`defaultValue?`: `(string | number)[]`
 
 - The initial selected values
 
-`items?`: (string | number | { value: string | number, label: any })[]
+`items?`: `(string | number | { value: string | number, label: any })[]`
 
 - The list of options to display. Can be an array of strings/numbers or objects with `value` and `label`.
 
@@ -147,6 +147,6 @@ export const meta = {
 
 ## Events
 
-`change`: (value: (string | number)[]) => void
+`change`: `(value: (string | number)[]) => void`
 
 - Emitted when the selection changes
