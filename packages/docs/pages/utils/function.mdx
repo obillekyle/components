@@ -1,3 +1,6 @@
+import Preview from '@/helper/preview.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
 export const meta = {
   title: 'Function',
   description: 'Utilities for function manipulation and performance optimization.',
@@ -7,6 +10,9 @@ export const meta = {
 
 Evaluates a value that can be a function or a raw value. If it's a function, it executes it with the provided arguments.
 
+<Preview>
+  <CodeHighlight>
+
 ```ts
 import { evaluate } from '@/utils/function'
 
@@ -15,9 +21,15 @@ const val2 = evaluate(() => 'world') // 'world'
 const val3 = evaluate((a) => a + 1, 1) // 2
 ```
 
+  </CodeHighlight>
+</Preview>
+
 ## Pipe
 
 Pipes a value through a series of functions.
+
+<Preview>
+  <CodeHighlight>
 
 ```ts
 import { pipe, asyncPipe } from '@/utils/function'
@@ -35,11 +47,17 @@ const asyncResult = await asyncPipe(
 ) // 4
 ```
 
+  </CodeHighlight>
+</Preview>
+
 ## Performance
 
 ### Throttler
 
 Limits the execution of a function to once every specified time interval.
+
+<Preview>
+  <CodeHighlight>
 
 ```ts
 import { throttler } from '@/utils/function'
@@ -50,9 +68,15 @@ throttler(() => console.log('clicked'), {
 })
 ```
 
+  </CodeHighlight>
+</Preview>
+
 ### Debounce
 
 Delays the execution of a function until after a specified wait time has elapsed since the last time it was invoked.
+
+<Preview>
+  <CodeHighlight>
 
 ```ts
 import { debounce } from '@/utils/function'
@@ -63,9 +87,15 @@ debounce(() => console.log('input stopped'), {
 })
 ```
 
+  </CodeHighlight>
+</Preview>
+
 ### Interval
 
 A wrapper around `setInterval` that manages clearing existing intervals with the same key.
+
+<Preview>
+  <CodeHighlight>
 
 ```ts
 import { interval, removeInterval } from '@/utils/function'
@@ -78,3 +108,6 @@ const id = interval(() => console.log('tick'), {
 // Later
 removeInterval('timer')
 ```
+
+  </CodeHighlight>
+</Preview>

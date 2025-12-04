@@ -1,3 +1,6 @@
+import Preview from '@/helper/preview.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
 export const meta = {
   title: 'IDB Storage',
   description: 'A Promise-based wrapper around IndexedDB with cross-tab synchronization.',
@@ -8,6 +11,9 @@ export const meta = {
 `IDBStorage` provides a simple, asynchronous key-value storage interface backed by IndexedDB. It supports storing complex JavaScript objects (structured clone algorithm) and synchronizes updates across different tabs using `BroadcastChannel`.
 
 ## Usage
+
+<Preview>
+  <CodeHighlight>
 
 ```ts
 import { IDBStorage } from '@/utils/idb'
@@ -29,9 +35,15 @@ await IDBStorage.removeItem('user')
 await IDBStorage.clear()
 ```
 
+  </CodeHighlight>
+</Preview>
+
 ## Event Listening
 
 You can listen for changes in the storage, which is useful for reacting to changes made in other tabs.
+
+<Preview>
+  <CodeHighlight>
 
 ```ts
 import { IDBStorage } from '@/utils/idb'
@@ -44,6 +56,9 @@ IDBStorage.addEventListener('store-cleared', () => {
   console.log('Storage cleared')
 })
 ```
+
+  </CodeHighlight>
+</Preview>
 
 ## API
 

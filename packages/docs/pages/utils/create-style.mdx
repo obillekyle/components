@@ -1,3 +1,6 @@
+import Preview from '@/helper/preview.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
 export const meta = {
   title: 'Create Style',
   description: 'Utility for generating dynamic scoped CSS classes.',
@@ -8,6 +11,9 @@ export const meta = {
 `createStyle` is a utility used to generate dynamic CSS classes from a JavaScript object. It manages style injection and removal, ensuring that styles are only present when needed. It is particularly useful for component styling based on props.
 
 ## Usage
+
+<Preview>
+  <CodeHighlight>
 
 ```ts
 import { createStyle } from '@/utils/create-style'
@@ -23,6 +29,9 @@ const className = createStyle(() => ({
 // Use `className` in your template
 // <div :class="className"></div>
 ```
+
+  </CodeHighlight>
+</Preview>
 
 ## Features
 

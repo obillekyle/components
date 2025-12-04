@@ -1,3 +1,6 @@
+import Preview from '@/helper/preview.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
 export const meta = {
   title: 'Component Manager',
   description: 'A utility class to manage component instances dynamically.',
@@ -8,6 +11,9 @@ export const meta = {
 `ComponentManager` is a utility class designed to manage the lifecycle and state of dynamic components, such as Modals, Snackbars, and Toasts. It provides a centralized way to open, close, and modify component instances.
 
 ## Usage
+
+<Preview>
+  <CodeHighlight>
 
 ```ts
 import { ComponentManager } from '@/utils/component-manager'
@@ -35,6 +41,9 @@ myManager.modify(id, { message: 'Updated Message' })
 // Close a component
 myManager.close(id)
 ```
+
+  </CodeHighlight>
+</Preview>
 
 ## API
 

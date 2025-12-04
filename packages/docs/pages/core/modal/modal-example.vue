@@ -8,7 +8,6 @@
       title="Basic Modal"
       content="This is a simple modal dialog."
       :actions="[{ label: 'Close' }]"
-      style="position: absolute;"
     />
   </div>
 </template>
