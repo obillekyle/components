@@ -1,0 +1,53 @@
+import Preview from '@/helper/preview.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+export const meta = {
+  title: 'Create Style',
+  description: 'Utility for generating dynamic scoped CSS classes.',
+}
+
+## Introduction
+
+`createStyle` is a utility used to generate dynamic CSS classes from a JavaScript object. It manages style injection and removal, ensuring that styles are only present when needed. It is particularly useful for component styling based on props.
+
+## Usage
+
+<Preview>
+  <CodeHighlight>
+
+```ts
+import { createStyle } from '@/utils/create-style'
+import { ref } from 'vue'
+
+const props = ref({ width: '100px', color: 'red' })
+
+const className = createStyle(() => ({
+  width: props.value.width,
+  color: props.value.color
+}))
+
+// Use `className` in your template
+// <div :class="className"></div>
+```
+
+  </CodeHighlight>
+</Preview>
+
+## Features
+
+- **Scoped Styles**: Generates unique class names based on content hash.
+- **Reference Counting**: Styles are removed from the DOM when no longer in use.
+- **Value Resolution**: automatically handles units and color variables.
+    - Numbers are treated as `px` by default for known properties, or can be configured.
+    - Strings starting with `$` are resolved as CSS variables (e.g., `$primary` -> `var(--primary)`).
+    - Strings starting with `#` are resolved using `getCSSValue`.
+- **Reactivity**: automatically updates the class when the source object changes.
+
+## API
+
+### `createStyle(styles: () => object, options?: CreateStyleOptions): Ref<string>`
+
+- `styles`: A function that returns the style object.
+- `options`:
+    - `prefix`: Prefix for the generated class name. Default: `md-css-`.
+    - `resolveVars`: Whether to resolve values using `cssPropValue`. Default: `true`.

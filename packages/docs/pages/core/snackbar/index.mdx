@@ -1,0 +1,62 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import SnackbarExample from './snackbar-example.vue'
+
+export const meta = {
+  title: 'Snackbar',
+  description: 'Snackbars provide brief messages about app processes at the bottom of the screen.',
+  source: 'packages/lib/src/components/Snackbar',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="150">
+    <SnackbarExample />
+  </PreviewFrame>
+
+  <CodeHighlight>
+
+```vue
+<script setup lang="ts">
+  import { SnackbarManager, Button } from '@vue-material/core'
+
+  function showSnackbar() {
+    SnackbarManager.open({
+      message: 'This is a snackbar',
+      actions: [
+        { label: 'Undo', onClick: (utils) => utils.close() }
+      ]
+    })
+  }
+</script>
+
+<template>
+  <Button @click="showSnackbar">Show Snackbar</Button>
+</template>
+```
+
+  </CodeHighlight>
+</Preview>
+
+> **Note:** Requires `<Snackbar.Provider />` in the app root for `SnackbarManager` usage.
+
+## Props
+
+`message?`: string | Component
+
+- Text message to display.
+
+`actions?`: `{ label: string, onClick: (utils) => void }[]`
+
+- Action buttons.
+
+`timeout?`: number
+
+- Duration in milliseconds before auto-closing.
+
+`closeable?`: boolean
+
+- Whether to show a close icon.

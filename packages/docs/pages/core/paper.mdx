@@ -1,0 +1,79 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Paper from '@vue-material/core/Paper'
+import Flex from '@vue-material/core/Box/Flex'
+
+export const meta = {
+  title: 'Paper',
+  description: 'A surface that displays content and actions on a single topic.',
+  source: 'packages/lib/src/components/Paper',
+  inherits: ['core/Box']
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex gap="#sm" wrap="wrap" justify="center">
+      <Paper>Neutral (Default)</Paper>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Paper } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Paper>Neutral (Default)</Paper>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Variants
+
+<Preview>
+  <PreviewFrame height="300">
+    <Flex gap="#sm" wrap="wrap" justify="center">
+      <Paper variant="primary">Primary</Paper>
+      <Paper variant="secondary">Secondary</Paper>
+      <Paper variant="tertiary">Tertiary</Paper>
+      <Paper variant="error">Error</Paper>
+      <Paper variant="neutral">Neutral</Paper>
+      <Paper variant="outlined">Outlined</Paper>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Paper, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap="#sm" wrap="wrap">
+        <Paper variant="primary">Primary</Paper>
+        <Paper variant="secondary">Secondary</Paper>
+        <Paper variant="tertiary">Tertiary</Paper>
+        <Paper variant="error">Error</Paper>
+        <Paper variant="neutral">Neutral</Paper>
+        <Paper variant="outlined">Outlined</Paper>
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+> #### Inherits `BoxProps`
+
+`variant?`: 'primary' | 'secondary' | 'tertiary' | 'error' | 'neutral' | 'outlined'
+
+- The variant of the paper
+- Default: `"neutral"`

@@ -1,0 +1,59 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import { Form } from '@vue-material/core/Form'
+import Input from '@vue-material/core/Input'
+import Button from '@vue-material/core/Button'
+import Flex from '@vue-material/core/Box/Flex'
+
+export const meta = {
+  title: 'Form',
+  description: 'A form component that provides form values to its children.',
+  source: 'packages/lib/src/components/Form',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="300">
+    <Form modelValue={{ name: '', email: '' }}>
+      <Flex direction="column" gap="#sm" style={{ padding: '20px' }}>
+        <Input name="name" placeholder="Name" />
+        <Input name="email" placeholder="Email" />
+        <Button type="submit">Submit</Button>
+      </Flex>
+    </Form>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Form, Input, Button, Flex } from '@vue-material/core'
+      import { ref } from 'vue'
+
+      const formData = ref({
+        name: '',
+        email: ''
+      })
+    </script>
+
+    <template>
+      <Form v-model="formData">
+        <Flex direction="column" gap="#sm">
+          <Input name="name" placeholder="Name" />
+          <Input name="email" placeholder="Email" />
+          <Button type="submit">Submit</Button>
+        </Flex>
+      </Form>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+`modelValue?`: any
+
+- The form data object. It provides values to child components based on their `name` prop.

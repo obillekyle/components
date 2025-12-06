@@ -1,15 +1,207 @@
 import Preview from '@/helper/preview.vue'
 import PreviewFrame from '@/helper/preview-frame.vue'
 import CodeHighlight from '@/helper/code-highlight.vue'
+import Input from '@vue-material/core/Input'
+import Flex from '@vue-material/core/Box/Flex'
 
 export const meta = {
   title: 'Input',
-  description: 'Form components',
+  description: 'A set of input components including text, number, checkbox, and radio.',
   source: 'packages/lib/src/components/Input',
-  inherits: []
+  inherits: ['core/Input']
 }
 
-## Usage
+## Text Input
 
-> [!WARNING]
-> Undocumented
+<Preview>
+  <PreviewFrame height="200">
+    <Flex direction="column" gap="#sm" style={{padding: '20px'}}>
+      <Input.Text placeholder="Text Input" />
+      <Input.Text variant="outlined" placeholder="Outlined Input" />
+      <Input.Text left-icon="material-symbols:search" placeholder="With Icon" />
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Input, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex direction="column" gap="#sm">
+        <Input.Text placeholder="Text Input" />
+        <Input.Text variant="outlined" placeholder="Outlined Input" />
+        <Input.Text left-icon="material-symbols:search" placeholder="With Icon" />
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+### Props (Text)
+
+> #### Inherits `InputHTMLAttributes`
+
+`variant?`: 'filled' | 'outlined'
+
+- Visual style of the input.
+- Default: `filled`
+
+`leftIcon?`: string | Component
+
+- Icon to display on the left.
+
+`rightIcon?`: string | Component
+
+- Icon to display on the right.
+
+`prefix?`: string
+
+- Text prefix.
+
+`suffix?`: string
+
+- Text suffix.
+
+`counter?`: boolean
+
+- Show character counter.
+
+`textbox?`: boolean
+
+- Render as textarea.
+
+
+## Number Input
+
+<Preview>
+  <PreviewFrame height="200">
+    <Flex direction="column" gap="#sm" style={{padding: '20px'}}>
+      <Input.Number placeholder="Number Input" />
+      <Input.Number variant="outlined" placeholder="Outlined Number" />
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Input, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex direction="column" gap="#sm">
+        <Input.Number placeholder="Number Input" />
+        <Input.Number variant="outlined" placeholder="Outlined Number" />
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+### Props (Number)
+
+> #### Inherits `InputHTMLAttributes`
+
+`variant?`: 'filled' | 'outlined'
+
+- Visual style of the input.
+- Default: `filled`
+
+`min?`: number
+
+- Minimum value.
+
+`max?`: number
+
+- Maximum value.
+
+## Checkbox
+
+<Preview>
+  <PreviewFrame height="100">
+    <Flex gap="#sm" align="center" justify="center">
+      <Input.Checkbox />
+      <Input.Checkbox checked />
+      <Input.Checkbox indeterminate />
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Input, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Flex gap="#sm">
+        <Input.Checkbox />
+        <Input.Checkbox checked />
+        <Input.Checkbox indeterminate />
+      </Flex>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+### Props (Checkbox)
+
+> #### Inherits `InputHTMLAttributes`
+
+`checked?`: boolean
+
+- Checked state.
+
+`indeterminate?`: boolean
+
+- Indeterminate state.
+
+`error?`: boolean
+
+- Error state.
+
+
+## Radio
+
+<Preview>
+  <PreviewFrame height="150">
+    <Flex direction="column" gap="#sm" align="center" justify="center">
+      <Input.Radio name="group1">
+        <Input.Radio.Item value="1" label="Option 1" />
+        <Input.Radio.Item value="2" label="Option 2" />
+        <Input.Radio.Item value="3" label="Option 3" />
+      </Input.Radio>
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Input, Flex } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Input.Radio name="group1">
+        <Input.Radio.Item value="1" label="Option 1" />
+        <Input.Radio.Item value="2" label="Option 2" />
+        <Input.Radio.Item value="3" label="Option 3" />
+      </Input.Radio>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+### Props (Radio Item)
+
+`value`: string | number
+
+- Value of the radio item.
+
+`label`: string
+
+- Label of the radio item.
+

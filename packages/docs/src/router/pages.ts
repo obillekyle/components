@@ -47,9 +47,13 @@ const corePages: Record<string, Page> = {
     name: 'Divider',
     icon: 'material-symbols:align-center'
   },
-  list: {
-    name: 'List',
-    icon: 'material-symbols:list'
+  form: {
+    name: 'Form',
+    icon: 'mdi:form-select'
+  },
+  frame: {
+    name: 'Frame',
+    icon: 'material-symbols:crop-free'
   },
   image: {
     name: 'Image',
@@ -60,17 +64,72 @@ const corePages: Record<string, Page> = {
     name: 'Input',
     icon: 'mdi:form-textbox'
   },
+  list: {
+    name: 'List',
+    icon: 'material-symbols:list'
+  },
+  misc: {
+    name: 'Misc',
+    icon: 'material-symbols:more-horiz'
+  },
+  modal: {
+    name: 'Modal',
+    icon: 'material-symbols:video-label'
+  },
+  navigation: {
+    name: 'Navigation',
+    icon: 'material-symbols:navigation-outline',
+    active: 'material-symbols:navigation'
+  },
+  paper: {
+    name: 'Paper',
+    icon: 'material-symbols:layers-outline',
+    active: 'material-symbols:layers'
+  },
   progress: {
     name: 'Progress',
     icon: 'material-symbols:sliders'
   },
+  select: {
+    name: 'Select',
+    icon: 'material-symbols:check-box-outline',
+    active: 'material-symbols:check-box'
+  },
+  sheet: {
+    name: 'Sheet',
+    icon: 'material-symbols:vertical-align-bottom'
+  },
+  skeleton: {
+    name: 'Skeleton',
+    icon: 'material-symbols:blur-on'
+  },
   slider: {
     name: 'Slider',
     icon: 'mdi:slider'
+  },
+  snackbar: {
+    name: 'Snackbar',
+    icon: 'material-symbols:branding-watermark-outline',
+    active: 'material-symbols:branding-watermark'
+  },
+  switch: {
+    name: 'Switch',
+    icon: 'material-symbols:toggle-on-outline',
+    active: 'material-symbols:toggle-on'
+  },
+  toast: {
+    name: 'Toast',
+    icon: 'material-symbols:notifications-outline',
+    active: 'material-symbols:notifications'
   }
 }
 
 const docsPages: Record<string, Page> = {
+  introduction: {
+    name: 'Introduction',
+    icon: 'material-symbols:info-outline',
+    active: 'material-symbols:info'
+  },
   gettingStarted: {
     name: 'Getting Started',
     icon: 'mdi:book-open-outline',
@@ -88,6 +147,16 @@ const utilsPages: Record<string, Page> = {
     icon: 'mdi:palette-outline',
     active: 'mdi:palette'
   },
+  componentManager: {
+    name: 'Component Manager',
+    icon: 'material-symbols:settings-applications-outline',
+    active: 'material-symbols:settings-applications'
+  },
+  createStyle: {
+    name: 'Create Style',
+    icon: 'material-symbols:style-outline',
+    active: 'material-symbols:style'
+  },
   css: {
     name: 'CSS',
     icon: 'ion:logo-css3'
@@ -101,6 +170,14 @@ const utilsPages: Record<string, Page> = {
     icon: 'material-symbols:touch-app-outline',
     active: 'material-symbols:touch-app'
   },
+  function: {
+    name: 'Function',
+    icon: 'material-symbols:functions'
+  },
+  idb: {
+    name: 'IDB Storage',
+    icon: 'material-symbols:storage'
+  },
   number: {
     name: 'Number',
     icon: 'mdi:numeric'
@@ -109,6 +186,10 @@ const utilsPages: Record<string, Page> = {
     name: 'Object',
     icon: 'material-symbols:account-tree-outline',
     active: 'material-symbols:account-tree'
+  },
+  other: {
+    name: 'Other',
+    icon: 'material-symbols:more-horiz'
   },
   ref: {
     name: 'Ref',

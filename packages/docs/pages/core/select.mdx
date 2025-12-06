@@ -1,0 +1,152 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import Select from '@vue-material/core/Select'
+import Flex from '@vue-material/core/Box/Flex'
+
+export const meta = {
+  title: 'Select',
+  description: 'Select component allow users to choose one or multiple values from a list of options.',
+  source: 'packages/lib/src/components/Select',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="300">
+    <Select
+      placeholder="Select an option"
+      items={['Option 1', 'Option 2', 'Option 3']}
+    />
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Select } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Select
+        placeholder="Select an option"
+        :items="['Option 1', 'Option 2', 'Option 3']"
+      />
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Multiple Selection
+
+<Preview>
+  <PreviewFrame height="300">
+    <Select
+      multiple
+      placeholder="Select options"
+      items={['Apple', 'Banana', 'Orange', 'Grape']}
+    />
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Select } from '@vue-material/core'
+    </script>
+
+    <template>
+      <Select
+        multiple
+        placeholder="Select options"
+        :items="['Apple', 'Banana', 'Orange', 'Grape']"
+      />
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Object Values
+
+<Preview>
+  <PreviewFrame height="300">
+     <Select
+      placeholder="Select user"
+      items={[
+        { value: 1, label: 'Alice' },
+        { value: 2, label: 'Bob' },
+        { value: 3, label: 'Charlie' }
+      ]}
+    />
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { Select } from '@vue-material/core'
+
+      const users = [
+        { value: 1, label: 'Alice' },
+        { value: 2, label: 'Bob' },
+        { value: 3, label: 'Charlie' }
+      ]
+    </script>
+
+    <template>
+      <Select
+        placeholder="Select user"
+        :items="users"
+      />
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+## Props
+
+> #### Inherits `HTMLAttributes`
+
+`value?`: `(string | number)[]`
+
+- The selected values
+
+`defaultValue?`: `(string | number)[]`
+
+- The initial selected values
+
+`items?`: `(string | number | { value: string | number, label: any })[]`
+
+- The list of options to display. Can be an array of strings/numbers or objects with `value` and `label`.
+
+`placeholder?`: string
+
+- The placeholder text
+
+`multiple?`: boolean
+
+- Whether to allow multiple selection
+
+`required?`: boolean
+
+- Whether the selection is required
+
+`variant?`: 'filled' | 'outlined'
+
+- The visual variant of the select input
+- Default: `filled`
+
+`prefix?`: string
+
+- Prefix text
+
+`icon?`: string | Component
+
+- Icon component or name
+
+## Events
+
+`change`: `(value: (string | number)[]) => void`
+
+- Emitted when the selection changes

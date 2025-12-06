@@ -1,0 +1,67 @@
+import Preview from '@/helper/preview.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+
+export const meta = {
+  title: 'Component Manager',
+  description: 'A utility class to manage component instances dynamically.',
+}
+
+## Introduction
+
+`ComponentManager` is a utility class designed to manage the lifecycle and state of dynamic components, such as Modals, Snackbars, and Toasts. It provides a centralized way to open, close, and modify component instances.
+
+## Usage
+
+<Preview>
+  <CodeHighlight>
+
+```ts
+import { ComponentManager } from '@/utils/component-manager'
+
+interface MyComponentProps {
+  message: string
+  duration?: number
+}
+
+const myManager = new ComponentManager<MyComponentProps>({
+  defaults: { duration: 3000 }
+})
+
+// Open a component
+const id = myManager.open({ message: 'Hello World' })
+
+// Listen to events
+myManager.on('open', (key, data) => {
+  console.log(`Opened component ${key} with data:`, data)
+})
+
+// Modify a component
+myManager.modify(id, { message: 'Updated Message' })
+
+// Close a component
+myManager.close(id)
+```
+
+  </CodeHighlight>
+</Preview>
+
+## API
+
+### `constructor(options?: ComponentOptions<T>)`
+
+- `options.defaults`: Default properties for the components.
+- `options.startIncrement`: Starting ID for auto-generated keys.
+
+### Methods
+
+- `open(component: T): number`: Opens a new component with auto-generated ID.
+- `open(key: ComponentID, component: T, overwrite?: boolean): ComponentID`: Opens a component with a specific key.
+- `modify(id: ComponentID, component: Partial<T> | ((old: WithID<T>) => Partial<T>))`: Modifies an existing component.
+- `close(id: ComponentID)`: Closes a component.
+- `utility(id: ComponentID): UtilityFunction<T>`: Returns a utility object with `close` and `modify` methods bound to the specific ID.
+- `clear()`: Closes all components.
+- `has(id: ComponentID)`: Checks if a component exists.
+
+### Properties
+
+- `data`: Returns an object of all active components.

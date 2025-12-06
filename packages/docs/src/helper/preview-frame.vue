@@ -4,11 +4,12 @@
 
   defineProps<{
     height?: SizesString
+    width?: SizesString
   }>()
 </script>
 
 <template>
-  <Box class="preview-frame" :height="height || 300">
+  <Box class="preview-frame" :height="height || 300" :width="width">
     <slot />
   </Box>
 </template>

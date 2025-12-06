@@ -1,12 +1,146 @@
 import Preview from '@/helper/preview.vue'
 import PreviewFrame from '@/helper/preview-frame.vue'
 import CodeHighlight from '@/helper/code-highlight.vue'
+import { Text, Floater, Scroller, AwaitedText, Box } from '@vue-material/core'
 
 export const meta = {
   title: 'Text',
-  description: ' A text component',
-  source: '',
+  description: 'Text and typography components.',
+  source: 'packages/lib/src/components/Text',
   inherits: []
 }
 
-## Usage
+## Text
+
+Basic text component with typography styles.
+
+<Preview>
+  <PreviewFrame height="150">
+    <Box p="#md">
+        <Text variant="display-large">Display Large</Text>
+        <Text variant="headline-medium">Headline Medium</Text>
+        <Text variant="body-medium">Body Medium</Text>
+    </Box>
+  </PreviewFrame>
+
+  <CodeHighlight>
+
+```vue
+<script setup lang="ts">
+  import { Text } from '@vue-material/core'
+</script>
+
+<template>
+  <Text variant="display-large">Display Large</Text>
+  <Text variant="headline-medium">Headline Medium</Text>
+  <Text variant="body-medium">Body Medium</Text>
+</template>
+```
+
+  </CodeHighlight>
+</Preview>
+
+### Props (Text)
+
+`variant?`: TypographyStyle
+
+- The typography style to apply. e.g. `display-large`, `body-medium`.
+
+`lines?`: number
+
+- Maximum number of lines to display.
+
+## Floater
+
+Text that floats/animates.
+
+<Preview>
+  <PreviewFrame height="100">
+    <Box p="#md">
+      <Floater>Floating Text Animation</Floater>
+    </Box>
+  </PreviewFrame>
+
+  <CodeHighlight>
+
+```vue
+<script setup lang="ts">
+  import { Floater } from '@vue-material/core'
+</script>
+
+<template>
+  <Floater>Floating Text Animation</Floater>
+</template>
+```
+
+  </CodeHighlight>
+</Preview>
+
+## Scroller
+
+Text that scrolls if it overflows.
+
+<Preview>
+  <PreviewFrame height="100">
+    <Box width="200px" style={{ overflow: 'hidden', border: '1px solid var(--outline)' }}>
+      <Scroller>
+        This is a very long text that should scroll because it is too long for the container.
+      </Scroller>
+    </Box>
+  </PreviewFrame>
+
+  <CodeHighlight>
+
+```vue
+<script setup lang="ts">
+  import { Scroller, Box } from '@vue-material/core'
+</script>
+
+<template>
+  <Box width="200px">
+    <Scroller>
+      This is a very long text that should scroll because it is too long for the container.
+    </Scroller>
+  </Box>
+</template>
+```
+
+  </CodeHighlight>
+</Preview>
+
+## Awaited Text
+
+Text that displays a loader or placeholder while waiting for a value (Promise).
+
+<Preview>
+  <PreviewFrame height="100">
+    <Box p="#md">
+      {/*
+        NOTE: Passing a promise inline in MDX JSX might be tricky for serialization.
+        We'll just show the static state or a simulated one if possible,
+        or just the code block if the live preview is too complex.
+        Let's try a simple string first to ensure it renders.
+      */}
+      <AwaitedText value="Loaded Value">
+        Loading...
+      </AwaitedText>
+    </Box>
+  </PreviewFrame>
+
+  <CodeHighlight>
+
+```vue
+<script setup lang="ts">
+  import { AwaitedText } from '@vue-material/core'
+  const myPromise = new Promise(r => setTimeout(() => r('Loaded!'), 2000))
+</script>
+
+<template>
+  <AwaitedText :value="myPromise">
+    Loading...
+  </AwaitedText>
+</template>
+```
+
+  </CodeHighlight>
+</Preview>

@@ -1,0 +1,63 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import { Toast } from '@vue-material/core/Toast'
+import Button from '@vue-material/core/Button'
+import Flex from '@vue-material/core/Box/Flex'
+import { ref } from 'vue'
+
+export const meta = {
+  title: 'Toast',
+  description: 'Toasts provide brief messages about app processes.',
+  source: 'packages/lib/src/components/Toast',
+  inherits: []
+}
+
+## Usage
+
+<Preview>
+  <PreviewFrame height="150">
+    <Flex align="end" justify="center" style={{height: '100%', paddingBottom: '20px'}}>
+        <Toast
+          class="static"
+          message="Notification Message"
+        />
+    </Flex>
+  </PreviewFrame>
+
+  <CodeHighlight>
+    ```vue
+    <script setup lang="ts">
+      import { ToastManager, Button } from '@vue-material/core'
+
+      function showToast() {
+        ToastManager.open({
+          message: 'Notification Message'
+        })
+      }
+    </script>
+
+    <template>
+      <Button @click="showToast">Show Toast</Button>
+    </template>
+    ```
+
+  </CodeHighlight>
+</Preview>
+
+> **Note:** Requires `<Toast.Provider />` in the app root for `ToastManager` usage.
+
+## Props
+
+`message?`: string | Component
+
+- Message to display.
+
+`icon?`: string | Component
+
+- Icon to display. Defaults to favicon if not provided.
+
+`variant?`: 'short' | 'expanded'
+
+- Layout variant.
+- Default: `short`

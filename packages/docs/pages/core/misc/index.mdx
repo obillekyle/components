@@ -1,0 +1,96 @@
+import Preview from '@/helper/preview.vue'
+import PreviewFrame from '@/helper/preview-frame.vue'
+import CodeHighlight from '@/helper/code-highlight.vue'
+import MiscExample from './misc-example.vue'
+
+export const meta = {
+  title: 'Misc',
+  description: 'Miscellaneous components.',
+  source: 'packages/lib/src/components/Misc',
+  inherits: []
+}
+
+## Misc Components
+
+<Preview>
+  <PreviewFrame height="400">
+    <MiscExample />
+  </PreviewFrame>
+
+  <CodeHighlight>
+
+```vue
+<script setup lang="ts">
+  import { Action, ColorBlock, HybridIcon } from '@vue-material/core/Misc'
+</script>
+
+<template>
+  <Action label="Action 1">
+    <HybridIcon icon="material-symbols:add" />
+  </Action>
+
+  <ColorBlock color="#F44336">Red</ColorBlock>
+
+  <HybridIcon icon="material-symbols:home" size="24px" />
+</template>
+```
+
+  </CodeHighlight>
+</Preview>
+
+## Overlay Provider
+
+A utility component that provides necessary context for overlays (Modals, Snackbars, Toasts, Sheets).
+It should be placed at the root of your application if you use `ComponentManager` to open these overlays.
+
+```vue
+<template>
+  <OverlayProvider>
+    <App />
+  </OverlayProvider>
+</template>
+```
+
+## View Observer
+
+A wrapper component that uses `IntersectionObserver` to detect visibility.
+
+<CodeHighlight>
+
+```vue
+<script setup lang="ts">
+  import { ViewObserver } from '@vue-material/core/Misc'
+</script>
+
+<template>
+  <ViewObserver @viewchange="(visible) => console.log(visible)">
+    <div>Observed Content</div>
+  </ViewObserver>
+</template>
+```
+
+</CodeHighlight>
+
+### Props (View Observer)
+
+`as?`: string | Component
+
+- The tag or component to render. Default: `div`
+
+`apply?`: `string | object`
+
+- Classes or props to apply when visible.
+
+`offset?`: string | number
+
+- Root margin offset.
+
+`threshold?`: number
+
+- Intersection threshold.
+
+### Events
+
+`viewchange`: `(visible: boolean) => void`
+
+- Emitted when visibility changes.
