@@ -38,7 +38,7 @@
   const isDark = inject('is-dark', ref(false))
   const inputColor = inject('input-color', ref<HTMLInputElement>())
 
-  let timeout: any
+  let observer: MutationObserver | undefined
   const error = ref(false)
   const ready = ref(false)
   const sidebar = ref(false)
@@ -75,19 +75,47 @@
     content.value?.scrollTo(0, 0)
   })
 
-  function getHeaders() {
-    timeout && clearTimeout(timeout)
-    timeout = setTimeout(() => {
+  let updateTimeout: any
+  function updateHeaders() {
+    clearTimeout(updateTimeout)
+    updateTimeout = setTimeout(() => {
       const element = content.value
-      if (!element || element.textContent === '') return getHeaders()
+      if (!element) return
       const wrapper = $('.content-wrapper', element) ?? element
       headers.value = [...wrapper.querySelectorAll('h1, h2, h3')] as any[]
-    }, 200)
+    }, 100)
   }
 
-  onMounted(() => getHeaders())
-  onBeforeUnmount(() => clearTimeout(timeout))
-  watch(loadComponent, getHeaders)
+  function startObserver() {
+    if (!content.value) return
+
+    // Initial update
+    updateHeaders()
+
+    observer?.disconnect()
+    observer = new MutationObserver(() => updateHeaders())
+
+    // We want to observe the content wrapper or inner content
+    // Since content.value is the scroll container, we observe its subtree
+    observer.observe(content.value, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    })
+  }
+
+  onMounted(() => {
+    startObserver()
+  })
+
+  watch(content, () => {
+    startObserver()
+  })
+
+  onBeforeUnmount(() => {
+    observer?.disconnect()
+    clearTimeout(updateTimeout)
+  })
 </script>
 
 <template>
