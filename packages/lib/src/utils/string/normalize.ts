@@ -1,5 +1,28 @@
 import { pipe } from '../function/pipe'
 
+const ESCAPE_MAP: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}
+const UNESCAPE_MAP: Record<string, string> = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#39;': "'"
+}
+const ESCAPE_REGEX = new RegExp(
+  `(${Object.keys(ESCAPE_MAP).join('|')})`,
+  'g'
+)
+const UNESCAPE_REGEX = new RegExp(
+  `(${Object.keys(UNESCAPE_MAP).join('|')})`,
+  'g'
+)
+
 // TODO: refactor
 
 export function normalizeNewLines(string_: string) {
@@ -39,35 +62,15 @@ export function normalizeNewLines(string_: string) {
 }
 
 export function escapeHtml(unsafeText: string): string {
-  const map: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  }
-
   return pipe(
-    Object.keys(map),
-    (keys) => keys.join('|'),
-    (match) => new RegExp(`(${match})`, 'g'),
-    (regex) => unsafeText.replaceAll(regex, (match) => map[match])
+    unsafeText,
+    (text) => text.replaceAll(ESCAPE_REGEX, (match) => ESCAPE_MAP[match])
   )
 }
 
 export function unescapeHtml(unsafeText: string): string {
-  const map: Record<string, string> = {
-    '&amp;': '&',
-    '&lt;': '<',
-    '&gt;': '>',
-    '&quot;': '"',
-    '&#39;': "'"
-  }
-
   return pipe(
-    Object.keys(map),
-    (keys) => keys.join('|'),
-    (match) => new RegExp(`(${match})`, 'g'),
-    (regex) => unsafeText.replaceAll(regex, (match) => map[match])
+    unsafeText,
+    (text) => text.replaceAll(UNESCAPE_REGEX, (match) => UNESCAPE_MAP[match])
   )
 }
