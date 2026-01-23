@@ -3,8 +3,9 @@ export function pick<T extends any, K extends (keyof T)[] = []>(
   keys: K
 ): Pick<T, K[number]>
 export function pick(object: any, keys: string[]) {
+  const keySet = new Set(keys)
   return Object.fromEntries(
-    Object.entries(object).filter(([key]) => keys.includes(key))
+    Object.entries(object).filter(([key]) => keySet.has(key))
   )
 }
 
@@ -14,8 +15,9 @@ type ExcludeFunction = <T extends object, K extends (keyof T)[] = []>(
 ) => Omit<T, K[number]>
 
 export const exclude: ExcludeFunction = (object, keys: any): any => {
+  const keySet = new Set(keys)
   return Object.fromEntries(
-    Object.entries(object).filter(([key]) => !keys.includes(key))
+    Object.entries(object).filter(([key]) => !keySet.has(key))
   )
 }
 
